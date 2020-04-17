@@ -2,6 +2,7 @@ import React, { useEffect, useRef } from 'react';
 import { useLocation, Switch, Route } from 'react-router-dom';
 
 import Header from './header/Header';
+import Footer from './footer/Footer';
 
 import '../css/App.css';
 
@@ -16,9 +17,17 @@ const App = () => {
     return (
         <div className="App">
             <Header />
-            <div className="main-envelope" ref={scrollContainer}>
-                <p>Content</p>
+            <div className="main-envelope">
+                <div className="main-contents" ref={scrollContainer}>
+                    <Switch>
+
+                    </Switch>
+                </div>
+                <div className="main-sidebar">
+
+                </div>
             </div>
+            <Footer />
         </div>
     );
 }

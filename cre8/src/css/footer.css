@@ -1,0 +1,7 @@
+.App > footer {
+    height: 20px;
+    background-color: #eeeeee;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+}

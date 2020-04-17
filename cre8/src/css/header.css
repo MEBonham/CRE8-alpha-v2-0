@@ -1,0 +1,77 @@
+
+.App > header {
+    width: 100%;
+    position: relative;
+    border-radius: 12px 12px 0 0;
+    background-image: url('../media/banner.jpg');
+    background-position: center top;
+    background-repeat: no-repeat;
+    -webkit-background-size: 100%;
+    -moz-background-size: 100%;
+    -o-background-size: 100%;
+    background-size: 100%;
+    background-color: #464646;
+}
+
+.App > header .banner-contents {
+    padding: calc(261 / 1088 * 20%) 4%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.App > header .banner-contents h1 {
+    font-size: 3rem;
+    text-shadow: 1px 1px 8px white;
+}
+
+.App > header .banner-contents .top-right-corner {
+    display: flex;
+    flex-direction: row-reverse;
+}
+
+.App > header .banner-contents .nav-dropdown {
+    height: 50px;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: flex-end;
+    position: relative;
+    z-index: 1;
+}
+
+.App > header .banner-contents .nav-toggle {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    background-color: #aaaaaa;
+    cursor: pointer;
+}
+
+.App > header .nav-dropdown nav {
+    position: relative;
+    top: -4px;
+    right: -6px;
+    display: flex;
+    flex-direction: column;
+    background-color: #aaaaaa;
+    border: 2px solid #464646;
+    border-radius: 6px;
+    padding: 4px 0;
+}
+
+.App > header .nav-dropdown nav a {
+    padding: 4px 12px;
+    font-size: 1.2rem;
+    text-align: right;
+}
+
+.App > header .nav-dropdown nav a:hover {
+    background-color: #cccccc;
+}
+
+.App > header .dummy-space {
+    width: 100%;
+    height: 0;
+    padding-top: calc(261 / 1088 * 60% - 50px);
+}
