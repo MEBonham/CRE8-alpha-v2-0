@@ -23,14 +23,16 @@
 }
 
 .App > header .banner-contents {
-    position: relative;
-    top: 20px;
-    color: white;
+    padding: calc(261 / 1088 * 20%) 4%;
+}
+
+.App > header .banner-contents h1 {
     font-size: 3rem;
+    text-shadow: 1px 1px 8px white;
 }
 
 .App > header .dummy-space {
     width: 100%;
     height: 0;
-    padding-top: calc(261 / 1088 * 100%);
+    padding-top: calc(261 / 1088 * 60% - 30px);
 }
