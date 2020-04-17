@@ -1,26 +1,28 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React, { useEffect, useRef } from 'react';
+import { useLocation, Switch, Route } from 'react-router-dom';
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+
+
+import '../css/App.css';
+
+const App = () => {
+    const { pathname } = useLocation();
+    const scrollContainer = useRef(null);
+
+    useEffect(() => {
+        scrollContainer.current.scroll(0, 0);
+    }, [pathname]);
+
+    return (
+        <div className="App">
+            <header>
+                <h1>CRE8 Alpha</h1>
+            </header>
+            <div className="main-envelope" ref={scrollContainer}>
+                <p>Content</p>
+            </div>
+        </div>
+    );
 }
 
 export default App;
