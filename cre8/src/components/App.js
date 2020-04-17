@@ -1,7 +1,7 @@
 import React, { useEffect, useRef } from 'react';
 import { useLocation, Switch, Route } from 'react-router-dom';
 
-
+import Header from './header/Header';
 
 import '../css/App.css';
 
@@ -15,9 +15,7 @@ const App = () => {
 
     return (
         <div className="App">
-            <header>
-                <h1>CRE8 Alpha</h1>
-            </header>
+            <Header />
             <div className="main-envelope" ref={scrollContainer}>
                 <p>Content</p>
             </div>
