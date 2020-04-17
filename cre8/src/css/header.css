@@ -30,8 +30,10 @@
     flex-direction: row-reverse;
 }
 
-.App > header .banner-contents .nav-dropdown {
+.App > header .banner-contents .nav-dropdown,
+.App > header .banner-contents .profile {
     height: 50px;
+    width: calc(50px + 14px);
     display: flex;
     flex-direction: column;
     justify-content: flex-start;
@@ -40,7 +42,12 @@
     z-index: 1;
 }
 
-.App > header .banner-contents .nav-toggle {
+.App > header .banner-contents .profile img {
+    margin-left: 14px;
+}
+
+.App > header .banner-contents .nav-toggle,
+.App > header .banner-contents .profile-button {
     width: 50px;
     height: 50px;
     border-radius: 50%;
@@ -48,7 +55,8 @@
     cursor: pointer;
 }
 
-.App > header .nav-dropdown nav {
+.App > header .nav-dropdown nav,
+.App > header .profile nav {
     position: relative;
     top: -4px;
     right: -6px;
@@ -60,13 +68,17 @@
     padding: 4px 0;
 }
 
-.App > header .nav-dropdown nav a {
+.App > header .nav-dropdown nav a,
+.App > header .profile nav a,
+.App > header .profile.signedin nav p {
     padding: 4px 12px;
     font-size: 1.2rem;
     text-align: right;
 }
 
-.App > header .nav-dropdown nav a:hover {
+.App > header .nav-dropdown nav a:hover,
+.App > header .profile nav a:hover,
+.App > header .profile.signedin nav p:hover {
     background-color: #cccccc;
 }
 

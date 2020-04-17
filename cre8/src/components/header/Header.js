@@ -1,52 +1,39 @@
 import React, { useState, useEffect } from 'react';
-import { Link, NavLink } from 'react-router-dom';
+import { Link } from 'react-router-dom';
+import useGlobal from '../../hooks/useGlobal';
 
-import menuButton from '../../media/hamburger-menu.png';
+import MainNav from './MainNav';
+import SignedIn from './SignedIn';
+import SignedOut from './SignedOut';
+
+import loadingIcon from '../../media/loading-icon.png';
 import '../../css/header.css';
 
 const Header = () => {
 
-    const [menuOpen, setMenuOpen] = useState(false);
-    const delayMilliseconds = 50;
+    const [userInfo] = useGlobal("user");
 
-    let lastClick = Date.now();
-
-    const toggle = () => {
-        setMenuOpen(!menuOpen);
-    }
-
-    const clickToggle = (ev) => {
-        if (Date.now() - lastClick >= delayMilliseconds) {
-            lastClick = Date.now();
-            toggle();
-        }
-    }
-
-    const closeMenu = (ev) => {
-        if (!ev.target.matches(".blockclick")) {
-            setMenuOpen(false);
-        }
-    }
-
+    const [profileComp, setProfileComp] = useState(
+        <div className="profile loading">
+            <img className="profile-button" src={loadingIcon} alt="Loading ..." />
+        </div>
+    );
+    
     useEffect(() => {
-        document.querySelector('#root').addEventListener('click', closeMenu);
-        return () => {
-            document.querySelector('#root').removeEventListener('click', closeMenu);
-        };
-    }, [])
+        if (userInfo) {
+            setProfileComp(<SignedIn />);
+        } else {
+            setProfileComp(<SignedOut />);
+        }
+    }, [ userInfo ]);
 
     return (
         <header className="main-page-header">
             <div className="banner-contents">
                 <Link to="/"><h1>CRE8 Alpha</h1></Link>
                 <div className="top-right-corner">
-                    <div className="nav-dropdown">
-                        <img className="nav-toggle" onClick={clickToggle} src={menuButton} alt="Nav Menu" />
-                        {menuOpen ? 
-                            <nav>
-                                <NavLink to="/characters">Characters</NavLink>
-                            </nav> : null}
-                    </div>
+                    {profileComp}
+                    <MainNav />
                 </div>
             </div>
             <div className="dummy-space" />
