@@ -12,7 +12,7 @@
 .App .main-envelope {
     display: flex;
     width: 100%;
-    height: calc(100vh - (261 / 1088 * 100%) - 158px);
+    height: calc(100vh - (261 / 1088 * 100%) - 78px);
 }
 
 .App .main-envelope .main-contents {

@@ -5,3 +5,18 @@
     justify-content: space-around;
     align-items: center;
 }
+
+.App > footer > div {
+    display: flex;
+    align-items: center;
+}
+
+.App > footer p {
+    margin-right: 4px;
+    font-size: 1rem;
+}
+
+.App > footer img {
+    height: 20px;
+    width: auto;
+}

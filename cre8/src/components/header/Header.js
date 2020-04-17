@@ -36,7 +36,7 @@ const Header = () => {
     }, [])
 
     return (
-        <header>
+        <header className="main-page-header">
             <div className="banner-contents">
                 <Link to="/"><h1>CRE8 Alpha</h1></Link>
                 <div className="top-right-corner">
