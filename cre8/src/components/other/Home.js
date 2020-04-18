@@ -5,7 +5,7 @@ const Home = () => {
     return(
         <div className="normal-padding main">
             <h1>Welcome!</h1>
-            <p><Link to="/private">Private Page</Link></p>
+            <p><Link to="/characters">Characters</Link></p>
         </div>
     );
 }

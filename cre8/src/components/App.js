@@ -7,6 +7,8 @@ import Header from './header/Header';
 import Footer from './footer/Footer';
 import Guarded from './Guarded';
 import Home from './other/Home';
+import NewCharForm from './newchar/NewCharForm';
+import CharMenu from './other/CharMenu';
 import ForgotPassword from './auth/ForgotPassword';
 import Login from './auth/Login';
 import Register from './auth/Register';
@@ -46,6 +48,8 @@ const App = () => {
                     <Switch>
                         <Route exact path="/" component={Home} />
                         <Route path={["/index", "/index.html"]} component={Home} />
+                        <Guarded path="/characters/new"><NewCharForm /></Guarded>
+                        <Route path="/characters" component={CharMenu} />
                         <Route path="/login/forgot" component={ForgotPassword} />
                         <Route path="/login" component={Login} />
                         <Route path="/register" component={Register} />
