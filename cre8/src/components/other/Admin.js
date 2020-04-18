@@ -98,7 +98,7 @@ const AdminSettings = (props) => {
                                             </div>
                                         }
                                     </td>
-                                    <td><span>{datum.email}</span></td>
+                                    <td><span>{<a href={`mailto:${datum.email}`}>{datum.email}</a>}</span></td>
                                 </tr>
                             );
                         })}
