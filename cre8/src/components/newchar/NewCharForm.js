@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Redirect } from 'react-router-dom';
+import { Redirect, Link } from 'react-router-dom';
 import fb from '../../fbConfig';
 import useGlobal from '../../hooks/useGlobal';
 
@@ -70,9 +70,9 @@ const NewCharForm = () => {
             if (allSlugs.indexOf(inputs.slug) >= 0) {
                 setErrorMessage("Slug in use.");
             } else {
-                const fields = Object.keys(inputs).filter(field => field.startsWith("select-"));
+                const fields = Object.keys(inputs).filter(field => field.startsWith("select_"));
                 const campaignsChecked = fields.map(field => (
-                    field.split("-")[1]
+                    field.split("_")[1]
                 ));
                 db.collection("characters").doc(inputs.slug).set({
                     owner: userInfo.uid,
@@ -123,7 +123,7 @@ const NewCharForm = () => {
                             <li key="standard">
                                 <input
                                     type="checkbox"
-                                    id={`select-standard`}
+                                    id={`select_standard`}
                                     onChange={handleInputChange}
                                     value="1"
                                 />
@@ -134,7 +134,7 @@ const NewCharForm = () => {
                         <li key="public">
                             <input
                                 type="checkbox"
-                                id={`select-public`}
+                                id={`select_public`}
                                 onChange={handleInputChange}
                                 value="1"
                             />
@@ -144,7 +144,7 @@ const NewCharForm = () => {
                             <li key={campaign.id}>
                                 <input
                                     type="checkbox"
-                                    id={`select-${campaign.id}`}
+                                    id={`select_${campaign.id}`}
                                     onChange={handleInputChange}
                                     value="1"
                                 />
@@ -152,6 +152,7 @@ const NewCharForm = () => {
                             </li>
                         ))}
                     </ul>
+                    <p>Create new campaigns under <Link to="/user/settings">User Settings</Link>.</p>
                 </div>
             </div>
             <button type="submit">Save Character</button>

@@ -9,6 +9,7 @@ const CharMenu = () => {
     const [userInfo] = useGlobal("user");
 
     const [characters, setCharacters] = useState([]);
+    const [orphans, setOrphans] = useState([]);
     const [campaigns, setCampaigns] = useState([]);
     const charStream = useRef(null);
     const campaignStream = useRef(null);
@@ -43,35 +44,43 @@ const CharMenu = () => {
         };
     }, [db, userInfo]);
 
+    useEffect(() => {
+        if (userInfo) {
+            setOrphans(characters.filter(charData => charData.campaigns.length === 0 && charData.owner === userInfo.uid));
+        }
+    }, [characters, userInfo])
+
     return(
         <div className="main normal-padding">
             <h1>Character Library</h1>
-            <div className="my-button">
+            <div className="my-button spacing-14px">
                 <Link to="/characters/new">New Character</Link>
             </div>
-            {campaigns.length ? <h2>Your Campaign Characters</h2> : null}
-            {campaigns.map(campaignObj => (
-                <section key={campaignObj.id}>
-                    <h3>{campaignObj.name}</h3>
-                    {characters.filter(charData => charData.campaigns.indexOf(campaignObj.id) >= 0)
-                        .map(charData => {
-                            const toAddress = `/characters/${charData.id}`;
-                            return(
-                                <p>
-                                    <Link to={toAddress}>{charData.id}</Link>
-                                </p>
-                            );
-                        })}
-                </section>
-            ))}
+            <section>
+                {campaigns.length ? <h2>Your Campaign Characters</h2> : null}
+                {campaigns.map(campaignObj => (
+                    <section key={campaignObj.id}>
+                        <h3>{campaignObj.name}</h3>
+                        {characters.filter(charData => charData.campaigns.indexOf(campaignObj.id) >= 0)
+                            .map(charData => {
+                                const toAddress = `/characters/${charData.id}`;
+                                return(
+                                    <p key={charData.id}>
+                                        <Link to={toAddress}>{charData.name}</Link>
+                                    </p>
+                                );
+                            })}
+                    </section>
+                ))}
+            </section>
             <section>
                 <h2>Standard Characters</h2>
                 {characters.filter(charData => charData.campaigns.indexOf("standard") >= 0)
                     .map(charData => {
                         const toAddress = `/characters/${charData.id}`;
                         return(
-                            <p>
-                                <Link to={toAddress}>{charData.id}</Link>
+                            <p key={charData.id}>
+                                <Link to={toAddress}>{charData.name}</Link>
                             </p>
                         );
                     })}
@@ -88,6 +97,20 @@ const CharMenu = () => {
                         );
                     })}
             </section>
+            {orphans.length ?
+                <section>
+                    <h2>Your Orphaned Characters</h2>
+                    {orphans.map(charData => {
+                        const toAddress = `/characters/${charData.id}`;
+                        return(
+                            <p key={charData.id}>
+                                <Link to={toAddress}>{charData.name}</Link>
+                            </p>
+                        );
+                    })}
+                </section> :
+                null
+            }
         </div>
     );
 }

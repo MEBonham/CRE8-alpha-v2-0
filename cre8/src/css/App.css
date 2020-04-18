@@ -29,14 +29,20 @@
 }
 
 .App .my-button {
-    margin-bottom: 14px;
+    margin-bottom: 2px;
     background-color: #91a6c7;
     border-radius: 12px;
     box-shadow: 2px 2px 6px #111111;
     display: flex;
+    cursor: pointer;
 }
 
-.App .my-button a {
+.App .spacing-14px {
+    margin-bottom: 14px;
+}
+
+.App .my-button a,
+.App .my-button span {
     white-space: nowrap;
     padding: 6px 12px;
     font-size: 1.4rem;
@@ -57,7 +63,8 @@
 .register-form div,
 .login-form div,
 .new-char-form > div,
-.new-char-form > div > div {
+.new-char-form > div > div,
+.manage-campaigns section form div {
     margin-bottom: 14px;
     display: flex;
     flex-direction: column;
@@ -66,7 +73,8 @@
 
 .register-form div label,
 .login-form div label,
-.login-form a {
+.login-form a,
+.manage-campaigns section form div label {
     margin-bottom: 2px;
     font-size: 1.4rem;
 }
@@ -85,12 +93,14 @@
 
 .new-char-form ul {
     list-style: none;
+    margin-bottom: 8px;
 }
 
 .main > section,
 .register-form button,
 .login-form button,
-.new-char-form button {
+.new-char-form button,
+.manage-campaigns section form button {
     margin-bottom: 14px;
 }
 
@@ -106,6 +116,26 @@
     font-size: 1.2rem;
 }
 
+.manage-campaigns .one-campaign div {
+    display: flex;
+    align-items: center;
+}
+
+.manage-campaigns section {
+    margin-bottom: 20px;
+    padding: 10px;
+    border: 1px solid gray;
+}
+
+.manage-campaigns .one-campaign select {
+    margin-right: 6px;
+}
+
+.manage-campaigns section form {
+    display: flex;
+    align-items: flex-end;
+}
+
 .main {
     display: flex;
     flex-direction: column;
@@ -118,7 +148,8 @@
     margin-bottom: 8px;
 }
 
-.main > section h3 {
+.main > section h3,
+.new-char-form h3 {
     font-size: 1.8rem;
     font-weight: bold;
     margin-bottom: 8px;

@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import fb from '../../fbConfig';
 
+import ManageCampaigns from './ManageCampaigns';
 import AdminSettings from './Admin';
 
 const Settings = () => {
@@ -37,6 +38,7 @@ const Settings = () => {
         <div className="normal-padding main">
             <h1>User Settings</h1>
             {rankBadge()}
+            <ManageCampaigns />
             {ownRank === "admin" ? <AdminSettings ownId={ownId} /> : null}
         </div>
     );
