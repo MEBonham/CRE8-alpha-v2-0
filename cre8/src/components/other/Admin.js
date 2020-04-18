@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import fb from '../../fbConfig';
 
-const AdminSettings = () => {
+const AdminSettings = (props) => {
 
     const db = fb.db;
 
@@ -80,20 +80,23 @@ const AdminSettings = () => {
                                 <tr key={datum.id}>
                                     <td><span>{datum.displayName}</span></td>
                                     <td>
-                                        <div className="popout-system">
-                                            <button onClick={togglePopout} id={`openRanks-${i}-button`}>{datum.rank}</button>
-                                            <div className={openPopups[i]}>
-                                                {ranksSystem.map(rankName => {
-                                                    return(
-                                                        <button 
-                                                            key={rankName}
-                                                            onClick={setRank}
-                                                            id={`changeRank-${datum.id}-${rankName}`}
-                                                        >{rankName}</button>
-                                                    );
-                                                })}
+                                        {datum.id === props.ownId ? 
+                                            null :
+                                            <div className="popout-system">
+                                                <button onClick={togglePopout} id={`openRanks-${i}-button`}>{datum.rank}</button>
+                                                <div className={openPopups[i]}>
+                                                    {ranksSystem.map(rankName => {
+                                                        return(
+                                                            <button 
+                                                                key={rankName}
+                                                                onClick={setRank}
+                                                                id={`changeRank-${datum.id}-${rankName}`}
+                                                            >{rankName}</button>
+                                                        );
+                                                    })}
+                                                </div>
                                             </div>
-                                        </div>
+                                        }
                                     </td>
                                     <td><span>{datum.email}</span></td>
                                 </tr>

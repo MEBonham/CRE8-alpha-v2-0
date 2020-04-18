@@ -5,13 +5,15 @@ import AdminSettings from './Admin';
 
 const Settings = () => {
 
-    const [ownRank, setOwnRank] = useState(null);    
+    const [ownId, setOwnId] = useState(null);
+    const [ownRank, setOwnRank] = useState(null);
     useEffect(() => {
         let user = fb.auth.currentUser;
         if (user) {
             const docRef = fb.db.collection("users").doc(user.uid);
             docRef.get()
                 .then((doc) => {
+                    setOwnId(doc.id);
                     setOwnRank(doc.data().rank);
                 })
                 .catch(err => {
@@ -35,7 +37,7 @@ const Settings = () => {
         <div className="normal-padding main">
             <h1>User Settings</h1>
             {rankBadge()}
-            {ownRank === "admin" ? <AdminSettings /> : null}
+            {ownRank === "admin" ? <AdminSettings ownId={ownId} /> : null}
         </div>
     );
 }
