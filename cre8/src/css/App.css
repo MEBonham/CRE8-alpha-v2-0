@@ -12,7 +12,6 @@
 .App .main-envelope {
     display: flex;
     width: 100%;
-    height: calc(100vh - (261 / 1088 * 100%) - 78px);
 }
 
 .App .main-envelope .main-contents {
@@ -116,11 +115,6 @@
     font-size: 1.2rem;
 }
 
-.manage-campaigns .one-campaign div {
-    display: flex;
-    align-items: center;
-}
-
 .manage-campaigns section {
     margin-bottom: 20px;
     padding: 10px;
@@ -129,6 +123,22 @@
 
 .manage-campaigns .one-campaign select {
     margin-right: 6px;
+}
+
+.manage-campaigns .one-campaign div {
+    margin-bottom: 4px;
+    display: flex;
+    align-items: center;
+}
+
+.manage-campaigns .one-campaign ul {
+    display: flex;
+    justify-content: space-around;
+    flex-wrap: wrap;
+}
+
+.manage-campaigns .one-campaign ul li {
+    margin-right: 20px;
 }
 
 .manage-campaigns section form {
