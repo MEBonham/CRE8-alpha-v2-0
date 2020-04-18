@@ -3,6 +3,7 @@ import fb from '../../fbConfig';
 
 const AdminSettings = (props) => {
 
+    const googleAuthManagement = "https://console.firebase.google.com/project/cre8-alpha/authentication/users";
     const db = fb.db;
 
     const ranksSystem = ["peasant", "archon", "admin"];
@@ -104,6 +105,7 @@ const AdminSettings = (props) => {
                         })}
                     </tbody>
                 </table>
+                <p><a href={googleAuthManagement} target="_blank" rel="noopener noreferrer">More control over users</a></p>
             </section>
         </section>
     );
