@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom';
 const Home = () => {
     return(
         <div className="normal-padding main">
-            <h1>Home</h1>
+            <h1>Welcome!</h1>
             <p><Link to="/private">Private Page</Link></p>
         </div>
     );

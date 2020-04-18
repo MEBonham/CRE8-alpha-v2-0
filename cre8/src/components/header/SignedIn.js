@@ -45,7 +45,7 @@ const SignedIn = () => {
             {menuOpen ? 
                 <nav>
                     <p className="blockclick">{fb.auth.currentUser.displayName}</p>
-                    <NavLink to="/user/settings">Settings</NavLink>
+                    <NavLink to="/user/settings" className="blockclick">Settings</NavLink>
                     <p onClick={handleLogout} className="blockclick logout">Logout</p>
                 </nav> : null}
         </div>

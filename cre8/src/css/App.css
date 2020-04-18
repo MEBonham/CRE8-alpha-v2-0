@@ -53,6 +53,7 @@
     font-size: 1.4rem;
 }
 
+.main > section,
 .register-form button,
 .login-form button {
     margin-bottom: 14px;
@@ -69,6 +70,60 @@
     font-size: 1.2rem;
 }
 
-.main p {
+.main > section h2 {
+    font-size: 2rem;
+    font-weight: bold;
+    margin-bottom: 8px;
+}
+
+.main > section h3 {
+    font-size: 1.8rem;
+    font-weight: bold;
+    margin-bottom: 8px;
+}
+
+.main p,
+.main .user-management-table {
     font-size: 1.4rem;
+}
+
+.main .user-management-table tr {
+    margin-bottom: 4px;
+    padding-bottom: 4px;
+    border-bottom: 1px solid gray;
+}
+
+.main .user-management-table th {
+    font-weight: bold;
+}
+
+.main .user-management-table th,
+.main .user-management-table td {
+    padding: 0 20px 7px 0;
+}
+
+.main .user-management-table td .popout-system {
+    width: 70px;
+    height: 16px;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+}
+
+.main .user-management-table td .popout {
+    display: none;
+}
+
+.main .user-management-table td .popout.open {
+    display: flex;
+    position: relative;
+    background-color: #666666;
+    border: 2px solid #444444;
+    border-radius: 2px;
+    z-index: 1;
+}
+
+.main .user-management-table td .popout.open button {
+    margin: 0 1px;
 }

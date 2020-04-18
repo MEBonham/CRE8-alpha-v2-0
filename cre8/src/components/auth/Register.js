@@ -16,11 +16,10 @@ const Register = () => {
     }, [ navHistory, returnToHistory ])
 
     const [user] = useGlobal("user");
-    const stream = useRef(null);
     const [prevUsernames, setPrevUserNames] = useState([]);
     const [errorMessage, setErrorMessage] = useState("");
+    
     let unsubscribe = false;
-
     useEffect(() => {
         if (unsubscribe) {
             return () => {
@@ -31,6 +30,7 @@ const Register = () => {
 
     const db = fb.db;
 
+    const stream = useRef(null);
     useEffect(() => {
         stream.current = db.collection("users")
             .onSnapshot(querySnapshot => {
