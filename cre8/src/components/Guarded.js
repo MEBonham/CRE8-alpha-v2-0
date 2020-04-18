@@ -8,7 +8,7 @@ const Guarded = ({ children, ...rest }) => {
 
     let component = userInfo ? 
         <Route {...rest}>
-            children
+            {children}
         </Route> : 
         <Redirect to="/login" />
     return (component);

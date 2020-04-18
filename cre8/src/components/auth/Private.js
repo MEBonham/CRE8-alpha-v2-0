@@ -2,7 +2,11 @@ import React from 'react';
 
 const Private = () => {
 
-    return (<p>You shouldn't be seeing this.</p>);
+    return (
+        <div className="normal-padding main">
+            <p>You should only see this if signed in. Just for testing purposes.</p>
+        </div>
+    );
 }
 
 export default Private;

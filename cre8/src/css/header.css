@@ -21,7 +21,10 @@
 }
 
 .App > header .banner-contents h1 {
+    border-radius: 4px;
     font-size: 3rem;
+    background-color: rgba(255, 255, 255, 0.3);
+    box-shadow: 0 0 6px rgba(255, 255, 255, 0.5);
     text-shadow: 1px 1px 8px white;
 }
 
@@ -39,11 +42,14 @@
     justify-content: flex-start;
     align-items: flex-end;
     position: relative;
-    z-index: 1;
 }
 
 .App > header .banner-contents .profile img {
     margin-left: 14px;
+}
+
+.App > header .banner-contents .profile.signedin img {
+    box-shadow: 0 0 2px #bac9e0;
 }
 
 .App > header .banner-contents .nav-toggle,
@@ -53,6 +59,7 @@
     border-radius: 50%;
     background-color: #aaaaaa;
     cursor: pointer;
+    z-index: 1;
 }
 
 .App > header .nav-dropdown nav,
@@ -66,6 +73,7 @@
     border: 2px solid #464646;
     border-radius: 6px;
     padding: 4px 0;
+    z-index: 2;
 }
 
 .App > header .nav-dropdown nav a,
@@ -74,11 +82,12 @@
     padding: 4px 12px;
     font-size: 1.2rem;
     text-align: right;
+    cursor: pointer;
 }
 
 .App > header .nav-dropdown nav a:hover,
 .App > header .profile nav a:hover,
-.App > header .profile.signedin nav p:hover {
+.App > header .profile.signedin nav p.logout:hover {
     background-color: #cccccc;
 }
 

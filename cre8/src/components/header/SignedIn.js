@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { NavLink } from 'react-router-dom';
+import fb from '../../fbConfig';
 
 import profileButton from '../../media/profile-icon.png';
 
@@ -34,13 +35,18 @@ const SignedIn = () => {
         };
     }, [])
 
+    const handleLogout = () => {
+        fb.auth.signOut();
+    }
+
     return(
         <div className="profile signedin">
             <img className="profile-button" onClick={clickToggle} src={profileButton} alt="User Menu" />
             {menuOpen ? 
                 <nav>
+                    <p className="blockclick">{fb.auth.currentUser.displayName}</p>
                     <NavLink to="/user/settings">Settings</NavLink>
-                    <p>Logout</p>
+                    <p onClick={handleLogout} className="blockclick logout">Logout</p>
                 </nav> : null}
         </div>
     );

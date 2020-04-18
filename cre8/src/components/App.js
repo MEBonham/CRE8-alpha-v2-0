@@ -7,6 +7,7 @@ import Header from './header/Header';
 import Footer from './footer/Footer';
 import Guarded from './Guarded';
 import Home from './Home';
+import ForgotPassword from './auth/ForgotPassword';
 import Login from './auth/Login';
 import Register from './auth/Register';
 import Private from './auth/Private';
@@ -15,25 +16,26 @@ import '../css/App.css';
 
 const App = () => {
     const [, setUserInfo] = useGlobal("user");
-
-    const { pathname } = useLocation();
-    const scrollContainer = useRef(null);
-
+    const [firstLoad, setFirstLoad] = useState(true);
     const [bodyHeight, setBodyHeight] = useState(900);
     const [headerHeight, setHeaderHeight] = useState(200);
     const styleObj = {height: (bodyHeight - headerHeight - 20) + "px"};
+    useEffect(() => {
+        if (firstLoad) {
+            fb.auth.onAuthStateChanged(user => {
+                    setUserInfo(user);
+            });
+            setBodyHeight(document.querySelector("body").offsetHeight);
+            setHeaderHeight(document.querySelector(".main-page-header").offsetHeight);
+            setFirstLoad(false);
+        }
+    }, [firstLoad, setUserInfo]);
 
+    const { pathname } = useLocation();
+    const scrollContainer = useRef(null);
     useEffect(() => {
         scrollContainer.current.scroll(0, 0);
     }, [pathname]);
-
-    useEffect(() => {
-        fb.auth.onAuthStateChanged(user => {
-            setUserInfo(user);
-        });
-        setBodyHeight(document.querySelector("body").offsetHeight);
-        setHeaderHeight(document.querySelector(".main-page-header").offsetHeight);
-    }, []);
 
     return (
         <div className="App">
@@ -43,13 +45,14 @@ const App = () => {
                     <Switch>
                         <Route exact path="/" component={Home} />
                         <Route path={["/index", "/index.html"]} component={Home} />
+                        <Route path="/login/forgot" component={ForgotPassword} />
                         <Route path="/login" component={Login} />
                         <Route path="/register" component={Register} />
                         <Guarded path="/private"><Private /></Guarded>
                     </Switch>
                 </div>
                 <div className="main-sidebar">
-
+                    
                 </div>
             </div>
             <Footer />
