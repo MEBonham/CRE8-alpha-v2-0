@@ -105,13 +105,13 @@ export const updateGoodSave = (statsObj) => {
         ...statsObj,
         fortitude_base_total,
         fortitude_mods,
-        fortitude_mods_total: heroic_bonus + mineModifiers(fortitude_mods),
+        fortitude_total: heroic_bonus + mineModifiers(fortitude_mods),
         reflex_base_total,
         reflex_mods,
-        reflex_mods_total: heroic_bonus + mineModifiers(reflex_mods),
+        reflex_total: heroic_bonus + mineModifiers(reflex_mods),
         willpower_base_total,
         willpower_mods,
-        willpower_mods_total: heroic_bonus + mineModifiers(willpower_mods),
+        willpower_total: heroic_bonus + mineModifiers(willpower_mods),
     };
     if (fortitude_base_total !== origFortBase) {
         result = updateVpMax(result);
@@ -119,20 +119,68 @@ export const updateGoodSave = (statsObj) => {
     return result;
 }
 
+const updateHeroicBonus = (statsObj) => {
+    const hb = statsObj.heroic_bonus;
+
+    const fortitude_base_total = hb + mineModifiers({ base: statsObj.fortitude_mods.base });
+    const fortitude_total = hb + mineModifiers(statsObj.fortitude_mods);
+    const reflex_base_total = hb + mineModifiers({ base: statsObj.reflex_mods.base });
+    const reflex_total = hb + mineModifiers(statsObj.reflex_mods);
+    const willpower_base_total = hb + mineModifiers({ base: statsObj.willpower_mods.base });
+    const willpower_total = hb + mineModifiers(statsObj.willpower_mods);
+
+    const fighting_level = hb + statsObj.fighting_level_kits_total;
+    const caster_level = hb + statsObj.caster_level_kits_total;
+    const coast_number = 6 + hb + statsObj.coast_number_kits_total;
+
+    let result = {
+        ...statsObj,
+        fortitude_base_total,
+        fortitude_total,
+        reflex_base_total,
+        reflex_total,
+        willpower_base_total,
+        willpower_total,
+        fighting_level,
+        caster_level,
+        coast_number
+    };
+    result = updateVpMax(result);
+    result = updateMpMax(result);
+    // result = updateSpellcraft(result);
+    return result;
+}
+
 const updateLevel = (statsObj) => {
-    // const origHeroicBonus = statsObj.heroic_bonus;
+    const origHeroicBonus = statsObj.heroic_bonus;
     const heroic_bonus = Math.min(4, Math.floor(statsObj.level / 2));
     const level_max8 = Math.min(8, statsObj.level);
+    const awesome_check = 4 + level_max8 + mineModifiers(statsObj.awesome_mods);
     let result = {
         ...statsObj,
         heroic_bonus,
-        level_max8
+        level_max8,
+        awesome_check
     };
     result = updateVpMax(result);
-    // if (heroic_bonus !== origHeroicBonus) {
-    //     result = updateHeroicBonus(result);
-    // }
+    if (heroic_bonus !== origHeroicBonus) {
+        result = updateHeroicBonus(result);
+    }
     return result;
+}
+
+const updateMpMax = (statsObj) => {
+    const origMpMax = statsObj.mp_max;
+
+    const mp_mods_total = mineModifiers(statsObj.mp_mods);
+    const mp_max = statsObj.caster_level + mp_mods_total;
+    const mp = Math.max(0, statsObj.mp + (mp_max - origMpMax));
+    return {
+        ...statsObj,
+        mp_mods_total,
+        mp_max,
+        mp
+    };
 }
 
 const updateVpMax = (statsObj) => {

@@ -155,7 +155,98 @@ const Configure = () => {
                             </div>
                         </section>
                         <section className="sublevels-breakdown">
-
+                            <div className="column-envelope breakdown">
+                                <div className="fill-in">
+                                    <p className="big-num">{cur.stats.fighting_level}</p>
+                                    <p className="caption">Fighting<br />Level</p>
+                                </div>
+                                <div className="equals-symbol">
+                                    =
+                                </div>
+                                <div className="fill-in">
+                                    <p className="big-num">{cur.stats.heroic_bonus}</p>
+                                    <p className="caption">1/2-Level</p>
+                                </div>
+                                <div className="plus-symbol">
+                                    +
+                                </div>
+                                <div className="fill-in">
+                                    <p className="big-num">{cur.stats.fighting_level_kits_total}</p>
+                                    <p className="caption">Kits<br />boosts</p>
+                                </div>
+                            </div>
+                            <div className="column-envelope breakdown">
+                                <div className="fill-in">
+                                    <p className="big-num">{cur.stats.caster_level}</p>
+                                    <p className="caption">Caster<br />Level</p>
+                                </div>
+                                <div className="equals-symbol">
+                                    =
+                                </div>
+                                <div className="fill-in">
+                                    <p className="big-num">{cur.stats.heroic_bonus}</p>
+                                    <p className="caption">1/2-Level</p>
+                                </div>
+                                <div className="plus-symbol">
+                                    +
+                                </div>
+                                <div className="fill-in">
+                                    <p className="big-num">{cur.stats.caster_level_kits_total}</p>
+                                    <p className="caption">Kits<br />boosts</p>
+                                </div>
+                            </div>
+                            <div className="column-envelope breakdown">
+                                <div className="fill-in">
+                                    <p className="big-num">{cur.stats.coast_number}</p>
+                                    <p className="caption">Coast<br />Number</p>
+                                </div>
+                                <div className="equals-symbol">
+                                    =
+                                </div>
+                                <div className="fill-in">
+                                    <p className="big-num">{cur.stats.heroic_bonus}</p>
+                                    <p className="caption">1/2-Level</p>
+                                </div>
+                                <div className="plus-symbol">
+                                    +
+                                </div>
+                                <div className="fill-in">
+                                    <p className="big-num">{cur.stats.coast_number_kits_total}</p>
+                                    <p className="caption">Kits<br />boosts</p>
+                                </div>
+                                <div className="plus-symbol">
+                                    +
+                                </div>
+                                <div>
+                                    <p className="big-num trailing-num">6</p>
+                                </div>
+                            </div>
+                            <div className="column-envelope breakdown">
+                                <div className="fill-in">
+                                    <p className="big-num">{cur.stats.awesome_check >= 0 ? "+" : null}{cur.stats.awesome_check}</p>
+                                    <p className="caption">Awesome<br />Check</p>
+                                </div>
+                                <div className="equals-symbol">
+                                    =
+                                </div>
+                                <div className="fill-in">
+                                    <p className="big-num">{cur.stats.level_max8}</p>
+                                    <p className="caption">Level</p>
+                                </div>
+                                <div className="plus-symbol">
+                                    +
+                                </div>
+                                <div className="fill-in">
+                                    <p className="big-num">{cur.stats.awesome_mods_total}</p>
+                                    <p className="caption">Misc.<br />bonuses</p>
+                                </div>
+                                <div className="plus-symbol">
+                                    +
+                                </div>
+                                <div>
+                                    <p className="big-num trailing-num">4</p>
+                                </div>
+                            </div>
                         </section>
                     </div>
                 </section>

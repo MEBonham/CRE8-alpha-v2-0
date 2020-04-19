@@ -53,7 +53,6 @@ const EditWrapper = (props) => {
     const setEditStatFctRef = useRef(setEditStatFct);
     const setCurRef = useRef(setCur);
     useEffect(() => {
-        console.log("flag");
         const switchKey = (key, newVal) => {
             switch (key) {
                 case "name":

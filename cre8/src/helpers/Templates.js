@@ -2,10 +2,19 @@
 export const charDefault = {
     activeTab: "configure",
     stats: {
+        awesome_check: 5,
+        awesome_mods: {},
+        awesome_mods_total: 0,
         caster_level: 0,
         caster_level_kits: {},
         caster_level_kits_total: 0,
+        coast_number: 6,
+        coast_number_kits: {},
+        coast_number_kits_total: 0,
         epithet: "Adventurer",
+        fighting_level: 0,
+        fighting_level_kits: {},
+        fighting_level_kits_total: 0,
         fortitude_base_total: 2,
         fortitude_mods: {
             base: {
@@ -15,7 +24,7 @@ export const charDefault = {
                 }
             }
         },
-        fortitude_mods_total: 2,
+        fortitude_total: 2,
         good_save: "fortitude",
         heroic_bonus: 0,
         level: 1,
