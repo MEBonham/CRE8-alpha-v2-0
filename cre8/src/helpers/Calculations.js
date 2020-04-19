@@ -1,11 +1,13 @@
+import gc from './GameConstants';
+
 const determineLevel = (xp_total) => {
     let calcLevel = 0;
     let xpThreshold = 0;
     while (xp_total >= xpThreshold) {
         calcLevel += 1;
-        let increment = 100 * calcLevel;
-        if (increment > 800) {
-            increment = 500;
+        let increment = gc.xp_increment_per_level * calcLevel;
+        if (increment > gc.max_level_pre_epic * gc.xp_increment_per_level) {
+            increment = gc.epic_level_xp_increment;
         }
         xpThreshold += increment;
     }
@@ -62,7 +64,7 @@ export const updateGoodSave = (statsObj) => {
         case "fortitude":
             fortMod["Original Good Save"] = {
                 level: 1,
-                num: 2
+                num: gc.good_save_boost
             };
             delete refMod["Original Good Save"];
             delete willMod["Original Good Save"];
@@ -71,7 +73,7 @@ export const updateGoodSave = (statsObj) => {
             delete fortMod["Original Good Save"];
             refMod["Original Good Save"] = {
                 level: 1,
-                num: 2
+                num: gc.good_save_boost
             };
             delete willMod["Original Good Save"];
             break;
@@ -80,7 +82,7 @@ export const updateGoodSave = (statsObj) => {
             delete refMod["Original Good Save"];
             willMod["Original Good Save"] = {
                 level: 1,
-                num: 2
+                num: gc.good_save_boost
             };
             break;
         default:
@@ -131,7 +133,7 @@ const updateHeroicBonus = (statsObj) => {
 
     const fighting_level = hb + statsObj.fighting_level_kits_total;
     const caster_level = hb + statsObj.caster_level_kits_total;
-    const coast_number = 6 + hb + statsObj.coast_number_kits_total;
+    const coast_number = gc.base_coast_number + hb + statsObj.coast_number_kits_total;
 
     let result = {
         ...statsObj,
@@ -153,9 +155,9 @@ const updateHeroicBonus = (statsObj) => {
 
 const updateLevel = (statsObj) => {
     const origHeroicBonus = statsObj.heroic_bonus;
-    const heroic_bonus = Math.min(4, Math.floor(statsObj.level / 2));
-    const level_max8 = Math.min(8, statsObj.level);
-    const awesome_check = 4 + level_max8 + mineModifiers(statsObj.awesome_mods);
+    const heroic_bonus = Math.min(gc.max_level_pre_epic / 2, Math.floor(statsObj.level / 2));
+    const level_max8 = Math.min(gc.max_level_pre_epic, statsObj.level);
+    const awesome_check = gc.base_awesome_bonus + level_max8 + mineModifiers(statsObj.awesome_mods);
     let result = {
         ...statsObj,
         heroic_bonus,
@@ -187,7 +189,7 @@ const updateVpMax = (statsObj) => {
     const origVpMax = statsObj.vp_max;
     
     const vp_kits_total = mineKits(statsObj.vp_kits);
-    const vp_max = 5 + (2 * statsObj.level_max8) + vp_kits_total + statsObj.fortitude_base_total;
+    const vp_max = gc.base_vitality_points + (2 * statsObj.level_max8) + vp_kits_total + statsObj.fortitude_base_total;
     const vp = Math.max(0, statsObj.vp + (vp_max - origVpMax));
     return {
         ...statsObj,
@@ -198,7 +200,7 @@ const updateVpMax = (statsObj) => {
 }
 
 const updateXP = (statsObj) => {
-    const xpPerParcel = 30;
+    const xpPerParcel = gc.xp_per_parcel;
 
     const origLevel = statsObj.level;
     

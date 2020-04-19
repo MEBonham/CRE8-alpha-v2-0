@@ -43,6 +43,7 @@ export const charDefault = {
         rp_max: 4,
         rp_mods: {},
         rp_mods_total: 0,
+        trained_skills_num: 2,
         vp: 9,
         vp_kits: {},
         vp_kits_total: 0,
