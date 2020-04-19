@@ -15,6 +15,8 @@ const CharSheetMain = () => {
     const { slug } = useParams();
     const [userInfo] = useGlobal("user");
     const [cur, setCur] = useGlobal("cur");
+    const saveIntervalMilliseconds = 60000;
+    const lastSave = useRef(Date.now());
 
     const db = fb.db;
 
@@ -64,7 +66,21 @@ const CharSheetMain = () => {
         if (cur) {
             setCharSheetTab(cur.activeTab);
         }
-    }, [cur])
+        if (db && Date.now() - lastSave.current >= saveIntervalMilliseconds) {
+            const curCopy = {
+                ...cur
+            };
+            const slug = curCopy.id;
+            delete curCopy.id;
+            db.collection("characters").doc(slug).set(curCopy)
+                .then(() => {
+                    lastSave.current = Date.now();
+                })
+                .catch(err => {
+                    console.log("Character autosave unsuccessful:", err);
+                });
+        }
+    }, [cur, db])
     useEffect(() => {
         if (charSheetTab === "play") {
             setTabContents(<Play />);

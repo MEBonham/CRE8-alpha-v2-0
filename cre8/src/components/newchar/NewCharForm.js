@@ -2,7 +2,6 @@ import React, { useState, useEffect, useRef } from 'react';
 import { Redirect, Link } from 'react-router-dom';
 import fb from '../../fbConfig';
 import useGlobal from '../../hooks/useGlobal';
-
 import useForm from '../../hooks/useForm';
 
 const NewCharForm = () => {

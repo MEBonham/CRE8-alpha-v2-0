@@ -6,8 +6,7 @@ const Play = () => {
     return(
         <>
             <header>
-                <h1>{cur.name}</h1>
-                <p>Play</p>
+                <h1 className="char-sheet-name">{cur.name}</h1>
             </header>
         </>
     );

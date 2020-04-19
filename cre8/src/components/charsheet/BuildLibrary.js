@@ -6,8 +6,7 @@ const BuildLibrary = () => {
     return(
         <>
             <header>
-                <h1>{cur.name}</h1>
-                <p>BuildLibrary</p>
+                <h1 className="char-sheet-name">{cur.name}</h1>
             </header>
         </>
     );

@@ -7,7 +7,7 @@ const useForm = (cb) => {
         if (ev) {
             ev.preventDefault();
         }
-        cb();
+        cb(ev);
     }
 
     const handleInputChange = (ev) => {

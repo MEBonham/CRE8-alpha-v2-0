@@ -6,8 +6,7 @@ const Bio = () => {
     return(
         <>
             <header>
-                <h1>{cur.name}</h1>
-                <p>Bio</p>
+                <h1 className="char-sheet-name">{cur.name}</h1>
             </header>
         </>
     );

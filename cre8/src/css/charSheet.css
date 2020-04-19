@@ -5,7 +5,45 @@
     border-radius: 12px 0 12px 12px;
     background-color: #d2b48c;
     background-image: url(../media/paper-texture.png);
+    box-shadow: 1px 1px 5px #111111;
     position: relative;
+}
+
+.parchment .column-envelope {
+    display: flex;
+    align-items: center;
+}
+
+.parchment .column-envelope.space-between {
+    justify-content: space-between;
+}
+
+.parchment .row-envelope {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.parchment .contain-edit {
+    position: relative;
+}
+
+.parchment .editable {
+    text-shadow: 1px 1px 3px rgba(0, 0, 127, 0.2);
+    cursor: pointer;
+}
+
+.parchment .popout-edit {
+    display: none;
+}
+
+.parchment .popout-edit.meb-open {
+    display: flex;
+    position: relative;
+    background-color: #666666;
+    border: 2px solid #444444;
+    border-radius: 2px;
+    z-index: 1;
 }
 
 .char-sheet-tabs {
@@ -13,7 +51,7 @@
     display: flex;
     justify-content: flex-end;
     position: relative;
-    top: -37px;
+    top: -39px;
     right: -1px;
 }
 
@@ -22,6 +60,7 @@
     padding: 4px 10px 5px;
     border-radius: 12px 12px 0 0;
     background-color: #bfa480;
+    box-shadow: 1px -1px 1px #111111;
     font-size: 1.6rem;
     cursor: pointer;
 }
@@ -31,6 +70,40 @@
     background-image: url(../media/paper-texture.png);
 }
 
-.parchment h1 {
+.parchment .right-padding {
+    padding-right: calc(6 / 94 * 100%);
+}
+
+.parchment h1.char-sheet-name {
     font-style: italic;
+    margin-bottom: 6px;
+}
+
+.parchment h2.subtitle {
+    font-size: 2rem;
+    font-weight: bold;
+}
+
+.parchment .stat {
+    font-size: 1.4rem;
+}
+
+.parchment .stat.float-right-element {
+    margin-left: 18px;
+}
+
+.parchment p.big-num {
+    font-size: 2rem;
+}
+
+.parchment .fill-in p {
+    text-align: center;
+}
+
+.parchment .fill-in p.big-num {
+    border-bottom: 1px solid brown;
+}
+
+.parchment .fill-in p.caption {
+    font-size: 1.2rem;
 }
