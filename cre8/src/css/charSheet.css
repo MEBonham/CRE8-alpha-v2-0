@@ -180,6 +180,41 @@
 }
 
 .parchment h3 {
+    margin-bottom: 10px;
     font-size: 1.6rem;
+    font-weight: bold;
+}
+
+.parchment section.trained-skills {
+    margin-bottom: 10px;
+}
+
+.parchment h3.trained-skills {
+    margin-right: 50px;
+}
+
+.parchment .checkbox-bank {
+    flex-grow: 1;
+}
+
+.parchment .checkbox-pair div {
+    display: flex;
+    align-items: center;
+}
+
+.parchment .checkbox-pair div input,
+.parchment table.skill-ranks-assignment select {
+    box-shadow: 0 0 4px rgba(22, 22, 168, 0.4);
+    cursor: pointer;
+}
+
+.parchment .checkbox-pair div span {
+    font-size: 1.1rem;
+    margin-bottom: 2px;
+}
+
+.parchment .skill-ranks-assignment th {
+    padding-right: 8px;
+    font-size: 1.1rem;
     font-weight: bold;
 }

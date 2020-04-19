@@ -49,6 +49,20 @@ const mineParcels = (parcelsObj) => {
     return 0;
 }
 
+export const mineTrainedSkillsRequired = (trainedReqObj) => {
+    const result = [];
+    const sources = Object.keys(trainedReqObj);
+    sources.forEach(source => {
+        const skillsArr = trainedReqObj[source].skills;
+        skillsArr.forEach(skill => {
+            if (!result.includes(skill)) {
+                result.push(skill);
+            }
+        });
+    });
+    return result;
+}
+
 export const updateBaseXp = (statsObj) => {
     return updateXP(statsObj);
 }
@@ -183,6 +197,57 @@ const updateMpMax = (statsObj) => {
         mp_max,
         mp
     };
+}
+
+const updateSkillMods = (statsObj) => {
+    const skill_mods_net = {};
+    const initialVals = {};
+    gc.skills_list.forEach(skill => {
+        initialVals[skill] = {};
+    });
+    const skill_mods = {
+        ...initialVals,
+        ...statsObj.skill_mods
+    };
+    gc.skills_list.forEach(skill => {
+        skill_mods_net[skill] = statsObj.skill_ranks[skill] + mineModifiers(skill_mods[skill]);
+    });
+    return {
+        ...statsObj,
+        skill_mods,
+        skill_mods_net
+    };
+}
+
+export const updateSkillRanks = (statsObj) => {
+    const skill_ranks = {};
+    gc.skills_list.forEach(skill => {
+        if (statsObj.trained_skills.includes(skill)) {
+            skill_ranks[skill] = 2;
+        } else {
+            skill_ranks[skill] = 0;
+        }
+    });
+    for (let i = 0; i < Math.min(statsObj.skill_ranks_history.length, statsObj.level_max8); i++) {
+        const level_history = statsObj.skill_ranks_history[i];
+        level_history.forEach(skill => {
+            skill_ranks[skill] += 1;
+        });
+    }
+    const maxUntrained = statsObj.level_max8;
+    const maxTrained = maxUntrained + gc.trained_skill_extra_ranks;
+    gc.skills_list.forEach(skill => {
+        if (statsObj.trained_skills.includes(skill)) {
+            skill_ranks[skill] = Math.min(skill_ranks[skill], maxTrained);
+        } else {
+            skill_ranks[skill] = Math.min(skill_ranks[skill], maxUntrained);
+        }
+    });
+    let result = {
+        ...statsObj,
+        skill_ranks
+    };
+    return updateSkillMods(result);
 }
 
 const updateVpMax = (statsObj) => {
