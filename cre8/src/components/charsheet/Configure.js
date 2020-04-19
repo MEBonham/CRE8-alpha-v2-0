@@ -89,7 +89,7 @@ const Configure = () => {
                                 +
                             </div>
                             <div>
-                                <p className="big-num">5</p>
+                                <p className="big-num trailing-num">5</p>
                             </div>
                         </div>
                         <div>

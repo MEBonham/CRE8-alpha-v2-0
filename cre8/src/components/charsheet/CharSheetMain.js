@@ -60,6 +60,7 @@ const CharSheetMain = () => {
         };
     }, [db, firstLoad, setCur, slug]);
 
+    const [toSave, setToSave] = useState(false);
     const [charSheetTab, setCharSheetTab] = useState(null);
     const [tabContents, setTabContents] = useState(null);
     useEffect(() => {
@@ -83,6 +84,9 @@ const CharSheetMain = () => {
         }
     }, [cur, db])
     useEffect(() => {
+        if (cur) {
+            setToSave(true);
+        }
         if (charSheetTab === "play") {
             setTabContents(<Play />);
         } else if (charSheetTab === "configure") {
@@ -99,7 +103,6 @@ const CharSheetMain = () => {
             <h1>Loading ...</h1>
         </div>
     );
-    const [toSave, setToSave] = useState(false);
     const toSaveFct = () => {
         setToSave(true);
     }
