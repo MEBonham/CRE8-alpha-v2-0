@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import useGlobal from '../../hooks/useGlobal';
 import useFormGlobalLink from '../../hooks/useFormGlobalLink';
 
@@ -15,8 +15,8 @@ const Configure = () => {
 
     const trainedSkills = useRef([]);
     const trainedSkillsReq = useRef([]);
-    const levelsArray = useRef([]);
-    const upTo5Array = useRef([]);
+    const [levelsArray, setLevelsArray] = useState([]);
+    const [upTo5Array, setUpTo5Array] = useState([]);
     useEffect(() => {
         if (cur) {
             document.querySelector(`#meb_setgoodsave_${cur.stats.good_save}`).parentNode.classList.add("selected");
@@ -32,30 +32,34 @@ const Configure = () => {
                 }
             });
 
-            levelsArray.current = [];
-            upTo5Array.current = [];
+            const tempLevelsArray = [];
+            const tempUpTo5Array = [];
             for (let i = 0; i < cur.stats.level_max8; i++) {
-                levelsArray.current.push(i);
+                tempLevelsArray.push(i);
             }
             for (let i = 0; i < gc.skill_ranks_per_level; i++) {
-                upTo5Array.current.push(i);
+                tempUpTo5Array.push(i);
             }
+            setLevelsArray(tempLevelsArray);
+            setUpTo5Array(tempUpTo5Array);
         }
     }, [cur])
 
     const setGoodSave = (ev) => {
-        const newVal = ev.target.id.split("_")[2];
-        setCur({
-            ...cur,
-            stats: updateGoodSave({
-                ...cur.stats,
-                good_save: newVal
-            })
-        });
-        document.querySelectorAll(".parchment .good-save .my-button").forEach(button => {
-            button.classList.remove("selected");
-        });
-        ev.target.closest("div").classList.add("selected");
+        if (cur) {
+            const newVal = ev.target.id.split("_")[2];
+            setCur({
+                ...cur,
+                stats: updateGoodSave({
+                    ...cur.stats,
+                    good_save: newVal
+                })
+            });
+            document.querySelectorAll(".parchment .good-save .my-button").forEach(button => {
+                button.classList.remove("selected");
+            });
+            ev.target.closest("div").classList.add("selected");
+        }
     }
 
     const trainSkillToggle = (ev) => {
@@ -85,6 +89,33 @@ const Configure = () => {
                     })
                 });
             }
+        }
+    }
+
+    const assignSkillRank = (ev) => {
+        const level = ev.target.id.split("_")[2];
+        const col = ev.target.id.split("_")[3];
+        let skillAdded = ev.target.value;
+        const skillsList = gc.skills_list;
+        if (!skillsList.includes(skillAdded)) {
+            skillAdded = null;
+        }
+        if (cur) {
+            const skill_ranks_history = cur.stats.skill_ranks_history;
+            while (skill_ranks_history[level] === undefined) {
+                skill_ranks_history[level] = [];
+            }
+            while (skill_ranks_history[level].length <= col) {
+                skill_ranks_history[level].push(null);
+            }
+            skill_ranks_history[level][col] = skillAdded;
+            setCur({
+                ...cur,
+                stats: updateSkillRanks({
+                    ...cur.stats,
+                    skill_ranks_history
+                })
+            });
         }
     }
 
@@ -337,12 +368,12 @@ const Configure = () => {
                     <h3 className="skill-ranks">Skill Ranks Assignment</h3>
                     <table className="skill-ranks-assignment">
                         <tbody>
-                            {levelsArray.current.map(level => (
+                            {levelsArray.map(level => (
                                 <tr key={level}>
                                     <th>Level {level + 1}:</th>
-                                    {upTo5Array.current.map(col => (
+                                    {upTo5Array.map(col => (
                                         <td key={col}>
-                                            <select id={`meb_skillrank_${level}_${col}`}>
+                                            <select onChange={assignSkillRank} id={`meb_skillrank_${level}_${col}`}>
                                                 <option value="Select Skill">Select Skill</option>
                                                 {gc.skills_list.map(skill => (
                                                     <option key={skill} value={skill}>{skill}</option>

@@ -204,6 +204,7 @@
 
 .parchment .checkbox-pair div input,
 .parchment table.skill-ranks-assignment select {
+    padding: 0;
     box-shadow: 0 0 4px rgba(22, 22, 168, 0.4);
     cursor: pointer;
 }

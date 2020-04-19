@@ -46,7 +46,7 @@ export const charDefault = {
         skill_mods: {},
         skill_mods_net: {},
         skill_ranks: {},
-        skill_ranks_history: [],
+        skill_ranks_history: {},
         trained_skills: [],
         trained_skills_num: 2,
         trained_skills_required: {},

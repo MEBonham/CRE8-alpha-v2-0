@@ -229,6 +229,7 @@ export const updateSkillRanks = (statsObj) => {
         }
     });
     for (let i = 0; i < Math.min(statsObj.skill_ranks_history.length, statsObj.level_max8); i++) {
+        console.log(statsObj.skill_ranks_history);
         const level_history = statsObj.skill_ranks_history[i];
         level_history.forEach(skill => {
             skill_ranks[skill] += 1;

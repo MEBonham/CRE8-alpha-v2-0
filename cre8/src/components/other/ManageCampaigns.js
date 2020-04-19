@@ -93,8 +93,6 @@ const ManageCampaigns = () => {
         setSelectVals(campaigns.map(() => null));
     }, [campaigns])
     const handleSelectChangeById = (ev) => {
-        // console.log(ev.target.id.split("_")[1]);
-        // console.log(ev.target.value);
         const newArr = selectVals.slice();
         newArr[ev.target.id.split("_")[1]] = ev.target.value;
         setSelectVals(newArr);
@@ -102,7 +100,6 @@ const ManageCampaigns = () => {
     const addNewPlayer = (ev) => {
         const idsArr = ev.target.id.split("_");
         const selectVal = selectVals[idsArr[1]];
-        // console.log(selectVal);
         db.collection("campaigns").doc(idsArr[2]).get()
             .then(doc => {
                 const prevMembers = doc.data().members;
