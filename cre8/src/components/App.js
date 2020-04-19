@@ -8,6 +8,7 @@ import Footer from './footer/Footer';
 import Guarded from './Guarded';
 import Home from './other/Home';
 import NewCharForm from './newchar/NewCharForm';
+import CharSheetMain from './charsheet/CharSheetMain';
 import CharMenu from './other/CharMenu';
 import ForgotPassword from './auth/ForgotPassword';
 import Login from './auth/Login';
@@ -22,7 +23,7 @@ const App = () => {
     const [firstLoad, setFirstLoad] = useState(true);
     const [bodyHeight, setBodyHeight] = useState(900);
     const [headerHeight, setHeaderHeight] = useState(200);
-    const styleObj = {height: (bodyHeight - headerHeight - 20) + "px"};
+    const styleObj = {height: (bodyHeight - headerHeight - 21) + "px"};
     useEffect(() => {
         if (firstLoad) {
             fb.auth.onAuthStateChanged(user => {
@@ -49,6 +50,7 @@ const App = () => {
                         <Route exact path="/" component={Home} />
                         <Route path={["/index", "/index.html"]} component={Home} />
                         <Guarded path="/characters/new"><NewCharForm /></Guarded>
+                        <Route path="/characters/:slug" component={CharSheetMain} />
                         <Route path="/characters" component={CharMenu} />
                         <Route path="/login/forgot" component={ForgotPassword} />
                         <Route path="/login" component={Login} />

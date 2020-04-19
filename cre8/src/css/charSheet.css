@@ -1,0 +1,36 @@
+.parchment {
+    margin-top: 20px;
+    width: 100%;
+    padding: 14px 0 24px 6%;
+    border-radius: 12px 0 12px 12px;
+    background-color: #d2b48c;
+    background-image: url(../media/paper-texture.png);
+    position: relative;
+}
+
+.char-sheet-tabs {
+    width: 100%;
+    display: flex;
+    justify-content: flex-end;
+    position: relative;
+    top: -37px;
+    right: -1px;
+}
+
+.char-sheet-tabs .char-sheet-tab {
+    margin: 0 1px;
+    padding: 4px 10px 5px;
+    border-radius: 12px 12px 0 0;
+    background-color: #bfa480;
+    font-size: 1.6rem;
+    cursor: pointer;
+}
+
+.char-sheet-tabs .char-sheet-tab.active {
+    background-color: #d2b48c;
+    background-image: url(../media/paper-texture.png);
+}
+
+.parchment h1 {
+    font-style: italic;
+}

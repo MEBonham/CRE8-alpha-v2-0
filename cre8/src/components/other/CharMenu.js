@@ -35,7 +35,9 @@ const CharMenu = () => {
                         ...campaign.data()
                     });
                 });
-                setCampaigns(campaignData.filter(campaignObj => campaignObj.members.indexOf(userInfo.uid) >= 0));
+                if (userInfo) {
+                    setCampaigns(campaignData.filter(campaignObj => campaignObj.members.indexOf(userInfo.uid) >= 0));
+                }
             });
     
         return () => {
