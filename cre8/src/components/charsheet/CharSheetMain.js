@@ -17,13 +17,13 @@ const CharSheetMain = () => {
     const { slug } = useParams();
     const [userInfo] = useGlobal("user");
     const [cur, setCur] = useGlobal("cur");
-    const saveIntervalMilliseconds = 60000;
+    const saveIntervalMilliseconds = 500;
     const lastSave = useRef(Date.now());
 
     const db = fb.db;
 
     const [campaigns, setCampaigns] = useState([]);
-    const [firstLoad, setFirstLoad] = useState(true);
+    const firstLoad = useRef(true);
     const campaignStream = useRef(null);
     const charStream = useRef(null);
     useEffect(() => {
@@ -38,7 +38,7 @@ const CharSheetMain = () => {
                 setCampaigns(campaignInfo);
             });
         
-        if (firstLoad) {
+        if (slug && firstLoad.current) {
             charStream.current = db.collection("characters").doc(slug)
                 // .onSnapshot(doc => {
                 .get().then(doc => {
@@ -52,7 +52,7 @@ const CharSheetMain = () => {
                         id: slug
                     }
                     setCur(docDefaulted);
-                    setFirstLoad(false);
+                    firstLoad.current = false;
                 });
         }
     
@@ -69,7 +69,7 @@ const CharSheetMain = () => {
         if (cur) {
             setCharSheetTab(cur.activeTab);
         }
-        if (db && Date.now() - lastSave.current >= saveIntervalMilliseconds) {
+        if (db && cur && Date.now() - lastSave.current >= saveIntervalMilliseconds) {
             const curCopy = {
                 ...cur
             };

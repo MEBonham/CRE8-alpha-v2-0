@@ -24,10 +24,11 @@
     align-items: center;
 }
 
-.parchment .contain-edit {
+.parchment .meb-contain-edit {
     display: flex;
     flex-direction: column;
     align-items: flex-start;
+    position: relative;
 }
 
 .parchment .editable {
@@ -35,20 +36,22 @@
     cursor: pointer;
 }
 
-.parchment .popout-edit {
+.parchment .meb-popout-edit {
     display: none;
 }
 
-.parchment .popout-edit.meb-open {
+.parchment .meb-popout-edit.meb-open {
     padding: 0 1px;
     display: flex;
     background-color: #666666;
     border: 2px solid #444444;
     border-radius: 2px;
+    position: absolute;
     z-index: 1;
 }
 
-.parchment .popout-edit.meb-open input {
+.parchment .meb-popout-edit.meb-open input {
+    width: 120px;
     margin-right: 2px;
 }
 
@@ -91,7 +94,12 @@
     margin-bottom: 6px;
 }
 
+.parchment .meb-contain-edit h1.editable {
+    display: inline-block;
+}
+
 .parchment h2.subtitle {
+    display: flex;
     font-size: 2rem;
     font-weight: bold;
 }
@@ -106,6 +114,10 @@
 
 .parchment .stat.float-right-element {
     margin-left: 18px;
+}
+
+.parchment .float-left-element-space {
+    margin-right: 6px;
 }
 
 .parchment .column-envelope.breakdown {
