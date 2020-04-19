@@ -10,10 +10,14 @@ const Configure = () => {
         const valHolderId = `#meb_editform_${key}`;
         const el = document.querySelector(valHolderId);
         const prevClasses = el.classList;
-        if (prevClasses.contains("meb_open")) {
-            el.classList.remove("meb_open");
+        if (prevClasses.contains("meb-open")) {
+            el.classList.remove("meb-open");
         } else {
-            el.classList.add("meb_open");
+            const otherOpen = document.querySelectorAll(".meb-open");
+            el.classList.add("meb-open");
+            otherOpen.forEach(openForm => {
+                openForm.classList.remove("meb-open");
+            });
         }
     }
 
@@ -28,7 +32,7 @@ const Configure = () => {
                     [key]: newVal
                 });
         }
-        document.getElementById(ev.target.id).classList.remove("meb_open");
+        document.getElementById(ev.target.id).classList.remove("meb-open");
     }
     const { inputs, handleInputChange, handleSubmit } = useForm(editStat);
 
