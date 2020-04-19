@@ -1,16 +1,15 @@
 import React, { useEffect, useRef } from 'react';
 import useGlobal from '../../hooks/useGlobal';
 
+import { updateBaseXp } from '../../helpers/Calculations';
+
 const EditWrapper = (props) => {
     const [cur, setCur] = useGlobal("cur");
     const [, setToggleEditingFct] = useGlobal("toggleEditingFct");
-    // const [clearedForEditing] = useGlobal("clearedForEditing");
     const [, setEditStatFct] = useGlobal("editStatFct");
     const [, setEscFormFct] = useGlobal("escFormFct");
-    // const [currentInputs] = useGlobal("currentInputs");
     
     const firstLoad = useRef(true);
-    // const clearedForEditingRef = useRef(false);
     useEffect(() => {
         if (firstLoad.current) {
             setEscFormFct((ev) => {
@@ -25,33 +24,31 @@ const EditWrapper = (props) => {
             });
 
             setToggleEditingFct((ev) => {
+                console.log(ev.target);
                 const key = ev.target.id.split("_")[2];
-                const valHolderId = `#meb_editform_${key}`;
-                const el = document.querySelector(valHolderId);
-                const prevClasses = el.classList;
-                if (prevClasses.contains("meb-open")) {
-                    el.classList.remove("meb-open");
-                } else {
-                    const otherOpen = document.querySelectorAll(".meb-open");
-                    // if (clearedForEditingRef.current) el.classList.add("meb-open");
-                    el.classList.add("meb-open");
-                    el.querySelector(`#meb_editval_${key}`).focus();
-
-                    el.style.top = `${el.previousSibling.clientHeight + 1}px`;
-                    el.style.left = `${(el.previousSibling.clientWidth - el.offsetWidth) / 2}px`;
-                    otherOpen.forEach(openForm => {
-                        openForm.classList.remove("meb-open");
-                    });
+                if (key) {
+                    const valHolderId = `#meb_editform_${key}`;
+                    const el = document.querySelector(valHolderId);
+                    const prevClasses = el.classList;
+                    if (prevClasses.contains("meb-open")) {
+                        el.classList.remove("meb-open");
+                    } else {
+                        const otherOpen = document.querySelectorAll(".meb-open");
+                        el.classList.add("meb-open");
+                        el.querySelector(`#meb_editval_${key}`).focus();
+    
+                        el.style.top = `${el.previousSibling.clientHeight + 1}px`;
+                        el.style.left = `${(el.previousSibling.clientWidth - el.offsetWidth) / 2}px`;
+                        otherOpen.forEach(openForm => {
+                            openForm.classList.remove("meb-open");
+                        });
+                    }
                 }
             });
             
             firstLoad.current = false;
         }
     })
-
-    // useEffect(() => {
-    //     clearedForEditingRef.current = clearedForEditing;
-    // }, [clearedForEditing])
 
     const setEditStatFctRef = useRef(setEditStatFct);
     const setCurRef = useRef(setCur);
@@ -64,6 +61,14 @@ const EditWrapper = (props) => {
                         ...cur,
                         [key]: newVal
                     };
+                case "xpBase":
+                    return {
+                        ...cur,
+                        stats: updateBaseXp({
+                            ...cur.stats,
+                            xp_base: Math.max(0, newVal)
+                        })
+                    }
                 default:
                     return {
                         ...cur,

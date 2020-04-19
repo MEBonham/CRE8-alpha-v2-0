@@ -75,6 +75,7 @@ a {
     text-decoration: none;
 }
 
-strong {
+strong,
+.bold {
 	font-weight: bold;
 }
