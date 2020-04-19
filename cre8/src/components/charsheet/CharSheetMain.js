@@ -10,6 +10,7 @@ import Configure from './Configure';
 import Bio from './Bio';
 import BuildLibrary from './BuildLibrary';
 import '../../css/charSheet.css';
+import MyButton from '../ui/MyButton';
 
 const CharSheetMain = () => {
     const { slug } = useParams();
@@ -39,7 +40,6 @@ const CharSheetMain = () => {
         if (firstLoad) {
             charStream.current = db.collection("characters").doc(slug)
                 .onSnapshot(doc => {
-                    console.log("flag");
                     const docDefaulted = {
                         ...charDefault,
                         ...doc.data(),
@@ -74,6 +74,7 @@ const CharSheetMain = () => {
             delete curCopy.id;
             db.collection("characters").doc(slug).set(curCopy)
                 .then(() => {
+                    console.log("Saved");
                     lastSave.current = Date.now();
                 })
                 .catch(err => {
@@ -98,6 +99,28 @@ const CharSheetMain = () => {
             <h1>Loading ...</h1>
         </div>
     );
+    const [toSave, setToSave] = useState(false);
+    const toSaveFct = () => {
+        setToSave(true);
+    }
+    useEffect(() => {
+        if (toSave) {
+            const curCopy = {
+                ...cur
+            };
+            const slug = curCopy.id;
+            delete curCopy.id;
+            db.collection("characters").doc(slug).set(curCopy)
+                .then(() => {
+                    setToSave(false);
+                    console.log("Saved");
+                    lastSave.current = Date.now();
+                })
+                .catch(err => {
+                    console.log("Character save unsuccessful:", err);
+                });
+        }
+    }, [cur, db, toSave]);
     const [component, setComponent] = useState(loadComponent.current);
     useEffect(() => {
 
@@ -122,6 +145,9 @@ const CharSheetMain = () => {
                     <div className="parchment">
                         <CharSheetTabs />
                         {tabContents}
+                    </div>
+                    <div className="float-right">
+                        <MyButton fct={toSaveFct}>Save</MyButton>
                     </div>
                 </div>);
             } else {

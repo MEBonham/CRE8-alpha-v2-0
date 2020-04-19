@@ -1,5 +1,5 @@
 .parchment {
-    margin-top: 20px;
+    margin: 20px 0 14px;
     width: 100%;
     padding: 14px 0 24px 6%;
     border-radius: 12px 0 12px 12px;
@@ -25,7 +25,9 @@
 }
 
 .parchment .contain-edit {
-    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
 }
 
 .parchment .editable {
@@ -38,12 +40,22 @@
 }
 
 .parchment .popout-edit.meb-open {
+    padding: 0 1px;
     display: flex;
-    position: relative;
     background-color: #666666;
     border: 2px solid #444444;
     border-radius: 2px;
     z-index: 1;
+}
+
+.parchment .popout-edit.meb-open input {
+    margin-right: 2px;
+}
+
+.float-right {
+    width: 100%;
+    display: flex;
+    justify-content: flex-end;
 }
 
 .char-sheet-tabs {
@@ -84,6 +96,10 @@
     font-weight: bold;
 }
 
+.parchment header header {
+    margin-bottom: 16px;
+}
+
 .parchment .stat {
     font-size: 1.4rem;
 }
@@ -92,8 +108,21 @@
     margin-left: 18px;
 }
 
-.parchment p.big-num {
+.parchment .column-envelope.breakdown {
+    align-items: flex-start;
+    position: relative;
+}
+
+.parchment p.big-num,
+.parchment .equals-symbol,
+.parchment .plus-symbol {
     font-size: 2rem;
+}
+
+.parchment .equals-symbol,
+.parchment .plus-symbol {
+    position: relative;
+    top: -2px;
 }
 
 .parchment .fill-in p {

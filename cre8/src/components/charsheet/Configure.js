@@ -15,6 +15,7 @@ const Configure = () => {
         } else {
             const otherOpen = document.querySelectorAll(".meb-open");
             el.classList.add("meb-open");
+            document.querySelector(`#meb_editval_${key}`).focus();
             otherOpen.forEach(openForm => {
                 openForm.classList.remove("meb-open");
             });
@@ -50,17 +51,18 @@ const Configure = () => {
                     <div className="column-envelope space-between">
                         <h2 className="subtitle">Level {cur.stats.level} <span className="editable">{cur.stats.epithet}</span></h2>
                         <div>
-                            <span className="stat float-right-element editable"><strong>XP: {cur.stats.xp}</strong></span>
+                            <span className="stat float-right-element editable"><strong>Base XP: {cur.stats.xp_base}</strong></span>
+                            <span className="stat float-right-element"><strong>XP: {cur.stats.xp}</strong></span>
                             <span className="stat float-right-element"><strong>Next Level At: {cur.stats.nextLevelAt}</strong></span>
                         </div>
                     </div>
                 </header>
                 <section className="column-envelope space-between">
                     <div className="pools-breakdown">
-                        <div className="column-envelope">
+                        <div className="column-envelope breakdown">
                             <div className="fill-in">
                                 <p className="big-num">{cur.stats.vp_max}</p>
-                                <p className="caption">Vitality Points</p>
+                                <p className="caption">Vitality<br />Points</p>
                             </div>
                             <div className="equals-symbol">
                                 =
@@ -74,14 +76,14 @@ const Configure = () => {
                             </div>
                             <div className="fill-in">
                                 <p className="big-num">{cur.stats.vp_kits_total}</p>
-                                <p className="caption">Kits boosts</p>
+                                <p className="caption">Kits<br />boosts</p>
                             </div>
                             <div className="plus-symbol">
                                 +
                             </div>
                             <div className="fill-in">
                                 <p className="big-num">{cur.stats.fortitude_base_total}</p>
-                                <p className="caption">Base Fortitude</p>
+                                <p className="caption">Base<br />Fortitude</p>
                             </div>
                             <div className="plus-symbol">
                                 +

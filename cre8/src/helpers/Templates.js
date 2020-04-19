@@ -9,6 +9,7 @@ export const charDefault = {
         nextLevelAt: 100,
         vp_kits_total: 0,
         vp_max: 9,
-        xp: 0
+        xp: 0,
+        xp_base: 0
     }
 };
