@@ -13,7 +13,8 @@ const AdminSettings = (props) => {
     const stream = useRef(null);
     useEffect(() => {
         stream.current = db.collection("users")
-            .onSnapshot(querySnapshot => {
+            // .onSnapshot(querySnapshot => {
+            .get().then(querySnapshot => {
                 const userData = [];
                 querySnapshot.forEach(doc => {
                     userData.push({
@@ -24,9 +25,9 @@ const AdminSettings = (props) => {
                 setUsersInfo(userData);
             });
     
-        return () => {
-            stream.current();
-        };
+        // return () => {
+        //     stream.current();
+        // };
     }, [db]);
 
     useEffect(() => {

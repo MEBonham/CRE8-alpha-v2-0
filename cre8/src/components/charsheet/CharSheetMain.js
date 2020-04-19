@@ -5,6 +5,7 @@ import useGlobal from '../../hooks/useGlobal';
 
 import { charDefault } from '../../helpers/Templates';
 import CharSheetTabs from './CharSheetTabs';
+import EditWrapper from './EditWrapper';
 import Play from './Play';
 import Configure from './Configure';
 import Bio from './Bio';
@@ -28,8 +29,8 @@ const CharSheetMain = () => {
     useEffect(() => {
         
         campaignStream.current = db.collection("campaigns")
-            .onSnapshot(querySnapshot => {
-                // console.log(querySnapshot);
+            //.onSnapshot(querySnapshot => {
+            .get().then(querySnapshot => {
                 const campaignInfo = {};
                 querySnapshot.forEach(campaign => {
                     campaignInfo[campaign.id] = campaign.data();
@@ -39,7 +40,8 @@ const CharSheetMain = () => {
         
         if (firstLoad) {
             charStream.current = db.collection("characters").doc(slug)
-                .onSnapshot(doc => {
+                // .onSnapshot(doc => {
+                .get().then(doc => {
                     const docDefaulted = {
                         ...charDefault,
                         ...doc.data(),
@@ -54,10 +56,10 @@ const CharSheetMain = () => {
                 });
         }
     
-        return () => {
-            campaignStream.current();
-            charStream.current();
-        };
+        // return () => {
+        //     campaignStream.current();
+        //     charStream.current();
+        // };
     }, [db, firstLoad, setCur, slug]);
 
     const [toSave, setToSave] = useState(false);
@@ -147,7 +149,9 @@ const CharSheetMain = () => {
                 setComponent(<div className="main normal-padding">
                     <div className="parchment">
                         <CharSheetTabs />
-                        {tabContents}
+                        <EditWrapper>
+                            {tabContents}
+                        </EditWrapper>
                     </div>
                     <div className="float-right">
                         <MyButton fct={toSaveFct}>Save</MyButton>

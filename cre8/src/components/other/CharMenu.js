@@ -15,7 +15,8 @@ const CharMenu = () => {
     const campaignStream = useRef(null);
     useEffect(() => {
         charStream.current = db.collection("characters")
-            .onSnapshot(querySnapshot => {
+            // .onSnapshot(querySnapshot => {
+            .get().then(querySnapshot => {
                 const charsData = [];
                 querySnapshot.forEach(doc => {
                     charsData.push({
@@ -27,7 +28,8 @@ const CharMenu = () => {
             });
         
         campaignStream.current = db.collection("campaigns")
-            .onSnapshot(querySnapshot => {
+            // .onSnapshot(querySnapshot => {
+            .get().then(querySnapshot => {
                 const campaignData = [];
                 querySnapshot.forEach(campaign => {
                     campaignData.push({
@@ -40,10 +42,10 @@ const CharMenu = () => {
                 }
             });
     
-        return () => {
-            charStream.current();
-            campaignStream.current();
-        };
+        // return () => {
+        //     charStream.current();
+        //     campaignStream.current();
+        // };
     }, [db, userInfo]);
 
     useEffect(() => {

@@ -33,7 +33,8 @@ const Register = () => {
     const stream = useRef(null);
     useEffect(() => {
         stream.current = db.collection("users")
-            .onSnapshot(querySnapshot => {
+            // .onSnapshot(querySnapshot => {
+            .get().then(querySnapshot => {
                 const usernames = [];
                 querySnapshot.forEach(doc => {
                     usernames.push(doc.data().displayName);
@@ -41,9 +42,9 @@ const Register = () => {
                 setPrevUserNames(usernames);
             });
     
-        return () => {
-            stream.current();
-        };
+        // return () => {
+        //     stream.current();
+        // };
     }, [db]);
 
     const addUserToDb = () => {

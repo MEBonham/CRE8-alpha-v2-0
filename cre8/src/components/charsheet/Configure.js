@@ -1,44 +1,19 @@
+// import React, { useEffect } from 'react';
 import React from 'react';
 import useGlobal from '../../hooks/useGlobal';
-import useForm from '../../hooks/useForm';
+import useFormGlobalLink from '../../hooks/useFormGlobalLink';
 
 const Configure = () => {
-    const [cur, setCur] = useGlobal("cur");
+    const [cur] = useGlobal("cur");
+    const [toggleEditing] = useGlobal("toggleEditingFct");
+    const [editStat] = useGlobal("editStatFct");
+    const [escFormFct] = useGlobal("escFormFct");
+    const [currentInputs, setCurrentInputs] = useGlobal("currentInputs");
 
-    const toggleEditing = (ev) => {
-        const key = ev.target.id.split("_")[2];
-        const valHolderId = `#meb_editform_${key}`;
-        const el = document.querySelector(valHolderId);
-        const prevClasses = el.classList;
-        if (prevClasses.contains("meb-open")) {
-            el.classList.remove("meb-open");
-        } else {
-            const otherOpen = document.querySelectorAll(".meb-open");
-            el.classList.add("meb-open");
-            document.querySelector(`#meb_editval_${key}`).focus();
-            otherOpen.forEach(openForm => {
-                openForm.classList.remove("meb-open");
-            });
-        }
-    }
-
-    const editStat = (ev) => {
-        const key = ev.target.id.split("_")[2];
-        const valHolderId = `meb_editval_${key}`;
-        const newVal = inputs[valHolderId];
-        switch (key) {
-            default:
-                setCur({
-                    ...cur,
-                    [key]: newVal
-                });
-        }
-        document.getElementById(ev.target.id).classList.remove("meb-open");
-    }
-    const { inputs, handleInputChange, handleSubmit } = useForm(editStat);
+    const { handleInputChange, handleSubmit } = useFormGlobalLink(editStat, currentInputs, setCurrentInputs);
 
     return(
-        <div className="right-padding">
+        <div className="right-padding" onKeyDown={escFormFct}>
             <header>
                 <header>
                     <div className="contain-edit">

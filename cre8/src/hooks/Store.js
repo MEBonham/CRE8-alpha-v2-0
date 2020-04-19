@@ -1,7 +1,5 @@
 import React, { useReducer, createContext } from 'react';
 
-
-
 const reducer = (state, action) => {
     switch (action.type) {
         case 'INITIALIZE':
@@ -24,7 +22,7 @@ const reducer = (state, action) => {
 }
 
 const initialData = {
-    dummy: null
+    currentInputs: {}
 };
 
 const GlobalWrapper = ({children}) => {

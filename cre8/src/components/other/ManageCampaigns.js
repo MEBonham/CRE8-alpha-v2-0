@@ -18,7 +18,8 @@ const ManageCampaigns = () => {
     useEffect(() => {
         
         campaignStream.current = db.collection("campaigns")
-            .onSnapshot(querySnapshot => {
+            // .onSnapshot(querySnapshot => {
+            .get().then(querySnapshot => {
                 const campaignData = [];
                 querySnapshot.forEach(campaign => {
                     campaignData.push({
@@ -30,7 +31,8 @@ const ManageCampaigns = () => {
             });
         
         usersStream.current = db.collection("users")
-            .onSnapshot(querySnapshot => {
+            // .onSnapshot(querySnapshot => {
+            .get().then(querySnapshot => {
                 const usersData = {};
                 querySnapshot.forEach(userDatum => {
                     const userDatumDefaulted = {
@@ -48,10 +50,10 @@ const ManageCampaigns = () => {
                 setUsersObj(usersData);
             });
     
-        return () => {
-            campaignStream.current();
-            usersStream.current();
-        };
+        // return () => {
+        //     campaignStream.current();
+        //     usersStream.current();
+        // };
     }, [db, userInfo]);
 
     const getDisplayNameFromId = (id) => {
