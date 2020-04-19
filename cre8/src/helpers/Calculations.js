@@ -13,15 +13,110 @@ const determineLevel = (xp_total) => {
 }
 
 const mineKits = (kitsObj) => {
+    // TODO
     return 0;
 }
 
+const mineModifiers = (modsObj) => {
+    let total = 0;
+    const bonusTypes = Object.keys(modsObj);
+    bonusTypes.forEach(type => {
+        const sources = Object.keys(modsObj[type]);
+        if (type === "circumstance") {
+            sources.forEach(source => {
+                total += modsObj[type][source].num;
+            });
+        } else {
+            let bestSoFar = 0;
+            sources.forEach(source => {
+                const mod = modsObj[type][source].num;
+                if (mod < 0) {
+                    total += mod;
+                } else if (mod > bestSoFar) {
+                    bestSoFar = mod;
+                }
+            });
+            total += bestSoFar;
+        }
+    });
+    return total;
+}
+
 const mineParcels = (parcelsObj) => {
+    // TODO
     return 0;
 }
 
 export const updateBaseXp = (statsObj) => {
     return updateXP(statsObj);
+}
+
+export const updateGoodSave = (statsObj) => {
+    const origFortBase = statsObj.fortitude_base_total;
+    const { heroic_bonus } = statsObj;
+
+    let fortMod = statsObj.fortitude_mods.base;
+    let refMod = statsObj.reflex_mods.base;
+    let willMod = statsObj.willpower_mods.base;
+    switch (statsObj.good_save) {
+        case "fortitude":
+            fortMod["Original Good Save"] = {
+                level: 1,
+                num: 2
+            };
+            delete refMod["Original Good Save"];
+            delete willMod["Original Good Save"];
+            break;
+        case "reflex":
+            delete fortMod["Original Good Save"];
+            refMod["Original Good Save"] = {
+                level: 1,
+                num: 2
+            };
+            delete willMod["Original Good Save"];
+            break;
+        case "willpower":
+            delete fortMod["Original Good Save"];
+            delete refMod["Original Good Save"];
+            willMod["Original Good Save"] = {
+                level: 1,
+                num: 2
+            };
+            break;
+        default:
+            return statsObj;
+    }
+    const fortitude_mods = {
+        ...statsObj.fortitude_mods,
+        base: fortMod
+    };
+    const reflex_mods = {
+        ...statsObj.reflex_mods,
+        base: refMod
+    };
+    const willpower_mods = {
+        ...statsObj.willpower_mods,
+        base: willMod
+    };
+    const fortitude_base_total = heroic_bonus + mineModifiers({ base: fortMod });
+    const reflex_base_total = heroic_bonus + mineModifiers({ base: refMod });
+    const willpower_base_total = heroic_bonus + mineModifiers({ base: willMod });
+    let result = {
+        ...statsObj,
+        fortitude_base_total,
+        fortitude_mods,
+        fortitude_mods_total: heroic_bonus + mineModifiers(fortitude_mods),
+        reflex_base_total,
+        reflex_mods,
+        reflex_mods_total: heroic_bonus + mineModifiers(reflex_mods),
+        willpower_base_total,
+        willpower_mods,
+        willpower_mods_total: heroic_bonus + mineModifiers(willpower_mods),
+    };
+    if (fortitude_base_total !== origFortBase) {
+        result = updateVpMax(result);
+    }
+    return result;
 }
 
 const updateLevel = (statsObj) => {

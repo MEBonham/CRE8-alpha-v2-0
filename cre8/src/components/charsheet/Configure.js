@@ -1,13 +1,35 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import useGlobal from '../../hooks/useGlobal';
 import useFormGlobalLink from '../../hooks/useFormGlobalLink';
 
+import MyButton from '../ui/MyButton';
+import { updateGoodSave } from '../../helpers/Calculations';
+
 const Configure = () => {
-    const [cur] = useGlobal("cur");
+    const [cur, setCur] = useGlobal("cur");
     const [toggleEditing] = useGlobal("toggleEditingFct");
     const [editStat] = useGlobal("editStatFct");
     const [escFormFct] = useGlobal("escFormFct");
     const [currentInputs, setCurrentInputs] = useGlobal("currentInputs");
+
+    useEffect(() => {
+        document.querySelector("#meb_setgoodsave_fortitude").parentNode.classList.add("selected");
+    }, [])
+
+    const setGoodSave = (ev) => {
+        const newVal = ev.target.id.split("_")[2];
+        setCur({
+            ...cur,
+            stats: updateGoodSave({
+                ...cur.stats,
+                good_save: newVal
+            })
+        });
+        document.querySelectorAll(".parchment .good-save .my-button").forEach(button => {
+            button.classList.remove("selected");
+        });
+        ev.target.closest("div").classList.add("selected");
+    }
 
     const { handleInputChange, handleSubmit } = useFormGlobalLink(editStat, currentInputs, setCurrentInputs);
 
@@ -49,7 +71,7 @@ const Configure = () => {
                     </div>
                 </header>
                 <section className="column-envelope space-between">
-                    <div className="pools-breakdown">
+                    <section className="pools-breakdown">
                         <div className="column-envelope breakdown">
                             <div className="fill-in">
                                 <p className="big-num">{cur.stats.vp_max}</p>
@@ -83,20 +105,58 @@ const Configure = () => {
                                 <p className="big-num trailing-num">5</p>
                             </div>
                         </div>
-                        <div>
-
+                        <div className="column-envelope breakdown">
+                            <div className="fill-in">
+                                <p className="big-num">{cur.stats.rp_max}</p>
+                                <p className="caption">Reserve<br />Points</p>
+                            </div>
+                            <div className="equals-symbol">
+                                =
+                            </div>
+                            <div className="fill-in">
+                                <p className="big-num">{cur.stats.rp_mods_total}</p>
+                                <p className="caption">Misc.<br />bonuses</p>
+                            </div>
+                            <div className="plus-symbol">
+                                +
+                            </div>
+                            <div>
+                                <p className="big-num trailing-num">4</p>
+                            </div>
                         </div>
-                        <div>
-
+                        <div className="column-envelope breakdown">
+                            <div className="fill-in">
+                                <p className="big-num">{cur.stats.mp_max}</p>
+                                <p className="caption">Magic<br />Points</p>
+                            </div>
+                            <div className="equals-symbol">
+                                =
+                            </div>
+                            <div className="fill-in">
+                                <p className="big-num">{cur.stats.caster_level}</p>
+                                <p className="caption">Caster<br />Level</p>
+                            </div>
+                            <div className="plus-symbol">
+                                +
+                            </div>
+                            <div className="fill-in">
+                                <p className="big-num">{cur.stats.mp_mods_total}</p>
+                                <p className="caption">Misc.<br />bonuses</p>
+                            </div>
                         </div>
-                    </div>
+                    </section>
                     <div className="row-envelope">
-                        <div className="good-save">
+                        <section className="good-save">
+                            <h2 className="section-head">Good Save:</h2>
+                            <div className="column-envelope">
+                                <MyButton fct={setGoodSave} evData="meb_setgoodsave_fortitude">Fortitude</MyButton>
+                                <MyButton fct={setGoodSave} evData="meb_setgoodsave_reflex">Reflex</MyButton>
+                                <MyButton fct={setGoodSave} evData="meb_setgoodsave_willpower">Willpower</MyButton>
+                            </div>
+                        </section>
+                        <section className="sublevels-breakdown">
 
-                        </div>
-                        <div className="sublevels-breakdown">
-
-                        </div>
+                        </section>
                     </div>
                 </section>
             </header>
