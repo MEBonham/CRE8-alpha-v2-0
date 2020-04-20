@@ -4,7 +4,8 @@ import useGlobal from '../../hooks/useGlobal';
 
 import MyButton from '../ui/MyButton';
 import gc from '../../helpers/GameConstants';
-// import { updateBaseXp } from '../../helpers/Calculations';
+import { ifPlus } from '../../helpers/Calculations';
+import d20Icon from '../../media/d20-icon.png';
 
 const Play = () => {
     const [cur, setCur] = useGlobal("cur");
@@ -114,74 +115,114 @@ const Play = () => {
                     </div>
                 </header>
                 <div className="column-envelope space-between">
-                    <section className="column-envelope pools">
-                        <div className="vp">
-                            <div className="pool-max">
-                                Pool: {cur.stats.vp_max}
+                    <div className="row-envelope pools-n-general">
+                        <section className="column-envelope pools">
+                            <div className="vp">
+                                <div className="pool-max">
+                                    Pool: {cur.stats.vp_max}
+                                </div>
+                                <div className="bar">
+                                    <div className="inner-bar" />
+                                </div>
+                                <div className="main-pool-val meb-contain-edit">
+                                    <div className="above-big-num" />
+                                    <p className="big-num editable" onClick={toggleEditing} id="meb_tog_vp">{cur.stats.vp}</p>
+                                    <form className="meb-popout-edit" onSubmit={handleSubmit} id="meb_editform_vp">
+                                        <input
+                                            type="number"
+                                            onChange={handleInputChange}
+                                            id="meb_editval_vp"
+                                        />
+                                        <button type="submit">Enter</button>
+                                    </form>
+                                    <div className="below-big-num" />
+                                    <p className="small">VP</p>
+                                </div>
                             </div>
-                            <div className="bar">
-                                <div className="inner-bar" />
+                            <div className="rp">
+                                <div className="pool-max">
+                                    Pool: {cur.stats.rp_max}
+                                </div>
+                                <div className="bar">
+                                    <div className="inner-bar" />
+                                </div>
+                                <div className="main-pool-val meb-contain-edit">
+                                    <div className="above-big-num" />
+                                    <p className="big-num editable" onClick={toggleEditing} id="meb_tog_rp">{cur.stats.rp}</p>
+                                    <form className="meb-popout-edit" onSubmit={handleSubmit} id="meb_editform_rp">
+                                        <input
+                                            type="number"
+                                            onChange={handleInputChange}
+                                            id="meb_editval_rp"
+                                        />
+                                        <button type="submit">Enter</button>
+                                    </form>
+                                    <div className="below-big-num" />
+                                    <p className="small">RP</p>
+                                </div>
                             </div>
-                            <div className="main-pool-val meb-contain-edit">
-                                <div className="above-big-num" />
-                                <p className="big-num editable" onClick={toggleEditing} id="meb_tog_vp">{cur.stats.vp}</p>
-                                <form className="meb-popout-edit" onSubmit={handleSubmit} id="meb_editform_vp">
-                                    <input
-                                        type="number"
-                                        onChange={handleInputChange}
-                                        id="meb_editval_vp"
-                                    />
-                                    <button type="submit">Enter</button>
-                                </form>
-                                <div className="below-big-num" />
-                                <p className="small">VP</p>
+                            <div className="mp">
+                                <div className="pool-max">
+                                    Pool: {cur.stats.mp_max}
+                                </div>
+                                <div className="bar">
+                                    <div className="inner-bar" />
+                                </div>
+                                <div className="main-pool-val meb-contain-edit">
+                                    <div className="above-big-num" />
+                                    <p className="big-num editable" onClick={toggleEditing} id="meb_tog_mp">{cur.stats.mp}</p>
+                                    <form className="meb-popout-edit" onSubmit={handleSubmit} id="meb_editform_mp">
+                                        <input
+                                            type="number"
+                                            onChange={handleInputChange}
+                                            id="meb_editval_mp"
+                                        />
+                                        <button type="submit">Enter</button>
+                                    </form>
+                                    <div className="below-big-num" />
+                                    <p className="small">MP</p>
+                                </div>
                             </div>
-                        </div>
-                        <div className="rp">
-                            <div className="pool-max">
-                                Pool: {cur.stats.rp_max}
+                        </section>
+                        <section className="general-rolls column-envelope">
+                            <div className="general-general row-envelope">
+                                <MyButton>
+                                    <img src={d20Icon} alt="" />
+                                    Heroics Check ({ifPlus(cur.stats.heroic_bonus) + cur.stats.heroic_bonus})
+                                </MyButton>
+                                <MyButton>
+                                    <img src={d20Icon} alt="" />
+                                    Awesome Check ({ifPlus(cur.stats.awesome_check) + cur.stats.awesome_check})
+                                </MyButton>
+                                <MyButton>
+                                    <img src={d20Icon} alt="" />
+                                    Spellcraft Check ({ifPlus(cur.stats.spellcraft_check) + cur.stats.spellcraft_check})
+                                </MyButton>
+                                <MyButton>
+                                    <img src={d20Icon} alt="" />
+                                    Speed Check ({ifPlus(cur.stats.speed) + cur.stats.speed})
+                                </MyButton>
                             </div>
-                            <div className="bar">
-                                <div className="inner-bar" />
+                            <div className="saving-throws row-envelope">
+                                <MyButton>
+                                    <img src={d20Icon} alt="" />
+                                    Defense Save ({ifPlus(cur.stats.defense_total) + cur.stats.defense_total})
+                                </MyButton>
+                                <MyButton>
+                                    <img src={d20Icon} alt="" />
+                                    Fortitude Save ({ifPlus(cur.stats.fortitude_total) + cur.stats.fortitude_total})
+                                </MyButton>
+                                <MyButton>
+                                    <img src={d20Icon} alt="" />
+                                    Reflex Save ({ifPlus(cur.stats.reflex_total) + cur.stats.reflex_total})
+                                </MyButton>
+                                <MyButton>
+                                    <img src={d20Icon} alt="" />
+                                    Willpower Save ({ifPlus(cur.stats.willpower_total) + cur.stats.willpower_total})
+                                </MyButton>
                             </div>
-                            <div className="main-pool-val meb-contain-edit">
-                                <div className="above-big-num" />
-                                <p className="big-num editable" onClick={toggleEditing} id="meb_tog_rp">{cur.stats.rp}</p>
-                                <form className="meb-popout-edit" onSubmit={handleSubmit} id="meb_editform_rp">
-                                    <input
-                                        type="number"
-                                        onChange={handleInputChange}
-                                        id="meb_editval_rp"
-                                    />
-                                    <button type="submit">Enter</button>
-                                </form>
-                                <div className="below-big-num" />
-                                <p className="small">RP</p>
-                            </div>
-                        </div>
-                        <div className="mp">
-                            <div className="pool-max">
-                                Pool: {cur.stats.mp_max}
-                            </div>
-                            <div className="bar">
-                                <div className="inner-bar" />
-                            </div>
-                            <div className="main-pool-val meb-contain-edit">
-                                <div className="above-big-num" />
-                                <p className="big-num editable" onClick={toggleEditing} id="meb_tog_mp">{cur.stats.mp}</p>
-                                <form className="meb-popout-edit" onSubmit={handleSubmit} id="meb_editform_mp">
-                                    <input
-                                        type="number"
-                                        onChange={handleInputChange}
-                                        id="meb_editval_mp"
-                                    />
-                                    <button type="submit">Enter</button>
-                                </form>
-                                <div className="below-big-num" />
-                                <p className="small">MP</p>
-                            </div>
-                        </div>
-                    </section>
+                        </section>
+                    </div>
                     <section className="conditions">
                         <div className="die-mode">
                             <h3>d20 Die Modes:</h3>

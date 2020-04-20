@@ -63,6 +63,11 @@ export const mineTrainedSkillsRequired = (trainedReqObj) => {
     return result;
 }
 
+export const ifPlus = (val) => {
+    if (val >= 0) return "+";
+    else return "";
+}
+
 export const updateBaseXp = (statsObj) => {
     return updateXP(statsObj);
 }
@@ -138,6 +143,7 @@ export const updateGoodSave = (statsObj) => {
 const updateHeroicBonus = (statsObj) => {
     const hb = statsObj.heroic_bonus;
 
+    const defense_total = hb + mineModifiers(statsObj.defense_mods);
     const fortitude_base_total = hb + mineModifiers({ base: statsObj.fortitude_mods.base });
     const fortitude_total = hb + mineModifiers(statsObj.fortitude_mods);
     const reflex_base_total = hb + mineModifiers({ base: statsObj.reflex_mods.base });
@@ -151,6 +157,7 @@ const updateHeroicBonus = (statsObj) => {
 
     let result = {
         ...statsObj,
+        defense_total,
         fortitude_base_total,
         fortitude_total,
         reflex_base_total,
@@ -163,7 +170,7 @@ const updateHeroicBonus = (statsObj) => {
     };
     result = updateVpMax(result);
     result = updateMpMax(result);
-    // result = updateSpellcraft(result);
+    result = updateSpellcraft(result);
     return result;
 }
 
@@ -251,11 +258,22 @@ export const updateSkillRanks = (statsObj) => {
     return updateSkillMods(result);
 }
 
+const updateSpellcraft = (statsObj) => {
+    const spellcraft_mods_total = mineModifiers(statsObj.spellcraft_mods);
+    const spellcraft_check = statsObj.caster_level + spellcraft_mods_total;
+    return {
+        ...statsObj,
+        spellcraft_check,
+        spellcraft_mods_total
+    };
+}
+
 const updateVpMax = (statsObj) => {
     const origVpMax = statsObj.vp_max;
     
     const vp_kits_total = mineKits(statsObj.vp_kits);
     const vp_max = gc.base_vitality_points + (2 * statsObj.level_max8) + vp_kits_total + statsObj.fortitude_base_total;
+    console.log(statsObj.vp, vp_max, origVpMax);
     const vp = Math.max(0, statsObj.vp + (vp_max - origVpMax));
     return {
         ...statsObj,
