@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import useGlobal from '../../hooks/useGlobal';
 
 import { roll } from '../../helpers/roll';
+import { ifPlus } from '../../helpers/Calculations';
 import '../../css/game.css';
 
 const RollsDisplay = () => {
@@ -41,18 +42,43 @@ const RollsDisplay = () => {
         }
         scrollHeightRef.current = el.scrollHeight;
         clientHeightRef.current = el.clientHeight;
+
+        // console.log(displayArr);
+        displayArr.forEach((roll, i) => {
+            if (roll.rollData.multRoll.length > 1) {
+                const elArr = document.querySelectorAll(`#meb_showRolls_${i} p.bg`);
+                let oneBold = false;
+                roll.rollData.multRoll.forEach((natDieRoll, j) => {
+                    const el = elArr[j];
+                    if (oneBold || natDieRoll !== roll.rollData.natRoll) {
+                        el.style.opacity = 0.5;
+                    } else {
+                        oneBold = true;
+                    }
+                });
+            }
+        });
     }, [displayArr])
 
     return (
         <section className="sidebar-padding rolls-window">
             <h2>Dice Rolls</h2>
             <div className="scroll-window">
-                {displayArr.map((rollDisplay, i) => (
-                    <div key={i} className="roll-display">
+                {displayArr.map((rollDisplay, i) => {
+                    return(<div key={i} className="roll-display">
                         <h3>{rollDisplay.character}<br />{rollDisplay.name}</h3>
-                        <p className="big-num">{rollDisplay.rollData.result}</p>
-                    </div>
-                ))}
+                        <div className="column-envelope" id={`meb_showRolls_${i}`}>
+                            {rollDisplay.rollData.multRoll.map((oneRoll, j) => (
+                                <p key={j} className="big-num bg">{oneRoll}</p>
+                            ))}
+                            <p className="big-num">{`${ifPlus(rollDisplay.rollData.netMod)}${rollDisplay.rollData.netMod}`}</p>
+                        </div>
+                        <div className="column-envelope roll-result">
+                            <p className="big-num equals">=</p>
+                            <p className="big-num bg">{rollDisplay.rollData.result}</p>
+                        </div>
+                    </div>);
+                })}
             </div>
         </section>
     );

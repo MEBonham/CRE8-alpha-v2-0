@@ -8,22 +8,30 @@ export const d20 = () => {
 }
 
 export const roll = (dieMode, modBasic, modsMisc, coastVal) => {
+    let multRoll;
     let natRoll;
     switch (dieMode) {
         case "normal":
-            natRoll = numSort([d20(), d20(), d20()])[1];
+            multRoll = [d20(), d20(), d20()];
+            natRoll = numSort(multRoll.slice())[1];
             break;
         case "boost":
-            natRoll = numSort([d20(), d20()])[1];
+            multRoll = [d20(), d20()];
+            natRoll = numSort(multRoll.slice())[1];
             break;
         case "drag":
-            natRoll = numSort([d20(), d20()])[0];
+            multRoll = [d20(), d20()];
+            natRoll = numSort(multRoll.slice())[0];
             break;
         default:
-            natRoll = d20();
+            multRoll = [d20()];
+            natRoll = multRoll[0];
     }
+    const netMod = parseInt(modBasic) + mineModifiers(modsMisc);
     return {
+        multRoll,
         natRoll,
-        result: Math.max(natRoll, coastVal) + parseInt(modBasic) + mineModifiers(modsMisc)
+        netMod,
+        result: Math.max(natRoll, coastVal) + netMod
     };
 }

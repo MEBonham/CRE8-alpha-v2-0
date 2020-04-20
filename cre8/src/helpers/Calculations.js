@@ -15,7 +15,7 @@ const determineLevel = (xp_total) => {
 }
 
 export const ifPlus = (val) => {
-    if (val >= 0) return "+";
+    if (parseInt(val) >= 0) return "+";
     else return "";
 }
 
@@ -31,12 +31,12 @@ export const mineModifiers = (modsObj) => {
         const sources = Object.keys(modsObj[type]);
         if (type === "circumstance") {
             sources.forEach(source => {
-                total += modsObj[type][source].num;
+                total += parseInt(modsObj[type][source].num);
             });
         } else {
             let bestSoFar = 0;
             sources.forEach(source => {
-                const mod = modsObj[type][source].num;
+                const mod = parseInt(modsObj[type][source].num);
                 if (mod < 0) {
                     total += mod;
                 } else if (mod > bestSoFar) {

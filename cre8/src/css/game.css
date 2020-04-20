@@ -1,3 +1,7 @@
+section.rolls-window .column-envelope {
+    display: flex;
+}
+
 section.rolls-window h2 {
     margin-bottom: 16px;
     font-size: 1.8rem;
@@ -27,6 +31,15 @@ section.rolls-window div.roll-display h3 {
     text-align: center;
 }
 
+section.rolls-window div.roll-display .roll-result {
+    position: relative;
+}
+
+section.rolls-window div.roll-display .roll-result .equals {
+    position: absolute;
+    right: 22px;
+}
+
 section.rolls-window div.roll-display p.big-num {
     width: 24px;
     height: 24px;
@@ -36,7 +49,7 @@ section.rolls-window div.roll-display p.big-num {
     text-align: center;
 }
 
-section.rolls-window div.roll-display p.big-num::after {
+section.rolls-window div.roll-display p.big-num.bg::after {
     content: "";
     background-image: url('../media/d20-icon.png');
     background-size: cover;
