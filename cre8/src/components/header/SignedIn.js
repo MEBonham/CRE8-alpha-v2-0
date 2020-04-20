@@ -1,39 +1,40 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect } from 'react';
 import { NavLink } from 'react-router-dom';
 import fb from '../../fbConfig';
+import useGlobal from '../../hooks/useGlobal';
 
 import profileButton from '../../media/profile-icon.png';
 
 const SignedIn = () => {
 
-    const delayMilliseconds = 50;
+    const delaySeconds = 0.05;
     let lastClick = Date.now();
 
-    const [menuOpen, setMenuOpen] = useState(false);
+    const [menuOpen, setMenuOpen] = useGlobal("userSettingsMenuOpen");
 
     const toggle = () => {
         setMenuOpen(!menuOpen);
     }
 
     const clickToggle = (ev) => {
-        if (Date.now() - lastClick >= delayMilliseconds) {
+        if (Date.now() - lastClick >= delaySeconds) {
             lastClick = Date.now();
             toggle();
         }
     }
 
-    const closeMenu = (ev) => {
-        if (!ev.target.matches(".blockclick")) {
-            setMenuOpen(false);
-        }
-    }
-
     useEffect(() => {
+        const closeMenu = (ev) => {
+            if (!ev.target.matches(".blockclick")) {
+                setMenuOpen(false);
+            }
+        }
+
         document.querySelector('#root').addEventListener('click', closeMenu);
         return () => {
             document.querySelector('#root').removeEventListener('click', closeMenu);
         };
-    }, [])
+    }, [setMenuOpen])
 
     const handleLogout = () => {
         fb.auth.signOut();
@@ -41,7 +42,7 @@ const SignedIn = () => {
 
     return(
         <div className="profile signedin">
-            <img className="profile-button" onClick={clickToggle} src={profileButton} alt="User Menu" />
+            <img className="profile-button blockclick" onClick={clickToggle} src={profileButton} alt="User Menu" />
             {menuOpen ? 
                 <nav>
                     <p className="blockclick">{fb.auth.currentUser.displayName}</p>

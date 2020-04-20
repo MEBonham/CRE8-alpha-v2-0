@@ -22,8 +22,7 @@ const reducer = (state, action) => {
 }
 
 const initialData = {
-    // clearedForEditing: false,
-    // currentInputs: {}
+    userSettingsMenuOpen: false
 };
 
 const GlobalWrapper = ({children}) => {

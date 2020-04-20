@@ -1,11 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import fb from '../../fbConfig';
+import useGlobal from '../../hooks/useGlobal';
 
 import ManageCampaigns from './ManageCampaigns';
 import AdminSettings from './Admin';
 
 const Settings = () => {
 
+    const [, setMenuOpen] = useGlobal("userSettingsMenuOpen");
     const [ownId, setOwnId] = useState(null);
     const [ownRank, setOwnRank] = useState(null);
     useEffect(() => {
@@ -21,6 +23,7 @@ const Settings = () => {
                     console.log(err);
                 });
         }
+        setMenuOpen(false);
     }, [])
 
     const rankBadge = () => {

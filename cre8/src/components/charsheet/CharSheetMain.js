@@ -15,8 +15,8 @@ import MyButton from '../ui/MyButton';
 
 const CharSheetMain = () => {
     const { slug } = useParams();
-    const [userInfo] = useGlobal("user");
     const [cur, setCur] = useGlobal("cur");
+
     const saveIntervalMilliseconds = 500;
     const lastSave = useRef(Date.now());
 
@@ -27,7 +27,6 @@ const CharSheetMain = () => {
     const campaignStream = useRef(null);
     const charStream = useRef(null);
     useEffect(() => {
-        
         campaignStream.current = db.collection("campaigns")
             //.onSnapshot(querySnapshot => {
             .get().then(querySnapshot => {
@@ -37,7 +36,12 @@ const CharSheetMain = () => {
                 });
                 setCampaigns(campaignInfo);
             });
-        
+    
+        // return () => {
+        //     campaignStream.current();
+        // };
+    }, [db])
+    useEffect(() => {
         if (slug && firstLoad.current) {
             charStream.current = db.collection("characters").doc(slug)
                 // .onSnapshot(doc => {
@@ -57,38 +61,22 @@ const CharSheetMain = () => {
         }
     
         // return () => {
-        //     campaignStream.current();
         //     charStream.current();
         // };
-    }, [db, firstLoad, setCur, slug]);
+    }, [db, setCur, slug]);
 
     const [toSave, setToSave] = useState(false);
     const [charSheetTab, setCharSheetTab] = useState(null);
     const [tabContents, setTabContents] = useState(null);
     useEffect(() => {
-        if (cur) {
+        if (cur && cur.activeTab !== charSheetTab) {
             setCharSheetTab(cur.activeTab);
         }
-        if (db && cur && Date.now() - lastSave.current >= saveIntervalMilliseconds) {
-            const curCopy = {
-                ...cur
-            };
-            const slug = curCopy.id;
-            delete curCopy.id;
-            db.collection("characters").doc(slug).set(curCopy)
-                .then(() => {
-                    console.log("Saved");
-                    lastSave.current = Date.now();
-                })
-                .catch(err => {
-                    console.log("Character autosave unsuccessful:", err);
-                });
-        }
-    }, [cur, db])
+    }, [charSheetTab, cur])
     useEffect(() => {
-        if (cur) {
-            setToSave(true);
-        }
+        // if (cur) {
+        //     setToSave(true);
+        // }
         if (charSheetTab === "play") {
             setTabContents(<Play />);
         } else if (charSheetTab === "configure") {
@@ -98,13 +86,14 @@ const CharSheetMain = () => {
         } else if (charSheetTab === "+library") {
             setTabContents(<BuildLibrary />);
         }
-    }, [charSheetTab, cur])
+    }, [charSheetTab])
 
-    const loadComponent = useRef(
-        <div className="main normal-padding">
-            <h1>Loading ...</h1>
-        </div>
-    );
+    useEffect(() => {
+        if (cur && Date.now() - lastSave.current >= saveIntervalMilliseconds) {
+            setToSave(true);
+            lastSave.current = Date.now();
+        }
+    }, [cur])
     const toSaveFct = () => {
         setToSave(true);
     }
@@ -126,6 +115,13 @@ const CharSheetMain = () => {
                 });
         }
     }, [cur, db, toSave]);
+
+    const [userInfo] = useGlobal("user");
+    const loadComponent = useRef(
+        <div className="main normal-padding">
+            <h1>Loading ...</h1>
+        </div>
+    );
     const [component, setComponent] = useState(loadComponent.current);
     useEffect(() => {
 

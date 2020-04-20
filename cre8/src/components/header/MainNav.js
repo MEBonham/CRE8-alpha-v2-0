@@ -5,7 +5,7 @@ import menuButton from '../../media/hamburger-menu.png';
 
 const MainNav = () => {
 
-    const delayMilliseconds = 50;
+    const delaySeconds = 0.05;
     let lastClick = Date.now();
 
     const [navOpen, setNavOpen] = useState(false);
@@ -15,14 +15,14 @@ const MainNav = () => {
     }
 
     const clickToggle = (ev) => {
-        if (Date.now() - lastClick >= delayMilliseconds) {
+        if (Date.now() - lastClick >= delaySeconds) {
             lastClick = Date.now();
             toggle();
         }
     }
 
     const closeNav = (ev) => {
-        if (!ev.target.matches(".blockclick")) {
+        if (!ev.target.matches(".blockclick-2")) {
             setNavOpen(false);
         }
     }
@@ -36,7 +36,7 @@ const MainNav = () => {
 
     return(
         <div className="nav-dropdown">
-            <img className="nav-toggle" onClick={clickToggle} src={menuButton} alt="Nav Menu" />
+            <img className="nav-toggle blockclick-2" onClick={clickToggle} src={menuButton} alt="Nav Menu" />
             {navOpen ? 
                 <nav>
                     <NavLink to="/characters">Characters</NavLink>

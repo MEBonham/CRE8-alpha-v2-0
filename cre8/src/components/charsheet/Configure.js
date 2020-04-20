@@ -92,30 +92,55 @@ const Configure = () => {
         }
     }
 
-    const assignSkillRank = (ev) => {
-        const level = ev.target.id.split("_")[2];
-        const col = ev.target.id.split("_")[3];
-        let skillAdded = ev.target.value;
-        const skillsList = gc.skills_list;
-        if (!skillsList.includes(skillAdded)) {
-            skillAdded = null;
-        }
+    const protectedLoadingSkillRanks = useRef(false);
+    useEffect(() => {
+        protectedLoadingSkillRanks.current = true;
+
         if (cur) {
-            const skill_ranks_history = cur.stats.skill_ranks_history;
-            while (skill_ranks_history[level] === undefined) {
-                skill_ranks_history[level] = [];
+            const history = cur.stats.skill_ranks_history;
+            for (let level = 0; level < cur.stats.level_max8; level++) {
+                if (history.hasOwnProperty(level)) {
+                    const ranksArr = history[level];
+                    for (let j = 0; j < Math.min(ranksArr.length, gc.skill_ranks_per_level); j++) {
+                        if (ranksArr[j]) {
+                            const el = document.getElementById(`meb_skillrank_${level}_${j}`);
+                            if (el) {
+                                el.value = ranksArr[j];
+                            }
+                        }
+                    }
+                }
             }
-            while (skill_ranks_history[level].length <= col) {
-                skill_ranks_history[level].push(null);
+        }
+
+        protectedLoadingSkillRanks.current = false;
+    }, [cur, levelsArray, upTo5Array])
+    const assignSkillRank = (ev) => {
+        if (!protectedLoadingSkillRanks.current) {
+            const level = ev.target.id.split("_")[2];
+            const col = ev.target.id.split("_")[3];
+            let skillAdded = ev.target.value;
+            const skillsList = gc.skills_list;
+            if (!skillsList.includes(skillAdded)) {
+                skillAdded = null;
             }
-            skill_ranks_history[level][col] = skillAdded;
-            setCur({
-                ...cur,
-                stats: updateSkillRanks({
-                    ...cur.stats,
-                    skill_ranks_history
-                })
-            });
+            if (cur) {
+                const skill_ranks_history = cur.stats.skill_ranks_history;
+                while (skill_ranks_history[level] === undefined) {
+                    skill_ranks_history[level] = [];
+                }
+                while (skill_ranks_history[level].length <= col) {
+                    skill_ranks_history[level].push(null);
+                }
+                skill_ranks_history[level][col] = skillAdded;
+                setCur({
+                    ...cur,
+                    stats: updateSkillRanks({
+                        ...cur.stats,
+                        skill_ranks_history
+                    })
+                });
+            }
         }
     }
 

@@ -30,7 +30,7 @@
 .App .my-button {
     margin-bottom: 2px;
     background-color: #91a6c7;
-    border-radius: 12px;
+    border-radius: 10px;
     box-shadow: 2px 2px 6px #111111;
     display: flex;
     cursor: pointer;
