@@ -36,7 +36,13 @@ const EditWrapper = (props) => {
                         el.classList.add("meb-open");
                         el.querySelector(`#meb_editval_${key}`).focus();
     
-                        el.style.top = `${el.previousSibling.clientHeight + 1}px`;
+                        let top = 1;
+                        let prevSib = el.previousSibling;
+                        while (prevSib) {
+                            top += prevSib.clientHeight;
+                            prevSib = prevSib.previousSibling;
+                        }
+                        el.style.top = `${top}px`;
                         el.style.left = `${(el.previousSibling.clientWidth - el.offsetWidth) / 2}px`;
                         otherOpen.forEach(openForm => {
                             openForm.classList.remove("meb-open");
@@ -54,6 +60,14 @@ const EditWrapper = (props) => {
     useEffect(() => {
         const switchKey = (key, newVal) => {
             switch (key) {
+                case "earnXp":
+                    return {
+                        ...cur,
+                        stats: updateBaseXp({
+                            ...cur.stats,
+                            xp_base: Math.max(0, cur.stats.xp_base + parseInt(newVal))
+                        })
+                    }
                 case "name":
                     return {
                         ...cur,

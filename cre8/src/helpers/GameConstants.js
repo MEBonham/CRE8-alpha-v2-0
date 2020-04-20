@@ -4,9 +4,20 @@ const gc = {
     base_reserve_points: 4,
     base_trained_skills: 2,
     base_vitality_points: 5,
+    basic_conditions: [
+        "Momentum",
+        "Exerted",
+        "Wounded"
+    ],
     epic_level_xp_increment: 500,
     good_save_boost: 2,
     max_level_pre_epic: 8,
+    other_conditions: [
+        "Unconscious",
+        "Dying",
+        "Shaken",
+        "Prone"
+    ],
     skills_list: [
         "Athletics",
         "Brawn",

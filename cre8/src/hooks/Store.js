@@ -22,6 +22,8 @@ const reducer = (state, action) => {
 }
 
 const initialData = {
+    coasting: false,
+    dieRollMode: "normal",
     userSettingsMenuOpen: false
 };
 

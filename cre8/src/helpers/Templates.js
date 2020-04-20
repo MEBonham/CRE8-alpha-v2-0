@@ -2,6 +2,7 @@
 export const charDefault = {
     activeTab: "configure",
     stats: {
+        active_conditions: [],
         awesome_check: 5,
         awesome_mods: {},
         awesome_mods_total: 0,

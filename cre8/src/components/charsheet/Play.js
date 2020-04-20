@@ -1,29 +1,94 @@
-import React from 'react';
-import useForm from '../../hooks/useForm';
+import React, { useEffect, useRef } from 'react';
+import useFormGlobalLink from '../../hooks/useFormGlobalLink';
 import useGlobal from '../../hooks/useGlobal';
 
 import MyButton from '../ui/MyButton';
-import { updateBaseXp } from '../../helpers/Calculations';
+import gc from '../../helpers/GameConstants';
+// import { updateBaseXp } from '../../helpers/Calculations';
 
 const Play = () => {
     const [cur, setCur] = useGlobal("cur");
     const [toggleEditing] = useGlobal("toggleEditingFct");
+    const [editStat] = useGlobal("editStatFct");
     const [escFormFct] = useGlobal("escFormFct");
+    const [currentInputs, setCurrentInputs] = useGlobal("currentInputs");
+    const [dieRollMode, setDieRollMode] = useGlobal("dieRollMode");
+    const [coasting, setCoasting] = useGlobal("coasting");
+    const coastingRef = useRef(coasting);
 
-    const earnXP = (ev) => {
-        const key = ev.target.id.split("_")[2];
-        const valHolderId = `meb_editval_${key}`;
-        const newVal = (parseInt(inputs[valHolderId]) || 0);
-        setCur({
-            ...cur,
-            stats: updateBaseXp({
-                ...cur.stats,
-                xp_base: Math.max(0, cur.stats.xp_base + newVal)
-            })
-        })
-        document.getElementById(ev.target.id).classList.remove("meb-open");
+    useEffect(() => {
+        if (cur) {
+            let el = document.querySelector("section.pools .vp .bar .inner-bar");
+            let percent = 100 * cur.stats.vp / cur.stats.vp_max;
+            el.style.width = `${percent}%`;
+            el = document.querySelector("section.pools .rp .bar .inner-bar");
+            percent = 100 * cur.stats.rp / cur.stats.rp_max;
+            el.style.width = `${percent}%`;
+            el = document.querySelector("section.pools .mp .bar .inner-bar");
+            percent = 100 * cur.stats.mp / cur.stats.mp_max;
+            el.style.width = `${percent}%`;
+
+            const active = cur.stats.active_conditions;
+            gc.basic_conditions.concat(gc.other_conditions).forEach(condition => {
+                const box = document.getElementById(`meb_checkcondition_${condition}`);
+                if (active.includes(condition)) {
+                    box.checked = true;
+                } else {
+                    box.checked = false;
+                }
+            });
+
+            document.getElementById("meb_check_coasting").checked = coastingRef.current;
+        }
+    }, [cur])
+
+    const selectDieMode = (ev) => {
+        setDieRollMode(ev.target.value);
     }
-    const { inputs, handleInputChange, handleSubmit } = useForm(earnXP);
+
+    const checkCondition = (ev) => {
+        const box = document.getElementById(ev.target.id);
+        if (!cur) {
+            box.checked = false;
+        } else {
+            const condition = ev.target.id.split("_")[2];
+            const on = box.checked;
+            const {active_conditions} = cur.stats;
+            let changeWasMade = true;
+            if (on && !active_conditions.includes(condition)) {
+                active_conditions.push(condition);
+            } else if (!on && active_conditions.includes(condition)) {
+                active_conditions.splice(active_conditions.indexOf(condition), 1);
+            } else if (on && active_conditions.includes("Shaken") && condition === "Momentum") {
+                box.checked = false;
+                changeWasMade = false;
+            } else {
+                changeWasMade = false;
+            }
+            if (changeWasMade) {
+                setCur({
+                    ...cur,
+                    stats: {
+                        ...cur.stats,
+                        active_conditions
+                    }
+                });
+            }
+        }
+    }
+
+    const checkCoasting = (ev) => {
+        const box = document.getElementById(ev.target.id);
+        if (box.checked) {
+            coastingRef.current = true;
+            setCoasting(true);
+        } else {
+            coastingRef.current = false;
+            setCoasting(false);
+        }
+    }
+    
+    const { handleInputChange, handleSubmit } = useFormGlobalLink(editStat, currentInputs, setCurrentInputs);
     return(
         <div className="right-padding" onKeyDown={escFormFct}>
             <header>
@@ -39,7 +104,6 @@ const Play = () => {
                                     <input
                                         type="number"
                                         onChange={handleInputChange}
-                                        value={inputs.meb_editval_earnXp || 0}
                                         id="meb_editval_earnXp"
                                     />
                                     <button type="submit">Enter</button>
@@ -49,6 +113,109 @@ const Play = () => {
                         </div>
                     </div>
                 </header>
+                <div className="column-envelope space-between">
+                    <section className="column-envelope pools">
+                        <div className="vp">
+                            <div className="pool-max">
+                                Pool: {cur.stats.vp_max}
+                            </div>
+                            <div className="bar">
+                                <div className="inner-bar" />
+                            </div>
+                            <div className="main-pool-val meb-contain-edit">
+                                <div className="above-big-num" />
+                                <p className="big-num editable" onClick={toggleEditing} id="meb_tog_vp">{cur.stats.vp}</p>
+                                <form className="meb-popout-edit" onSubmit={handleSubmit} id="meb_editform_vp">
+                                    <input
+                                        type="number"
+                                        onChange={handleInputChange}
+                                        id="meb_editval_vp"
+                                    />
+                                    <button type="submit">Enter</button>
+                                </form>
+                                <div className="below-big-num" />
+                                <p className="small">VP</p>
+                            </div>
+                        </div>
+                        <div className="rp">
+                            <div className="pool-max">
+                                Pool: {cur.stats.rp_max}
+                            </div>
+                            <div className="bar">
+                                <div className="inner-bar" />
+                            </div>
+                            <div className="main-pool-val meb-contain-edit">
+                                <div className="above-big-num" />
+                                <p className="big-num editable" onClick={toggleEditing} id="meb_tog_rp">{cur.stats.rp}</p>
+                                <form className="meb-popout-edit" onSubmit={handleSubmit} id="meb_editform_rp">
+                                    <input
+                                        type="number"
+                                        onChange={handleInputChange}
+                                        id="meb_editval_rp"
+                                    />
+                                    <button type="submit">Enter</button>
+                                </form>
+                                <div className="below-big-num" />
+                                <p className="small">RP</p>
+                            </div>
+                        </div>
+                        <div className="mp">
+                            <div className="pool-max">
+                                Pool: {cur.stats.mp_max}
+                            </div>
+                            <div className="bar">
+                                <div className="inner-bar" />
+                            </div>
+                            <div className="main-pool-val meb-contain-edit">
+                                <div className="above-big-num" />
+                                <p className="big-num editable" onClick={toggleEditing} id="meb_tog_mp">{cur.stats.mp}</p>
+                                <form className="meb-popout-edit" onSubmit={handleSubmit} id="meb_editform_mp">
+                                    <input
+                                        type="number"
+                                        onChange={handleInputChange}
+                                        id="meb_editval_mp"
+                                    />
+                                    <button type="submit">Enter</button>
+                                </form>
+                                <div className="below-big-num" />
+                                <p className="small">MP</p>
+                            </div>
+                        </div>
+                    </section>
+                    <section className="conditions">
+                        <div className="die-mode">
+                            <h3>d20 Die Modes:</h3>
+                            <select onChange={selectDieMode} defaultValue={dieRollMode}>
+                                <option value="boost">Boosted</option>
+                                <option value="normal">Normal</option>
+                                <option value="drag">Dragged</option>
+                                <option value="both">Boosted & Dragged</option>
+                            </select>
+                            <div>
+                                <input type="checkbox" onClick={checkCoasting} id={"meb_check_coasting"} /> Coasting
+                            </div>
+                        </div>
+                        <div>
+                            <h3>Conditions</h3>
+                            <ul className="not-last">
+                                {gc.basic_conditions.map(condition => (
+                                    <li key={condition} className="checkbox-pair">
+                                        <input type="checkbox" onClick={checkCondition} id={`meb_checkcondition_${condition}`} />
+                                        <span>{condition}</span>
+                                    </li>
+                                ))}
+                            </ul>
+                            <ul>
+                                {gc.other_conditions.map(condition => (
+                                    <li key={condition} className="checkbox-pair">
+                                        <input type="checkbox" onClick={checkCondition} id={`meb_checkcondition_${condition}`} />
+                                        <span>{condition}</span>
+                                    </li>
+                                ))}
+                            </ul>
+                        </div>
+                    </section>
+                </div>
             </header>
         </div>
     );

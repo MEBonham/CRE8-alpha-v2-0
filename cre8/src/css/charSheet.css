@@ -135,6 +135,7 @@
 
 .parchment header section.top-breakdowns {
     justify-content: space-around;
+    flex-grow: 2;
 }
 
 .parchment .column-envelope.breakdown {
@@ -198,13 +199,15 @@
     flex-grow: 1;
 }
 
-.parchment .checkbox-pair div {
+.parchment .checkbox-pair div,
+.parchment section.conditions li.checkbox-pair {
     display: flex;
     align-items: center;
 }
 
 .parchment .checkbox-pair div input,
-.parchment table.skill-ranks-assignment select {
+.parchment table.skill-ranks-assignment select,
+.parchment section.conditions li.checkbox-pair input {
     padding: 0;
     box-shadow: 0 0 4px rgba(22, 22, 168, 0.4);
     cursor: pointer;
@@ -219,4 +222,107 @@
     padding-right: 8px;
     font-size: 1.1rem;
     font-weight: bold;
+}
+
+.parchment header section.pools {
+    justify-content: flex-start;
+    flex-grow: 2;
+}
+
+.parchment section.pools > div {
+    margin-right: 10%;
+    width: 70px;
+    height: 80px;
+    border-radius: 8px;
+    border: 1px solid brown;
+    background-color: rgba(255, 255, 255, 0.2);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.parchment section.pools > div .pool-max {
+    margin: 3px 0 4px;
+    font-size: 1.2rem;
+}
+
+.parchment section.pools > div .bar {
+    width: 100%;
+    height: 12px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: flex-start;
+    background-color: #444444;
+}
+
+.parchment section.pools > div .bar .inner-bar {
+    height: 3px;
+    display: flex;
+}
+
+.parchment section.pools > div.vp .bar .inner-bar {
+    background-color: green;
+}
+
+.parchment section.pools > div.rp .bar .inner-bar {
+    background-color: darkred;
+}
+
+.parchment section.pools > div.mp .bar .inner-bar {
+    background-color: #2ab7de;
+}
+
+.parchment section.pools > div div.main-pool-val {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+.parchment section.pools > div div.main-pool-val .above-big-num {
+    flex-grow: 1;
+}
+
+.parchment section.pools > div div.main-pool-val .below-big-num {
+    flex-grow: 1.4;
+}
+
+.parchment section.pools > div div.main-pool-val p.small {
+    font-size: 1rem;
+}
+
+.parchment header section.conditions {
+    flex-grow: 0.7;
+    border-left: 1px solid brown;
+    padding-left: 24px;
+}
+
+.parchment header section.conditions div.die-mode {
+    margin-bottom: 12px;
+    border-bottom: 1px solid brown;
+    padding-bottom: 12px;
+}
+
+.parchment header section.conditions div.die-mode select {
+    margin-bottom: 4px;
+}
+
+.parchment header section.conditions div.die-mode div {
+    font-size: 1.4rem;
+}
+
+.parchment header section.conditions div.die-mode div input {
+    position: relative;
+    top: 2px;
+}
+
+.parchment section.conditions ul.not-last {
+    margin-bottom: 12px;
+    border-bottom: 1px dashed brown;
+    padding-bottom: 12px;
+}
+
+.parchment section.conditions li.checkbox-pair span {
+    font-size: 1.4rem;
+    margin-bottom: 2px;
 }
