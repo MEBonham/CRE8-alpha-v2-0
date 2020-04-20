@@ -16,31 +16,32 @@ import MyButton from '../ui/MyButton';
 const CharSheetMain = () => {
     const { slug } = useParams();
     const [cur, setCur] = useGlobal("cur");
+    const [usersCampaigns] = useGlobal("usersCampaigns");
 
     const saveIntervalMilliseconds = 500;
     const lastSave = useRef(Date.now());
 
     const db = fb.db;
 
-    const [campaigns, setCampaigns] = useState([]);
+    // const [campaigns, setCampaigns] = useState([]);
+    // const campaignStream = useRef(null);
     const firstLoad = useRef(true);
-    const campaignStream = useRef(null);
     const charStream = useRef(null);
-    useEffect(() => {
-        campaignStream.current = db.collection("campaigns")
-            //.onSnapshot(querySnapshot => {
-            .get().then(querySnapshot => {
-                const campaignInfo = {};
-                querySnapshot.forEach(campaign => {
-                    campaignInfo[campaign.id] = campaign.data();
-                });
-                setCampaigns(campaignInfo);
-            });
+    // useEffect(() => {
+    //     campaignStream.current = db.collection("campaigns")
+    //         //.onSnapshot(querySnapshot => {
+    //         .get().then(querySnapshot => {
+    //             const campaignInfo = {};
+    //             querySnapshot.forEach(campaign => {
+    //                 campaignInfo[campaign.id] = campaign.data();
+    //             });
+    //             setCampaigns(campaignInfo);
+    //         });
     
-        // return () => {
-        //     campaignStream.current();
-        // };
-    }, [db])
+    //     // return () => {
+    //     //     campaignStream.current();
+    //     // };
+    // }, [db])
     useEffect(() => {
         if (slug && firstLoad.current) {
             charStream.current = db.collection("characters").doc(slug)
@@ -137,10 +138,12 @@ const CharSheetMain = () => {
             return false;
         }
 
-        if (!cur || !campaigns) {
+        // if (!cur || !campaigns) {
+        if (!cur || !usersCampaigns) {
             setComponent(loadComponent.current);
         } else {
-            const access = determineAccess(campaigns, userInfo.uid);
+            // const access = determineAccess(campaigns, userInfo.uid);
+            const access = determineAccess(usersCampaigns, userInfo.uid);
             if (access) {
                 setComponent(<div className="main normal-padding">
                     <div className="parchment">
@@ -157,7 +160,8 @@ const CharSheetMain = () => {
                 setComponent(<Redirect to="/characters" />)
             }
         }
-    }, [campaigns, cur, tabContents, userInfo])
+    // }, [campaigns, cur, tabContents, userInfo])
+    }, [usersCampaigns, cur, tabContents, userInfo])
 
     return(<>
         {component}

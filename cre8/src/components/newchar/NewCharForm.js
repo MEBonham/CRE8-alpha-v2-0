@@ -8,11 +8,12 @@ const NewCharForm = () => {
 
     const db = fb.db;
     const [userInfo] = useGlobal("user");
+    const [usersCampaigns] = useGlobal("usersCampaigns");
 
     const [characters, setCharacters] = useState([]);
-    const [campaigns, setCampaigns] = useState([]);
     const charStream = useRef(null);
-    const campaignStream = useRef(null);
+    // const [campaigns, setCampaigns] = useState([]);
+    // const campaignStream = useRef(null);
     useEffect(() => {
         charStream.current = db.collection("characters")
             // .onSnapshot(querySnapshot => {
@@ -27,22 +28,22 @@ const NewCharForm = () => {
                 setCharacters(charsData);
             });
         
-        campaignStream.current = db.collection("campaigns")
-            // .onSnapshot(querySnapshot => {
-            .get().then(querySnapshot => {
-                const campaignData = [];
-                querySnapshot.forEach(campaign => {
-                    campaignData.push({
-                        id: campaign.id,
-                        ...campaign.data()
-                    });
-                });
-                setCampaigns(campaignData.filter(campaignObj => campaignObj.members.indexOf(userInfo.uid) >= 0));
-            });
+        // campaignStream.current = db.collection("campaigns")
+        //     // .onSnapshot(querySnapshot => {
+        //     .get().then(querySnapshot => {
+        //         const campaignData = [];
+        //         querySnapshot.forEach(campaign => {
+        //             campaignData.push({
+        //                 id: campaign.id,
+        //                 ...campaign.data()
+        //             });
+        //         });
+        //         setCampaigns(campaignData.filter(campaignObj => campaignObj.members.indexOf(userInfo.uid) >= 0));
+        //     });
     
         // return () => {
         //     charStream.current();
-        //     campaignStream.current();
+        //     // campaignStream.current();
         // };
     }, [db, userInfo]);
 
@@ -141,7 +142,7 @@ const NewCharForm = () => {
                             />
                             Public
                         </li>
-                        {campaigns.map(campaign => (
+                        {usersCampaigns.map(campaign => (
                             <li key={campaign.id}>
                                 <input
                                     type="checkbox"

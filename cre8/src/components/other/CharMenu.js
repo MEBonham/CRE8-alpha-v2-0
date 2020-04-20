@@ -7,12 +7,13 @@ const CharMenu = () => {
 
     const db = fb.db;
     const [userInfo] = useGlobal("user");
+    const [usersCampaigns] = useGlobal("usersCampaigns");
 
     const [characters, setCharacters] = useState([]);
     const [orphans, setOrphans] = useState([]);
-    const [campaigns, setCampaigns] = useState([]);
+    // const [campaigns, setCampaigns] = useState([]);
+    // const campaignStream = useRef(null);
     const charStream = useRef(null);
-    const campaignStream = useRef(null);
     useEffect(() => {
         charStream.current = db.collection("characters")
             // .onSnapshot(querySnapshot => {
@@ -27,24 +28,24 @@ const CharMenu = () => {
                 setCharacters(charsData);
             });
         
-        campaignStream.current = db.collection("campaigns")
-            // .onSnapshot(querySnapshot => {
-            .get().then(querySnapshot => {
-                const campaignData = [];
-                querySnapshot.forEach(campaign => {
-                    campaignData.push({
-                        id: campaign.id,
-                        ...campaign.data()
-                    });
-                });
-                if (userInfo) {
-                    setCampaigns(campaignData.filter(campaignObj => campaignObj.members.indexOf(userInfo.uid) >= 0));
-                }
-            });
+        // campaignStream.current = db.collection("campaigns")
+        //     // .onSnapshot(querySnapshot => {
+        //     .get().then(querySnapshot => {
+        //         const campaignData = [];
+        //         querySnapshot.forEach(campaign => {
+        //             campaignData.push({
+        //                 id: campaign.id,
+        //                 ...campaign.data()
+        //             });
+        //         });
+        //         if (userInfo) {
+        //             setCampaigns(campaignData.filter(campaignObj => campaignObj.members.indexOf(userInfo.uid) >= 0));
+        //         }
+        //     });
     
         // return () => {
         //     charStream.current();
-        //     campaignStream.current();
+        //     // campaignStream.current();
         // };
     }, [db, userInfo]);
 
@@ -61,9 +62,9 @@ const CharMenu = () => {
                 <Link to="/characters/new">New Character</Link>
             </div>
             <section>
-                {campaigns.length ? <h2>Your Campaign Characters</h2> : null}
-                {campaigns.map((campaignObj, i) => (
-                    <section key={campaignObj.id} className={i + 1 < campaigns.length ? "not-last" : null}>
+                {usersCampaigns.length ? <h2>Your Campaign Characters</h2> : null}
+                {usersCampaigns.map((campaignObj, i) => (
+                    <section key={campaignObj.id} className={i + 1 < usersCampaigns.length ? "not-last" : null}>
                         <h3>{campaignObj.name}</h3>
                         {characters.filter(charData => charData.campaigns.indexOf(campaignObj.id) >= 0)
                             .map(charData => {

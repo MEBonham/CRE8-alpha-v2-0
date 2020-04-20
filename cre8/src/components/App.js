@@ -20,7 +20,7 @@ import Settings from './other/Settings';
 import '../css/App.css';
 
 const App = () => {
-    const [, setUserInfo] = useGlobal("user");
+    const [userInfo, setUserInfo] = useGlobal("user");
     const [firstLoad, setFirstLoad] = useState(true);
     const [bodyHeight, setBodyHeight] = useState(900);
     const [headerHeight, setHeaderHeight] = useState(200);
@@ -35,6 +35,29 @@ const App = () => {
             setFirstLoad(false);
         }
     }, [firstLoad, setUserInfo]);
+
+    const db = fb.db;
+    const campaignStream = useRef(null);
+    const [, setUsersCampaigns] = useGlobal("usersCampaigns");
+    useEffect(() => {
+        if (userInfo) {
+            campaignStream.current = db.collection("campaigns")
+                //.onSnapshot(querySnapshot => {
+                .get().then(querySnapshot => {
+                    const campaignInfo = {};
+                    querySnapshot.forEach(campaign => {
+                        if (campaign.data().members.includes(userInfo.uid)) {
+                            campaignInfo[campaign.id] = campaign.data();
+                        }
+                    });
+                    setUsersCampaigns(campaignInfo);
+                });
+        
+            // return () => {
+            //     campaignStream.current();
+            // };
+        }
+    }, [db, userInfo])
 
     const { pathname } = useLocation();
     const scrollContainer = useRef(null);

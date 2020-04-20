@@ -22,6 +22,8 @@ const RollsDisplay = () => {
         if (rolls.processFlag) {
             rolls.array.filter(roll => !roll.processed)
                 .forEach(rollObj => {
+                    console.log(userInfo.uid);
+                    console.log(rollObj);
                     // if campaign matches
                     setDisplayArr([
                         ...displayArr,
@@ -43,7 +45,6 @@ const RollsDisplay = () => {
         scrollHeightRef.current = el.scrollHeight;
         clientHeightRef.current = el.clientHeight;
 
-        // console.log(displayArr);
         displayArr.forEach((roll, i) => {
             if (roll.rollData.multRoll.length > 1) {
                 const elArr = document.querySelectorAll(`#meb_showRolls_${i} p.bg`);
