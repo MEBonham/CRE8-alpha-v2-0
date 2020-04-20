@@ -16,21 +16,7 @@ const ManageCampaigns = () => {
     // const campaignStream = useRef(null);
     const [usersObj, setUsersObj] = useState([]);
     const usersStream = useRef(null);
-    useEffect(() => {
-        
-        // campaignStream.current = db.collection("campaigns")
-        //     // .onSnapshot(querySnapshot => {
-        //     .get().then(querySnapshot => {
-        //         const campaignData = [];
-        //         querySnapshot.forEach(campaign => {
-        //             campaignData.push({
-        //                 id: campaign.id,
-        //                 ...campaign.data()
-        //             });
-        //         });
-        //         setCampaigns(campaignData.filter(campaignObj => campaignObj.members.indexOf(userInfo.uid) >= 0));
-        //     });
-        
+    useEffect(() => {        
         usersStream.current = db.collection("users")
             // .onSnapshot(querySnapshot => {
             .get().then(querySnapshot => {

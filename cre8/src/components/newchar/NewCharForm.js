@@ -12,8 +12,6 @@ const NewCharForm = () => {
 
     const [characters, setCharacters] = useState([]);
     const charStream = useRef(null);
-    // const [campaigns, setCampaigns] = useState([]);
-    // const campaignStream = useRef(null);
     useEffect(() => {
         charStream.current = db.collection("characters")
             // .onSnapshot(querySnapshot => {
@@ -27,23 +25,9 @@ const NewCharForm = () => {
                 });
                 setCharacters(charsData);
             });
-        
-        // campaignStream.current = db.collection("campaigns")
-        //     // .onSnapshot(querySnapshot => {
-        //     .get().then(querySnapshot => {
-        //         const campaignData = [];
-        //         querySnapshot.forEach(campaign => {
-        //             campaignData.push({
-        //                 id: campaign.id,
-        //                 ...campaign.data()
-        //             });
-        //         });
-        //         setCampaigns(campaignData.filter(campaignObj => campaignObj.members.indexOf(userInfo.uid) >= 0));
-        //     });
     
         // return () => {
         //     charStream.current();
-        //     // campaignStream.current();
         // };
     }, [db, userInfo]);
 

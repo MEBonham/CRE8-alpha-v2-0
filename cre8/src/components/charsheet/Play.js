@@ -100,7 +100,8 @@ const Play = () => {
     const generalRoll = (ev) => {
         if (cur) {
             const userStamp = userInfo ? userInfo.uid : "anon";
-            rollRef.current[`${Date.now()}-${userStamp}`] = {
+            rollRef.current = {
+                id: `${Date.now()}-${userStamp}`,
                 processedLocally: false,
                 processedBy: [],
                 name: ev.target.id.split("_")[2].split("-").join(" "),
@@ -130,6 +131,7 @@ const Play = () => {
                     }
                 };
             }
+            console.log(ev.target.id.split("_")[2].split("-").join(" "));
             const userStamp = userInfo ? userInfo.uid : "anon";
             rollRef.current = {
                 id: `${Date.now()}-${userStamp}`,
@@ -144,7 +146,6 @@ const Play = () => {
                 coasting: 0,
                 type: "saving throw"
             };
-            console.log(rollRef.current);
             setLatestRoll({
                 ...rollRef.current
             });

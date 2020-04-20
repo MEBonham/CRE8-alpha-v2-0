@@ -7,7 +7,6 @@ import { ifPlus } from '../../helpers/Calculations';
 import '../../css/game.css';
 
 const RollsDisplay = () => {
-    // const MAX_DISPLAYED = 100;
     const db = fb.db;
     const [userInfo] = useGlobal("user");
     const [usersCampaigns] = useGlobal("usersCampaigns");
@@ -29,13 +28,8 @@ const RollsDisplay = () => {
         return false;
     }
     useEffect(() => {
-        // const allRollIds = Object.keys(rolls);
-        // const rollsSortedTruncated = {};
-        // allRollIds.forEach(rollId => {
-        //     const rollObj = rolls[rollId];
         if (latestRoll.dieMode) {
             const rollObj = { ...latestRoll };
-            console.log(rollObj);
             const rollId = rollObj.id;
             if (!rollObj.processedLocally) {
                 const processedArr = (userInfo) ? [
@@ -48,14 +42,9 @@ const RollsDisplay = () => {
                     processedBy: processedArr,
                     rollData: roll(rollObj.dieMode, rollObj.dieModBasic, rollObj.dieModsMisc, rollObj.coasting)
                 };
-                // rollsSortedTruncated[rollId.split("-")[0]] = rollOnce;
                 delete rollOnce.id;
                 db.collection("rolls").doc(rollId).set(rollOnce)
                     .then(() => {
-                        // setRolls({
-                        //     ...rolls,
-                        //     rollId: rollOnce
-                        // });
                         setDisplayArr([
                             ...displayArr,
                             {
@@ -87,25 +76,10 @@ const RollsDisplay = () => {
                             processedBy: processedArr
                         }
                     ]);
-                    // rollsSortedTruncated[rollId.split("-")[0]] = {
-                    //     ...rollObj,
-                    //     processedBy: processedArr
-                    // };
                 }
             }
         }
-        // const rollIds = Object.keys(rollsSortedTruncated).sort();
-        // if (rollIds.length > MAX_DISPLAYED) {
-        //     const rollIds = rollIds.slice(rollIds.length - MAX_DISPLAYED);
-        // }
-        // rollIds.forEach(rollId => {
-        //     const rollObj = rollsSortedTruncated[rollId];
-        //     setDisplayArr([
-        //         ...displayArr,
-        //         rollObj
-        //     ]);
-        // });
-    }, [latestRoll])
+    }, [db, latestRoll, userInfo, usersCampaigns])
 
     useEffect(() => {
         const el = document.querySelector(".rolls-window div.scroll-window");

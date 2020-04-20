@@ -50,7 +50,8 @@ const App = () => {
                             campaignInfo[campaign.id] = campaign.data();
                         }
                     });
-                    setUsersCampaigns(campaignInfo);
+                    // setUsersCampaigns(campaignInfo);
+                    dispatch({ type: "UPDATE_CAMPAIGNS" });
                 });
         
             // return () => {
