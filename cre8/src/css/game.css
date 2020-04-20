@@ -31,19 +31,19 @@ section.rolls-window div.roll-display p.big-num {
     width: 24px;
     height: 24px;
     position: relative;
-    background-image: url('../media/d20-icon.png');
     font-size: 2rem;
     font-weight: bold;
+    text-align: center;
 }
 
-/* section.rolls-window div.roll-display p.big-num::after {
+section.rolls-window div.roll-display p.big-num::after {
     content: "";
     background-image: url('../media/d20-icon.png');
-    opacity: 0.8;
+    background-size: cover;
+    opacity: 0.2;
     position: absolute;
     top: 0;
     bottom: 0;
     left: 0;
     right: 0;
-    z-index: -1;
-} */
+}
