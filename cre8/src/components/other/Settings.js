@@ -7,7 +7,6 @@ import AdminSettings from './Admin';
 
 const Settings = () => {
 
-    const [, setMenuOpen] = useGlobal("userSettingsMenuOpen");
     const [ownId, setOwnId] = useState(null);
     const [ownRank, setOwnRank] = useState(null);
     useEffect(() => {
@@ -23,8 +22,14 @@ const Settings = () => {
                     console.log(err);
                 });
         }
-        setMenuOpen(false);
     }, [])
+
+    const [menuOpen, setMenuOpen] = useGlobal("userSettingsMenuOpen");
+    useEffect(() => {
+        if (menuOpen) {
+            setMenuOpen(false);
+        }
+    }, [menuOpen, setMenuOpen])
 
     const rankBadge = () => {
         switch(ownRank) {

@@ -55,15 +55,15 @@ const CharMenu = () => {
     }, [characters, userInfo])
 
     return(
-        <div className="main normal-padding">
+        <div className="main normal-padding char-menu">
             <h1>Character Library</h1>
             <div className="my-button spacing-14px">
                 <Link to="/characters/new">New Character</Link>
             </div>
             <section>
                 {campaigns.length ? <h2>Your Campaign Characters</h2> : null}
-                {campaigns.map(campaignObj => (
-                    <section key={campaignObj.id}>
+                {campaigns.map((campaignObj, i) => (
+                    <section key={campaignObj.id} className={i + 1 < campaigns.length ? "not-last" : null}>
                         <h3>{campaignObj.name}</h3>
                         {characters.filter(charData => charData.campaigns.indexOf(campaignObj.id) >= 0)
                             .map(charData => {

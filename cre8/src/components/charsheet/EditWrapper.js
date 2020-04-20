@@ -24,7 +24,6 @@ const EditWrapper = (props) => {
             });
 
             setToggleEditingFct((ev) => {
-                console.log(ev.target);
                 const key = ev.target.id.split("_")[2];
                 if (key) {
                     const valHolderId = `#meb_editform_${key}`;

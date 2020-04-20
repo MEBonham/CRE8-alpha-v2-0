@@ -68,7 +68,7 @@ const NewCharForm = () => {
             characters.forEach(charData => {
                 allSlugs.push(charData.id);
             });
-            if (allSlugs.indexOf(inputs.slug) >= 0) {
+            if (allSlugs.includes(inputs.slug)) {
                 setErrorMessage("Slug in use.");
             } else {
                 const fields = Object.keys(inputs).filter(field => field.startsWith("select_"));
@@ -107,7 +107,7 @@ const NewCharForm = () => {
                     required
                 />
             </div>
-            <div className="columns-envelope">
+            <div className="column-envelope">
                 <div>
                     <label htmlFor="name">Name</label>
                     <input

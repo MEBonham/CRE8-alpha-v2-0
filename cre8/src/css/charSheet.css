@@ -118,7 +118,8 @@
     font-size: 1.4rem;
 }
 
-.parchment .stat.float-right-element {
+.parchment .stat.float-right-element,
+.parchment .xp-button.float-right-element {
     margin-left: 18px;
 }
 
