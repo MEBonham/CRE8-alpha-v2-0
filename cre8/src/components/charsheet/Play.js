@@ -9,6 +9,7 @@ import d20Icon from '../../media/d20-icon.png';
 
 const Play = () => {
     const [cur, setCur] = useGlobal("cur");
+    const [rolls, setRolls] = useGlobal("rolls");
     const [toggleEditing] = useGlobal("toggleEditingFct");
     const [editStat] = useGlobal("editStatFct");
     const [escFormFct] = useGlobal("escFormFct");
@@ -16,6 +17,7 @@ const Play = () => {
     const [dieRollMode, setDieRollMode] = useGlobal("dieRollMode");
     const [coasting, setCoasting] = useGlobal("coasting");
     const coastingRef = useRef(coasting);
+    const rollsRef = useRef(rolls);
 
     useEffect(() => {
         if (cur) {
@@ -86,6 +88,63 @@ const Play = () => {
         } else {
             coastingRef.current = false;
             setCoasting(false);
+        }
+    }
+
+    const resetDieMode = () => {
+        document.getElementById("meb_select_dieMode").value = "normal";
+        setDieRollMode("normal");
+    }
+
+    const generalRoll = (ev) => {
+        if (cur) {
+            rollsRef.current.array.push({
+                processed: false,
+                name: ev.target.id.split("_")[2].split("-").join(" "),
+                character: cur.name,
+                campaigns: cur.campaigns,
+                dieMode: dieRollMode,
+                dieModBasic: ev.target.id.split("_")[3],
+                dieModsMisc: {},
+                coasting: 0,
+                type: "general roll"
+            });
+            rollsRef.current.processFlag = true;
+            setRolls({
+                ...rollsRef.current
+            });
+
+            resetDieMode();
+        }
+    }
+
+    const saveRoll = (ev) => {
+        if (cur) {
+            const dieModsMisc = {};
+            if (cur.stats.active_conditions.includes("Wounded")) {
+                dieModsMisc.wounded = {
+                    wounded: {
+                        num: gc.wounded_save_penalty
+                    }
+                };
+            }
+            rollsRef.current.array.push({
+                processed: false,
+                name: ev.target.id.split("_")[2].split("-").join(" "),
+                character: cur.name,
+                campaigns: cur.campaigns,
+                dieMode: dieRollMode,
+                dieModBasic: ev.target.id.split("_")[3],
+                dieModsMisc,
+                coasting: 0,
+                type: "saving throw"
+            });
+            rollsRef.current.processFlag = true;
+            setRolls({
+                ...rollsRef.current
+            });
+
+            resetDieMode();
         }
     }
     
@@ -186,37 +245,37 @@ const Play = () => {
                         </section>
                         <section className="general-rolls column-envelope">
                             <div className="general-general row-envelope">
-                                <MyButton>
+                                <MyButton fct={generalRoll} evData={`meb_roll_Heroics-Check_${cur.stats.heroic_bonus}`}>
                                     <img src={d20Icon} alt="" />
                                     Heroics Check ({ifPlus(cur.stats.heroic_bonus) + cur.stats.heroic_bonus})
                                 </MyButton>
-                                <MyButton>
+                                <MyButton fct={generalRoll} evData={`meb_roll_Awesome-Check_${cur.stats.awesome_check}`}>
                                     <img src={d20Icon} alt="" />
                                     Awesome Check ({ifPlus(cur.stats.awesome_check) + cur.stats.awesome_check})
                                 </MyButton>
-                                <MyButton>
+                                <MyButton fct={generalRoll} evData={`meb_roll_Spellcraft-Check_${cur.stats.spellcraft_check}`}>
                                     <img src={d20Icon} alt="" />
                                     Spellcraft Check ({ifPlus(cur.stats.spellcraft_check) + cur.stats.spellcraft_check})
                                 </MyButton>
-                                <MyButton>
+                                <MyButton fct={generalRoll} evData={`meb_roll_Speed-Check_${cur.stats.speed}`}>
                                     <img src={d20Icon} alt="" />
                                     Speed Check ({ifPlus(cur.stats.speed) + cur.stats.speed})
                                 </MyButton>
                             </div>
                             <div className="saving-throws row-envelope">
-                                <MyButton>
+                                <MyButton fct={saveRoll} evData={`meb_roll_Defense-Save_${cur.stats.defense_total}`}>
                                     <img src={d20Icon} alt="" />
                                     Defense Save ({ifPlus(cur.stats.defense_total) + cur.stats.defense_total})
                                 </MyButton>
-                                <MyButton>
+                                <MyButton fct={saveRoll} evData={`meb_roll_Fortitude-Save_${cur.stats.fortitude_total}`}>
                                     <img src={d20Icon} alt="" />
                                     Fortitude Save ({ifPlus(cur.stats.fortitude_total) + cur.stats.fortitude_total})
                                 </MyButton>
-                                <MyButton>
+                                <MyButton fct={saveRoll} evData={`meb_roll_Reflex-Save_${cur.stats.reflex_total}`}>
                                     <img src={d20Icon} alt="" />
                                     Reflex Save ({ifPlus(cur.stats.reflex_total) + cur.stats.reflex_total})
                                 </MyButton>
-                                <MyButton>
+                                <MyButton fct={saveRoll} evData={`meb_roll_Willpower-Save_${cur.stats.willpower_total}`}>
                                     <img src={d20Icon} alt="" />
                                     Willpower Save ({ifPlus(cur.stats.willpower_total) + cur.stats.willpower_total})
                                 </MyButton>
@@ -226,7 +285,7 @@ const Play = () => {
                     <section className="conditions">
                         <div className="die-mode">
                             <h3>d20 Die Modes:</h3>
-                            <select onChange={selectDieMode} defaultValue={dieRollMode}>
+                            <select onChange={selectDieMode} defaultValue={dieRollMode} id="meb_select_dieMode">
                                 <option value="boost">Boosted</option>
                                 <option value="normal">Normal</option>
                                 <option value="drag">Dragged</option>

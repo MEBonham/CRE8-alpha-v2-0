@@ -14,12 +14,17 @@ const determineLevel = (xp_total) => {
     return [calcLevel, xpThreshold];
 }
 
+export const ifPlus = (val) => {
+    if (val >= 0) return "+";
+    else return "";
+}
+
 const mineKits = (kitsObj) => {
     // TODO
     return 0;
 }
 
-const mineModifiers = (modsObj) => {
+export const mineModifiers = (modsObj) => {
     let total = 0;
     const bonusTypes = Object.keys(modsObj);
     bonusTypes.forEach(type => {
@@ -63,9 +68,8 @@ export const mineTrainedSkillsRequired = (trainedReqObj) => {
     return result;
 }
 
-export const ifPlus = (val) => {
-    if (val >= 0) return "+";
-    else return "";
+export const numSort = (numArr) => {
+    return numArr.sort((a, b) => { return a - b });
 }
 
 export const updateBaseXp = (statsObj) => {

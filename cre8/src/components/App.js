@@ -10,6 +10,7 @@ import Home from './other/Home';
 import NewCharForm from './newchar/NewCharForm';
 import CharSheetMain from './charsheet/CharSheetMain';
 import CharMenu from './other/CharMenu';
+import RollsDisplay from './game/RollsDisplay';
 import ForgotPassword from './auth/ForgotPassword';
 import Login from './auth/Login';
 import Register from './auth/Register';
@@ -60,7 +61,7 @@ const App = () => {
                     </Switch>
                 </div>
                 <div className="main-sidebar">
-                    
+                    <RollsDisplay />
                 </div>
             </div>
             <Footer />
