@@ -8,8 +8,9 @@ import { ifPlus } from '../../helpers/Calculations';
 import d20Icon from '../../media/d20-icon.png';
 
 const Play = () => {
+    const [userInfo] = useGlobal("user");
     const [cur, setCur] = useGlobal("cur");
-    const [rolls, setRolls] = useGlobal("rolls");
+    const [latestRoll, setLatestRoll] = useGlobal("latestRoll");
     const [toggleEditing] = useGlobal("toggleEditingFct");
     const [editStat] = useGlobal("editStatFct");
     const [escFormFct] = useGlobal("escFormFct");
@@ -17,7 +18,6 @@ const Play = () => {
     const [dieRollMode, setDieRollMode] = useGlobal("dieRollMode");
     const [coasting, setCoasting] = useGlobal("coasting");
     const coastingRef = useRef(coasting);
-    const rollsRef = useRef(rolls);
 
     useEffect(() => {
         if (cur) {
@@ -96,10 +96,13 @@ const Play = () => {
         setDieRollMode("normal");
     }
 
+    const rollRef = useRef(latestRoll);
     const generalRoll = (ev) => {
         if (cur) {
-            rollsRef.current.array.push({
-                processed: false,
+            const userStamp = userInfo ? userInfo.uid : "anon";
+            rollRef.current[`${Date.now()}-${userStamp}`] = {
+                processedLocally: false,
+                processedBy: [],
                 name: ev.target.id.split("_")[2].split("-").join(" "),
                 character: cur.name,
                 campaigns: cur.campaigns,
@@ -108,10 +111,9 @@ const Play = () => {
                 dieModsMisc: {},
                 coasting: 0,
                 type: "general roll"
-            });
-            rollsRef.current.processFlag = true;
-            setRolls({
-                ...rollsRef.current
+            };
+            setLatestRoll({
+                ...rollRef.current
             });
 
             resetDieMode();
@@ -128,8 +130,11 @@ const Play = () => {
                     }
                 };
             }
-            rollsRef.current.array.push({
-                processed: false,
+            const userStamp = userInfo ? userInfo.uid : "anon";
+            rollRef.current = {
+                id: `${Date.now()}-${userStamp}`,
+                processedLocally: false,
+                processedBy: [],
                 name: ev.target.id.split("_")[2].split("-").join(" "),
                 character: cur.name,
                 campaigns: cur.campaigns,
@@ -138,10 +143,10 @@ const Play = () => {
                 dieModsMisc,
                 coasting: 0,
                 type: "saving throw"
-            });
-            rollsRef.current.processFlag = true;
-            setRolls({
-                ...rollsRef.current
+            };
+            console.log(rollRef.current);
+            setLatestRoll({
+                ...rollRef.current
             });
 
             resetDieMode();

@@ -24,10 +24,7 @@ const reducer = (state, action) => {
 const initialData = {
     coasting: false,
     dieRollMode: "normal",
-    rolls: {
-        processFlag: false,
-        array: []
-    },
+    latestRoll: {},
     userSettingsMenuOpen: false
 };
 

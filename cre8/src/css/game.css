@@ -41,6 +41,7 @@ section.rolls-window div.roll-display .roll-result .equals {
 }
 
 section.rolls-window div.roll-display p.big-num {
+    margin: 0 2px;
     width: 24px;
     height: 24px;
     position: relative;

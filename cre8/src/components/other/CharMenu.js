@@ -55,6 +55,11 @@ const CharMenu = () => {
         }
     }, [characters, userInfo])
 
+    const [campaignIds, setCampaignIds] = useState([]);
+    useEffect(() => {
+        if (usersCampaigns) setCampaignIds(Object.keys(usersCampaigns));
+    }, [usersCampaigns])
+
     return(
         <div className="main normal-padding char-menu">
             <h1>Character Library</h1>
@@ -62,21 +67,24 @@ const CharMenu = () => {
                 <Link to="/characters/new">New Character</Link>
             </div>
             <section>
-                {usersCampaigns.length ? <h2>Your Campaign Characters</h2> : null}
-                {usersCampaigns.map((campaignObj, i) => (
-                    <section key={campaignObj.id} className={i + 1 < usersCampaigns.length ? "not-last" : null}>
-                        <h3>{campaignObj.name}</h3>
-                        {characters.filter(charData => charData.campaigns.indexOf(campaignObj.id) >= 0)
-                            .map(charData => {
-                                const toAddress = `/characters/${charData.id}`;
-                                return(
-                                    <p key={charData.id}>
-                                        <Link to={toAddress}>{charData.name}</Link>
-                                    </p>
-                                );
-                            })}
-                    </section>
-                ))}
+                {campaignIds.length ? <h2>Your Campaign Characters</h2> : null}
+                {campaignIds.map((campaignId, i) => {
+                    const campaignObj = usersCampaigns[campaignId];
+                    return (
+                        <section key={campaignId} className={i + 1 < campaignIds.length ? "not-last" : null}>
+                            <h3>{campaignObj.name}</h3>
+                            {characters.filter(charData => charData.campaigns.includes(campaignId))
+                                .map(charData => {
+                                    const toAddress = `/characters/${charData.id}`;
+                                    return(
+                                        <p key={charData.id}>
+                                            <Link to={toAddress}>{charData.name}</Link>
+                                        </p>
+                                    );
+                                })}
+                        </section>
+                    );
+                })}
             </section>
             <section>
                 <h2>Standard Characters</h2>

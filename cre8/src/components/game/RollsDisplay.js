@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
+import fb from '../../fbConfig';
 import useGlobal from '../../hooks/useGlobal';
 
 import { roll } from '../../helpers/roll';
@@ -6,8 +7,11 @@ import { ifPlus } from '../../helpers/Calculations';
 import '../../css/game.css';
 
 const RollsDisplay = () => {
+    // const MAX_DISPLAYED = 100;
+    const db = fb.db;
     const [userInfo] = useGlobal("user");
-    const [rolls] = useGlobal("rolls");
+    const [usersCampaigns] = useGlobal("usersCampaigns");
+    const [latestRoll] = useGlobal("latestRoll");
     const [displayArr, setDisplayArr] = useState([]);
 
     const scrollHeightRef = useRef(0);
@@ -18,24 +22,90 @@ const RollsDisplay = () => {
         clientHeightRef.current = el.clientHeight;
     }, [])
 
+    const campaignMatch = (campIdsArr1, campIdsArr2) => {
+        campIdsArr1.forEach(id => {
+            if (campIdsArr2.includes(id)) return true;
+        });
+        return false;
+    }
     useEffect(() => {
-        if (rolls.processFlag) {
-            rolls.array.filter(roll => !roll.processed)
-                .forEach(rollObj => {
-                    console.log(userInfo.uid);
-                    console.log(rollObj);
-                    // if campaign matches
+        // const allRollIds = Object.keys(rolls);
+        // const rollsSortedTruncated = {};
+        // allRollIds.forEach(rollId => {
+        //     const rollObj = rolls[rollId];
+        if (latestRoll.dieMode) {
+            const rollObj = { ...latestRoll };
+            console.log(rollObj);
+            const rollId = rollObj.id;
+            if (!rollObj.processedLocally) {
+                const processedArr = (userInfo) ? [
+                    ...rollObj.processedBy.slice(),
+                    userInfo.uid
+                ] : rollObj.processedBy.slice();
+                const rollOnce = {
+                    ...rollObj,
+                    processedLocally: true,
+                    processedBy: processedArr,
+                    rollData: roll(rollObj.dieMode, rollObj.dieModBasic, rollObj.dieModsMisc, rollObj.coasting)
+                };
+                // rollsSortedTruncated[rollId.split("-")[0]] = rollOnce;
+                delete rollOnce.id;
+                db.collection("rolls").doc(rollId).set(rollOnce)
+                    .then(() => {
+                        // setRolls({
+                        //     ...rolls,
+                        //     rollId: rollOnce
+                        // });
+                        setDisplayArr([
+                            ...displayArr,
+                            {
+                                ...rollOnce,
+                                id: rollId
+                            }
+                        ]);
+                    })
+                    .catch(err => {
+                        console.log(err);
+                        setDisplayArr([
+                            ...displayArr,
+                            {
+                                ...rollOnce,
+                                id: rollId
+                            }
+                        ]);
+                    })
+            } else if (userInfo && usersCampaigns && rollObj && !rollObj.processedBy.includes(userInfo.uid)) {
+                if (campaignMatch(Object.keys(usersCampaigns), rollObj.campaigns)) {
+                    const processedArr = (userInfo) ? [
+                        ...rollObj.processedBy.slice(),
+                        userInfo.uid
+                    ] : rollObj.processedBy.slice();
                     setDisplayArr([
                         ...displayArr,
                         {
-                            character: rollObj.character,
-                            name: rollObj.name,
-                            rollData: roll(rollObj.dieMode, rollObj.dieModBasic, rollObj.dieModsMisc, rollObj.coasting)
+                            ...rollObj,
+                            processedBy: processedArr
                         }
                     ]);
-                });
+                    // rollsSortedTruncated[rollId.split("-")[0]] = {
+                    //     ...rollObj,
+                    //     processedBy: processedArr
+                    // };
+                }
+            }
         }
-    }, [rolls])
+        // const rollIds = Object.keys(rollsSortedTruncated).sort();
+        // if (rollIds.length > MAX_DISPLAYED) {
+        //     const rollIds = rollIds.slice(rollIds.length - MAX_DISPLAYED);
+        // }
+        // rollIds.forEach(rollId => {
+        //     const rollObj = rollsSortedTruncated[rollId];
+        //     setDisplayArr([
+        //         ...displayArr,
+        //         rollObj
+        //     ]);
+        // });
+    }, [latestRoll])
 
     useEffect(() => {
         const el = document.querySelector(".rolls-window div.scroll-window");
