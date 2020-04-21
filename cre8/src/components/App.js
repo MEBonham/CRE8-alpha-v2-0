@@ -20,85 +20,6 @@ import Settings from './other/Settings';
 import '../css/App.css';
 
 const App = () => {
-    // const appReducer = (state, action) => {
-    //     switch (action.type) {
-    //         case 'ADJUST_HEIGHTS':
-    //             return {
-    //                 ...state,
-    //                 styleObj: { 
-    //                     height: `${document.querySelector("body").offsetHeight
-    //                          - document.querySelector(".main-page-header").offsetHeight - 21}px`
-    //                 }
-    //             };
-    //         case 'ERROR':
-    //             return { ...state, errorMessage: action.error };
-    //         // case 'UPDATE_CAMPAIGNS':
-    //         //     setUsersCampaigns(action.payload);
-    //         //     return state;
-    //         default:
-    //             return state;
-    //     }
-    // }
-
-    // const useApp = () => {
-    //     const db = fb.db;
-    //     const [userInfo, setUserInfo] = useGlobal("user");
-    //     const [, setUsersCampaigns] = useGlobal("usersCampaigns");
-    //     const initialState = {
-    //         userInfo,
-    //         setUsersCampaigns,
-    //         styleObj: {},
-    //         errorMessage: ""
-    //     };
-    //     const [state, dispatch] = useReducer(appReducer, initialState);
-
-    //     // const updateUser = async (user) => {
-    //     //     try {
-    //     //         setUserInfo(user);
-    //     //     } catch (err) {
-    //     //         dispatch({ type: 'ERROR', error: err.message || err });
-    //     //     }
-    //     // }
-
-    //     const fetchCampaigns = () => {
-    //         let campaignStream = db.collection("campaigns")
-    //             //.onSnapshot(querySnapshot => {
-    //             .get().then(querySnapshot => {
-    //                 const campaignInfo = {};
-    //                 querySnapshot.forEach(campaign => {
-    //                     if (campaign.data().members.includes(userInfo.uid)) {
-    //                         campaignInfo[campaign.id] = campaign.data();
-    //                     }
-    //                 });
-    //                 setUsersCampaigns(campaignInfo);
-    //                 // dispatch({ type: "UPDATE_CAMPAIGNS", payload: campaignInfo });
-    //                 return campaignStream;
-    //             })
-    //             .catch(err => {
-    //                 dispatch({ type: 'ERROR', error: err.message || err });
-    //                 return null;
-    //             });
-    //     }
-
-    //     useEffect(() => {
-    //         fb.auth.onAuthStateChanged(user => {
-    //             setUserInfo(user);
-    //         });
-    //         dispatch({ type: 'ADJUST_HEIGHTS' })
-    //     }, [setUserInfo])
-
-    //     useEffect(() => {
-    //         if (userInfo) {
-    //             const unsubscribeObj = fetchCampaigns();
-    //             return () => unsubscribeObj;
-    //         }
-    //     }, [fetchCampaigns, userInfo])
-
-    //     return state;
-    // }
-
-    // console.log(useApp());
-    // const { styleObj } = useApp();
 
     const [userInfo, setUserInfo] = useGlobal("user");
     const [firstLoad, setFirstLoad] = useState(true);
@@ -131,7 +52,6 @@ const App = () => {
                         }
                     });
                     setUsersCampaigns(campaignInfo);
-                    // dispatch({ type: "UPDATE_CAMPAIGNS" });
                 });
         
             // return () => {
