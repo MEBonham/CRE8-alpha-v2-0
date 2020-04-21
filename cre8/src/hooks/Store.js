@@ -1,6 +1,5 @@
-import React, { useReducer, createContext } from 'react';
 
-const reducer = (state, action) => {
+const Reducer = (state, action) => {
     switch (action.type) {
         case 'INITIALIZE':
             const initialState = {};
@@ -21,21 +20,5 @@ const reducer = (state, action) => {
     }
 }
 
-const initialData = {
-    coasting: false,
-    dieRollMode: "normal",
-    latestRoll: {},
-    userSettingsMenuOpen: false
-};
-
-const GlobalWrapper = ({children}) => {
-    const [state, dispatch] = useReducer(reducer, initialData);
-    return(
-        <StoreContext.Provider value={{state, dispatch}}>
-            {children}
-        </StoreContext.Provider>
-    );
-}
-
-export const StoreContext = createContext(null);
-export default GlobalWrapper;
+// export const StoreContext = createContext(null);
+export default Reducer;

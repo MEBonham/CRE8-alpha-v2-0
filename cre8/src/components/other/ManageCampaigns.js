@@ -1,16 +1,16 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useContext } from 'react';
 import { v4 as uuidv4 } from 'uuid';
+import { Context } from '../GlobalWrapper';
 import fb from '../../fbConfig';
-import useGlobal from '../../hooks/useGlobal';
 import useForm from '../../hooks/useForm';
 
 import MyButton from '../ui/MyButton';
 
 const ManageCampaigns = () => {
-
+    const [{ user, activeCampaigns }, dispatch] = useContext(Context);
     const db = fb.db;
-    const [userInfo] = useGlobal("user");
-    const [usersCampaigns, setUsersCampaigns] = useGlobal("usersCampaigns");
+    // const [userInfo] = useGlobal("user");
+    // const [usersCampaigns, setUsersCampaigns] = useGlobal("usersCampaigns");
 
     const [usersObj, setUsersObj] = useState([]);
     const usersStream = useRef(null);
@@ -27,7 +27,7 @@ const ManageCampaigns = () => {
                 });
                 setUsersObj(usersData);
             });
-    }, [db, userInfo]);
+    }, [db, user]);
 
     const getDisplayNameFromId = (id) => {
         if (usersObj && usersObj[id]) {
@@ -48,19 +48,19 @@ const ManageCampaigns = () => {
     const saveNewCampaign = () => {
         const id = uuidv4();
         db.collection("campaigns").doc(id).set({
-            owner: userInfo.uid,
+            owner: user.uid,
             name: newInputs.newCampaignName,
-            members: [userInfo.uid]
+            members: [user.uid]
         })
         .then(() => {
-            setUsersCampaigns({
-                ...usersCampaigns,
+            dispatch({ type: "SET", key: "activeCampaigns", payload: {
+                ...activeCampaigns,
                 [id]: {
-                    owner: userInfo.uid,
+                    owner: user.uid,
                     name: newInputs.newCampaignName,
-                    members: [userInfo.uid]
+                    members: [user.uid]
                 }
-            });
+            } });
         })
         .catch(err => {
             console.log(err);
@@ -93,16 +93,16 @@ const ManageCampaigns = () => {
                         }, { merge: true })
                         .then(() => {
                             // console.log(usersCampaigns);
-                            setUsersCampaigns({
-                                ...usersCampaigns,
+                            dispatch({ type: "SET", key: "activeCampaigns", payload: {
+                                ...activeCampaigns,
                                 [idsArr[2]]: {
-                                    ...usersCampaigns[idsArr[2]],
+                                    ...activeCampaigns[idsArr[2]],
                                     members: [
                                         ...prevMembers,
                                         selectVal
                                     ]
                                 }
-                            })
+                            } });
                         })
                         .catch(err => {
                             console.log(err);
@@ -117,8 +117,8 @@ const ManageCampaigns = () => {
     return(
         <section className="manage-campaigns">
             <h2>Your Campaigns</h2>
-            {Object.keys(usersCampaigns).map((campaignId, i) => {
-                const campaignData = usersCampaigns[campaignId];
+            {Object.keys(activeCampaigns).map((campaignId, i) => {
+                const campaignData = activeCampaigns[campaignId];
                 return(
                     <section key={campaignId} className="one-campaign">
                         <h3>{campaignData.name}</h3>

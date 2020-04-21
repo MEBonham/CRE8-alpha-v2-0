@@ -1,14 +1,14 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useContext } from 'react';
 import { Redirect, Link } from 'react-router-dom';
 import fb from '../../fbConfig';
-import useGlobal from '../../hooks/useGlobal';
+import { Context } from '../GlobalWrapper';
 import useForm from '../../hooks/useForm';
 
 const NewCharForm = () => {
-
+    const [{ user, activeCampaigns }] = useContext(Context);
     const db = fb.db;
-    const [userInfo] = useGlobal("user");
-    const [usersCampaigns] = useGlobal("usersCampaigns");
+    // const [userInfo] = useGlobal("user");
+    // const [usersCampaigns] = useGlobal("usersCampaigns");
 
     const [characters, setCharacters] = useState([]);
     const charStream = useRef(null);
@@ -29,12 +29,12 @@ const NewCharForm = () => {
         // return () => {
         //     charStream.current();
         // };
-    }, [db, userInfo]);
+    }, [db, user]);
 
     const [rank, setRank] = useState(null);
     useEffect(() => {
-        if (userInfo) {
-            const docRef = fb.db.collection("users").doc(userInfo.uid);
+        if (user) {
+            const docRef = fb.db.collection("users").doc(user.uid);
             docRef.get()
                 .then((doc) => {
                     setRank(doc.data().rank);
@@ -43,7 +43,7 @@ const NewCharForm = () => {
                     console.log(err);
                 });
         }
-    }, [userInfo])
+    }, [user])
     
     const [errorMessage, setErrorMessage] = useState("");
     const [redirectFlag, setRedirectFlag] = useState(false);
@@ -61,7 +61,7 @@ const NewCharForm = () => {
                     field.split("_")[1]
                 ));
                 db.collection("characters").doc(inputs.slug).set({
-                    owner: userInfo.uid,
+                    owner: user.uid,
                     name: inputs.name,
                     campaigns: campaignsChecked
                 })
@@ -126,7 +126,7 @@ const NewCharForm = () => {
                             />
                             Public
                         </li>
-                        {Object.keys(usersCampaigns).map(campaignId => {
+                        {Object.keys(activeCampaigns).map(campaignId => {
                             return(
                                 <li key={campaignId}>
                                     <input
@@ -135,7 +135,7 @@ const NewCharForm = () => {
                                         onChange={handleInputChange}
                                         value="1"
                                     />
-                                    {usersCampaigns[campaignId].name}
+                                    {activeCampaigns[campaignId].name}
                                 </li>
                             );
                         })}

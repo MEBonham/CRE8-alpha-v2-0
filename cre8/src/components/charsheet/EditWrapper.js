@@ -1,18 +1,19 @@
-import React, { useEffect, useRef } from 'react';
-import useGlobal from '../../hooks/useGlobal';
+import React, { useEffect, useRef, useContext } from 'react';
+import { Context } from '../GlobalWrapper';
 
 import { updateBaseXp } from '../../helpers/Calculations';
 
 const EditWrapper = (props) => {
-    const [cur, setCur] = useGlobal("cur");
-    const [, setToggleEditingFct] = useGlobal("toggleEditingFct");
-    const [, setEditStatFct] = useGlobal("editStatFct");
-    const [, setEscFormFct] = useGlobal("escFormFct");
+    const [state, dispatch] = useContext(Context);
+    // const [cur, setCur] = useGlobal("cur");
+    // const [, setToggleEditingFct] = useGlobal("toggleEditingFct");
+    // const [, setEditStatFct] = useGlobal("editStatFct");
+    // const [, setEscFormFct] = useGlobal("escFormFct");
     
     const firstLoad = useRef(true);
     useEffect(() => {
         if (firstLoad.current) {
-            setEscFormFct((ev) => {
+            dispatch({ type: "SET", key: "escFormFct", payload: (ev) => {
                 if (ev.key && ev.key === "Escape") {
                     document.querySelectorAll(".meb-popout-edit input").forEach(el => {
                         el.blur();
@@ -21,9 +22,9 @@ const EditWrapper = (props) => {
                         el.classList.remove("meb-open");
                     });
                 }
-            });
+            } });
 
-            setToggleEditingFct((ev) => {
+            dispatch({ type: "SET", key: "toggleEditingFct", payload: (ev) => {
                 const key = ev.target.id.split("_")[2];
                 if (key) {
                     const valHolderId = `#meb_editform_${key}`;
@@ -49,57 +50,60 @@ const EditWrapper = (props) => {
                         });
                     }
                 }
-            });
+            } });
             
             firstLoad.current = false;
         }
     })
 
-    const setEditStatFctRef = useRef(setEditStatFct);
-    const setCurRef = useRef(setCur);
+    // const setEditStatFctRef = useRef(setEditStatFct);
+    // const setCurRef = useRef(setCur);
     useEffect(() => {
         const switchKey = (key, newVal) => {
             switch (key) {
                 case "earnXp":
                     return {
-                        ...cur,
+                        ...state.cur,
                         stats: updateBaseXp({
-                            ...cur.stats,
-                            xp_base: Math.max(0, cur.stats.xp_base + parseInt(newVal))
+                            ...state.cur.stats,
+                            xp_base: Math.max(0, state.cur.stats.xp_base + parseInt(newVal))
                         })
                     }
                 case "name":
                     return {
-                        ...cur,
+                        ...state.cur,
                         [key]: newVal
                     };
                 case "xpBase":
                     return {
-                        ...cur,
+                        ...state.cur,
                         stats: updateBaseXp({
-                            ...cur.stats,
+                            ...state.cur.stats,
                             xp_base: Math.max(0, newVal)
                         })
                     }
                 default:
                     return {
-                        ...cur,
+                        ...state.cur,
                         stats: {
-                            ...cur.stats,
+                            ...state.cur.stats,
                             [key]: newVal
                         }
                     };
             }
         }
 
-        setEditStatFctRef.current((ev, savedInputs) => {
+        dispatch({ type: "SET", key: "editStatFct", payload: (ev, savedInputs) => {
             const key = ev.target.id.split("_")[2];
             const valHolderId = `meb_editval_${key}`;
             const newVal = savedInputs[valHolderId];
-            setCurRef.current(switchKey(key, newVal));
+            dispatch({ type: "SET", key: "cur", payload: switchKey(key, newVal) });
             document.getElementById(ev.target.id).classList.remove("meb-open");
-        });
-    }, [cur])
+        } });
+        // setEditStatFctRef.current((ev, savedInputs) => {
+        //     setCurRef.current(switchKey(key, newVal));
+        // });
+    }, [dispatch, state.cur])
 
     return(
         <>

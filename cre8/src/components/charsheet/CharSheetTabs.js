@@ -1,30 +1,31 @@
-import React, { useState, useEffect } from 'react';
-import useGlobal from '../../hooks/useGlobal';
+import React, { useContext } from 'react';
+import { Context } from '../GlobalWrapper';
 
 const CharSheetTabs = () => {
+    const [{ cur }, dispatch] = useContext(Context);
     const classInactive = "char-sheet-tab";
     const classActive = "char-sheet-tab active";
 
-    const [cur, setCur] = useGlobal("cur");
-    const [tab, setTab] = useState(null);
-    useEffect(() => {
-        setTab(cur.activeTab);
-    }, [cur])
+    // const [cur, setCur] = useGlobal("cur");
+    // const [tab, setTab] = useState(null);
+    // useEffect(() => {
+    //     dispatch({ type: "SET", key: "cur", payload: cur.activeTab });
+    // }, [cur])
 
     const tabClick = (ev) => {
         const setStr = ev.target.id.split("_")[1];
-        setCur({
+        dispatch({ type: "SET", key: "cur", payload: {
             ...cur,
             activeTab: setStr
-        });
+        } });
     }
 
     return(
         <div className="char-sheet-tabs">
-            <span onClick={tabClick} id="main-tab_play" className={tab === "play" ? classActive : classInactive}>Play</span>
-            <span onClick={tabClick} id="main-tab_configure" className={tab === "configure" ? classActive : classInactive}>Configure</span>
-            <span onClick={tabClick} id="main-tab_bio" className={tab === "bio" ? classActive : classInactive}>Bio</span>
-            <span onClick={tabClick} id="main-tab_+library" className={tab === "+library" ? classActive : classInactive}>+Library</span>
+            <span onClick={tabClick} id="main-tab_play" className={cur.activeTab === "play" ? classActive : classInactive}>Play</span>
+            <span onClick={tabClick} id="main-tab_configure" className={cur.activeTab === "configure" ? classActive : classInactive}>Configure</span>
+            <span onClick={tabClick} id="main-tab_bio" className={cur.activeTab === "bio" ? classActive : classInactive}>Bio</span>
+            <span onClick={tabClick} id="main-tab_+library" className={cur.activeTab === "+library" ? classActive : classInactive}>+Library</span>
         </div>
     );
 }

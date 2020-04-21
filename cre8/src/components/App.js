@@ -1,8 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useLocation, Switch, Route } from 'react-router-dom';
-import GlobalWrapper from '../hooks/Store';
+import GlobalWrapper from './GlobalWrapper';
 
-import StateHolder from './StateHolder';
 import Header from './header/Header';
 import Footer from './footer/Footer';
 import Guarded from './Guarded';
@@ -39,11 +38,11 @@ const App = () => {
         }
     }, []);
 
-    // const { pathname } = useLocation();
-    // const scrollContainer = useRef(null);
-    // useEffect(() => {
-    //     scrollContainer.current.scroll(0, 0);
-    // }, [pathname]);
+    const { pathname } = useLocation();
+    const scrollContainer = useRef(null);
+    useEffect(() => {
+        scrollContainer.current.scroll(0, 0);
+    }, [pathname]);
 
     return (
         <div className="App">
@@ -51,8 +50,8 @@ const App = () => {
                 {/* <StateHolder /> */}
                 <Header />
                 <div className="main-envelope" style={styleObj}>
-                    {/* <div className="main-contents" ref={scrollContainer}> */}
-                    <div className="main-contents">
+                    <div className="main-contents" ref={scrollContainer}>
+                    {/* <div className="main-contents"> */}
                         <Switch>
                             <Route exact path="/" component={Home} />
                             <Route path={["/index", "/index.html"]} component={Home} />

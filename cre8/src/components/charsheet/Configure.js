@@ -1,5 +1,5 @@
-import React, { useState, useEffect, useRef } from 'react';
-import useGlobal from '../../hooks/useGlobal';
+import React, { useState, useEffect, useRef, useContext } from 'react';
+import { Context } from '../GlobalWrapper';
 import useFormGlobalLink from '../../hooks/useFormGlobalLink';
 
 import MyButton from '../ui/MyButton';
@@ -7,22 +7,23 @@ import gc from '../../helpers/GameConstants';
 import { mineTrainedSkillsRequired, updateGoodSave, updateSkillRanks } from '../../helpers/Calculations';
 
 const Configure = () => {
-    const [cur, setCur] = useGlobal("cur");
-    const [toggleEditing] = useGlobal("toggleEditingFct");
-    const [editStat] = useGlobal("editStatFct");
-    const [escFormFct] = useGlobal("escFormFct");
-    const [currentInputs, setCurrentInputs] = useGlobal("currentInputs");
+    const [state, dispatch] = useContext(Context);
+    // const [cur, setCur] = useGlobal("cur");
+    // const [toggleEditing] = useGlobal("toggleEditingFct");
+    // const [editStat] = useGlobal("editStatFct");
+    // const [escFormFct] = useGlobal("escFormFct");
+    // const [currentInputs, setCurrentInputs] = useGlobal("currentInputs");
 
     const trainedSkills = useRef([]);
     const trainedSkillsReq = useRef([]);
     const [levelsArray, setLevelsArray] = useState([]);
     const [upTo5Array, setUpTo5Array] = useState([]);
     useEffect(() => {
-        if (cur) {
-            document.querySelector(`#meb_setgoodsave_${cur.stats.good_save}`).parentNode.classList.add("selected");
+        if (state.cur) {
+            document.querySelector(`#meb_setgoodsave_${state.cur.stats.good_save}`).parentNode.classList.add("selected");
             
-            trainedSkillsReq.current = mineTrainedSkillsRequired(cur.stats.trained_skills_required);
-            trainedSkills.current = cur.stats.trained_skills;
+            trainedSkillsReq.current = mineTrainedSkillsRequired(state.cur.stats.trained_skills_required);
+            trainedSkills.current = state.cur.stats.trained_skills;
             gc.skills_list.forEach(skill => {
                 if (trainedSkillsReq.current.includes(skill)) {
                     document.querySelector(`#meb_trained_checkbox_${skill}`).setAttribute("disabled", "true");
@@ -34,7 +35,7 @@ const Configure = () => {
 
             const tempLevelsArray = [];
             const tempUpTo5Array = [];
-            for (let i = 0; i < cur.stats.level_max8; i++) {
+            for (let i = 0; i < state.cur.stats.level_max8; i++) {
                 tempLevelsArray.push(i);
             }
             for (let i = 0; i < gc.skill_ranks_per_level; i++) {
@@ -43,18 +44,18 @@ const Configure = () => {
             setLevelsArray(tempLevelsArray);
             setUpTo5Array(tempUpTo5Array);
         }
-    }, [cur])
+    }, [state.cur])
 
     const setGoodSave = (ev) => {
-        if (cur) {
+        if (state.cur) {
             const newVal = ev.target.id.split("_")[2];
-            setCur({
-                ...cur,
+            dispatch({ type: "SET", key: "cur", payload: {
+                ...state.cur,
                 stats: updateGoodSave({
-                    ...cur.stats,
+                    ...state.cur.stats,
                     good_save: newVal
                 })
-            });
+            } });
             document.querySelectorAll(".parchment .good-save .my-button").forEach(button => {
                 button.classList.remove("selected");
             });
@@ -64,15 +65,15 @@ const Configure = () => {
 
     const trainSkillToggle = (ev) => {
         const box = document.getElementById(ev.target.id);
-        if (!cur) {
+        if (!state.cur) {
             box.checked = false;
         } else {
             // console.log(box, skill, box.checked);
             const skill = ev.target.id.split("_")[3];
             const on = box.checked;
-            const trainedSkills = cur.stats.trained_skills;
+            const trainedSkills = state.cur.stats.trained_skills;
             let changeWasMade = true;
-            if (on && trainedSkills.length < cur.stats.trained_skills_num && !trainedSkills.includes(skill)) {
+            if (on && trainedSkills.length < state.cur.stats.trained_skills_num && !trainedSkills.includes(skill)) {
                 trainedSkills.push(skill);
             } else if (!on && trainedSkills.includes(skill)) {
                 trainedSkills.splice(trainedSkills.indexOf(skill), 1);
@@ -81,13 +82,13 @@ const Configure = () => {
                 changeWasMade = false;
             }
             if (changeWasMade) {
-                setCur({
-                    ...cur,
+                dispatch({ type: "SET", key: "cur", payload: {
+                    ...state.cur,
                     stats: updateSkillRanks({
-                        ...cur.stats,
+                        ...state.cur.stats,
                         trained_skills: trainedSkills
                     })
-                });
+                } });
             }
         }
     }
@@ -96,9 +97,9 @@ const Configure = () => {
     useEffect(() => {
         protectedLoadingSkillRanks.current = true;
 
-        if (cur) {
-            const history = cur.stats.skill_ranks_history;
-            for (let level = 0; level < cur.stats.level_max8; level++) {
+        if (state.cur) {
+            const history = state.cur.stats.skill_ranks_history;
+            for (let level = 0; level < state.cur.stats.level_max8; level++) {
                 if (history.hasOwnProperty(level)) {
                     const ranksArr = history[level];
                     for (let j = 0; j < Math.min(ranksArr.length, gc.skill_ranks_per_level); j++) {
@@ -114,7 +115,7 @@ const Configure = () => {
         }
 
         protectedLoadingSkillRanks.current = false;
-    }, [cur, levelsArray, upTo5Array])
+    }, [state.cur, levelsArray, upTo5Array])
     const assignSkillRank = (ev) => {
         if (!protectedLoadingSkillRanks.current) {
             const level = ev.target.id.split("_")[2];
@@ -124,34 +125,36 @@ const Configure = () => {
             if (!skillsList.includes(skillAdded)) {
                 skillAdded = null;
             }
-            if (cur) {
-                const skill_ranks_history = cur.stats.skill_ranks_history;
-                while (skill_ranks_history[level] === undefined) {
-                    skill_ranks_history[level] = [];
+            if (state.cur) {
+                const skill_ranks_history = state.cur.stats.skill_ranks_history;
+                for (let lev = 0; lev <= level; lev++) {
+                    if (skill_ranks_history[lev] === undefined) {
+                        skill_ranks_history[lev] = [];
+                    }
                 }
                 while (skill_ranks_history[level].length <= col) {
                     skill_ranks_history[level].push(null);
                 }
                 skill_ranks_history[level][col] = skillAdded;
-                setCur({
-                    ...cur,
+                dispatch({ type: "SET", key: "cur", payload: {
+                    ...state.cur,
                     stats: updateSkillRanks({
-                        ...cur.stats,
+                        ...state.cur.stats,
                         skill_ranks_history
                     })
-                });
+                } });
             }
         }
     }
 
-    const { handleInputChange, handleSubmit } = useFormGlobalLink(editStat, currentInputs, setCurrentInputs);
+    const { handleInputChange, handleSubmit } = useFormGlobalLink(state.editStat, state.currentInputs, state.setCurrentInputs);
 
     return(
-        <div className="right-padding" onKeyDown={escFormFct}>
+        <div className="right-padding" onKeyDown={state.escFormFct}>
             <header>
                 <header>
                     <div className="meb-contain-edit">
-                        <h1 className="char-sheet-name editable" onClick={toggleEditing} id="meb_tog_name">{cur.name}</h1>
+                        <h1 className="char-sheet-name editable" onClick={state.toggleEditing} id="meb_tog_name">{state.cur.name}</h1>
                         <form className="meb-popout-edit" onSubmit={handleSubmit} id="meb_editform_name">
                             <input type="text" onChange={handleInputChange} id="meb_editval_name" />
                             <button type="submit">Enter</button>
@@ -159,9 +162,9 @@ const Configure = () => {
                     </div>
                     <div className="column-envelope space-between">
                         <h2 className="subtitle">
-                            <span className="float-left-element-space">Level {cur.stats.level}</span>
+                            <span className="float-left-element-space">Level {state.cur.stats.level}</span>
                             <span className="meb-contain-edit">
-                                <span className="editable" onClick={toggleEditing} id="meb_tog_epithet">{cur.stats.epithet}</span>
+                                <span className="editable" onClick={state.toggleEditing} id="meb_tog_epithet">{state.cur.stats.epithet}</span>
                                 <form className="meb-popout-edit" onSubmit={handleSubmit} id="meb_editform_epithet">
                                     <input type="text" onChange={handleInputChange} id="meb_editval_epithet" />
                                     <button type="submit">Enter</button>
@@ -170,16 +173,16 @@ const Configure = () => {
                         </h2>
                         <div className="column-envelope">
                             <span className="meb-contain-edit stat float-right-element">
-                                <span className="editable bold" onClick={toggleEditing} id="meb_tog_xpBase">
-                                    Base XP: {cur.stats.xp_base}
+                                <span className="editable bold" onClick={state.toggleEditing} id="meb_tog_xpBase">
+                                    Base XP: {state.cur.stats.xp_base}
                                 </span>
                                 <form className="meb-popout-edit" onSubmit={handleSubmit} id="meb_editform_xpBase">
                                     <input type="number" onChange={handleInputChange} id="meb_editval_xpBase" />
                                     <button type="submit">Enter</button>
                                 </form>
                             </span>
-                            <span className="stat float-right-element bold">XP: {cur.stats.xp}</span>
-                            <span className="stat float-right-element bold">Next Level At: {cur.stats.next_level_at}</span>
+                            <span className="stat float-right-element bold">XP: {state.cur.stats.xp}</span>
+                            <span className="stat float-right-element bold">Next Level At: {state.cur.stats.next_level_at}</span>
                         </div>
                     </div>
                 </header>
@@ -195,28 +198,28 @@ const Configure = () => {
                     <section className="pools-breakdown">
                         <div className="column-envelope breakdown">
                             <div className="fill-in">
-                                <p className="big-num">{cur.stats.vp_max}</p>
+                                <p className="big-num">{state.cur.stats.vp_max}</p>
                                 <p className="caption">Vitality<br />Points</p>
                             </div>
                             <div className="equals-symbol">
                                 =
                             </div>
                             <div className="fill-in">
-                                <p className="big-num">{2 * cur.stats.level_max8}</p>
+                                <p className="big-num">{2 * state.cur.stats.level_max8}</p>
                                 <p className="caption">2x Level</p>
                             </div>
                             <div className="plus-symbol">
                                 +
                             </div>
                             <div className="fill-in">
-                                <p className="big-num">{cur.stats.vp_kits_total}</p>
+                                <p className="big-num">{state.cur.stats.vp_kits_total}</p>
                                 <p className="caption">Kits<br />boosts</p>
                             </div>
                             <div className="plus-symbol">
                                 +
                             </div>
                             <div className="fill-in">
-                                <p className="big-num">{cur.stats.fortitude_base_total}</p>
+                                <p className="big-num">{state.cur.stats.fortitude_base_total}</p>
                                 <p className="caption">Base<br />Fortitude</p>
                             </div>
                             <div className="plus-symbol">
@@ -228,14 +231,14 @@ const Configure = () => {
                         </div>
                         <div className="column-envelope breakdown">
                             <div className="fill-in">
-                                <p className="big-num">{cur.stats.rp_max}</p>
+                                <p className="big-num">{state.cur.stats.rp_max}</p>
                                 <p className="caption">Reserve<br />Points</p>
                             </div>
                             <div className="equals-symbol">
                                 =
                             </div>
                             <div className="fill-in">
-                                <p className="big-num">{cur.stats.rp_mods_total}</p>
+                                <p className="big-num">{state.cur.stats.rp_mods_total}</p>
                                 <p className="caption">Misc.<br />bonuses</p>
                             </div>
                             <div className="plus-symbol">
@@ -247,21 +250,21 @@ const Configure = () => {
                         </div>
                         <div className="column-envelope breakdown">
                             <div className="fill-in">
-                                <p className="big-num">{cur.stats.mp_max}</p>
+                                <p className="big-num">{state.cur.stats.mp_max}</p>
                                 <p className="caption">Magic<br />Points</p>
                             </div>
                             <div className="equals-symbol">
                                 =
                             </div>
                             <div className="fill-in">
-                                <p className="big-num">{cur.stats.caster_level}</p>
+                                <p className="big-num">{state.cur.stats.caster_level}</p>
                                 <p className="caption">Caster<br />Level</p>
                             </div>
                             <div className="plus-symbol">
                                 +
                             </div>
                             <div className="fill-in">
-                                <p className="big-num">{cur.stats.mp_mods_total}</p>
+                                <p className="big-num">{state.cur.stats.mp_mods_total}</p>
                                 <p className="caption">Misc.<br />bonuses</p>
                             </div>
                         </div>
@@ -269,61 +272,61 @@ const Configure = () => {
                     <section className="sublevels-breakdown">
                         <div className="column-envelope breakdown">
                             <div className="fill-in">
-                                <p className="big-num">{cur.stats.fighting_level}</p>
+                                <p className="big-num">{state.cur.stats.fighting_level}</p>
                                 <p className="caption">Fighting<br />Level</p>
                             </div>
                             <div className="equals-symbol">
                                 =
                             </div>
                             <div className="fill-in">
-                                <p className="big-num">{cur.stats.heroic_bonus}</p>
+                                <p className="big-num">{state.cur.stats.heroic_bonus}</p>
                                 <p className="caption">1/2-Level</p>
                             </div>
                             <div className="plus-symbol">
                                 +
                             </div>
                             <div className="fill-in">
-                                <p className="big-num">{cur.stats.fighting_level_kits_total}</p>
+                                <p className="big-num">{state.cur.stats.fighting_level_kits_total}</p>
                                 <p className="caption">Kits<br />boosts</p>
                             </div>
                         </div>
                         <div className="column-envelope breakdown">
                             <div className="fill-in">
-                                <p className="big-num">{cur.stats.caster_level}</p>
+                                <p className="big-num">{state.cur.stats.caster_level}</p>
                                 <p className="caption">Caster<br />Level</p>
                             </div>
                             <div className="equals-symbol">
                                 =
                             </div>
                             <div className="fill-in">
-                                <p className="big-num">{cur.stats.heroic_bonus}</p>
+                                <p className="big-num">{state.cur.stats.heroic_bonus}</p>
                                 <p className="caption">1/2-Level</p>
                             </div>
                             <div className="plus-symbol">
                                 +
                             </div>
                             <div className="fill-in">
-                                <p className="big-num">{cur.stats.caster_level_kits_total}</p>
+                                <p className="big-num">{state.cur.stats.caster_level_kits_total}</p>
                                 <p className="caption">Kits<br />boosts</p>
                             </div>
                         </div>
                         <div className="column-envelope breakdown">
                             <div className="fill-in">
-                                <p className="big-num">{cur.stats.coast_number}</p>
+                                <p className="big-num">{state.cur.stats.coast_number}</p>
                                 <p className="caption">Coast<br />Number</p>
                             </div>
                             <div className="equals-symbol">
                                 =
                             </div>
                             <div className="fill-in">
-                                <p className="big-num">{cur.stats.heroic_bonus}</p>
+                                <p className="big-num">{state.cur.stats.heroic_bonus}</p>
                                 <p className="caption">1/2-Level</p>
                             </div>
                             <div className="plus-symbol">
                                 +
                             </div>
                             <div className="fill-in">
-                                <p className="big-num">{cur.stats.coast_number_kits_total}</p>
+                                <p className="big-num">{state.cur.stats.coast_number_kits_total}</p>
                                 <p className="caption">Kits<br />boosts</p>
                             </div>
                             <div className="plus-symbol">
@@ -335,21 +338,21 @@ const Configure = () => {
                         </div>
                         <div className="column-envelope breakdown">
                             <div className="fill-in">
-                                <p className="big-num">{cur.stats.awesome_check >= 0 ? "+" : null}{cur.stats.awesome_check}</p>
+                                <p className="big-num">{state.cur.stats.awesome_check >= 0 ? "+" : null}{state.cur.stats.awesome_check}</p>
                                 <p className="caption">Awesome<br />Check</p>
                             </div>
                             <div className="equals-symbol">
                                 =
                             </div>
                             <div className="fill-in">
-                                <p className="big-num">{cur.stats.level_max8}</p>
+                                <p className="big-num">{state.cur.stats.level_max8}</p>
                                 <p className="caption">Level</p>
                             </div>
                             <div className="plus-symbol">
                                 +
                             </div>
                             <div className="fill-in">
-                                <p className="big-num">{cur.stats.awesome_mods_total}</p>
+                                <p className="big-num">{state.cur.stats.awesome_mods_total}</p>
                                 <p className="caption">Misc.<br />bonuses</p>
                             </div>
                             <div className="plus-symbol">
@@ -365,7 +368,7 @@ const Configure = () => {
             <section>
                 <h2 className="section-head">Skills</h2>
                 <section className="column-envelope space-between trained-skills">
-                    <h3 className="trained-skills">Trained Skills: {cur.stats.trained_skills_num}</h3>
+                    <h3 className="trained-skills">Trained Skills: {state.cur.stats.trained_skills_num}</h3>
                     <table className="checkbox-bank">
                         <tbody>
                             <tr>

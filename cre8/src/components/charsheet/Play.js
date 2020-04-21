@@ -1,6 +1,6 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useContext } from 'react';
+import { Context } from '../GlobalWrapper';
 import useFormGlobalLink from '../../hooks/useFormGlobalLink';
-import useGlobal from '../../hooks/useGlobal';
 
 import MyButton from '../ui/MyButton';
 import gc from '../../helpers/GameConstants';
@@ -8,30 +8,31 @@ import { ifPlus } from '../../helpers/Calculations';
 import d20Icon from '../../media/d20-icon.png';
 
 const Play = () => {
-    const [userInfo] = useGlobal("user");
-    const [cur, setCur] = useGlobal("cur");
-    const [latestRoll, setLatestRoll] = useGlobal("latestRoll");
-    const [toggleEditing] = useGlobal("toggleEditingFct");
-    const [editStat] = useGlobal("editStatFct");
-    const [escFormFct] = useGlobal("escFormFct");
-    const [currentInputs, setCurrentInputs] = useGlobal("currentInputs");
-    const [dieRollMode, setDieRollMode] = useGlobal("dieRollMode");
-    const [coasting, setCoasting] = useGlobal("coasting");
-    const coastingRef = useRef(coasting);
+    const [state, dispatch] = useContext(Context);
+    // const [userInfo] = useGlobal("user");
+    // const [cur, setCur] = useGlobal("cur");
+    // const [latestRoll, setLatestRoll] = useGlobal("latestRoll");
+    // const [toggleEditing] = useGlobal("toggleEditingFct");
+    // const [editStat] = useGlobal("editStatFct");
+    // const [escFormFct] = useGlobal("escFormFct");
+    // const [currentInputs, setCurrentInputs] = useGlobal("currentInputs");
+    // const [dieRollMode, setDieRollMode] = useGlobal("dieRollMode");
+    // const [coasting, setCoasting] = useGlobal("coasting");
+    // const coastingRef = useRef(coasting);
 
     useEffect(() => {
-        if (cur) {
+        if (state.cur) {
             let el = document.querySelector("section.pools .vp .bar .inner-bar");
-            let percent = 100 * cur.stats.vp / Math.max(0.5, cur.stats.vp_max);
+            let percent = 100 * state.cur.stats.vp / Math.max(0.5, state.cur.stats.vp_max);
             el.style.width = `${percent}%`;
             el = document.querySelector("section.pools .rp .bar .inner-bar");
-            percent = 100 * cur.stats.rp / Math.max(0.5, cur.stats.rp_max);
+            percent = 100 * state.cur.stats.rp / Math.max(0.5, state.cur.stats.rp_max);
             el.style.width = `${percent}%`;
             el = document.querySelector("section.pools .mp .bar .inner-bar");
-            percent = 100 * cur.stats.mp / Math.max(0.5, cur.stats.mp_max);
+            percent = 100 * state.cur.stats.mp / Math.max(0.5, state.cur.stats.mp_max);
             el.style.width = `${percent}%`;
 
-            const active = cur.stats.active_conditions;
+            const active = state.cur.stats.active_conditions;
             gc.basic_conditions.concat(gc.other_conditions).forEach(condition => {
                 const box = document.getElementById(`meb_checkcondition_${condition}`);
                 if (active.includes(condition)) {
@@ -41,22 +42,22 @@ const Play = () => {
                 }
             });
 
-            document.getElementById("meb_check_coasting").checked = coastingRef.current;
+            document.getElementById("meb_check_coasting").checked = state.coasting;
         }
-    }, [cur])
+    }, [state.coasting, state.cur])
 
     const selectDieMode = (ev) => {
-        setDieRollMode(ev.target.value);
+        dispatch({ type: "SET", key: "dieRollMode", payload: ev.target.value });
     }
 
     const checkCondition = (ev) => {
         const box = document.getElementById(ev.target.id);
-        if (!cur) {
+        if (!state.cur) {
             box.checked = false;
         } else {
             const condition = ev.target.id.split("_")[2];
             const on = box.checked;
-            const {active_conditions} = cur.stats;
+            const {active_conditions} = state.cur.stats;
             let changeWasMade = true;
             if (on && !active_conditions.includes(condition)) {
                 active_conditions.push(condition);
@@ -69,13 +70,13 @@ const Play = () => {
                 changeWasMade = false;
             }
             if (changeWasMade) {
-                setCur({
-                    ...cur,
+                dispatch({ type: "SET", key: "cur", payload: {
+                    ...state.cur,
                     stats: {
-                        ...cur.stats,
+                        ...state.cur.stats,
                         active_conditions
                     }
-                });
+                } });
             }
         }
     }
@@ -83,88 +84,88 @@ const Play = () => {
     const checkCoasting = (ev) => {
         const box = document.getElementById(ev.target.id);
         if (box.checked) {
-            coastingRef.current = true;
-            setCoasting(true);
+            // coastingRef.current = true;
+            dispatch({ type: "SET", key: "coasting", payload: true });
         } else {
-            coastingRef.current = false;
-            setCoasting(false);
+            // coastingRef.current = false;
+            dispatch({ type: "SET", key: "coasting", payload: false });
         }
     }
 
     const resetDieMode = () => {
         document.getElementById("meb_select_dieMode").value = "normal";
-        setDieRollMode("normal");
+        dispatch({ type: "SET", key: "dieRollMode", payload: "normal" });
     }
 
-    const rollRef = useRef(latestRoll);
+    const rollRef = useRef(state.latestRoll);
     const generalRoll = (ev) => {
-        if (cur) {
-            const userStamp = userInfo ? userInfo.uid : "anon";
+        if (state.cur) {
+            const userStamp = state.user ? state.user.uid : "anon";
             rollRef.current = {
                 id: `${Date.now()}-${userStamp}`,
                 processedLocally: false,
                 processedBy: [],
                 name: ev.target.id.split("_")[2].split("-").join(" "),
-                character: cur.name,
-                campaigns: cur.campaigns,
-                dieMode: dieRollMode,
+                character: state.cur.name,
+                campaigns: state.cur.campaigns,
+                dieMode: state.dieRollMode,
                 dieModBasic: ev.target.id.split("_")[3],
                 dieModsMisc: {},
                 coasting: 0,
                 type: "general roll"
             };
-            setLatestRoll({
+            dispatch({ type: "SET_LATEST_ROLL", payload: {
                 ...rollRef.current
-            });
+            } });
 
             resetDieMode();
         }
     }
 
-    const saveRoll = (ev) => {
-        if (cur) {
+    const savingRoll = (ev) => {
+        if (state.cur) {
             const dieModsMisc = {};
-            if (cur.stats.active_conditions.includes("Wounded")) {
+            if (state.cur.stats.active_conditions.includes("Wounded")) {
                 dieModsMisc.wounded = {
                     wounded: {
                         num: gc.wounded_save_penalty
                     }
                 };
             }
-            const userStamp = userInfo ? userInfo.uid : "anon";
+            const userStamp = state.user ? state.user.uid : "anon";
             rollRef.current = {
                 id: `${Date.now()}-${userStamp}`,
                 processedLocally: false,
                 processedBy: [],
                 name: ev.target.id.split("_")[2].split("-").join(" "),
-                character: cur.name,
-                campaigns: cur.campaigns,
-                dieMode: dieRollMode,
+                character: state.cur.name,
+                campaigns: state.cur.campaigns,
+                dieMode: state.dieRollMode,
                 dieModBasic: ev.target.id.split("_")[3],
                 dieModsMisc,
                 coasting: 0,
                 type: "saving throw"
             };
-            setLatestRoll({
+            dispatch({ type: "SET_LATEST_ROLL", payload: {
                 ...rollRef.current
-            });
+            } });
 
             resetDieMode();
         }
     }
     
-    const { handleInputChange, handleSubmit } = useFormGlobalLink(editStat, currentInputs, setCurrentInputs);
+    const { handleInputChange, handleSubmit } = useFormGlobalLink(state.editStatFct, state.currentInputs, state.setCurrentInputs);
     return(
-        <div className="right-padding" onKeyDown={escFormFct}>
+        <div className="right-padding" onKeyDown={state.escFormFct}>
             <header>
                 <header>
-                    <h1 className="char-sheet-name">{cur.name}</h1>
+                    <h1 className="char-sheet-name">{state.cur.name}</h1>
                     <div className="column-envelope space-between">
-                        <h2 className="subtitle">Level {cur.stats.level} {cur.stats.epithet}</h2>
+                        <h2 className="subtitle">Level {state.cur.stats.level} {state.cur.stats.epithet}</h2>
                         <div className="column-envelope">
-                            <span className="stat float-right-element bold">XP: {cur.stats.xp}</span>
+                            <span className="stat float-right-element bold">XP: {state.cur.stats.xp}</span>
                             <div className="xp-button float-right-element meb-contain-edit">
-                                <MyButton fct={toggleEditing} evData="meb_tog_earnXp">Earn XP</MyButton>
+                                <MyButton fct={state.toggleEditing} evData="meb_tog_earnXp">Earn XP</MyButton>
                                 <form className="meb-popout-edit" onSubmit={handleSubmit} id="meb_editform_earnXp">
                                     <input
                                         type="number"
@@ -174,7 +175,7 @@ const Play = () => {
                                     <button type="submit">Enter</button>
                                 </form>
                             </div>
-                            <span className="stat float-right-element bold">Next Level At: {cur.stats.next_level_at}</span>
+                            <span className="stat float-right-element bold">Next Level At: {state.cur.stats.next_level_at}</span>
                         </div>
                     </div>
                 </header>
@@ -183,14 +184,14 @@ const Play = () => {
                         <section className="column-envelope pools">
                             <div className="vp">
                                 <div className="pool-max">
-                                    Pool: {cur.stats.vp_max}
+                                    Pool: {state.cur.stats.vp_max}
                                 </div>
                                 <div className="bar">
                                     <div className="inner-bar" />
                                 </div>
                                 <div className="main-pool-val meb-contain-edit">
                                     <div className="above-big-num" />
-                                    <p className="big-num editable" onClick={toggleEditing} id="meb_tog_vp">{cur.stats.vp}</p>
+                                    <p className="big-num editable" onClick={state.toggleEditing} id="meb_tog_vp">{state.cur.stats.vp}</p>
                                     <form className="meb-popout-edit" onSubmit={handleSubmit} id="meb_editform_vp">
                                         <input
                                             type="number"
@@ -205,14 +206,14 @@ const Play = () => {
                             </div>
                             <div className="rp">
                                 <div className="pool-max">
-                                    Pool: {cur.stats.rp_max}
+                                    Pool: {state.cur.stats.rp_max}
                                 </div>
                                 <div className="bar">
                                     <div className="inner-bar" />
                                 </div>
                                 <div className="main-pool-val meb-contain-edit">
                                     <div className="above-big-num" />
-                                    <p className="big-num editable" onClick={toggleEditing} id="meb_tog_rp">{cur.stats.rp}</p>
+                                    <p className="big-num editable" onClick={state.toggleEditing} id="meb_tog_rp">{state.cur.stats.rp}</p>
                                     <form className="meb-popout-edit" onSubmit={handleSubmit} id="meb_editform_rp">
                                         <input
                                             type="number"
@@ -227,14 +228,14 @@ const Play = () => {
                             </div>
                             <div className="mp">
                                 <div className="pool-max">
-                                    Pool: {cur.stats.mp_max}
+                                    Pool: {state.cur.stats.mp_max}
                                 </div>
                                 <div className="bar">
                                     <div className="inner-bar" />
                                 </div>
                                 <div className="main-pool-val meb-contain-edit">
                                     <div className="above-big-num" />
-                                    <p className="big-num editable" onClick={toggleEditing} id="meb_tog_mp">{cur.stats.mp}</p>
+                                    <p className="big-num editable" onClick={state.toggleEditing} id="meb_tog_mp">{state.cur.stats.mp}</p>
                                     <form className="meb-popout-edit" onSubmit={handleSubmit} id="meb_editform_mp">
                                         <input
                                             type="number"
@@ -250,39 +251,39 @@ const Play = () => {
                         </section>
                         <section className="general-rolls column-envelope">
                             <div className="general-general row-envelope">
-                                <MyButton fct={generalRoll} evData={`meb_roll_Heroics-Check_${cur.stats.heroic_bonus}`}>
+                                <MyButton fct={generalRoll} evData={`meb_roll_Heroics-Check_${state.cur.stats.heroic_bonus}`}>
                                     <img src={d20Icon} alt="" />
-                                    Heroics Check ({ifPlus(cur.stats.heroic_bonus) + cur.stats.heroic_bonus})
+                                    Heroics Check ({ifPlus(state.cur.stats.heroic_bonus) + state.cur.stats.heroic_bonus})
                                 </MyButton>
-                                <MyButton fct={generalRoll} evData={`meb_roll_Awesome-Check_${cur.stats.awesome_check}`}>
+                                <MyButton fct={generalRoll} evData={`meb_roll_Awesome-Check_${state.cur.stats.awesome_check}`}>
                                     <img src={d20Icon} alt="" />
-                                    Awesome Check ({ifPlus(cur.stats.awesome_check) + cur.stats.awesome_check})
+                                    Awesome Check ({ifPlus(state.cur.stats.awesome_check) + state.cur.stats.awesome_check})
                                 </MyButton>
-                                <MyButton fct={generalRoll} evData={`meb_roll_Spellcraft-Check_${cur.stats.spellcraft_check}`}>
+                                <MyButton fct={generalRoll} evData={`meb_roll_Spellcraft-Check_${state.cur.stats.spellcraft_check}`}>
                                     <img src={d20Icon} alt="" />
-                                    Spellcraft Check ({ifPlus(cur.stats.spellcraft_check) + cur.stats.spellcraft_check})
+                                    Spellcraft Check ({ifPlus(state.cur.stats.spellcraft_check) + state.cur.stats.spellcraft_check})
                                 </MyButton>
-                                <MyButton fct={generalRoll} evData={`meb_roll_Speed-Check_${cur.stats.speed}`}>
+                                <MyButton fct={generalRoll} evData={`meb_roll_Speed-Check_${state.cur.stats.speed}`}>
                                     <img src={d20Icon} alt="" />
-                                    Speed Check ({ifPlus(cur.stats.speed) + cur.stats.speed})
+                                    Speed Check ({ifPlus(state.cur.stats.speed) + state.cur.stats.speed})
                                 </MyButton>
                             </div>
                             <div className="saving-throws row-envelope">
-                                <MyButton fct={saveRoll} evData={`meb_roll_Defense-Save_${cur.stats.defense_total}`}>
+                                <MyButton fct={savingRoll} evData={`meb_roll_Defense-Save_${state.cur.stats.defense_total}`}>
                                     <img src={d20Icon} alt="" />
-                                    Defense Save ({ifPlus(cur.stats.defense_total) + cur.stats.defense_total})
+                                    Defense Save ({ifPlus(state.cur.stats.defense_total) + state.cur.stats.defense_total})
                                 </MyButton>
-                                <MyButton fct={saveRoll} evData={`meb_roll_Fortitude-Save_${cur.stats.fortitude_total}`}>
+                                <MyButton fct={savingRoll} evData={`meb_roll_Fortitude-Save_${state.cur.stats.fortitude_total}`}>
                                     <img src={d20Icon} alt="" />
-                                    Fortitude Save ({ifPlus(cur.stats.fortitude_total) + cur.stats.fortitude_total})
+                                    Fortitude Save ({ifPlus(state.cur.stats.fortitude_total) + state.cur.stats.fortitude_total})
                                 </MyButton>
-                                <MyButton fct={saveRoll} evData={`meb_roll_Reflex-Save_${cur.stats.reflex_total}`}>
+                                <MyButton fct={savingRoll} evData={`meb_roll_Reflex-Save_${state.cur.stats.reflex_total}`}>
                                     <img src={d20Icon} alt="" />
-                                    Reflex Save ({ifPlus(cur.stats.reflex_total) + cur.stats.reflex_total})
+                                    Reflex Save ({ifPlus(state.cur.stats.reflex_total) + state.cur.stats.reflex_total})
                                 </MyButton>
-                                <MyButton fct={saveRoll} evData={`meb_roll_Willpower-Save_${cur.stats.willpower_total}`}>
+                                <MyButton fct={savingRoll} evData={`meb_roll_Willpower-Save_${state.cur.stats.willpower_total}`}>
                                     <img src={d20Icon} alt="" />
-                                    Willpower Save ({ifPlus(cur.stats.willpower_total) + cur.stats.willpower_total})
+                                    Willpower Save ({ifPlus(state.cur.stats.willpower_total) + state.cur.stats.willpower_total})
                                 </MyButton>
                             </div>
                         </section>
@@ -290,7 +291,7 @@ const Play = () => {
                     <section className="conditions">
                         <div className="die-mode">
                             <h3>d20 Die Modes:</h3>
-                            <select onChange={selectDieMode} defaultValue={dieRollMode} id="meb_select_dieMode">
+                            <select onChange={selectDieMode} defaultValue={state.dieRollMode} id="meb_select_dieMode">
                                 <option value="boost">Boosted</option>
                                 <option value="normal">Normal</option>
                                 <option value="drag">Dragged</option>

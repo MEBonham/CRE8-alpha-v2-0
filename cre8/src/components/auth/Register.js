@@ -1,11 +1,12 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useContext } from 'react';
 import { Redirect, useHistory } from 'react-router-dom';
-import useGlobal from '../../hooks/useGlobal';
+import { Context } from '../GlobalWrapper';
 import fb from '../../fbConfig';
 
 import useForm from '../../hooks/useForm';
 
 const Register = () => {
+    const [{ user }] = useContext(Context);
 
     const [returnToHistory, setReturnToHistory] = useState(false);
     const navHistory = useHistory();
@@ -15,7 +16,7 @@ const Register = () => {
         }
     }, [ navHistory, returnToHistory ])
 
-    const [user] = useGlobal("user");
+    // const [user] = useGlobal("user");
     const [prevUsernames, setPrevUserNames] = useState([]);
     const [errorMessage, setErrorMessage] = useState("");
     

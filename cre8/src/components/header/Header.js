@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-// import useGlobal from '../../hooks/useGlobal';
 import fb from '../../fbConfig';
 
 import MainNav from './MainNav';

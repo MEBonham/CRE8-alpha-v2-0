@@ -1,12 +1,12 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
+import { Context } from '../GlobalWrapper';
 import fb from '../../fbConfig';
-import useGlobal from '../../hooks/useGlobal';
 
 import ManageCampaigns from './ManageCampaigns';
 import AdminSettings from './Admin';
 
 const Settings = () => {
-
+    const [{ settingsMenuOpen }, dispatch] = useContext(Context);
     const [ownId, setOwnId] = useState(null);
     const [ownRank, setOwnRank] = useState(null);
     useEffect(() => {
@@ -24,12 +24,12 @@ const Settings = () => {
         }
     }, [])
 
-    const [menuOpen, setMenuOpen] = useGlobal("userSettingsMenuOpen");
+    // const [menuOpen, setMenuOpen] = useGlobal("userSettingsMenuOpen");
     useEffect(() => {
-        if (menuOpen) {
-            setMenuOpen(false);
+        if (settingsMenuOpen) {
+            dispatch({ type: "SET", key: "settingsMenuOpen", payload: false });
         }
-    }, [menuOpen, setMenuOpen])
+    }, [dispatch, settingsMenuOpen])
 
     const rankBadge = () => {
         switch(ownRank) {

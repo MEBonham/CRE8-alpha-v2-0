@@ -1,12 +1,12 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import { Route, Redirect } from 'react-router-dom';
-import useGlobal from '../hooks/useGlobal';
+import { Context } from './GlobalWrapper';
 
 const Guarded = ({ children, ...rest }) => {
+    const [{ user }] = useContext(Context);
+    // const [userInfo] = useGlobal("user");
 
-    const [userInfo] = useGlobal("user");
-
-    let component = userInfo ? 
+    let component = user ? 
         <Route {...rest}>
             {children}
         </Route> : 

@@ -1,13 +1,14 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useContext } from 'react';
 import { Link } from 'react-router-dom';
 import fb from '../../fbConfig';
-import useGlobal from '../../hooks/useGlobal';
+import { Context } from '../GlobalWrapper';
 
 const CharMenu = () => {
-
+    const [state] = useContext(Context);
+    const { user, activeCampaigns } = state;
     const db = fb.db;
-    const [userInfo] = useGlobal("user");
-    const [usersCampaigns] = useGlobal("usersCampaigns");
+    // const [userInfo] = useGlobal("user");
+    // const [usersCampaigns] = useGlobal("usersCampaigns");
 
     const [characters, setCharacters] = useState([]);
     const [orphans, setOrphans] = useState([]);
@@ -47,21 +48,21 @@ const CharMenu = () => {
         //     charStream.current();
         //     // campaignStream.current();
         // };
-    }, [db, userInfo]);
+    }, [db, user]);
 
     useEffect(() => {
-        if (userInfo) {
-            setOrphans(characters.filter(charData => charData.campaigns.length === 0 && charData.owner === userInfo.uid));
+        if (user) {
+            setOrphans(characters.filter(charData => charData.campaigns.length === 0 && charData.owner === user.uid));
         }
-    }, [characters, userInfo])
+    }, [characters, user])
 
     const [campaignIds, setCampaignIds] = useState([]);
     useEffect(() => {
-        const usersCampaignsCopy = { ...usersCampaigns };
+        const usersCampaignsCopy = { ...activeCampaigns };
         delete usersCampaignsCopy.standard;
         delete usersCampaignsCopy.public;
         if (Object.keys(usersCampaignsCopy)) setCampaignIds(Object.keys(usersCampaignsCopy));
-    }, [usersCampaigns])
+    }, [activeCampaigns])
 
     return(
         <div className="main normal-padding char-menu">
@@ -72,7 +73,7 @@ const CharMenu = () => {
             <section>
                 {campaignIds.length ? <h2>Your Campaign Characters</h2> : null}
                 {campaignIds.map((campaignId, i) => {
-                    const campaignObj = usersCampaigns[campaignId];
+                    const campaignObj = activeCampaigns[campaignId];
                     return (
                         <section key={campaignId} className={i + 1 < campaignIds.length ? "not-last" : null}>
                             <h3>{campaignObj.name}</h3>

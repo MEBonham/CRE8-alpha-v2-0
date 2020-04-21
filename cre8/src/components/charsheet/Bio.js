@@ -1,12 +1,13 @@
-import React from 'react';
-import useGlobal from '../../hooks/useGlobal';
+import React, { useContext } from 'react';
+import Context from '../GlobalWrapper';
 
 const Bio = () => {
-    const [cur] = useGlobal("cur");
+    const [state] = useContext(Context);
+    // const [cur] = useGlobal("cur");
     return(
         <>
             <header>
-                <h1 className="char-sheet-name">{cur.name}</h1>
+                <h1 className="char-sheet-name">{state.cur.name}</h1>
             </header>
         </>
     );

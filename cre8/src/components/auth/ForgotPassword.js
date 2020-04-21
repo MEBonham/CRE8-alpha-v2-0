@@ -1,13 +1,13 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 import { Redirect } from 'react-router-dom';
-import useGlobal from '../../hooks/useGlobal';
 import fb from '../../fbConfig';
+import { Context } from '../GlobalWrapper';
 
 import useForm from '../../hooks/useForm';
 
 const ForgotPassword = () => {
 
-    const [user] = useGlobal("user");
+    const [{ user }] = useContext(Context);
     const [errorMessage, setErrorMessage] = useState("");
     const [ confirmMessage, setConfirmMessage ] = useState("");
 
