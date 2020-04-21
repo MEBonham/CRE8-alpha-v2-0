@@ -3,11 +3,11 @@ import React, { useState, useEffect } from 'react';
 const Testing = () => {
     const [val, setVal] = useState(null);
     useEffect(() => {
-        setVal(4);
+        setVal("boring default data");
     }, [])
 
     const setTo7 = (ev) => {
-        setVal(7);
+        setVal("important data");
     }
 
     return (

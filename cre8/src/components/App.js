@@ -39,11 +39,11 @@ const App = () => {
         }
     }, []);
 
-    const { pathname } = useLocation();
-    const scrollContainer = useRef(null);
-    useEffect(() => {
-        scrollContainer.current.scroll(0, 0);
-    }, [pathname]);
+    // const { pathname } = useLocation();
+    // const scrollContainer = useRef(null);
+    // useEffect(() => {
+    //     scrollContainer.current.scroll(0, 0);
+    // }, [pathname]);
 
     return (
         <div className="App">
@@ -51,7 +51,8 @@ const App = () => {
                 {/* <StateHolder /> */}
                 <Header />
                 <div className="main-envelope" style={styleObj}>
-                    <div className="main-contents" ref={scrollContainer}>
+                    {/* <div className="main-contents" ref={scrollContainer}> */}
+                    <div className="main-contents">
                         <Switch>
                             <Route exact path="/" component={Home} />
                             <Route path={["/index", "/index.html"]} component={Home} />
