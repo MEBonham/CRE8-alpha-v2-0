@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useLocation, Switch, Route } from 'react-router-dom';
+import GlobalWrapper from '../hooks/Store';
 
 import StateHolder from './StateHolder';
 import Header from './header/Header';
@@ -10,6 +11,7 @@ import NewCharForm from './newchar/NewCharForm';
 import CharSheetMain from './charsheet/CharSheetMain';
 import CharMenu from './other/CharMenu';
 import RollsDisplay from './game/RollsDisplay';
+import Testing from './Testing';
 import ForgotPassword from './auth/ForgotPassword';
 import Login from './auth/Login';
 import Register from './auth/Register';
@@ -45,28 +47,31 @@ const App = () => {
 
     return (
         <div className="App">
-            <StateHolder />
-            <Header />
-            <div className="main-envelope" style={styleObj}>
-                <div className="main-contents" ref={scrollContainer}>
-                    <Switch>
-                        <Route exact path="/" component={Home} />
-                        <Route path={["/index", "/index.html"]} component={Home} />
-                        <Guarded path="/characters/new"><NewCharForm /></Guarded>
-                        <Route path="/characters/:slug" component={CharSheetMain} />
-                        <Route path="/characters" component={CharMenu} />
-                        <Route path="/login/forgot" component={ForgotPassword} />
-                        <Route path="/login" component={Login} />
-                        <Route path="/register" component={Register} />
-                        <Guarded path="/private"><Private /></Guarded>
-                        <Guarded path="/user/settings"><Settings /></Guarded>
-                    </Switch>
+            <GlobalWrapper>
+                {/* <StateHolder /> */}
+                <Header />
+                <div className="main-envelope" style={styleObj}>
+                    <div className="main-contents" ref={scrollContainer}>
+                        <Switch>
+                            <Route exact path="/" component={Home} />
+                            <Route path={["/index", "/index.html"]} component={Home} />
+                            <Guarded path="/characters/new"><NewCharForm /></Guarded>
+                            <Route path="/characters/:slug" component={CharSheetMain} />
+                            <Route path="/characters" component={CharMenu} />
+                            <Route path="/login/forgot" component={ForgotPassword} />
+                            <Route path="/login" component={Login} />
+                            <Route path="/register" component={Register} />
+                            <Guarded path="/private"><Private /></Guarded>
+                            <Guarded path="/user/settings"><Settings /></Guarded>
+                        </Switch>
+                    </div>
+                    <div className="main-sidebar">
+                        <RollsDisplay />
+                        <Testing />
+                    </div>
                 </div>
-                <div className="main-sidebar">
-                    <RollsDisplay />
-                </div>
-            </div>
-            <Footer />
+                <Footer />
+            </GlobalWrapper>
         </div>
     );
 }

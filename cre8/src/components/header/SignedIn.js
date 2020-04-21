@@ -43,7 +43,7 @@ const SignedIn = () => {
     return(
         <div className="profile signedin">
             <img className="profile-button blockclick" onClick={clickToggle} src={profileButton} alt="User Menu" />
-            {menuOpen ? 
+            {(menuOpen && fb.auth.currentUser) ? 
                 <nav>
                     <p className="blockclick">{fb.auth.currentUser.displayName}</p>
                     <NavLink to="/user/settings" className="blockclick">Settings</NavLink>

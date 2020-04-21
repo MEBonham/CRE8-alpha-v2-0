@@ -126,24 +126,25 @@ const CharSheetMain = () => {
     const [component, setComponent] = useState(loadComponent.current);
     useEffect(() => {
 
-        const determineAccess = (campaigns, uid) => {
+        const determineAccess = (campaigns, userInfo) => {
+            console.log(cur.campaigns);
             if (cur && cur.campaigns && cur.campaigns.includes("standard")) return true;
             if (cur && cur.campaigns && cur.campaigns.includes("public")) return true;
-            if (cur && uid && cur.owner === uid) return true;
-            if (campaigns && uid) {
+            if (cur && userInfo && cur.owner === userInfo.uid) return true;
+            if (campaigns && userInfo) {
                 Object.keys(campaigns).forEach(campaignId => {
-                    if (campaigns[campaignId].members.includes(uid)) return true;
+                    if (campaigns[campaignId].members.includes(userInfo.uid)) return true;
                 });
             }
             return false;
         }
 
-        // if (!cur || !campaigns) {
-        if (!cur || !usersCampaigns) {
+        // if (!cur || !usersCampaigns) {
+        if (!cur) {
             setComponent(loadComponent.current);
         } else {
             // const access = determineAccess(campaigns, userInfo.uid);
-            const access = determineAccess(usersCampaigns, userInfo.uid);
+            const access = determineAccess(usersCampaigns, userInfo);
             if (access) {
                 setComponent(<div className="main normal-padding">
                     <div className="parchment">

@@ -4,11 +4,15 @@ import useGlobal from '../hooks/useGlobal';
 
 const StateHolder = () => {
     const [userInfo, setUserInfo] = useGlobal("user");
+    const firstLoad = useRef(true);
     useEffect(() => {
-        fb.auth.onAuthStateChanged(user => {
-            setUserInfo(user);
-        });
-    })
+        if (firstLoad.current) {
+            fb.auth.onAuthStateChanged(user => {
+                setUserInfo(user);
+            });
+            firstLoad.current = false;
+        }
+    }, [setUserInfo])
 
     const db = fb.db;
     const campaignStream = useRef(null);
@@ -30,6 +34,11 @@ const StateHolder = () => {
             // return () => {
             //     campaignStream.current();
             // };
+        } else {
+            setUsersCampaigns({
+                standard: {},
+                public: {}
+            })
         }
     }, [db, setUsersCampaigns, userInfo])
 

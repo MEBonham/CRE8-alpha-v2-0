@@ -57,7 +57,10 @@ const CharMenu = () => {
 
     const [campaignIds, setCampaignIds] = useState([]);
     useEffect(() => {
-        if (usersCampaigns) setCampaignIds(Object.keys(usersCampaigns));
+        const usersCampaignsCopy = { ...usersCampaigns };
+        delete usersCampaignsCopy.standard;
+        delete usersCampaignsCopy.public;
+        if (Object.keys(usersCampaignsCopy)) setCampaignIds(Object.keys(usersCampaignsCopy));
     }, [usersCampaigns])
 
     return(
