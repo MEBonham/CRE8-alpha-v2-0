@@ -277,7 +277,6 @@ const updateVpMax = (statsObj) => {
     
     const vp_kits_total = mineKits(statsObj.vp_kits);
     const vp_max = gc.base_vitality_points + (2 * statsObj.level_max8) + vp_kits_total + statsObj.fortitude_base_total;
-    console.log(statsObj.vp, vp_max, origVpMax);
     const vp = Math.max(0, statsObj.vp + (vp_max - origVpMax));
     return {
         ...statsObj,

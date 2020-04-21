@@ -126,17 +126,19 @@ const NewCharForm = () => {
                             />
                             Public
                         </li>
-                        {usersCampaigns.map(campaign => (
-                            <li key={campaign.id}>
-                                <input
-                                    type="checkbox"
-                                    id={`select_${campaign.id}`}
-                                    onChange={handleInputChange}
-                                    value="1"
-                                />
-                                {campaign.name}
-                            </li>
-                        ))}
+                        {Object.keys(usersCampaigns).map(campaignId => {
+                            return(
+                                <li key={campaignId}>
+                                    <input
+                                        type="checkbox"
+                                        id={`select_${campaignId}`}
+                                        onChange={handleInputChange}
+                                        value="1"
+                                    />
+                                    {usersCampaigns[campaignId].name}
+                                </li>
+                            );
+                        })}
                     </ul>
                     <p>Create new campaigns under <Link to="/user/settings">User Settings</Link>.</p>
                 </div>

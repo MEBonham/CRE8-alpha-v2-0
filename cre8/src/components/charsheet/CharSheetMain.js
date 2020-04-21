@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Redirect, useParams } from 'react-router-dom';
+import { Link, Redirect, useParams } from 'react-router-dom';
 import fb from '../../fbConfig';
 import useGlobal from '../../hooks/useGlobal';
 
@@ -153,6 +153,7 @@ const CharSheetMain = () => {
                         </EditWrapper>
                     </div>
                     <div className="float-right">
+                        <span className="my-button"><Link to="/characters">Back to Characters</Link></span>
                         <MyButton fct={toSaveFct}>Save</MyButton>
                     </div>
                 </div>);

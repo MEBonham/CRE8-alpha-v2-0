@@ -22,13 +22,13 @@ const Play = () => {
     useEffect(() => {
         if (cur) {
             let el = document.querySelector("section.pools .vp .bar .inner-bar");
-            let percent = 100 * cur.stats.vp / cur.stats.vp_max;
+            let percent = 100 * cur.stats.vp / Math.max(0.5, cur.stats.vp_max);
             el.style.width = `${percent}%`;
             el = document.querySelector("section.pools .rp .bar .inner-bar");
-            percent = 100 * cur.stats.rp / cur.stats.rp_max;
+            percent = 100 * cur.stats.rp / Math.max(0.5, cur.stats.rp_max);
             el.style.width = `${percent}%`;
             el = document.querySelector("section.pools .mp .bar .inner-bar");
-            percent = 100 * cur.stats.mp / cur.stats.mp_max;
+            percent = 100 * cur.stats.mp / Math.max(0.5, cur.stats.mp_max);
             el.style.width = `${percent}%`;
 
             const active = cur.stats.active_conditions;

@@ -12,13 +12,10 @@ const ManageCampaigns = () => {
     const [userInfo] = useGlobal("user");
     const [usersCampaigns, setUsersCampaigns] = useGlobal("usersCampaigns");
 
-    // const [campaigns, setCampaigns] = useState([]);
-    // const campaignStream = useRef(null);
     const [usersObj, setUsersObj] = useState([]);
     const usersStream = useRef(null);
     useEffect(() => {        
         usersStream.current = db.collection("users")
-            // .onSnapshot(querySnapshot => {
             .get().then(querySnapshot => {
                 const usersData = {};
                 querySnapshot.forEach(userDatum => {
@@ -27,20 +24,9 @@ const ManageCampaigns = () => {
                         ...userDatum.data()
                     };
                     usersData[userDatum.id] = userDatumDefaulted;
-                    // usersData.push({
-                    //     displayName: userDatumDefaulted.displayName,
-                    //     campaigns: userDatumDefaulted.campaigns,
-                    //     uid: userDatum.id
-                    // });
                 });
-                // setUsersObj(usersData.filter(userData => userData.uid !== userInfo.uid));
                 setUsersObj(usersData);
             });
-    
-        // return () => {
-        //     // campaignStream.current();
-        //     usersStream.current();
-        // };
     }, [db, userInfo]);
 
     const getDisplayNameFromId = (id) => {
@@ -66,10 +52,14 @@ const ManageCampaigns = () => {
             name: newInputs.newCampaignName,
             members: [userInfo.uid]
         })
-        .then((doc) => {
+        .then(() => {
             setUsersCampaigns({
                 ...usersCampaigns,
-                id: doc
+                [id]: {
+                    owner: userInfo.uid,
+                    name: newInputs.newCampaignName,
+                    members: [userInfo.uid]
+                }
             });
         })
         .catch(err => {
@@ -82,9 +72,6 @@ const ManageCampaigns = () => {
     const newHandleSubmit = saveNewForm.handleSubmit;
     
     const [selectVals, setSelectVals] = useState([]);
-    // useEffect(() => {
-    //     setSelectVals(campaigns.map(() => null));
-    // }, [campaigns])
     const handleSelectChangeById = (ev) => {
         const newArr = selectVals.slice();
         newArr[ev.target.id.split("_")[1]] = ev.target.value;
@@ -93,23 +80,38 @@ const ManageCampaigns = () => {
     const addNewPlayer = (ev) => {
         const idsArr = ev.target.id.split("_");
         const selectVal = selectVals[idsArr[1]];
-        db.collection("campaigns").doc(idsArr[2]).get()
-            .then(doc => {
-                const prevMembers = doc.data().members;
-                db.collection("campaigns").doc(idsArr[2])
-                    .set({
-                        members: [
-                            ...prevMembers,
-                            selectVal
-                        ]
-                    }, { merge: true })
-                    .catch(err => {
-                        console.log(err);
-                    });
-            })
-            .catch(err => {
-                console.log(err);
-            });
+        if (selectVal) {
+            db.collection("campaigns").doc(idsArr[2]).get()
+                .then(doc => {
+                    const prevMembers = doc.data().members;
+                    db.collection("campaigns").doc(idsArr[2])
+                        .set({
+                            members: [
+                                ...prevMembers,
+                                selectVal
+                            ]
+                        }, { merge: true })
+                        .then(() => {
+                            // console.log(usersCampaigns);
+                            setUsersCampaigns({
+                                ...usersCampaigns,
+                                [idsArr[2]]: {
+                                    ...usersCampaigns[idsArr[2]],
+                                    members: [
+                                        ...prevMembers,
+                                        selectVal
+                                    ]
+                                }
+                            })
+                        })
+                        .catch(err => {
+                            console.log(err);
+                        });
+                })
+                .catch(err => {
+                    console.log(err);
+                });
+        }
     }
 
     return(
@@ -127,7 +129,7 @@ const ManageCampaigns = () => {
                                     return <option key={userObj.uid} value={userObj.uid}>{userObj.displayName}</option>
                                 })}
                             </select>
-                            <MyButton fct={addNewPlayer} evData={`add-player-to-campaign_${i}_${campaignData.id}`}>Add Player</MyButton>
+                            <MyButton fct={addNewPlayer} evData={`add-player-to-campaign_${i}_${campaignId}`}>Add Player</MyButton>
                         </div>
                         <ul>
                             {campaignData.members.map(memberId => (
@@ -139,27 +141,6 @@ const ManageCampaigns = () => {
                     </section>
                 );
             })}
-            {/* {campaigns.map((campaignData, i) => (
-                <section key={campaignData.id} className="one-campaign">
-                    <h3>{campaignData.name}</h3>
-                    <div>
-                        <select id={`addusers_${i}`} onChange={handleSelectChangeById}>
-                            <option value="Select User">Select User</option>
-                            {otherUsersList(campaignData.members).map(userObj => {
-                                return <option key={userObj.uid} value={userObj.uid}>{userObj.displayName}</option>
-                            })}
-                        </select>
-                        <MyButton fct={addNewPlayer} evData={`add-player-to-campaign_${i}_${campaignData.id}`}>Add Player</MyButton>
-                    </div>
-                    <ul>
-                        {campaignData.members.map(memberId => (
-                            <li key={`${i}-${memberId}`}>
-                                {getDisplayNameFromId(memberId)}
-                            </li>
-                        ))}
-                    </ul>
-                </section>
-            ))} */}
             <section>
                 <h3>Create New Campaign</h3>
                 <form onSubmit={newHandleSubmit}>

@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import fb from '../../fbConfig';
 import useGlobal from '../../hooks/useGlobal';
 
@@ -18,9 +18,10 @@ const RollsDisplay = () => {
         clientHeightRef.current = el.clientHeight;
     }, [])
 
-    const [latestRoll] = useGlobal("latestRoll");
-    const [displayArr, setDisplayArr] = useGlobal("rollsDisplayArray");
+    // const [displayArr, setDisplayArr] = useGlobal("rollsDisplayArray");
+    const [displayArr, setDisplayArr] = useState([]);
     const displayArrRef = useRef(displayArr);
+    const [latestRoll] = useGlobal("latestRoll");
     const [usersCampaigns] = useGlobal("usersCampaigns");
     const campaignMatch = (campIdsArr1, campIdsArr2) => {
         campIdsArr1.forEach(id => {
@@ -45,6 +46,7 @@ const RollsDisplay = () => {
                     .then(() => {
                         setDisplayArr([
                             ...displayArrRef.current,
+                            // ...displayArr,
                             {
                                 ...rollOnce
                             }
@@ -54,6 +56,7 @@ const RollsDisplay = () => {
                         console.log(err);
                         setDisplayArr([
                             ...displayArrRef.current,
+                            // ...displayArr,
                             {
                                 ...rollOnce
                             }
@@ -67,6 +70,7 @@ const RollsDisplay = () => {
                     ] : latestRoll.processedBy.slice();
                     setDisplayArr([
                         ...displayArrRef.current,
+                        // ...displayArr,
                         {
                             ...latestRoll,
                             processedBy: processedArr
@@ -88,27 +92,29 @@ const RollsDisplay = () => {
         scrollHeightRef.current = el.scrollHeight;
         clientHeightRef.current = el.clientHeight;
 
-        displayArr.forEach((roll, i) => {
-            if (roll.rollData.multRoll.length > 1) {
-                const elArr = document.querySelectorAll(`#meb_showRolls_${i} p.bg`);
-                let oneBold = false;
-                roll.rollData.multRoll.forEach((natDieRoll, j) => {
-                    const el = elArr[j];
-                    if (oneBold || natDieRoll !== roll.rollData.natRoll) {
-                        el.style.opacity = 0.5;
-                    } else {
-                        oneBold = true;
-                    }
-                });
-            }
-        });
+        if (displayArr) {
+            displayArr.forEach((roll, i) => {
+                if (roll.rollData.multRoll.length > 1) {
+                    const elArr = document.querySelectorAll(`#meb_showRolls_${i} p.bg`);
+                    let oneBold = false;
+                    roll.rollData.multRoll.forEach((natDieRoll, j) => {
+                        const el = elArr[j];
+                        if (oneBold || natDieRoll !== roll.rollData.natRoll) {
+                            el.style.opacity = 0.5;
+                        } else {
+                            oneBold = true;
+                        }
+                    });
+                }
+            });
+        }
     }, [displayArr])
 
     return (
         <section className="sidebar-padding rolls-window">
             <h2>Dice Rolls</h2>
             <div className="scroll-window">
-                {displayArr.map((rollDisplay, i) => {
+                {displayArr ? displayArr.map((rollDisplay, i) => {
                     return(<div key={i} className="roll-display">
                         <h3>{rollDisplay.character}<br />{rollDisplay.name}</h3>
                         <div className="column-envelope" id={`meb_showRolls_${i}`}>
@@ -122,7 +128,7 @@ const RollsDisplay = () => {
                             <p className="big-num bg">{rollDisplay.rollData.result}</p>
                         </div>
                     </div>);
-                })}
+                }) : null}
             </div>
         </section>
     );

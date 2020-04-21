@@ -61,6 +61,10 @@
     justify-content: flex-end;
 }
 
+.float-right .my-button {
+    margin-left: 14px;
+}
+
 .char-sheet-tabs {
     width: 100%;
     display: flex;
