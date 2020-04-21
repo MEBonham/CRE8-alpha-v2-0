@@ -131,7 +131,6 @@ const Play = () => {
                     }
                 };
             }
-            console.log(ev.target.id.split("_")[2].split("-").join(" "));
             const userStamp = userInfo ? userInfo.uid : "anon";
             rollRef.current = {
                 id: `${Date.now()}-${userStamp}`,

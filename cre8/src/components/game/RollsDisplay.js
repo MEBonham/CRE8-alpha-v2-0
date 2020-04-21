@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useEffect, useRef } from 'react';
 import fb from '../../fbConfig';
 import useGlobal from '../../hooks/useGlobal';
 
@@ -9,9 +9,6 @@ import '../../css/game.css';
 const RollsDisplay = () => {
     const db = fb.db;
     const [userInfo] = useGlobal("user");
-    const [usersCampaigns] = useGlobal("usersCampaigns");
-    const [latestRoll] = useGlobal("latestRoll");
-    const [displayArr, setDisplayArr] = useState([]);
 
     const scrollHeightRef = useRef(0);
     const clientHeightRef = useRef(0);
@@ -21,6 +18,10 @@ const RollsDisplay = () => {
         clientHeightRef.current = el.clientHeight;
     }, [])
 
+    const [latestRoll] = useGlobal("latestRoll");
+    const [displayArr, setDisplayArr] = useGlobal("rollsDisplayArray");
+    const displayArrRef = useRef(displayArr);
+    const [usersCampaigns] = useGlobal("usersCampaigns");
     const campaignMatch = (campIdsArr1, campIdsArr2) => {
         campIdsArr1.forEach(id => {
             if (campIdsArr2.includes(id)) return true;
@@ -29,57 +30,55 @@ const RollsDisplay = () => {
     }
     useEffect(() => {
         if (latestRoll.dieMode) {
-            const rollObj = { ...latestRoll };
-            const rollId = rollObj.id;
-            if (!rollObj.processedLocally) {
+            if (!latestRoll.processedLocally) {
                 const processedArr = (userInfo) ? [
-                    ...rollObj.processedBy.slice(),
+                    ...latestRoll.processedBy.slice(),
                     userInfo.uid
-                ] : rollObj.processedBy.slice();
+                ] : latestRoll.processedBy.slice();
                 const rollOnce = {
-                    ...rollObj,
+                    ...latestRoll,
                     processedLocally: true,
                     processedBy: processedArr,
-                    rollData: roll(rollObj.dieMode, rollObj.dieModBasic, rollObj.dieModsMisc, rollObj.coasting)
+                    rollData: roll(latestRoll.dieMode, latestRoll.dieModBasic, latestRoll.dieModsMisc, latestRoll.coasting)
                 };
-                delete rollOnce.id;
-                db.collection("rolls").doc(rollId).set(rollOnce)
+                db.collection("rolls").doc(latestRoll.id).set(rollOnce)
                     .then(() => {
                         setDisplayArr([
-                            ...displayArr,
+                            ...displayArrRef.current,
                             {
-                                ...rollOnce,
-                                id: rollId
+                                ...rollOnce
                             }
                         ]);
                     })
                     .catch(err => {
                         console.log(err);
                         setDisplayArr([
-                            ...displayArr,
+                            ...displayArrRef.current,
                             {
-                                ...rollOnce,
-                                id: rollId
+                                ...rollOnce
                             }
                         ]);
                     })
-            } else if (userInfo && usersCampaigns && rollObj && !rollObj.processedBy.includes(userInfo.uid)) {
-                if (campaignMatch(Object.keys(usersCampaigns), rollObj.campaigns)) {
+            } else if (userInfo && usersCampaigns && latestRoll && !latestRoll.processedBy.includes(userInfo.uid)) {
+                if (campaignMatch(Object.keys(usersCampaigns), latestRoll.campaigns)) {
                     const processedArr = (userInfo) ? [
-                        ...rollObj.processedBy.slice(),
+                        ...latestRoll.processedBy.slice(),
                         userInfo.uid
-                    ] : rollObj.processedBy.slice();
+                    ] : latestRoll.processedBy.slice();
                     setDisplayArr([
-                        ...displayArr,
+                        ...displayArrRef.current,
                         {
-                            ...rollObj,
+                            ...latestRoll,
                             processedBy: processedArr
                         }
                     ]);
                 }
             }
         }
-    }, [db, latestRoll, userInfo, usersCampaigns])
+    }, [db, latestRoll, setDisplayArr, userInfo, usersCampaigns])
+    useEffect(() => {
+        displayArrRef.current = displayArr;
+    }, [displayArr])
 
     useEffect(() => {
         const el = document.querySelector(".rolls-window div.scroll-window");

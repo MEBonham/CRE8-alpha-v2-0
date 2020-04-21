@@ -25,6 +25,7 @@ const initialData = {
     coasting: false,
     dieRollMode: "normal",
     latestRoll: {},
+    rollsDisplayArray: [],
     userSettingsMenuOpen: false
 };
 
