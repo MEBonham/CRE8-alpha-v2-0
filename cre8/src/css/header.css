@@ -60,7 +60,7 @@
 .App > header .profile nav {
     position: absolute;
     top: 46px;
-    right: -6px;
+    right: -8px;
     display: flex;
     flex-direction: column;
     align-items: flex-end;

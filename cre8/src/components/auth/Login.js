@@ -1,22 +1,29 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
+import { useHistory } from 'react-router-dom';
+import { Store } from '../GlobalWrapper';
 import fb from '../../fbConfig';
 import useForm from '../../hooks/useForm';
 
 const Login = () => {
+    const [, dispatch] = useContext(Store);
+    // Close menu that presumably led you here
+    useEffect(() => {
+        dispatch({ type: "SET", key: "userSettingsMenuOpen", payload: false });
+    }, [dispatch])
 
-    const signIn = (ev) => {
-        fb.auth.signInWithEmailAndPassword(inputs.email, inputs.password)
-            .then(() => {
-                
-            })
-            .catch(err => {
-                if (err.code && (err.code === "auth/user-not-found" || err.code === "auth/wrong-password")) {
-                    setErrorMessage("Invalid email or password.");
-                } else {
-                    setErrorMessage("Error signing in. Please try again later.");
-                    console.log("Miscellaneous error signing in.", err);
-                }
-            });
+    const navHistory = useHistory();
+    const signIn = async (ev) => {
+        try {
+            await fb.auth.signInWithEmailAndPassword(inputs.email, inputs.password);
+            navHistory.goBack();
+        } catch(err) {
+            if (err.code && (err.code === "auth/user-not-found" || err.code === "auth/wrong-password")) {
+                setErrorMessage("Invalid email or password.");
+            } else {
+                setErrorMessage("Error signing in. Please try again later.");
+                console.log("Miscellaneous error signing in.", err);
+            }
+        }
     }
     
     const [errorMessage, setErrorMessage] = useState("");
