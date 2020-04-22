@@ -4,6 +4,7 @@ import { Store } from '../GlobalWrapper';
 import fb from '../../fbConfig';
 import useForm from '../../hooks/useForm';
 
+import MyFormButton from '../ui/MyFormButton';
 import MyLink from '../ui/MyLink';
 
 const Login = () => {
@@ -32,7 +33,7 @@ const Login = () => {
     const { inputs, handleInputChange, handleSubmit } = useForm(signIn);
 
     return (
-        <form onSubmit={handleSubmit} className="primary-content content-padding login-form">
+        <form onSubmit={handleSubmit} className="primary-content content-padding login-form rows">
             <h1>Login</h1>
             <div>
                 <label htmlFor="email">Email</label>
@@ -54,9 +55,9 @@ const Login = () => {
                     required
                 />
             </div>
-            <button type="submit">Login</button>
+            <MyFormButton type="submit" className="my-button">Login</MyFormButton>
             {errorMessage ? <p className="buffer-above error-message">{errorMessage}</p> : null}
-            <p className="buffer-above"><MyLink to="/login/forgot">Forgot your password?</MyLink></p>
+            <div className="buffer-above"><MyLink to="/login/forgot">Forgot your password?</MyLink></div>
         </form>
     )
 }

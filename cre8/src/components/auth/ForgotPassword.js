@@ -23,7 +23,7 @@ const ForgotPassword = () => {
 
     const component = state.user ? 
         <Redirect to="/" /> :
-        <form onSubmit={handleSubmit} className="primary-content content-padding login-form">
+        <form onSubmit={handleSubmit} className="primary-content content-padding login-form rows">
             <h1>Forgot Password</h1>
             <div>
                 <label htmlFor="email">Email</label>

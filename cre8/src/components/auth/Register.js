@@ -83,7 +83,7 @@ const Register = () => {
     const { inputs, handleInputChange, handleSubmit } = useForm(registerFct);
 
     return (
-        <form onSubmit={handleSubmit} className="primary-content content-padding login-form">
+        <form onSubmit={handleSubmit} className="primary-content content-padding login-form rows">
             <h1>Register</h1>
             <div>
                 <label htmlFor="email">Email</label>
