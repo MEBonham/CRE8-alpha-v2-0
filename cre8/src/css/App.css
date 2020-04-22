@@ -1,0 +1,16 @@
+.columns {
+    display: flex;
+}
+
+.rows {
+    display: flex;
+    flex-direction: column;
+}
+
+.App .main-envelope .contents {
+    width: 70%;
+}
+
+.App .main-envelope .sidebar {
+    width: 30%;
+}
