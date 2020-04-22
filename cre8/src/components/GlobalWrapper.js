@@ -2,7 +2,7 @@ import React, { useReducer, createContext } from 'react';
 import Reducer from '../hooks/Store';
 
 const initialData = {
-
+    userSettingsMenuOpen: false
 };
 
 export const Store = createContext(initialData);

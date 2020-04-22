@@ -11,10 +11,8 @@ import Login from './auth/Login';
 import RollsDisplay from './game/RollsDisplay';
 
 import '../css/App.css';
-import GlobalWrapper from './GlobalWrapper';
 
 const App = () => {
-
     const FOOTER_HEIGHT_PX = 21;
     const [styleObj, setStyleObj] = useState({ height: "700px" });
     useEffect(() => {
@@ -25,25 +23,23 @@ const App = () => {
 
     return(
         <div className="App">
-            <GlobalWrapper>
-                <StateHolder />
-                <Header />
-                <div className="main-envelope columns" style={styleObj}>
-                    <div className="contents">
-                        <Switch>
-                            <Route exact path="/" component={Home} />
-                            <Route path={["/index", "/index.html"]} component={Home} />
-                            <Route path="/characters/:slug" component={CharSheetMain} />
-                            <Route path="/characters" component={CharMenu} />
-                            <Route path="/login" component={Login} />
-                        </Switch>
-                    </div>
-                    <div className="sidebar">
-                        <RollsDisplay />
-                    </div>
+            <StateHolder />
+            <Header />
+            <div className="main-envelope columns" style={styleObj}>
+                <div className="contents">
+                    <Switch>
+                        <Route exact path="/" component={Home} />
+                        <Route path={["/index", "/index.html"]} component={Home} />
+                        <Route path="/characters/:slug" component={CharSheetMain} />
+                        <Route path="/characters" component={CharMenu} />
+                        <Route path="/login" component={Login} />
+                    </Switch>
                 </div>
-                <Footer />
-            </GlobalWrapper>
+                <div className="sidebar">
+                    <RollsDisplay />
+                </div>
+            </div>
+            <Footer />
         </div>
     );
 }
