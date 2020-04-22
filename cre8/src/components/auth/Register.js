@@ -43,7 +43,7 @@ const Register = () => {
     }, [db, streamOpened]);
 
     const navHistory = useHistory();
-    const registerFct = (ev) => {
+    const registerFct = async (ev) => {
         if (!streamOpened) {
             return;
         } else if (prevUsernames.includes(inputs.username)) {
@@ -53,37 +53,33 @@ const Register = () => {
                 setErrorMessage("Duplicate username. Please try again.")
             }
         } else {
-            fb.auth.createUserWithEmailAndPassword(inputs.email, inputs.password)
-                .then(() => {
-                    const { uid } = fb.auth.currentUser;
-                    const displayName = inputs.username;
-                    db.collection("users").doc(uid).set({
+            try {
+                await fb.auth.createUserWithEmailAndPassword(inputs.email, inputs.password);
+                const { uid } = await fb.auth.currentUser;
+                const displayName = inputs.username;
+                try {
+                    await db.collection("users").doc(uid).set({
                         displayName,
                         email: inputs.email,
                         rank: "peasant"
-                    }).then(() => {
-                        fb.auth.currentUser.updateProfile({
-                            displayName
-                        })
-                        .then(() => {
-                            navHistory.goBack();
-                        })
-                        .catch((err) => {
-                            console.log("Error:", err);
-                        });
-                    }).catch((err) => {
-                        console.log("Error:", err);
                     });
-                }).catch((err) => {
-                    if (err.code && err.code === "auth/email-already-in-use") {
-                        setErrorMessage("Email already in use.");
-                    } else if (err.code && err.code === "auth/weak-password") {
-                        setErrorMessage("Password too weak; please provide at least 6 characters.");
-                    } else {
-                        setErrorMessage("Error registering. Please try again later.");
-                        console.log("Misc. error registering user:", err);
-                    }
-                });
+                    await fb.auth.currentUser.updateProfile({
+                            displayName
+                    });
+                    navHistory.goBack();
+                } catch(err) {
+                    console.log("Error:", err);
+                };
+            } catch(err) {
+                if (err.code && err.code === "auth/email-already-in-use") {
+                    setErrorMessage("Email already in use.");
+                } else if (err.code && err.code === "auth/weak-password") {
+                    setErrorMessage("Password too weak; please provide at least 6 characters.");
+                } else {
+                    setErrorMessage("Error registering. Please try again later.");
+                    console.log("Misc. error registering user:", err);
+                }
+            };
         }
     }
     const { inputs, handleInputChange, handleSubmit } = useForm(registerFct);
