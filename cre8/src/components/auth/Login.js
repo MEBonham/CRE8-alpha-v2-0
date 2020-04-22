@@ -1,14 +1,15 @@
-import React, { useState, useEffect, useContext } from 'react';
-import { useHistory } from 'react-router-dom';
+import React, { useState, useEffect, useRef, useContext } from 'react';
+import { Redirect, useHistory } from 'react-router-dom';
 import { Store } from '../GlobalWrapper';
 import fb from '../../fbConfig';
 import useForm from '../../hooks/useForm';
 
+import LoadingAlert from '../other/LoadingAlert';
 import MyFormButton from '../ui/MyFormButton';
 import MyLink from '../ui/MyLink';
 
 const Login = () => {
-    const [, dispatch] = useContext(Store);
+    const [state, dispatch] = useContext(Store);
     // Close menu that presumably led you here
     useEffect(() => {
         dispatch({ type: "SET", key: "userSettingsMenuOpen", payload: false });
@@ -32,7 +33,9 @@ const Login = () => {
     const [errorMessage, setErrorMessage] = useState("");
     const { inputs, handleInputChange, handleSubmit } = useForm(signIn);
 
-    return (
+    const [component, setComponent] = useState(<LoadingAlert />);
+    const firstLoad = useRef(true);
+    const [formCode] = useState(
         <form onSubmit={handleSubmit} className="primary-content content-padding login-form rows">
             <h1>Login</h1>
             <div>
@@ -59,7 +62,15 @@ const Login = () => {
             {errorMessage ? <p className="buffer-above error-message">{errorMessage}</p> : null}
             <div className="buffer-above"><MyLink to="/login/forgot">Forgot your password?</MyLink></div>
         </form>
-    )
+    );
+    useEffect(() => {
+        if (firstLoad.current) {
+            firstLoad.current = false;
+        } else {
+            setComponent(state.user ? <Redirect to="/" /> : formCode);
+        }
+    }, [formCode, state.user])
+    return (component);
 }
 
 export default Login;

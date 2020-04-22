@@ -1,8 +1,10 @@
-import React, { useState, useEffect, useContext } from 'react';
+import React, { useState, useEffect, useRef, useContext } from 'react';
 import { Redirect, useHistory } from 'react-router-dom';
 import { Store } from '../GlobalWrapper';
 import fb from '../../fbConfig';
 import useForm from '../../hooks/useForm';
+
+import LoadingAlert from '../other/LoadingAlert';
 
 const Register = () => {
     const [state, dispatch] = useContext(Store);
@@ -84,8 +86,10 @@ const Register = () => {
     }
     const { inputs, handleInputChange, handleSubmit } = useForm(registerFct);
 
-    const component = state.user ? <Redirect to="/" /> :
-        (<form onSubmit={handleSubmit} className="primary-content content-padding login-form rows">
+    const [component, setComponent] = useState(<LoadingAlert />);
+    const firstLoad = useRef(true);
+    const [formCode] = useState(
+        <form onSubmit={handleSubmit} className="primary-content content-padding login-form rows">
             <h1>Register</h1>
             <div>
                 <label htmlFor="email">Email</label>
@@ -119,8 +123,16 @@ const Register = () => {
             </div>
             <button type="submit">Register</button>
             {errorMessage ? <p className="buffer-above error-message">{errorMessage}</p> : null}
-        </form>);
-    return (component)
+        </form>
+    );
+    useEffect(() => {
+        if (firstLoad.current) {
+            firstLoad.current = false;
+        } else {
+            setComponent(state.user ? <Redirect to="/" /> : formCode);
+        }
+    }, [formCode, state.user])
+    return (component);
 }
 
 export default Register;
