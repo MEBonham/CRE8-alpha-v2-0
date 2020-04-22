@@ -2,6 +2,7 @@ import React, { useReducer, createContext } from 'react';
 import Reducer from '../hooks/Store';
 
 const initialData = {
+    initialMount: true,
     mainNavMenuOpen: false,
     userSettingsMenuOpen: false
 };

@@ -1,13 +1,11 @@
-import React, { useState, useEffect, useRef, useContext } from 'react';
-import { Redirect, useHistory } from 'react-router-dom';
+import React, { useState, useEffect, useContext } from 'react';
+import { useHistory } from 'react-router-dom';
 import { Store } from '../GlobalWrapper';
 import fb from '../../fbConfig';
 import useForm from '../../hooks/useForm';
 
-import LoadingAlert from '../other/LoadingAlert';
-
 const Register = () => {
-    const [state, dispatch] = useContext(Store);
+    const [, dispatch] = useContext(Store);
     // Close menu that presumably led you here
     useEffect(() => {
         dispatch({ type: "SET", key: "userSettingsMenuOpen", payload: false });
@@ -86,9 +84,7 @@ const Register = () => {
     }
     const { inputs, handleInputChange, handleSubmit } = useForm(registerFct);
 
-    const [component, setComponent] = useState(<LoadingAlert />);
-    const firstLoad = useRef(true);
-    const [formCode] = useState(
+    return (
         <form onSubmit={handleSubmit} className="primary-content content-padding login-form rows">
             <h1>Register</h1>
             <div>
@@ -123,16 +119,9 @@ const Register = () => {
             </div>
             <button type="submit">Register</button>
             {errorMessage ? <p className="buffer-above error-message">{errorMessage}</p> : null}
+            <p className="buffer-above">I'm going to avoid lengthy Terms Of Service if I can, but know that this site is moderated. If you choose a username that is lewd, deliberately confusable with someone else's, or otherwise troublesome, your account will be modified or deleted.</p>
         </form>
     );
-    useEffect(() => {
-        if (firstLoad.current) {
-            firstLoad.current = false;
-        } else {
-            setComponent(state.user ? <Redirect to="/" /> : formCode);
-        }
-    }, [formCode, state.user])
-    return (component);
 }
 
 export default Register;

@@ -3,6 +3,7 @@ import { Route, Switch } from 'react-router-dom';
 import GlobalWrapper from './GlobalWrapper';
 
 import Guarded from './auth/Guarded';
+import ReverseGuarded from './auth/ReverseGuarded';
 import StateHolder from './other/StateHolder';
 import Header from './header/Header';
 import Footer from './footer/Footer';
@@ -39,9 +40,9 @@ const App = () => {
                             <Route path="/characters/:slug" component={CharSheetMain} />
                             <Route path="/characters" component={CharMenu} />
                             <Guarded path="/user/settings"><UserSettings /></Guarded>
-                            <Route path="/login/forgot" component={ForgotPassword} />
-                            <Route path="/login" component={Login} />
-                            <Route path="/register" component={Register} />
+                            <ReverseGuarded path="/login/forgot"><ForgotPassword /></ReverseGuarded>
+                            <ReverseGuarded path="/login"><Login /></ReverseGuarded>
+                            <ReverseGuarded path="/register"><Register /></ReverseGuarded>
                         </Switch>
                     </div>
                     <div className="sidebar">

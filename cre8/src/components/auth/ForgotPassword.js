@@ -1,30 +1,34 @@
-import React, { useState, useEffect, useRef, useContext } from 'react';
-import { Redirect } from 'react-router-dom';
-import { Store } from '../GlobalWrapper';
+import React, { useState, useEffect, useRef } from 'react';
 import fb from '../../fbConfig';
 
 import useForm from '../../hooks/useForm';
-import LoadingAlert from '../other/LoadingAlert';
 
 const ForgotPassword = () => {
-    const [state] = useContext(Store);
     const [errorMessage, setErrorMessage] = useState("");
     const [confirmMessage, setConfirmMessage] = useState("");
+
+    const _isMounted = useRef(false);
+    useEffect(() => {
+        _isMounted.current = true;
+        return (() => {
+            _isMounted.current = false;
+        });
+    }, [])
 
     const resetPw = async () => {
         try {
             await fb.auth.sendPasswordResetEmail(inputs.email)
-            setConfirmMessage("Password Reset email sent.");
+            if (_isMounted) setConfirmMessage("Password Reset email sent. Assuming Google's API worked. I've found it unreliable.");
         } catch(err) {
+            if (_isMounted) {
                 setErrorMessage("An error occurred. Please try again later.");
                 console.log("Error:", err);
+            }
         };
     }
     const { inputs, handleInputChange, handleSubmit } = useForm(resetPw);
 
-    const [component, setComponent] = useState(<LoadingAlert />);
-    const firstLoad = useRef(true);
-    const [formCode] = useState(
+    return (
         <form onSubmit={handleSubmit} className="primary-content content-padding login-form rows">
             <h1>Forgot Password</h1>
             <div>
@@ -42,14 +46,6 @@ const ForgotPassword = () => {
             {confirmMessage ? <p className="buffer-above">{confirmMessage}</p> : null}
         </form>
     );
-    useEffect(() => {
-        if (firstLoad.current) {
-            firstLoad.current = false;
-        } else {
-            setComponent(state.user ? <Redirect to="/" /> : formCode);
-        }
-    }, [formCode, state.user])
-    return (component);
-    }
+}
 
 export default ForgotPassword;

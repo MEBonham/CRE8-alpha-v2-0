@@ -85,7 +85,7 @@
     font-size: 1.2rem;
 }
 
-.App form.login-form p {
+.App form.login-form p.error-message {
     font-weight: bold;
     color: #990000;
 }

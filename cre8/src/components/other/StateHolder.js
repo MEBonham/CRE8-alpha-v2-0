@@ -8,6 +8,7 @@ const StateHolder = () => {
         let unsubscribeAuth = fb.auth.onAuthStateChanged(user => {
             dispatch({ type: "SET", key: "user", payload: user });
         });
+        dispatch({ type: "SET", key: "initialMount", payload: false });
         return(() => {
             unsubscribeAuth();
         });
