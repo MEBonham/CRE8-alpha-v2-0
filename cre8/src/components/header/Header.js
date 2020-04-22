@@ -1,10 +1,10 @@
-import React, { useState, useContext } from 'react';
-import { Link, NavLink } from 'react-router-dom';
+import React, { useState, useContext, useEffect } from 'react';
+import { Link } from 'react-router-dom';
 import { Store } from '../GlobalWrapper';
-import fb from '../../fbConfig';
 
-import MyButton from '../ui/MyButton';
 import MainNav from './MainNav';
+import SignedIn from './SignedIn';
+import SignedOut from './SignedOut';
 import loadingIcon from '../../media/loading-icon.png';
 import '../../css/header.css';
 
@@ -16,10 +16,13 @@ const Header = () => {
             <img src={loadingIcon} alt="Loading ..." />
         </div>
     );
-
-    const handleLogout = () => {
-        fb.auth.signOut();
-    }
+    useEffect(() => {
+        if (state.user) {
+            setProfileComp(<SignedIn />);
+        } else {
+            setProfileComp(<SignedOut />);
+        }
+    }, [state.user])
 
     return (
         <header>
@@ -29,7 +32,6 @@ const Header = () => {
                     {profileComp}
                     <MainNav />
                 </div>
-                {state.user ? <MyButton fct={handleLogout}>Logout</MyButton> : <NavLink to="login">Login</NavLink>}
             </div>
             <div className="dummy-space" />
         </header>

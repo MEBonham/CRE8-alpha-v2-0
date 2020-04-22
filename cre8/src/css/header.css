@@ -77,6 +77,11 @@
     padding: 4px 12px;
     font-size: 1.2rem;
     text-align: center;
+}
+
+.App > header .nav-dropdown-system nav a,
+.App > header .profile nav a,
+.App > header .profile.signed-in nav p.logout {
     cursor: pointer;
 }
 
