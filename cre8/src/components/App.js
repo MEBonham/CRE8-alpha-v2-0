@@ -1,6 +1,7 @@
 import React from 'react';
-import { NavLink, Route, Switch } from 'react-router-dom';
+import { Route, Switch } from 'react-router-dom';
 
+import Header from './header/Header';
 import Home from './other/Home';
 import CharSheetMain from './charsheet/CharSheetMain';
 import CharMenu from './other/CharMenu';
@@ -14,12 +15,9 @@ const App = () => {
     return(
         <div className="App">
             <GlobalWrapper>
-                <header>
-                    <NavLink to="/characters">Characters</NavLink>
-                </header>
+                <Header />
                 <div className="main-envelope columns">
                     <div className="contents">
-                        <h1>Hello</h1>
                         <Switch>
                             <Route exact path="/" component={Home} />
                             <Route path={["/index", "/index.html"]} component={Home} />

@@ -3,7 +3,7 @@ import { Link, useParams } from 'react-router-dom';
 import { Store } from '../GlobalWrapper';
 
 const CharSheetMain = () => {
-    const [state, dispatch] = useContext(Store);
+    const [, dispatch] = useContext(Store);
     const { slug } = useParams();
     const addSlug = (ev) => {
         dispatch({ type: "SET", key: "latestRoll", payload: { slug: slug } });
