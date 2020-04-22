@@ -12,8 +12,6 @@ const CharMenu = () => {
     return(
         <div className="primary-content content-padding">
             <Link to="/characters/fred">Fred</Link>
-            <Link to="/login">Login</Link>
-            <Link to="/register">Register</Link>
         </div>
     )
 }

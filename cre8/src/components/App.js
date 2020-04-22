@@ -10,6 +10,7 @@ import Home from './other/Home';
 import CharSheetMain from './charsheet/CharSheetMain';
 import CharMenu from './other/CharMenu';
 import UserSettings from './auth/UserSettings';
+import ForgotPassword from './auth/ForgotPassword';
 import Login from './auth/Login';
 import Register from './auth/Register';
 import RollsDisplay from './game/RollsDisplay';
@@ -38,6 +39,7 @@ const App = () => {
                             <Route path="/characters/:slug" component={CharSheetMain} />
                             <Route path="/characters" component={CharMenu} />
                             <Guarded path="/user/settings"><UserSettings /></Guarded>
+                            <Route path="/login/forgot" component={ForgotPassword} />
                             <Route path="/login" component={Login} />
                             <Route path="/register" component={Register} />
                         </Switch>

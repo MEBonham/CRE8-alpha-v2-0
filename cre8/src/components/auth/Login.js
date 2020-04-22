@@ -4,6 +4,8 @@ import { Store } from '../GlobalWrapper';
 import fb from '../../fbConfig';
 import useForm from '../../hooks/useForm';
 
+import MyLink from '../ui/MyLink';
+
 const Login = () => {
     const [, dispatch] = useContext(Store);
     // Close menu that presumably led you here
@@ -54,6 +56,7 @@ const Login = () => {
             </div>
             <button type="submit">Login</button>
             {errorMessage ? <p className="buffer-above error-message">{errorMessage}</p> : null}
+            <p className="buffer-above"><MyLink to="/login/forgot">Forgot your password?</MyLink></p>
         </form>
     )
 }
