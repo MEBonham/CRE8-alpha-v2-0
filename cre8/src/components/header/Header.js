@@ -4,6 +4,7 @@ import { Store } from '../GlobalWrapper';
 import fb from '../../fbConfig';
 
 import MyButton from '../ui/MyButton';
+import '../../css/header.css';
 
 const Header = () => {
     const [state] = useContext(Store);
@@ -19,6 +20,7 @@ const Header = () => {
                 <NavLink to="/characters">Characters</NavLink>
                 {state.user ? <MyButton fct={handleLogout}>Logout</MyButton> : <NavLink to="login">Login</NavLink>}
             </div>
+            <div className="dummy-space" />
         </header>
     );
 }
