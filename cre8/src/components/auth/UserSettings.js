@@ -2,6 +2,8 @@ import React, { useState, useEffect, useContext } from 'react';
 import { Store } from '../GlobalWrapper';
 import fb from '../../fbConfig';
 
+import AdminSettings from './Admin';
+
 const UserSettings = () => {
     const [state, dispatch] = useContext(Store);
     // Close menu that presumably led you here
@@ -42,6 +44,7 @@ const UserSettings = () => {
         <div className="primary-content content-padding rows">
             <h1>User Settings</h1>
             {rankBadge()}
+            {userInfo && userInfo.rank === "admin" ? <AdminSettings ownId={userInfo.id} /> : null}
         </div>
     );
 }
