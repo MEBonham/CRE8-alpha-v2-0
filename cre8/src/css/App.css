@@ -15,7 +15,7 @@
     border-radius: 12px;
     background-color: #bac9e0;
     box-shadow: 0 0 8px #111111;
-    /* overflow: hidden; */
+    overflow: hidden;
 }
 
 .App .main-envelope .contents {

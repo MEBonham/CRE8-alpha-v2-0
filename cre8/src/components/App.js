@@ -3,6 +3,7 @@ import { Route, Switch } from 'react-router-dom';
 
 import StateHolder from './other/StateHolder';
 import Header from './header/Header';
+import Footer from './footer/Footer';
 import Home from './other/Home';
 import CharSheetMain from './charsheet/CharSheetMain';
 import CharMenu from './other/CharMenu';
@@ -41,6 +42,7 @@ const App = () => {
                         <RollsDisplay />
                     </div>
                 </div>
+                <Footer />
             </GlobalWrapper>
         </div>
     );
