@@ -1,21 +1,24 @@
-import React, { useState, useEffect, useRef, useContext } from 'react';
-import { useHistory } from 'react-router-dom';
+import React, { useState, useEffect, useContext } from 'react';
+import { Redirect, useHistory } from 'react-router-dom';
 import { Store } from '../GlobalWrapper';
 import fb from '../../fbConfig';
 import useForm from '../../hooks/useForm';
 
 const Register = () => {
-    const [, dispatch] = useContext(Store);
+    const [state, dispatch] = useContext(Store);
     // Close menu that presumably led you here
     useEffect(() => {
         dispatch({ type: "SET", key: "userSettingsMenuOpen", payload: false });
     }, [dispatch])
+    
+    const [errorMessage, setErrorMessage] = useState("");
 
     const db = fb.db;
     const [prevUsernames, setPrevUserNames] = useState([]);
-    const stream = useRef(null);
+    const [streamOpened, setStreamOpened] = useState(false);
     useEffect(() => {
-        stream.current = db.collection("users")
+        let _isMounted = true;
+        db.collection("users")
             // .onSnapshot(querySnapshot => {
             .get()
             .then(querySnapshot => {
@@ -23,22 +26,25 @@ const Register = () => {
                 querySnapshot.forEach(doc => {
                     usernames.push(doc.data().displayName);
                 });
-                setPrevUserNames(usernames);
+                if (_isMounted) {
+                    setPrevUserNames(usernames);
+                    setStreamOpened(true);
+                }
             })
             .catch((err) => {
-                setErrorMessage(err.message || err);
-                stream.current = null;
+                if (_isMounted) {
+                    setErrorMessage(err.message || err);
+                    setStreamOpened(false);
+                }
             });
-    
-        // return () => {
-        //     stream.current();
-        // };
-    }, [db]);
+        return(() => {
+            _isMounted = false;
+        });
+    }, [db, streamOpened]);
 
-    const [errorMessage, setErrorMessage] = useState("");
     const navHistory = useHistory();
-    const registerFct = async (ev) => {
-        if (!stream.current) {
+    const registerFct = (ev) => {
+        if (!streamOpened) {
             return;
         } else if (prevUsernames.includes(inputs.username)) {
             if (inputs.username === "Select User") {
@@ -47,43 +53,43 @@ const Register = () => {
                 setErrorMessage("Duplicate username. Please try again.")
             }
         } else {
-            try {
-                await fb.auth.createUserWithEmailAndPassword(inputs.email, inputs.password);
-                const { uid } = fb.auth.currentUser;
-                const displayName = inputs.username;
-                db.collection("users").doc(uid).set({
-                    displayName,
-                    email: inputs.email,
-                    rank: "peasant"
-                }).then(() => {
-                    fb.auth.currentUser.updateProfile({
-                        displayName
-                    })
-                    .then(() => {
-                        navHistory.goBack();
-                    })
-                    .catch((err) => {
+            fb.auth.createUserWithEmailAndPassword(inputs.email, inputs.password)
+                .then(() => {
+                    const { uid } = fb.auth.currentUser;
+                    const displayName = inputs.username;
+                    db.collection("users").doc(uid).set({
+                        displayName,
+                        email: inputs.email,
+                        rank: "peasant"
+                    }).then(() => {
+                        fb.auth.currentUser.updateProfile({
+                            displayName
+                        })
+                        .then(() => {
+                            navHistory.goBack();
+                        })
+                        .catch((err) => {
+                            console.log("Error:", err);
+                        });
+                    }).catch((err) => {
                         console.log("Error:", err);
-                    })
+                    });
                 }).catch((err) => {
-                    console.log("Error:", err);
-                })
-            } catch(err) {
-                if (err.code && err.code === "auth/email-already-in-use") {
-                    setErrorMessage("Email already in use.");
-                } else if (err.code && err.code === "auth/weak-password") {
-                    setErrorMessage("Password too weak; please provide at least 6 characters.");
-                } else {
-                    setErrorMessage("Error registering. Please try again later.");
-                    console.log("Misc. error registering user:", err);
-                }
-            }
+                    if (err.code && err.code === "auth/email-already-in-use") {
+                        setErrorMessage("Email already in use.");
+                    } else if (err.code && err.code === "auth/weak-password") {
+                        setErrorMessage("Password too weak; please provide at least 6 characters.");
+                    } else {
+                        setErrorMessage("Error registering. Please try again later.");
+                        console.log("Misc. error registering user:", err);
+                    }
+                });
         }
     }
     const { inputs, handleInputChange, handleSubmit } = useForm(registerFct);
 
-    return (
-        <form onSubmit={handleSubmit} className="primary-content content-padding login-form rows">
+    const component = state.user ? <Redirect to="/" /> :
+        (<form onSubmit={handleSubmit} className="primary-content content-padding login-form rows">
             <h1>Register</h1>
             <div>
                 <label htmlFor="email">Email</label>
@@ -117,8 +123,8 @@ const Register = () => {
             </div>
             <button type="submit">Register</button>
             {errorMessage ? <p className="buffer-above error-message">{errorMessage}</p> : null}
-        </form>
-    )
+        </form>);
+    return (component)
 }
 
 export default Register;
