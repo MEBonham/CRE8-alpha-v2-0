@@ -22,7 +22,8 @@ const useForm = (cb) => {
     return {
         handleSubmit,
         handleInputChange,
-        inputs
+        inputs,
+        setInputs
     };
 }
 

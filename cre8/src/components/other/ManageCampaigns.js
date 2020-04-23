@@ -1,10 +1,11 @@
 import React, { useState, useEffect, useRef, useContext } from 'react';
-// import { v4 as uuidv4 } from 'uuid';
+import { v4 as uuidv4 } from 'uuid';
 import { Store } from '../GlobalWrapper';
 import fb from '../../fbConfig';
-// import useForm from '../../hooks/useForm';
+import useForm from '../../hooks/useForm';
 
 import MyButton from '../ui/MyButton';
+import MyFormButton from '../ui/MyFormButton';
 
 const ManageCampaigns = () => {
     const [state, dispatch] = useContext(Store);
@@ -76,6 +77,32 @@ const ManageCampaigns = () => {
         }
     }
 
+    const saveNewCampaign = async (ev) => {
+        const id = uuidv4();
+        try {
+            await db.collection("campaigns").doc(id).set({
+                owner: state.user.uid,
+                name: inputs.newCampaignName,
+                members: [state.user.uid]
+            });
+            dispatch({ type: "SET", key: "activeCampaigns", payload: {
+                ...state.activeCampaigns,
+                [id]: {
+                    owner: state.user.uid,
+                    name: inputs.newCampaignName,
+                    members: [state.user.uid]
+                }
+            } });
+            setInputs({
+                ...inputs,
+                newCampaignName: ""
+            });
+        } catch (err) {
+            console.log("Error:", err);
+        }
+    }
+    const { inputs, handleInputChange, handleSubmit, setInputs } = useForm(saveNewCampaign);
+
     return (
         <section className="manage-campaigns rows">
             <h2>Your Campaigns</h2>
@@ -83,7 +110,7 @@ const ManageCampaigns = () => {
                 Object.keys(state.activeCampaigns).map((campaignId, i) => {
                     const campaignInfo = state.activeCampaigns[campaignId];
                     return (
-                        <section key={campaignId} className="rows">
+                        <section key={campaignId} className="one-campaign rows">
                             <h3>{campaignInfo.name}</h3>
                             <form className="columns">
                                 {/* <select onChange={handleSelectChangeById} id={`meb_addUserToCampaign_${i}`}> */}
@@ -104,7 +131,26 @@ const ManageCampaigns = () => {
                             </ul>
                         </section>
                     );
-                }) : <p><em>(None)</em></p>}
+                }) :
+            <p><em>(None)</em></p>}
+            {state.user ? 
+                <section className="new-campaign">
+                    <h3>Create New Campaign</h3>
+                    <form onSubmit={handleSubmit}>
+                        <div>
+                            <label htmlFor="newCampaignName">Name</label>
+                            <input
+                                type="text"
+                                id="newCampaignName"
+                                onChange={handleInputChange}
+                                value={inputs.newCampaignName || ""}
+                                required
+                            />
+                        </div>
+                        <MyFormButton type="submit">Save</MyFormButton>
+                    </form>
+                </section> :
+            null}
         </section>
     );
 }
