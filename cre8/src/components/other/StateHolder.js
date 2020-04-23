@@ -6,6 +6,7 @@ import fb from '../../fbConfig';
 const StateHolder = () => {
     const [state, dispatch] = useContext(Store);
     
+    // Subscribe to authorization changes
     useEffect(() => {
         let unsubscribeAuth = fb.auth.onAuthStateChanged(user => {
             dispatch({ type: "SET", key: "user", payload: user });
@@ -18,6 +19,7 @@ const StateHolder = () => {
         });
     }, [dispatch])
 
+    // Pull active campaigns list from database
     const campaignsStream = useRef(null);
     useEffect(() => {
         if (state.user) {

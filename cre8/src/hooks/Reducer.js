@@ -1,6 +1,29 @@
 
 const Reducer = (state, action) => {
     switch (action.type) {
+        case 'CHAR_EDIT':
+            const newVal = action.inputs[`${action.stub}_${action.field}`];
+            switch (action.field) {
+                case "name":
+                    return {
+                        ...state,
+                        cur: {
+                            ...state.cur,
+                            name: newVal
+                        }
+                    };
+                default:
+                    return {
+                        ...state,
+                        cur: {
+                            ...state.cur,
+                            stats: {
+                                ...state.cur.stats,
+                                [action.field]: newVal
+                            }
+                        }
+                    };
+            }
         case 'SET':
             const newState = {};
             newState[action.key] = action.payload;

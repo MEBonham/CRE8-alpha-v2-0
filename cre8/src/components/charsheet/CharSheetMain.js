@@ -37,8 +37,8 @@ const CharSheetMain = () => {
         }
     }
     
-    return(
-        <div className="parchment">
+    return (
+        <div onKeyDown={state.escFormFct} className="parchment">
             <CharSheetTabs />
             <div className="parchment-padding">
                 {/* <EditWrapper> */}
@@ -46,7 +46,7 @@ const CharSheetMain = () => {
                 {/* </EditWrapper> */}
             </div>
         </div>
-    )
+    );
 }
 
 export default CharSheetMain;
