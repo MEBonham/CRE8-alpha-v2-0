@@ -1,6 +1,5 @@
 
 export const charDefault = {
-    activeTab: "configure",
     stats: {
         active_conditions: [],
         awesome_check: 5,

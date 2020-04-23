@@ -6,7 +6,7 @@ const Home = () => {
     return (
         <div className="primary-content content-padding home-page rows">
             <h1>Welcome!</h1>
-            <p><MyLink to="/characters">Characters</MyLink></p>
+            <MyLink to="/characters">Characters</MyLink>
         </div>
     );
 }

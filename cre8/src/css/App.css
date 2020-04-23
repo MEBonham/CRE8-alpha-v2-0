@@ -256,3 +256,7 @@ section.user-management {
     position: relative;
     top: 2px;
 }
+
+.code-404 h1 {
+    line-height: 1.2;
+}

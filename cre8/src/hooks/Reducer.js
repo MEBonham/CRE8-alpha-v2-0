@@ -13,7 +13,13 @@ const Reducer = (state, action) => {
                 ...state,
                 characterCache: action.payload,
                 shouldUpdateCharacterCache: false
-            }
+            };
+        case 'UPDATE_CUR':
+            // TODO: Cache outgoing cur object
+            return {
+                ...state,
+                cur: action.payload
+            };
         default:
             return state;
     }
