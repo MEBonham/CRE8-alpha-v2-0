@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef, useContext, useCallback } from 'react';
-import { Redirect, useParams } from 'react-router-dom';
+import { Prompt, Redirect, useParams } from 'react-router-dom';
 
 import { Store } from '../GlobalWrapper';
 import fb from '../../fbConfig';
@@ -17,36 +17,47 @@ const CharSheetShell = () => {
     const { slug } = useParams();
     const db = fb.db;
 
-    // Check if the page should even exist, load state.cur
+    // Manually triggered re-load from database
+    const [manualLoad, setManualLoad] = useState(false);
+    const manualLoadFct = (ev) => {
+        setManualLoad(true);
+    }
+
+    // Check if the page should even exist, load cur from database
     const [code404, setCode404] = useState(false);
-    const charStream = useRef(null);
-    const loadCur = useCallback(() => {
-        charStream.current = db.collection("characters").doc(slug)
-            .onSnapshot((doc) => {
-                if (doc.exists) {
-                    const docDefaulted = {
-                        ...charDefault,
-                        ...doc.data(),
-                        stats: {
-                            ...charDefault.stats,
-                            ...doc.data().stats
-                        },
-                        id: slug
-                    };
-                    dispatch({ type: "UPDATE_CUR", payload: docDefaulted });
-                } else {
-                    setCode404(true);
-                }
-            });
+    // const charStream = useRef(null);
+    const loadCur = useCallback(async () => {
+        // charStream.current = db.collection("characters").doc(slug)
+            // .onSnapshot((doc) => {
+            // });
+        try {
+            const doc = await db.collection("characters").doc(slug).get();
+            if (doc.exists) {
+                const docDefaulted = {
+                    ...charDefault,
+                    ...doc.data(),
+                    stats: {
+                        ...charDefault.stats,
+                        ...doc.data().stats
+                    },
+                    id: slug
+                };
+                dispatch({ type: "UPDATE_CUR_FROM_DB", payload: docDefaulted });
+            } else {
+                setCode404(true);
+            }
+        } catch(err) {
+            console.log("Error:", err);
+        }
     }, [db, dispatch, slug]);
     useEffect(() => {
         loadCur();
-        return(() => {
-            if (charStream.current) {
-                charStream.current();
-            }
-        });
-    }, [loadCur])
+        // return(() => {
+        //     if (charStream.current) {
+        //         charStream.current();
+        //     }
+        // });
+    }, [loadCur, manualLoad])
 
     // Load the user's Rank
     const [rank, setRank] = useState(null);
@@ -119,8 +130,8 @@ const CharSheetShell = () => {
         }
     }, [checkAccess, checkEditPriv, rank, state.user])
 
-    const toSaveFct = (ev) => {
-        dispatch({ type: "SET", key: "toSaveFlag", payload: true });
+    const toSaveBtn = (ev) => {
+        dispatch({ type: "SET", key: "saveButtonHit", payload: true });
     }
 
     if (code404) return <Code404 />
@@ -128,11 +139,15 @@ const CharSheetShell = () => {
     if (!state.cur) return <LoadingAlert />
     return(
         <div className="primary-content content-padding char-sheet">
+            <Prompt when={state.curChangesMade} message="Are you sure you want to leave? Unsaved changes may be lost." />
             <CharSheetMain />
             <div className="float-right rows">
-                <MyLink to="/characters">Back to Characters</MyLink>
                 <div className="columns">
-                    {state.editPrivilege ? <MyButton fct={toSaveFct}>Save Character (TODO)</MyButton> : null}
+                    <MyButton fct={manualLoadFct}>Load Latest Version of Character</MyButton>
+                    <MyLink to="/characters">Back to Characters</MyLink>
+                </div>
+                <div className="columns">
+                    {state.editPrivilege ? <MyButton fct={toSaveBtn}>Save Character</MyButton> : null}
                     {adminPrivilege ? <MyButton>Delete Character (TODO)</MyButton> : null}
                 </div>
             </div>

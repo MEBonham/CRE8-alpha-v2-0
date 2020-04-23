@@ -8,6 +8,7 @@ const Reducer = (state, action) => {
                 case "name":
                     return {
                         ...state,
+                        curChangesMade: true,
                         cur: {
                             ...state.cur,
                             name: newVal
@@ -16,6 +17,7 @@ const Reducer = (state, action) => {
                 case "xpBase":
                     return {
                         ...state,
+                        curChangesMade: true,
                         cur: {
                             ...state.cur,
                             stats: updateXp({
@@ -27,6 +29,7 @@ const Reducer = (state, action) => {
                 default:
                     return {
                         ...state,
+                        curChangesMade: true,
                         cur: {
                             ...state.cur,
                             stats: {
@@ -36,6 +39,12 @@ const Reducer = (state, action) => {
                         }
                     };
             }
+        case 'RESOLVE_CUR_SAVE':
+            return {
+                ...state,
+                curChangesMade: false,
+                saveButtonHit: false
+            };
         case 'SET':
             const newState = {};
             newState[action.key] = action.payload;
@@ -49,11 +58,12 @@ const Reducer = (state, action) => {
                 characterCache: action.payload,
                 shouldUpdateCharacterCache: false
             };
-        case 'UPDATE_CUR':
+        case 'UPDATE_CUR_FROM_DB':
             // TODO: Cache outgoing cur object
             return {
                 ...state,
-                cur: action.payload
+                cur: action.payload,
+                curChangesMade: false
             };
         default:
             return state;

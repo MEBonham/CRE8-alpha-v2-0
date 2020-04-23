@@ -45,6 +45,7 @@ const toggleCharEditing = (ev) => {
 const initialData = {
     activeTabs: {},
     characterCache: [],
+    curChangesMade: false,
     editPrivilege: false,
     escFormFct,
     initialMount: true,
