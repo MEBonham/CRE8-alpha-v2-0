@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef, useContext } from 'react';
 import { Route, Redirect } from 'react-router-dom';
-import { Store } from '../GlobalWrapper';
 
+import { Store } from '../GlobalWrapper';
 import LoadingAlert from '../other/LoadingAlert';
 
 const ReverseGuarded = ({ children, destination, ...otherProps }) => {

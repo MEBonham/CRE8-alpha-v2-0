@@ -1,7 +1,6 @@
 import React from 'react';
 
 import gyzLogo from '../../media/GyzaninarLogo.png';
-
 import '../../css/footer.css';
 
 const Footer = () => {

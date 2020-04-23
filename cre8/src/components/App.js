@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Route, Switch } from 'react-router-dom';
-import GlobalWrapper from './GlobalWrapper';
 
+import GlobalWrapper from './GlobalWrapper';
 import Guarded from './auth/Guarded';
 import ReverseGuarded from './auth/ReverseGuarded';
 import StateHolder from './other/StateHolder';

@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
-import fb from '../../fbConfig';
 
+import fb from '../../fbConfig';
 import useForm from '../../hooks/useForm';
 
 const ForgotPassword = () => {
