@@ -7,7 +7,6 @@ import { Store } from '../GlobalWrapper';
 // import MyButton from '../ui/MyButton';
 // import { charDefault } from '../../helpers/Templates';
 import CharSheetTabs from './CharSheetTabs';
-// import EditWrapper from './EditWrapper';
 import Play from './Play';
 import Configure from './Configure';
 import Bio from './Bio';
@@ -41,9 +40,7 @@ const CharSheetMain = () => {
         <div onKeyDown={state.escFormFct} className="parchment">
             <CharSheetTabs />
             <div className="parchment-padding">
-                {/* <EditWrapper> */}
-                    {tabContents()}
-                {/* </EditWrapper> */}
+                {tabContents()}
             </div>
         </div>
     );

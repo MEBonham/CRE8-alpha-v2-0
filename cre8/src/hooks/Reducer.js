@@ -1,3 +1,4 @@
+import { updateXp } from '../helpers/Calculations';
 
 const Reducer = (state, action) => {
     switch (action.type) {
@@ -10,6 +11,17 @@ const Reducer = (state, action) => {
                         cur: {
                             ...state.cur,
                             name: newVal
+                        }
+                    };
+                case "xpBase":
+                    return {
+                        ...state,
+                        cur: {
+                            ...state.cur,
+                            stats: updateXp({
+                                ...state.cur.stats,
+                                xp_base: parseInt(newVal)
+                            })
                         }
                     };
                 default:

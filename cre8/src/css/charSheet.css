@@ -1,3 +1,9 @@
+
+.space-between {
+    width: 100%;
+    justify-content: space-between;
+}
+
 div.char-sheet div.float-right {
     align-items: flex-end;
 }
@@ -77,6 +83,7 @@ div.char-sheet > div.float-right .my-button {
 }
 
 .parchment header header {
+    margin-bottom: 16px;
     display: flex;
     flex-direction: column;
     align-items: flex-start;
@@ -85,4 +92,25 @@ div.char-sheet > div.float-right .my-button {
 .parchment h1 {
     font-style: italic;
     margin-bottom: 6px;
+}
+
+.parchment .stat {
+    font-size: 1.4rem;
+}
+
+.parchment h2.subtitle {
+    display: flex;
+}
+
+.parchment h2.subtitle span.float-left {
+    margin-right: 6px;
+}
+
+.parchment .xp-summary {
+    justify-content: flex-end;
+    flex-wrap: wrap;
+}
+
+.parchment header header .stat.float-right {
+    margin-left: 20px;
 }
