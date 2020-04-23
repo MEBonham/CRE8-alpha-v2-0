@@ -25,7 +25,6 @@ const AdminSettings = ({ ownId }) => {
                 });
                 setUsersInfo(userData);
             });
-    
         // return () => {
         //     stream.current();
         // };

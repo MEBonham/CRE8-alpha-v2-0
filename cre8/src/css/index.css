@@ -79,3 +79,7 @@ strong,
 .bold {
 	font-weight: bold;
 }
+
+em {
+	font-style: italic;
+}

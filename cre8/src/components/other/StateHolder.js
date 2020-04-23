@@ -1,18 +1,52 @@
-import { useEffect, useContext } from 'react';
+import { useEffect, useRef, useContext } from 'react';
 import { Store } from '../GlobalWrapper';
 import fb from '../../fbConfig';
 
 const StateHolder = () => {
-    const [, dispatch] = useContext(Store);
+    const [state, dispatch] = useContext(Store);
+    
     useEffect(() => {
         let unsubscribeAuth = fb.auth.onAuthStateChanged(user => {
             dispatch({ type: "SET", key: "user", payload: user });
         });
+
         dispatch({ type: "SET", key: "initialMount", payload: false });
+
         return(() => {
             unsubscribeAuth();
         });
     }, [dispatch])
+
+    const campaignsStream = useRef(null);
+    useEffect(() => {
+        if (state.user) {
+            campaignsStream.current = fb.db.collection("campaigns")
+                //.onSnapshot(querySnapshot => {
+                .get().then(querySnapshot => {
+                    const campaignsInfo = {};
+                    // querySnapshot.filter() is not a function, I tried.
+                    querySnapshot.forEach(campaign => {
+                        if (campaign.data().members.includes(state.user.uid)) {
+                            campaignsInfo[campaign.id] = campaign.data();
+                        }
+                    });
+                    dispatch({ type: "SET", key: "activeCampaigns", payload: campaignsInfo });
+                })
+                .catch((err) => {
+                    console.log("Error:", err);
+                });
+        } else {
+            dispatch({ type: "SET", key: "activeCampaigns", payload: {
+                standard: {},
+                public: {}
+            } });
+        }
+        // if (campaignsStream.current) {
+        //     return (() => {
+        //         campaignsStream.current();
+        //     });
+        // }
+    }, [dispatch, state.user])
 
     return (null);
 }

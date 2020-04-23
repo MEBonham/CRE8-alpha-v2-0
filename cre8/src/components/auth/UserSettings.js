@@ -2,6 +2,7 @@ import React, { useState, useEffect, useContext } from 'react';
 import { Store } from '../GlobalWrapper';
 import fb from '../../fbConfig';
 
+import ManageCampaigns from '../other/ManageCampaigns';
 import AdminSettings from './Admin';
 
 const UserSettings = () => {
@@ -44,6 +45,7 @@ const UserSettings = () => {
         <div className="primary-content content-padding rows">
             <h1>User Settings</h1>
             {rankBadge()}
+            <ManageCampaigns />
             {userInfo && userInfo.rank === "admin" ? <AdminSettings ownId={userInfo.id} /> : null}
         </div>
     );

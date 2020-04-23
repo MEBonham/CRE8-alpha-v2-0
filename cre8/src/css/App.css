@@ -45,6 +45,7 @@
 
 .App .main-envelope .contents {
     width: 70%;
+    overflow-y: auto;
 }
 
 .App .main-envelope .sidebar {
@@ -85,6 +86,34 @@
 .App .primary-content p,
 .user-management-table {
     font-size: 1.4rem;
+}
+
+.manage-campaigns {
+    align-items: flex-start;
+}
+
+.manage-campaigns section {
+    width: calc(60% + 20px);
+    margin-bottom: 20px;
+    padding: 10px 10%;
+    align-items: flex-start;
+    border: 1px solid gray;
+    box-shadow: 2px 2px 6px gray;
+}
+
+.manage-campaigns section form select {
+    margin-right: 8px;
+}
+
+.manage-campaigns section ul {
+    width: 100%;
+    margin-top: 10px;
+    justify-content: space-around;
+    flex-wrap: wrap;
+}
+
+.manage-campaigns section li {
+    margin-right: 20px;
 }
 
 section.user-management {
