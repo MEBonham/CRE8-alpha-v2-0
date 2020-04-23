@@ -4,6 +4,7 @@ import Reducer from '../hooks/Reducer';
 
 const initialData = {
     characterCache: [],
+    editPrivilege: false,
     initialMount: true,
     mainNavMenuOpen: false,
     shouldUpdateCharacterCache: true,

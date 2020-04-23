@@ -1,0 +1,8 @@
+div.char-sheet div.float-right {
+    align-items: flex-end;
+}
+
+div.char-sheet > div.float-right .my-button {
+    margin-left: 12px;
+    margin-bottom: 12px;
+}

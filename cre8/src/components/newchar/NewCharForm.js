@@ -1,6 +1,6 @@
 // import React, { useState, useEffect, useRef, useContext, useCallback } from 'react';
 import React, { useState, useEffect, useContext, useCallback } from 'react';
-import { Redirect } from 'react-router-dom';
+import { Link, Redirect } from 'react-router-dom';
 import { Store } from '../GlobalWrapper';
 import fb from '../../fbConfig';
 
@@ -164,6 +164,7 @@ const NewCharForm = () => {
                             </li>
                         ))}
                     </ul>
+                    <p>Create new campaigns under <Link to="/user/settings">User Settings</Link>.</p>
                 </div>
             </div>
             <MyFormButton type="submit" className="my-button">Save</MyFormButton>

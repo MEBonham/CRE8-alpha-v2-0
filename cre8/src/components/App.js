@@ -9,7 +9,7 @@ import Header from './header/Header';
 import Footer from './footer/Footer';
 import Home from './other/Home';
 import NewCharForm from './newchar/NewCharForm';
-import CharSheetMain from './charsheet/CharSheetMain';
+import CharSheetShell from './charsheet/CharSheetShell';
 import CharMenu from './other/CharMenu';
 import UserSettings from './auth/UserSettings';
 import ForgotPassword from './auth/ForgotPassword';
@@ -39,7 +39,7 @@ const App = () => {
                             <Route exact path="/" component={Home} />
                             <Route path={["/index", "/index.html"]} component={Home} />
                             <Guarded path="/characters/new"><NewCharForm /></Guarded>
-                            <Route path="/characters/:slug" component={CharSheetMain} />
+                            <Route path="/characters/:slug" component={CharSheetShell} />
                             <Route path="/characters" component={CharMenu} />
                             <Guarded path="/user/settings"><UserSettings /></Guarded>
                             <ReverseGuarded path="/login/forgot"><ForgotPassword /></ReverseGuarded>
