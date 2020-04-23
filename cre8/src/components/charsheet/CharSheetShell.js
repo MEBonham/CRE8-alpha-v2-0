@@ -54,7 +54,6 @@ const CharSheetShell = () => {
         const collectUserInfo = async () => {
             try {
                 const doc = await db.collection("users").doc(state.user.uid).get();
-                console.log(doc.data().rank);
                 setRank(doc.data().rank);
             } catch(err) {
                 console.log("Error:", err);
@@ -133,7 +132,7 @@ const CharSheetShell = () => {
             <div className="float-right rows">
                 <MyLink to="/characters">Back to Characters</MyLink>
                 <div className="columns">
-                    {state.editPrivilege ? <MyButton fct={toSaveFct}>Save Character</MyButton> : null}
+                    {state.editPrivilege ? <MyButton fct={toSaveFct}>Save Character (TODO)</MyButton> : null}
                     {adminPrivilege ? <MyButton>Delete Character (TODO)</MyButton> : null}
                 </div>
             </div>

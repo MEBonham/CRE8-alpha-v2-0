@@ -6,3 +6,46 @@ div.char-sheet > div.float-right .my-button {
     margin-left: 12px;
     margin-bottom: 12px;
 }
+
+.parchment {
+    margin: 20px 0 18px;
+    width: 100%;
+    border-radius: 12px 0 12px 12px;
+    background-color: #d2b48c;
+    background-image: url(../media/paper-texture.png);
+    box-shadow: 1px 1px 5px #111111;
+    position: relative;
+}
+
+.parchment .char-sheet-tabs {
+    width: 100%;
+    display: flex;
+    justify-content: flex-end;
+    position: relative;
+    top: -25px;
+    right: -1 px;
+}
+
+.parchment .char-sheet-tabs .one-tab {
+    margin: 0 1px;
+    padding: 4px 10px 5px;
+    border-radius: 12px 12px 0 0;
+    background-color: #bfa480;
+    box-shadow: 1px -1px 1px #111111;
+    font-size: 1.6rem;
+    cursor: pointer;
+}
+
+.parchment .char-sheet-tabs .one-tab.active {
+    background-color: #d2b48c;
+    background-image: url(../media/paper-texture.png);
+}
+
+.parchment .parchment-padding {
+    padding: 14px 6% 24px;
+}
+
+.parchment h1 {
+    font-style: italic;
+    margin-bottom: 6px;
+}
