@@ -2,8 +2,10 @@ import React, { useReducer, createContext } from 'react';
 import Reducer from '../hooks/Store';
 
 const initialData = {
+    characterCache: [],
     initialMount: true,
     mainNavMenuOpen: false,
+    shouldUpdateCharacterCache: true,
     userSettingsMenuOpen: false
 };
 

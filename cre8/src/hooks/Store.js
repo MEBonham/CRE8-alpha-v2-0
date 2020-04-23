@@ -8,6 +8,12 @@ const Reducer = (state, action) => {
                 ...state,
                 ...newState
             };
+        case 'SAVE_CHARACTERS_TO_CACHE':
+            return {
+                ...state,
+                characterCache: action.payload,
+                shouldUpdateCharacterCache: false
+            }
         default:
             return state;
     }

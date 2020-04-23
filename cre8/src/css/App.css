@@ -1,5 +1,6 @@
 .columns {
     display: flex;
+    flex-direction: row;
 }
 
 .rows {
@@ -88,9 +89,18 @@
     font-size: 1.4rem;
 }
 
+.home-page,
 .char-library > section,
 .manage-campaigns {
     align-items: flex-start;
+}
+
+.char-library section section.not-last {
+    margin-bottom: 20px;
+}
+
+.char-library p {
+    margin-bottom: 3px;
 }
 
 .manage-campaigns section {
@@ -174,11 +184,13 @@ section.user-management {
     margin: 0 1px;
 }
 
-.App form.login-form {
+.App form.login-form,
+.App form.new-char-form {
     align-items: flex-start;
 }
 
 .App form.login-form > div,
+.App form.new-char-form > div,
 .manage-campaigns section.new-campaign form > div {
     margin-bottom: 14px;
     display: flex;
@@ -192,15 +204,55 @@ section.user-management {
     font-size: 1.4rem;
 }
 
-.App form.login-form .buffer-above {
+.App form.login-form .buffer-above,
+.App form.new-char-form .buffer-above {
     margin-top: 14px;
 }
 
-.App form.login-form p {
+.App form.login-form p,
+.App form.new-char-form p {
     font-size: 1.2rem;
 }
 
-.App form.login-form p.error-message {
+.App form.login-form p.error-message,
+.App form.new-char-form p.error-message {
     font-weight: bold;
     color: #990000;
+}
+
+.App form.new-char-form {
+    width: 84%;
+}
+
+.App form.new-char-form > div > div {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+}
+
+.App form.new-char-form > div label {
+    margin-bottom: 4px;
+    font-size: 1.4rem;
+    font-weight: bold;
+    line-height: 1.2;
+}
+
+.App form.new-char-form > div.columns {
+    width: 100%;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.new-char-form ul {
+    list-style: none;
+}
+
+.new-char-form ul li {
+    font-size: 1.4rem;
+}
+
+.new-char-form ul li input {
+    position: relative;
+    top: 2px;
 }

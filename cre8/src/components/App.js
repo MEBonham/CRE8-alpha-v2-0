@@ -8,6 +8,7 @@ import StateHolder from './other/StateHolder';
 import Header from './header/Header';
 import Footer from './footer/Footer';
 import Home from './other/Home';
+import NewCharForm from './newchar/NewCharForm';
 import CharSheetMain from './charsheet/CharSheetMain';
 import CharMenu from './other/CharMenu';
 import UserSettings from './auth/UserSettings';
@@ -37,6 +38,7 @@ const App = () => {
                         <Switch>
                             <Route exact path="/" component={Home} />
                             <Route path={["/index", "/index.html"]} component={Home} />
+                            <Guarded path="/characters/new"><NewCharForm /></Guarded>
                             <Route path="/characters/:slug" component={CharSheetMain} />
                             <Route path="/characters" component={CharMenu} />
                             <Guarded path="/user/settings"><UserSettings /></Guarded>

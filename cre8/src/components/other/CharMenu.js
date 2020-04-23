@@ -1,5 +1,5 @@
-// import React, { useState, useEffect, useRef, useContext } from 'react';
-import React, { useState, useEffect, useContext } from 'react';
+// import React, { useState, useEffect, useRef, useContext, useCallback } from 'react';
+import React, { useState, useEffect, useContext, useCallback } from 'react';
 import { Link } from 'react-router-dom';
 import { Store } from '../GlobalWrapper';
 import fb from '../../fbConfig';
@@ -13,41 +13,45 @@ const CharMenu = () => {
         dispatch({ type: "SET", key: "mainNavMenuOpen", payload: false });
     }, [dispatch])
 
-    const [characters, setCharacters] = useState([]);
     const [orphans, setOrphans] = useState([]);
-    // const charStream = useRef(null);
-    useEffect(() => {
-        const gatherChars = async () => {
-            const saveChars = (querySnapshot) => {
-                const charsData = [];
-                querySnapshot.forEach(doc => {
-                    charsData.push({
-                        id: doc.id,
-                        ...doc.data()
-                    });
+    const gatherChars = useCallback(async () => {
+        const saveCharsToArr = (querySnapshot) => {
+            const charsData = [];
+            querySnapshot.forEach(doc => {
+                charsData.push({
+                    id: doc.id,
+                    ...doc.data()
                 });
-                setCharacters(charsData);
-            }
-            // charStream.current = fb.db.collection("characters").onSnapshot(querySnapshot => {
-            //     saveChars(querySnapshot);
-            // }).catch((err) => {
-            //     console.log("Error:", err);
-            // });
-            const query = await fb.db.collection("characters").get();
-            saveChars(query);
+            });
+            dispatch({ type: "SAVE_CHARACTERS_TO_CACHE", payload: charsData });
         }
-        gatherChars();
+        // charStream.current = fb.db.collection("characters").onSnapshot(querySnapshot => {
+        //     saveChars(querySnapshot);
+        // }).catch((err) => {
+        //     console.log("Error:", err);
+        // });
+        try {
+            const query = await fb.db.collection("characters").get();
+            saveCharsToArr(query);
+        } catch(err) {
+            console.log("Error:", err);
+        }
+    }, [dispatch]);
+    useEffect(() => {
+        if (state.shouldUpdateCharacterCache) {
+            gatherChars();
+        }
         // return(() => {
         //     if (charStream.current) {
         //         charStream.current();
         //     }
         // });
-    }, [])
+    }, [gatherChars, state.shouldUpdateCharacterCache])
     useEffect(() => {
-        if (state.user && characters.length) {
-            setOrphans(characters.filter(charData => charData.campaigns.length === 0 && charData.owner === state.user.uid));
+        if (state.user) {
+            setOrphans(state.characterCache.filter(charData => charData.campaigns.length === 0 && charData.owner === state.user.uid));
         }
-    }, [characters, state.user])
+    }, [state.characterCache, state.user])
 
     const [campaignIds, setCampaignIds] = useState([]);
     useEffect(() => {
@@ -71,7 +75,7 @@ const CharMenu = () => {
                         return (
                             <section key={campaignId} className={i + 1 < campaignIds.length ? "not-last" : null}>
                                 <h3>{campaignObj.name}</h3>
-                                {characters.filter(charData => charData.campaigns.includes(campaignId))
+                                {state.characterCache.filter(charData => charData.campaigns.includes(campaignId))
                                     .map(charData => {
                                         const toAddress = `/characters/${charData.id}`;
                                         return (
@@ -100,7 +104,7 @@ const CharMenu = () => {
             null}
             <section>
                 <h2>Standard Characters</h2>
-                {characters.filter(charData => charData.campaigns.includes("standard"))
+                {state.characterCache.filter(charData => charData.campaigns.includes("standard"))
                     .map(charData => {
                         const toAddress = `/characters/${charData.id}`;
                         return (
@@ -113,7 +117,7 @@ const CharMenu = () => {
             </section>
             <section>
                 <h2>Other Public Characters</h2>
-                {characters.filter(charData => charData.campaigns.includes("public"))
+                {state.characterCache.filter(charData => charData.campaigns.includes("public"))
                     .map(charData => {
                         const toAddress = `/characters/${charData.id}`;
                         return (

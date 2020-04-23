@@ -1,4 +1,5 @@
-import React, { useState, useEffect, useContext } from 'react';
+import React, { useState, useEffect, useContext, useCallback } from 'react';
+import { Redirect } from 'react-router-dom';
 import { Store } from '../GlobalWrapper';
 import fb from '../../fbConfig';
 
@@ -13,22 +14,25 @@ const UserSettings = () => {
     }, [dispatch])
 
     const [userInfo, setUserInfo] = useState({});
-    useEffect(() => {
-        const collectUserInfo = async () => {
-            try {
-                const doc = await fb.db.collection("users").doc(state.user.uid).get();
-                setUserInfo({
-                    ...doc.data(),
-                    id: doc.id
-                });
-            } catch(err) {
-                console.log("Error:", err);
-            }
+    const collectUserInfo = useCallback(async () => {
+        try {
+            const doc = await fb.db.collection("users").doc(state.user.uid).get();
+            setUserInfo({
+                ...doc.data(),
+                id: doc.id
+            });
+        } catch(err) {
+            console.log("Error:", err);
         }
+    }, [state.user]);
+    const [redirectFlag, setRedirectFlag] = useState(false);
+    useEffect(() => {
         if (state.user) {
             collectUserInfo();
+        } else {
+            setRedirectFlag(true);
         }
-    }, [state.user])
+    }, [collectUserInfo, state.user])
 
     const rankBadge = () => {
         switch (userInfo.rank) {
@@ -41,6 +45,7 @@ const UserSettings = () => {
         }
     }
 
+    if (redirectFlag) return <Redirect to="/" />
     return(
         <div className="primary-content content-padding rows">
             <h1>User Settings</h1>
