@@ -83,7 +83,7 @@ div.char-sheet > div.float-right .my-button {
 }
 
 .parchment header header {
-    margin-bottom: 16px;
+    margin-bottom: 20px;
     display: flex;
     flex-direction: column;
     align-items: flex-start;
@@ -98,7 +98,12 @@ div.char-sheet > div.float-right .my-button {
     font-size: 1.4rem;
 }
 
-.parchment h2.subtitle {
+.parchment header header .space-between {
+    align-items: center;
+}
+
+.App .parchment h2.subtitle {
+    margin-bottom: 0;
     display: flex;
 }
 
