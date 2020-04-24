@@ -87,16 +87,37 @@ const StateHolder = () => {
             }
         }
     }, [db, dispatch, state.cur]);
+    const activeTabsChangesMade = useRef(false);
+    const activeTabsRef = useRef(state.activeTabs);
+    const charTabsSave = useCallback(async () => {
+        if (state.cur && state.user && state.activeTabs) {
+            try {
+                await db.collection("activeTabs").doc(state.user.uid).set(state.activeTabs, { merge: true });
+                console.log("Saved Current Tabs");
+            } catch(err) {
+                console.log("Error saving activeTabs to db:", err);
+            }
+        }
+    }, [db, state.activeTabs, state.cur, state.user])
     const checkSaveReqs = useCallback(() => {
         if (state.curChangesMade && (state.saveButtonHit || Date.now() - lastSaveMoment.current > AUTOSAVE_INTERVAL)) {
             curSave();
+        } else if (activeTabsChangesMade && Date.now() - lastSaveMoment.current > AUTOSAVE_INTERVAL) {
+            charTabsSave();
         }
-    }, [AUTOSAVE_INTERVAL, curSave, state.curChangesMade, state.saveButtonHit]);
+    }, [AUTOSAVE_INTERVAL, charTabsSave, curSave, state.curChangesMade, state.saveButtonHit]);
     useEffect(() => {
         if (state.curChangesMade) {
             checkSaveReqs();
         }
     }, [checkSaveReqs, state.curChangesMade])
+    useEffect(() => {
+        if (state.activeTabs !== activeTabsRef.current) {
+            activeTabsChangesMade.current = true;
+            activeTabsRef.current = state.activeTabs;
+            checkSaveReqs();
+        }
+    }, [checkSaveReqs, state.activeTabs])
     useEffect(() => {
         if (state.saveButtonHit) {
             checkSaveReqs();
@@ -117,7 +138,12 @@ const StateHolder = () => {
         if (state.pendingRoll) {
             dispatch({ type: "SET", key: "latestRoll", payload: {
                 ...state.pendingRoll,
-                resultData: roll(state.pendingRoll.dieMode, state.pendingRoll.dieModBasic, state.pendingRoll.dieModsMisc, state.pendingRoll.coasting)
+                resultData: roll(
+                    state.pendingRoll.dieMode,
+                    state.pendingRoll.dieModBasic,
+                    state.pendingRoll.dieModsMisc,
+                    state.pendingRoll.coasting
+                )
             } });
         }
     }, [dispatch, state.pendingRoll])

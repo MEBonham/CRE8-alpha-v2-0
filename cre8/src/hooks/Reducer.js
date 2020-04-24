@@ -6,7 +6,7 @@ const Reducer = (state, action) => {
             let newVal;
             switch (action.field) {
                 case "active_conditions":
-                    let newVal = [ ...action.payload ];
+                    newVal = [ ...action.payload ];
                     if (newVal.includes("Shaken") && newVal.includes("Momentum")) {
                         newVal.splice(newVal.indexOf("Momentum"), 1);
                     }
