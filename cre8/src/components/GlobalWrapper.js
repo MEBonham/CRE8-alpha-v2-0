@@ -3,7 +3,7 @@ import React, { useReducer, createContext } from 'react';
 import Reducer from '../hooks/Reducer';
 
 
-const escFormFct = (ev) => {
+const keyShortcutsFct = (ev) => {
     if (ev.key && ev.key === "Escape") {
         document.querySelectorAll(".meb-popout-edit input").forEach(el => {
             el.blur();
@@ -48,8 +48,8 @@ const initialData = {
     curChangesMade: false,
     dieRollMode: "normal",
     editPrivilege: false,
-    escFormFct,
     initialMount: true,
+    keyShortcutsFct,
     mainNavMenuOpen: false,
     shouldUpdateCharacterCache: true,
     toggleCharEditing,

@@ -4,7 +4,10 @@ import { Route, Switch } from 'react-router-dom';
 import GlobalWrapper from './GlobalWrapper';
 import Guarded from './auth/Guarded';
 import ReverseGuarded from './auth/ReverseGuarded';
-import StateHolder from './other/StateHolder';
+import StateLoader from './invisible/StateLoader';
+import StateSaver from './invisible/StateSaver';
+import RollerEngine from './invisible/RollerEngine';
+import FctInitiator from './invisible/FctInitiator';
 import Header from './header/Header';
 import Footer from './footer/Footer';
 import Home from './other/Home';
@@ -31,7 +34,10 @@ const App = () => {
     return(
         <div className="App">
             <GlobalWrapper>
-                <StateHolder />
+                <StateLoader />
+                <StateSaver />
+                <RollerEngine />
+                <FctInitiator />
                 <Header />
                 <div className="main-envelope columns" style={styleObj}>
                     <div className="contents">

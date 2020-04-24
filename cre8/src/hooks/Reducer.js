@@ -54,6 +54,19 @@ const Reducer = (state, action) => {
                             })
                         }
                     };
+                case "mp":
+                    newVal = action.inputs[`${action.stub}_${action.field}`];
+                    return {
+                        ...state,
+                        curChangesMade: true,
+                        cur: {
+                            ...state.cur,
+                            stats: {
+                                ...state.cur.stats,
+                                vp: Math.min(Math.max(0, state.cur.stats.mp + newVal), state.cur.stats.mp_max)
+                            }
+                        }
+                    };
                 case "name":
                     newVal = action.inputs[`${action.stub}_${action.field}`];
                     return {
@@ -62,6 +75,32 @@ const Reducer = (state, action) => {
                         cur: {
                             ...state.cur,
                             name: newVal
+                        }
+                    };
+                case "rp":
+                    newVal = action.inputs[`${action.stub}_${action.field}`];
+                    return {
+                        ...state,
+                        curChangesMade: true,
+                        cur: {
+                            ...state.cur,
+                            stats: {
+                                ...state.cur.stats,
+                                vp: Math.min(Math.max(0, state.cur.stats.rp + newVal), state.cur.stats.rp_max)
+                            }
+                        }
+                    };
+                case "vp":
+                    newVal = action.inputs[`${action.stub}_${action.field}`];
+                    return {
+                        ...state,
+                        curChangesMade: true,
+                        cur: {
+                            ...state.cur,
+                            stats: {
+                                ...state.cur.stats,
+                                vp: Math.min(Math.max(0, state.cur.stats.vp + newVal), state.cur.stats.vp_max)
+                            }
                         }
                     };
                 case "xpBase":

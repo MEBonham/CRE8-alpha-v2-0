@@ -60,7 +60,7 @@ const CharSheetMain = () => {
     }
     
     return (
-        <div onKeyDown={state.escFormFct} className="parchment">
+        <div onKeyDown={state.keyShortcutsFct} className="parchment">
             <CharSheetTabs />
             <div className="parchment-padding">
                 {tabContents()}

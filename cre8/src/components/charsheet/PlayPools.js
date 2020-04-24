@@ -35,13 +35,16 @@ const PlayPools = () => {
                     <p className="big-num editable-text" onClick={state.toggleCharEditing} id="meb_togCharEdit_vp">
                         {state.cur.stats.vp}
                     </p>
-                    <form className="meb-popout-edit" onSubmit={handleSubmit} id="meb_charEditForm_vp">
-                        <input
-                            type="number"
-                            onChange={handleInputChange}
-                            id="meb_charEditVal_vp"
-                        />
-                        <button type="submit">Enter</button>
+                    <form className="meb-popout-edit rows" onSubmit={handleSubmit} id="meb_charEditForm_vp">
+                        <label>(Add or Subtract)</label>
+                        <div className="columns">
+                            <input
+                                type="number"
+                                onChange={handleInputChange}
+                                id="meb_charEditVal_vp"
+                            />
+                            <button type="submit">Enter</button>
+                        </div>
                     </form>
                     <div className="below-big-num" />
                     <p className="small">VP</p>
@@ -59,13 +62,16 @@ const PlayPools = () => {
                     <p className="big-num editable-text" onClick={state.toggleCharEditing} id="meb_togCharEdit_rp">
                         {state.cur.stats.rp}
                     </p>
-                    <form className="meb-popout-edit" onSubmit={handleSubmit} id="meb_charEditForm_rp">
-                        <input
-                            type="number"
-                            onChange={handleInputChange}
-                            id="meb_charEditVal_rp"
-                        />
-                        <button type="submit">Enter</button>
+                    <form className="meb-popout-edit rows" onSubmit={handleSubmit} id="meb_charEditForm_rp">
+                        <label>(Add or Subtract)</label>
+                        <div className="columns">
+                            <input
+                                type="number"
+                                onChange={handleInputChange}
+                                id="meb_charEditVal_rp"
+                            />
+                            <button type="submit">Enter</button>
+                        </div>
                     </form>
                     <div className="below-big-num" />
                     <p className="small">RP</p>
@@ -83,13 +89,16 @@ const PlayPools = () => {
                     <p className="big-num editable-text" onClick={state.toggleCharEditing} id="meb_togCharEdit_mp">
                         {state.cur.stats.mp}
                     </p>
-                    <form className="meb-popout-edit" onSubmit={handleSubmit} id="meb_charEditForm_mp">
-                        <input
-                            type="number"
-                            onChange={handleInputChange}
-                            id="meb_charEditVal_mp"
-                        />
-                        <button type="submit">Enter</button>
+                    <form className="meb-popout-edit rows" onSubmit={handleSubmit} id="meb_charEditForm_mp">
+                        <label>(Add or Subtract)</label>
+                        <div className="columns">
+                            <input
+                                type="number"
+                                onChange={handleInputChange}
+                                id="meb_charEditVal_mp"
+                            />
+                            <button type="submit">Enter</button>
+                        </div>
                     </form>
                     <div className="below-big-num" />
                     <p className="small">MP</p>

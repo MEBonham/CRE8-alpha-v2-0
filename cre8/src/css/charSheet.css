@@ -255,6 +255,15 @@ div.char-sheet > div.float-right .my-button {
     font-size: 1rem;
 }
 
+.parchment section.pools .meb-contain-edit form.rows {
+    align-items: center;
+}
+
+.parchment section.pools .meb-contain-edit label {
+    margin-bottom: 2px;
+    color: #bbbbbb;
+}
+
 .parchment section.general-rolls > div.general-general {
     margin-right: 12px;
     border-right: 1px solid brown;
