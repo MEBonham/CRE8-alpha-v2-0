@@ -2,18 +2,6 @@ import React, { useReducer, createContext } from 'react';
 
 import Reducer from '../hooks/Reducer';
 
-
-const keyShortcutsFct = (ev) => {
-    if (ev.key && ev.key === "Escape") {
-        document.querySelectorAll(".meb-popout-edit input").forEach(el => {
-            el.blur();
-        });
-        document.querySelectorAll(".meb-popout-edit").forEach(el => {
-            el.classList.remove("meb-open");
-        });
-    }
-}
-
 const toggleCharEditing = (ev) => {
     const field = ev.target.id.split("_")[2];
     if (field) {
@@ -49,7 +37,6 @@ const initialData = {
     dieRollMode: "normal",
     editPrivilege: false,
     initialMount: true,
-    keyShortcutsFct,
     mainNavMenuOpen: false,
     shouldUpdateCharacterCache: true,
     toggleCharEditing,

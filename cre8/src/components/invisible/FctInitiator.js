@@ -21,6 +21,37 @@ const FctInitiator = () => {
         dispatch({ type: "SET", key: "editCharFct", payload: editCharFct });
     }, [dispatch, editCharFct])
 
+    // Initialize keyboard shortcuts (& block normal, conflicting keyboard shortcuts)
+    const keyShortcutsFct = useCallback((ev) => {
+        if (ev.key && ev.key === "Escape") {
+            document.querySelectorAll(".meb-popout-edit input").forEach(el => {
+                el.blur();
+            });
+            document.querySelectorAll(".meb-popout-edit").forEach(el => {
+                el.classList.remove("meb-open");
+            });
+        } else if ((window.navigator.platform.match("Mac") ? ev.metaKey : ev.ctrlKey) && (ev.key === "s" || ev.key === "S") && !ev.altKey) {
+            dispatch({ type: "SET", key: "saveButtonHit", payload: true });
+        }
+    }, [dispatch]);
+    const blockShortcutKeysFct = useCallback((ev) => {
+        if ((window.navigator.platform.match("Mac") ? ev.metaKey : ev.ctrlKey) && (ev.key === "s" || ev.key === "S") && !ev.altKey) {
+            ev.preventDefault();
+        }
+    }, [])
+    useEffect(() => {
+        dispatch({ type: "SET", key: "keyShortcutsFct", payload: keyShortcutsFct });
+        dispatch({ type: "SET", key: "blockShortcutKeysFct", payload: blockShortcutKeysFct });
+    }, [blockShortcutKeysFct, dispatch, keyShortcutsFct])
+    useEffect(() => {
+        if (state.keyShortcutsFct) {
+            document.addEventListener('keyup', state.keyShortcutsFct);
+        }
+        if (state.blockShortcutKeysFct) {
+            document.addEventListener('keydown', state.blockShortcutKeysFct);
+        }
+    }, [state.blockShortcutKeysFct, state.keyShortcutsFct])
+
     return (null);
 }
 

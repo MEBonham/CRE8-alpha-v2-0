@@ -55,7 +55,7 @@ const Reducer = (state, action) => {
                         }
                     };
                 case "mp":
-                    newVal = action.inputs[`${action.stub}_${action.field}`];
+                    newVal = parseInt(action.inputs[`${action.stub}_${action.field}`]);
                     return {
                         ...state,
                         curChangesMade: true,
@@ -63,7 +63,7 @@ const Reducer = (state, action) => {
                             ...state.cur,
                             stats: {
                                 ...state.cur.stats,
-                                vp: Math.min(Math.max(0, state.cur.stats.mp + newVal), state.cur.stats.mp_max)
+                                mp: Math.min(Math.max(0, state.cur.stats.mp + newVal), state.cur.stats.mp_max)
                             }
                         }
                     };
@@ -78,7 +78,7 @@ const Reducer = (state, action) => {
                         }
                     };
                 case "rp":
-                    newVal = action.inputs[`${action.stub}_${action.field}`];
+                    newVal = parseInt(action.inputs[`${action.stub}_${action.field}`]);
                     return {
                         ...state,
                         curChangesMade: true,
@@ -86,12 +86,12 @@ const Reducer = (state, action) => {
                             ...state.cur,
                             stats: {
                                 ...state.cur.stats,
-                                vp: Math.min(Math.max(0, state.cur.stats.rp + newVal), state.cur.stats.rp_max)
+                                rp: Math.min(Math.max(0, state.cur.stats.rp + newVal), state.cur.stats.rp_max)
                             }
                         }
                     };
                 case "vp":
-                    newVal = action.inputs[`${action.stub}_${action.field}`];
+                    newVal = parseInt(action.inputs[`${action.stub}_${action.field}`]);
                     return {
                         ...state,
                         curChangesMade: true,
