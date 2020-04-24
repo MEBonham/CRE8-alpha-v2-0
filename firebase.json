@@ -1,0 +1,10 @@
+{
+  "hosting": {
+    "public": "cre8/build",
+    "ignore": [
+      "firebase.json",
+      "**/.*",
+      "**/node_modules/**"
+    ]
+  }
+}
