@@ -73,6 +73,13 @@ const Reducer = (state, action) => {
                 curChangesMade: false,
                 saveButtonHit: false
             };
+        case 'ROLL_PENDING':
+            // action.elementToReset.value = "normal";
+            return {
+                ...state,
+                pendingRoll: action.payload,
+                dieRollMode: "normal"
+            };
         case 'SET':
             const newState = {};
             newState[action.key] = action.payload;

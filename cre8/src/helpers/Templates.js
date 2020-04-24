@@ -73,3 +73,10 @@ export const charDefault = {
         xp_parcels_total: 0
     }
 };
+
+export const rollDefault = {
+    processedLocally: false,
+    processedBy: [],
+    dieModsMisc: {},
+    coasting: 0
+};

@@ -29,7 +29,7 @@ div.char-sheet > div.float-right .my-button {
     justify-content: flex-end;
     position: relative;
     top: -25px;
-    right: -1 px;
+    right: -1px;
 }
 
 .parchment .char-sheet-tabs .one-tab {
@@ -249,4 +249,36 @@ div.char-sheet > div.float-right .my-button {
 
 .parchment section.pools > div div.main-pool-val p.small {
     font-size: 1rem;
+}
+
+.parchment section.general-rolls > div {
+    /* align-items: stretch; */
+}
+
+.parchment section.general-rolls > div.general-general {
+    margin-right: 12px;
+    border-right: 1px solid brown;
+    padding-right: 12px;
+}
+
+.parchment section.general-rolls > div.saving-throws {
+    margin-right: 20px;
+}
+
+.parchment section.general-rolls > div > div.my-button {
+    margin-bottom: 12px;
+    /* display: flex;
+    justify-content: center; */
+}
+
+.parchment section.general-rolls > div > div.my-button span {
+    display: flex;
+    align-items: center;
+    font-size: 1.2rem;
+}
+
+.parchment section.general-rolls > div > div.my-button img {
+    margin-right: 6px;
+    width: 14px;
+    opacity: 0.5;
 }

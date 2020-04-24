@@ -46,6 +46,7 @@ const initialData = {
     activeTabs: {},
     characterCache: [],
     curChangesMade: false,
+    dieRollMode: "normal",
     editPrivilege: false,
     escFormFct,
     initialMount: true,

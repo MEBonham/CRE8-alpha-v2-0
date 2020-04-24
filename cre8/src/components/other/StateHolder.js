@@ -2,6 +2,7 @@ import { useEffect, useRef, useContext, useCallback } from 'react';
 
 import { Store } from '../GlobalWrapper';
 import fb from '../../fbConfig';
+import { roll } from '../../helpers/Roll';
 
 const StateHolder = () => {
     const [state, dispatch] = useContext(Store);
@@ -110,6 +111,16 @@ const StateHolder = () => {
             clearInterval(intervalStream.current);
         });
     }, [AUTOSAVE_INTERVAL, checkSaveReqs])
+
+    // Roll dice as they come through the system
+    useEffect(() => {
+        if (state.pendingRoll) {
+            dispatch({ type: "SET", key: "latestRoll", payload: {
+                ...state.pendingRoll,
+                resultData: roll(state.pendingRoll.dieMode, state.pendingRoll.dieModBasic, state.pendingRoll.dieModsMisc, state.pendingRoll.coasting)
+            } });
+        }
+    }, [dispatch, state.pendingRoll])
 
     return (null);
 }
