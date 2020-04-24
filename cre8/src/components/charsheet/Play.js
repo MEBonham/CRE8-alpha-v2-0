@@ -1,17 +1,12 @@
-import React, { useContext } from 'react';
+import React from 'react';
 
-import { Store } from '../GlobalWrapper';
+import PlayHeader from './PlayHeader';
 
 const Play = () => {
-    const [state] = useContext(Store);
 
     return (
         <header>
-            <header>
-                <div className="meb-contain-edit">
-                    <h1 onClick={state.toggleEditing} id="meb_tog_name">{state.cur.name}</h1>
-                </div>
-            </header>
+            <PlayHeader />
         </header>
     );
 }

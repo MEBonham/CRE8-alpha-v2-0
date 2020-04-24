@@ -5,6 +5,19 @@ const Reducer = (state, action) => {
         case 'CHAR_EDIT':
             let newVal;
             switch (action.field) {
+                case "earnXp":
+                    newVal = action.inputs[`${action.stub}_${action.field}`];
+                    return {
+                        ...state,
+                        curChangesMade: true,
+                        cur: {
+                            ...state.cur,
+                            stats: updateXp({
+                                ...state.cur.stats,
+                                xp_base: state.cur.stats.xp_base + parseInt(newVal)
+                            })
+                        }
+                    };
                 case "goodSave":
                     return {
                         ...state,

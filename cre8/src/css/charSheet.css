@@ -117,10 +117,12 @@ div.char-sheet > div.float-right .my-button {
 
 .parchment .xp-summary {
     justify-content: flex-end;
+    align-items: center;
     flex-wrap: wrap;
 }
 
-.parchment header header .stat.float-right {
+.parchment header header .stat.float-right,
+.parchment .xp-button.float-right {
     margin-left: 20px;
 }
 
