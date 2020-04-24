@@ -135,3 +135,43 @@ div.char-sheet > div.float-right .my-button {
 .parchment .good-save .my-button.selected {
     box-shadow: 2px 2px 10px #111177;
 }
+
+.parchment header section.top-breakdowns {
+    justify-content: space-around;
+    align-items: center;
+    flex-grow: 2;
+}
+
+.parchment .breakdown.columns {
+    margin-bottom: 14px;
+    align-items: flex-start;
+}
+
+.App .parchment p.big-num,
+.App .parchment .equals-symbol,
+.App .parchment .plus-symbol {
+    font-size: 2rem;
+    font-weight: bold;
+}
+
+.parchment p.trailing-num {
+    margin-left: 6px;
+}
+
+.parchment .equals-symbol,
+.parchment .plus-symbol {
+    position: relative;
+    top: -2px;
+}
+
+.parchment .fill-in p {
+    text-align: center;
+}
+
+.parchment .fill-in p.big-num {
+    border-bottom: 1px solid brown;
+}
+
+.parchment .fill-in p.caption {
+    font-size: 1.2rem;
+}

@@ -109,15 +109,24 @@ export const updateGoodSave = (statsObj) => {
     }
     const fortitude_mods = {
         ...statsObj.fortitude_mods,
-        base: fortMod
+        base: {
+            ...statsObj.fortitude_mods.base,
+            fortMod
+        }
     };
     const reflex_mods = {
         ...statsObj.reflex_mods,
-        base: refMod
+        base: {
+            ...statsObj.reflex_mods.base,
+            refMod
+        }
     };
     const willpower_mods = {
         ...statsObj.willpower_mods,
-        base: willMod
+        base: {
+            ...statsObj.willpower_mods.base,
+            willMod
+        }
     };
     const fortitude_base_total = heroic_bonus + mineModifiers({ base: fortMod });
     const reflex_base_total = heroic_bonus + mineModifiers({ base: refMod });
