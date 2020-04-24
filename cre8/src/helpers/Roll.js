@@ -4,7 +4,7 @@ const MersenneTwister = require('mersenne-twister');
 
 let gen = new MersenneTwister();
 
-export const d20 = () => {
+const d20 = () => {
     return Math.floor(20 * gen.random() + 1)
 }
 

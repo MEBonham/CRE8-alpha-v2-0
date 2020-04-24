@@ -21,7 +21,7 @@ const PlayGeneralRolls = () => {
         };
     }
     const dispatchRollData = (data) => {
-        dispatch({ type: "ROLL_PENDING", payload: data, elementToReset: document.getElementById("meb_select_dieMode") });
+        dispatch({ type: "ROLL_PENDING", payload: data, elementToReset: document.getElementById("meb_select_d20dieMode") });
     }
     const generalRoll = (ev) => {
         if (state.cur) {

@@ -1,5 +1,6 @@
 import React from 'react';
 
+import PlayConditions from './PlayConditions';
 import PlayGeneralRolls from './PlayGeneralRolls';
 import PlayHeader from './PlayHeader';
 import PlayPools from './PlayPools';
@@ -14,6 +15,7 @@ const Play = () => {
                     <PlayPools />
                     <PlayGeneralRolls />
                 </div>
+                <PlayConditions />
             </div>
         </header>
     );

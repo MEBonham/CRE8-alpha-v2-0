@@ -5,6 +5,30 @@ const Reducer = (state, action) => {
         case 'CHAR_EDIT':
             let newVal;
             switch (action.field) {
+                case "active_conditions":
+                    let newVal = [ ...action.payload ];
+                    if (newVal.includes("Shaken") && newVal.includes("Momentum")) {
+                        newVal.splice(newVal.indexOf("Momentum"), 1);
+                    }
+                    return {
+                        ...state,
+                        curChangesMade: true,
+                        cur: {
+                            ...state.cur,
+                            stats: {
+                                ...state.cur.stats,
+                                active_conditions: newVal
+                            }
+                        }
+                    };
+                case "coasting":
+                    return {
+                        ...state,
+                        cur: {
+                            ...state.cur,
+                            coasting: action.payload
+                        }
+                    };
                 case "earnXp":
                     newVal = action.inputs[`${action.stub}_${action.field}`];
                     return {
@@ -74,7 +98,7 @@ const Reducer = (state, action) => {
                 saveButtonHit: false
             };
         case 'ROLL_PENDING':
-            // action.elementToReset.value = "normal";
+            action.elementToReset.value = "normal";
             return {
                 ...state,
                 pendingRoll: action.payload,
