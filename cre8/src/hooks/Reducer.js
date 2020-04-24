@@ -1,11 +1,24 @@
-import { updateXp } from '../helpers/Calculations';
+import { updateXp, updateGoodSave } from '../helpers/Calculations';
 
 const Reducer = (state, action) => {
     switch (action.type) {
         case 'CHAR_EDIT':
-            const newVal = action.inputs[`${action.stub}_${action.field}`];
+            let newVal;
             switch (action.field) {
+                case "goodSave":
+                    return {
+                        ...state,
+                        curChangesMade: true,
+                        cur: {
+                            ...state.cur,
+                            stats: updateGoodSave({
+                                ...state.cur.stats,
+                                good_save: action.payload
+                            })
+                        }
+                    };
                 case "name":
+                    newVal = action.inputs[`${action.stub}_${action.field}`];
                     return {
                         ...state,
                         curChangesMade: true,
@@ -15,6 +28,7 @@ const Reducer = (state, action) => {
                         }
                     };
                 case "xpBase":
+                    newVal = action.inputs[`${action.stub}_${action.field}`];
                     return {
                         ...state,
                         curChangesMade: true,
@@ -27,6 +41,7 @@ const Reducer = (state, action) => {
                         }
                     };
                 default:
+                    newVal = action.inputs[`${action.stub}_${action.field}`];
                     return {
                         ...state,
                         curChangesMade: true,

@@ -94,6 +94,10 @@ div.char-sheet > div.float-right .my-button {
     margin-bottom: 6px;
 }
 
+.parchment h2 {
+    font-size: 2rem;
+}
+
 .parchment .stat {
     font-size: 1.4rem;
 }
@@ -118,4 +122,16 @@ div.char-sheet > div.float-right .my-button {
 
 .parchment header header .stat.float-right {
     margin-left: 20px;
+}
+
+.parchment header section.good-save {
+    align-items: center;
+}
+
+.parchment .good-save .my-button {
+    margin: 0 2px 14px;
+}
+
+.parchment .good-save .my-button.selected {
+    box-shadow: 2px 2px 10px #111177;
 }
