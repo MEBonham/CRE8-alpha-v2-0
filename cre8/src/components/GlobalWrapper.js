@@ -38,6 +38,7 @@ const initialData = {
     editPrivilege: false,
     initialMount: true,
     mainNavMenuOpen: false,
+    rollQueue: [],
     shouldUpdateCharacterCache: true,
     toggleCharEditing,
     userSettingsMenuOpen: false

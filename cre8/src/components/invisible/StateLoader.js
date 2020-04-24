@@ -52,6 +52,25 @@ const StateLoader = () => {
         // }
     }, [db, dispatch, state.user])
 
+    // Watch db for new dice rolls
+    const rollsStream = useRef(null);
+    useEffect(() => {
+        if (state.user) {
+            rollsStream.current = db.collection("rolls")
+                .onSnapshot(querySnapshot => {
+                    querySnapshot.forEach(roll => {
+                        // console.log(roll.data().processedBy);
+                        if (!roll.data().processedBy.includes(state.user.uid)) {
+                            dispatch({ type: "ROLL_TO_QUEUE", local: false, payload: {
+                                ...roll.data(),
+                                id: roll.id
+                            } });
+                        }
+                    });
+                })
+        }
+    }, [db, dispatch, state.user])
+
     return (null);
 }
 

@@ -130,6 +130,14 @@ const Reducer = (state, action) => {
                         }
                     };
             }
+        case 'GATE_ROLL':
+            const copy = state.rollQueue.slice();
+            const val = copy.shift();
+            return {
+                ...state,
+                rollQueue: copy,
+                latestRoll: val
+            }
         case 'RESOLVE_CUR_SAVE':
             return {
                 ...state,
@@ -143,6 +151,13 @@ const Reducer = (state, action) => {
                 pendingRoll: action.payload,
                 dieRollMode: "normal"
             };
+        case 'ROLL_TO_QUEUE':
+            return {
+                ...state,
+                rollQueue: action.local ?
+                    [ action.payload, ...state.rollQueue ] :
+                    [ ...state.rollQUeue, action.payload ]
+            }
         case 'SET':
             const newState = {};
             newState[action.key] = action.payload;
