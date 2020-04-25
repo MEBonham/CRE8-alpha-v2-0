@@ -1,27 +1,42 @@
-import React, { useState, useEffect, useRef, useContext } from 'react';
+import React, { useEffect, useRef, useContext } from 'react';
 
 import { Store } from '../GlobalWrapper';
+// import useLsPersistedState from '../../hooks/useLsPersistedState';
 import { ifPlus } from '../../helpers/Calculations';
 import '../../css/game.css';
 
 const RollsDisplay = () => {
-    const [state] = useContext(Store);
+    const [state, dispatch] = useContext(Store);
+    const LS_KEY = "rollsToDisplay";
 
-    const [rollsArr, setRollsArr] = useState([]);
+    // Load persisted rolls from local storage
+    useEffect(() => {
+        const tempVar = JSON.parse(localStorage.getItem(LS_KEY));
+        dispatch({ type: "SET", key: "rollsToDisplay", payload: tempVar });
+    }, [dispatch])
 
-    const rollsArrRef = useRef(rollsArr);
+    // Save rolls to local storage for persistence
+    useEffect(() => {
+        localStorage.setItem(LS_KEY, JSON.stringify(state.rollsToDisplay));
+    }, [state.rollsToDisplay]);
+
+    // Add incoming rolls to display set
+    const rollsArrRef = useRef(state.rollsToDisplay);
     useEffect(() => {
         const processRoll = () => {
-            setRollsArr([ ...rollsArrRef.current, state.latestRoll ]);
+            dispatch({ type: "SET", key: "rollsToDisplay", payload: [
+                ...rollsArrRef.current, state.latestRoll
+            ] });
         }
         if (state.latestRoll) {
             processRoll();
         }
-    }, [state.latestRoll])
+    }, [dispatch, state.latestRoll])
     useEffect(() => {
-        rollsArrRef.current = rollsArr;
-    }, [rollsArr])
+        rollsArrRef.current = state.rollsToDisplay;
+    }, [state.rollsToDisplay])
 
+    // Keep Dice Rolls window scrolled to bottom; style dice rolls display
     const scrollHeightRef = useRef(0);
     const clientHeightRef = useRef(0);
     const scrollWindow = useRef(null);
@@ -36,8 +51,8 @@ const RollsDisplay = () => {
         scrollHeightRef.current = scrollWindow.current.scrollHeight;
         clientHeightRef.current = scrollWindow.current.clientHeight;
 
-        if (rollsArr) {
-            rollsArr.forEach((roll, i) => {
+        if (state.rollsToDisplay) {
+            state.rollsToDisplay.forEach((roll, i) => {
                 if (roll.resultData.multRoll.length > 1) {
                     const elArr = document.querySelectorAll(`#meb_showNatRolls_${i} p.bg`);
                     let oneBold = false;
@@ -52,13 +67,13 @@ const RollsDisplay = () => {
                 }
             });
         }
-    }, [rollsArr])
+    }, [state.rollsToDisplay])
 
     return(
         <section className="sidebar-padding rolls-outer-window">
             <h2>Dice Rolls</h2>
             <div ref={scrollWindow} className="rolls-inner-window">
-                {rollsArr ? rollsArr.map((rollData, i) => {
+                {state.rollsToDisplay ? state.rollsToDisplay.map((rollData, i) => {
                     return(<div key={i} className="roll-display">
                         <h3>{rollData.character} <br />{rollData.name}</h3>
                         <div className="columns" id={`meb_showNatRolls_${i}`}>

@@ -5,6 +5,7 @@ import { Store } from '../GlobalWrapper';
 import fb from '../../fbConfig';
 import ManageCampaigns from '../other/ManageCampaigns';
 import AdminSettings from './Admin';
+import MyButton from '../ui/MyButton';
 
 const UserSettings = () => {
     const [state, dispatch] = useContext(Store);
@@ -12,6 +13,11 @@ const UserSettings = () => {
     useEffect(() => {
         dispatch({ type: "SET", key: "userSettingsMenuOpen", payload: false });
     }, [dispatch])
+
+    // Clear displayed rolls
+    const clearLsRolls = () => {
+        dispatch({ type: "SET", key: "rollsToDisplay", payload: [] });
+    }
 
     const [userInfo, setUserInfo] = useState({});
     const collectUserInfo = useCallback(async () => {
@@ -50,6 +56,9 @@ const UserSettings = () => {
         <div className="primary-content content-padding rows">
             <h1>User Settings</h1>
             {rankBadge()}
+            <section className="settings-button-bank">
+                <MyButton fct={clearLsRolls}>Clear Dice Rolls</MyButton>
+            </section>
             <ManageCampaigns />
             {userInfo && userInfo.rank === "admin" ? <AdminSettings ownId={userInfo.id} /> : null}
         </div>

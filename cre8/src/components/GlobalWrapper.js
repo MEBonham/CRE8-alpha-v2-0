@@ -1,6 +1,19 @@
 import React, { useReducer, createContext } from 'react';
 
+import fb from '../fbConfig';
 import Reducer from '../hooks/Reducer';
+
+const uploadRoll = (roll, uid) => {
+    const processedArr = [ ...roll.processedBy, uid ];
+    const rollCopy = {
+        ...roll,
+        processedLocally: true,
+        processedBy: processedArr
+    }
+    const { id } = rollCopy;
+    delete rollCopy.id;
+    fb.db.collection("rolls").doc(id).set(rollCopy);
+}
 
 const toggleCharEditing = (ev) => {
     const field = ev.target.id.split("_")[2];
@@ -39,8 +52,10 @@ const initialData = {
     initialMount: true,
     mainNavMenuOpen: false,
     rollQueue: [],
+    rollsToDisplay: [],
     shouldUpdateCharacterCache: true,
     toggleCharEditing,
+    uploadRoll,
     userSettingsMenuOpen: false
 };
 

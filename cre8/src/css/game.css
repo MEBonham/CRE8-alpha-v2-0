@@ -6,7 +6,7 @@ section.rolls-outer-window h2 {
 }
 
 section.rolls-outer-window div.rolls-inner-window {
-    height: 250px;
+    height: 224px;
     overflow-y: auto;
 }
 

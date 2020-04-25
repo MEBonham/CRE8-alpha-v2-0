@@ -1,7 +1,6 @@
 import { useEffect, useRef, useContext, useCallback } from 'react';
 
 import { Store } from '../GlobalWrapper';
-import fb from '../../fbConfig';
 import { roll } from '../../helpers/Roll';
 
 const RollerEngine = () => {
@@ -24,19 +23,13 @@ const RollerEngine = () => {
     }, [dispatch, state.pendingRoll])
 
     // Save new rolls to db
+    const uploadRef = useRef(null);
     useEffect(() => {
-        if (state.latestRoll && !state.latestRoll.processedLocally) {
-            const processedArr = state.user ?
-                [ ...state.latestRoll.processedBy, state.user.uid ] :
-                [ ...state.latestRoll.processedBy ];
-            const latestRollCopy = {
-                ...state.latestRoll,
-                processedLocally: true,
-                processedBy: processedArr
-            }
-            const { id } = latestRollCopy;
-            delete latestRollCopy.id;
-            fb.db.collection("rolls").doc(id).set(latestRollCopy);
+        uploadRef.current = state.uploadRoll;
+    }, [state.uploadRoll])
+    useEffect(() => {
+        if (state.latestRoll && !state.latestRoll.processedLocally && state.user) {
+            uploadRef.current(state.latestRoll, state.user.uid);
         }
     }, [state.latestRoll, state.user])
 

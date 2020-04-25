@@ -31,6 +31,7 @@ const StateSaver = () => {
         if (state.cur && state.user && state.activeTabs) {
             try {
                 await db.collection("activeTabs").doc(state.user.uid).set(state.activeTabs, { merge: true });
+                activeTabsChangesMade.current = false;
                 console.log("Saved Current Tabs");
             } catch(err) {
                 console.log("Error saving activeTabs to db:", err);

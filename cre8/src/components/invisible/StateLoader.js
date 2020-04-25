@@ -54,6 +54,10 @@ const StateLoader = () => {
 
     // Watch db for new dice rolls
     const rollsStream = useRef(null);
+    const uploadRef = useRef(null);
+    useEffect(() => {
+        uploadRef.current = state.uploadRoll;
+    }, [state.uploadRoll])
     useEffect(() => {
         if (state.user) {
             rollsStream.current = db.collection("rolls")
@@ -61,6 +65,10 @@ const StateLoader = () => {
                     querySnapshot.forEach(roll => {
                         // console.log(roll.data().processedBy);
                         if (!roll.data().processedBy.includes(state.user.uid)) {
+                            uploadRef.current({
+                                ...roll.data(),
+                                id: roll.id
+                            }, state.user.uid);
                             dispatch({ type: "ROLL_TO_QUEUE", local: false, payload: {
                                 ...roll.data(),
                                 id: roll.id

@@ -156,7 +156,7 @@ const Reducer = (state, action) => {
                 ...state,
                 rollQueue: action.local ?
                     [ action.payload, ...state.rollQueue ] :
-                    [ ...state.rollQUeue, action.payload ]
+                    [ ...state.rollQueue, action.payload ]
             }
         case 'SET':
             const newState = {};
