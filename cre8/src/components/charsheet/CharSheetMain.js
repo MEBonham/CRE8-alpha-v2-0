@@ -11,7 +11,10 @@ import BuildLibrary from './BuildLibrary';
 const CharSheetMain = () => {
     const [state, dispatch] = useContext(Store);
 
-    const [tab, setTab] = useState(state.editPrivilege ? "configure" : "play");
+    // const [tab, setTab] = useState(state.editPrivilege ? "configure" : "play");
+    const [tab, setTab] = useState(null);
+
+    // Once per load of character, sync the activeTabs state object with the database
     const slugRef = useRef(null);
     const loadActiveTabs = useCallback(async () => {
         try {
@@ -37,11 +40,18 @@ const CharSheetMain = () => {
         }
     }, [dispatch, loadActiveTabs, state.cur, state.user])
 
+    // Set tab to match global state record, or a default value
     useEffect(() => {
         if (state.cur && state.activeTabs) {
-            setTab(state.activeTabs[state.cur.id]);
+            const activeTabsCopy = {
+                [state.cur.id]: (state.editPrivilege ? "configure" :"play"),
+                ...state.activeTabs
+            };
+            setTab(activeTabsCopy[state.cur.id]);
         }
-    }, [state.activeTabs, state.cur])
+    }, [state.activeTabs, state.cur, state.editPrivilege])
+
+    // Actually invoke the component that goes with the selected tab
     const tabContents = () => {
         if (state.cur) {
             switch (tab) {
