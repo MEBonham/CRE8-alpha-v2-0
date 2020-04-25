@@ -1,4 +1,4 @@
-import { updateXp, updateGoodSave } from '../helpers/Calculations';
+import { updateXp, updateGoodSave, updateSkillRanks } from '../helpers/Calculations';
 
 const Reducer = (state, action) => {
     switch (action.type) {
@@ -88,6 +88,25 @@ const Reducer = (state, action) => {
                                 ...state.cur.stats,
                                 rp: Math.min(Math.max(0, state.cur.stats.rp + newVal), state.cur.stats.rp_max)
                             }
+                        }
+                    };
+                case "trained_skills_history":
+                    // console.log(action);
+                    newVal = {
+                        ...state.cur.stats.trained_skills_history,
+                        [action.level]: {
+                            ...state.cur.stats.trained_skills_history[action.level],
+                            [action.src]: action.payload
+                        }
+                    };
+                    return {
+                        ...state,
+                        cur: {
+                            ...state.cur,
+                            stats: updateSkillRanks({
+                                ...state.cur.stats,
+                                [action.field]: newVal
+                            })
                         }
                     };
                 case "vp":

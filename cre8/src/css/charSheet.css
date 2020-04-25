@@ -324,3 +324,35 @@ div.char-sheet > div.float-right .my-button {
     font-size: 1.4rem;
     margin-bottom: 2px;
 }
+
+section.configure-skills .trained {
+    margin-bottom: 14px;
+    display: flex;
+    align-items: center;
+}
+
+section.configure-skills .trained label {
+    margin-right: 10px;
+    font-size: 1.4rem;
+    font-weight: bold;
+}
+
+section.configure-skills .trained select {
+    margin-right: 6px;
+    position: relative;
+    top: 1px;
+}
+
+section.configure-skills .net-ranks-display table {
+    border-collapse: separate;
+    border-spacing: 2px 4px;
+    font-size: 1.1rem;
+}
+
+section.configure-skills .net-ranks-display th {
+    font-weight: bold;
+}
+
+section.configure-skills .net-ranks-display td {
+    text-align: center;
+}
