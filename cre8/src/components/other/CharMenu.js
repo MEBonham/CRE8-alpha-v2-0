@@ -50,6 +50,8 @@ const CharMenu = () => {
     useEffect(() => {
         if (state.user) {
             setOrphans(state.characterCache.filter(charData => charData.campaigns.length === 0 && charData.owner === state.user.uid));
+        } else {
+            setOrphans([]);
         }
     }, [state.characterCache, state.user])
 
@@ -60,6 +62,19 @@ const CharMenu = () => {
         delete usersCampaignsCopy.public;
         if (Object.keys(usersCampaignsCopy).length) setCampaignIds(Object.keys(usersCampaignsCopy));
     }, [state.activeCampaigns])
+
+    // Alphabetize Public characters
+    const compareFct = (a, b) => {
+        const nameA = a.name.toUpperCase();
+        const nameB = b.name.toUpperCase();
+        if (nameA < nameB) {
+          return -1;
+        }
+        if (nameA > nameB) {
+          return 1;
+        }
+        return 0;
+    }
 
     return(
         <div className="primary-content content-padding char-library">
@@ -72,7 +87,7 @@ const CharMenu = () => {
                     <h2>Your Campaign Characters</h2>
                     {campaignIds.map((campaignId, i) => {
                         const campaignObj = state.activeCampaigns[campaignId];
-                        return (
+                        return (campaignObj ?
                             <section key={campaignId} className={i + 1 < campaignIds.length ? "not-last" : null}>
                                 <h3>{campaignObj.name}</h3>
                                 {state.characterCache.filter(charData => charData.campaigns.includes(campaignId))
@@ -84,8 +99,8 @@ const CharMenu = () => {
                                             </p>
                                         );
                                     })}
-                            </section>
-                        );
+                            </section> :
+                        null);
                     })}
                 </section> :
             null}
@@ -104,7 +119,7 @@ const CharMenu = () => {
             null}
             <section>
                 <h2>Standard Characters</h2>
-                {state.characterCache.filter(charData => charData.campaigns.includes("standard"))
+                {state.characterCache.filter(charData => charData.campaigns.includes("standard")).sort(compareFct)
                     .map(charData => {
                         const toAddress = `/characters/${charData.id}`;
                         return (

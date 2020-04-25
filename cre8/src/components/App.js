@@ -19,7 +19,7 @@ import ForgotPassword from './auth/ForgotPassword';
 import Login from './auth/Login';
 import Register from './auth/Register';
 import RollsDisplay from './game/RollsDisplay';
-
+import Code404 from './other/Code404';
 import '../css/App.css';
 
 const App = () => {
@@ -51,6 +51,7 @@ const App = () => {
                             <ReverseGuarded path="/login/forgot"><ForgotPassword /></ReverseGuarded>
                             <ReverseGuarded path="/login"><Login /></ReverseGuarded>
                             <ReverseGuarded path="/register"><Register /></ReverseGuarded>
+                            <Route component={Code404} />
                         </Switch>
                     </div>
                     <div className="sidebar">

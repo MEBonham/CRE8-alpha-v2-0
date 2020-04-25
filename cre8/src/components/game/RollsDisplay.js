@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useContext } from 'react';
 
 import { Store } from '../GlobalWrapper';
-// import useLsPersistedState from '../../hooks/useLsPersistedState';
+import MyButton from '../ui/MyButton';
 import { ifPlus } from '../../helpers/Calculations';
 import '../../css/game.css';
 
@@ -19,6 +19,11 @@ const RollsDisplay = () => {
     useEffect(() => {
         localStorage.setItem(LS_KEY, JSON.stringify(state.rollsToDisplay));
     }, [state.rollsToDisplay]);
+
+    // Clear displayed rolls
+    const clearLsRolls = () => {
+        dispatch({ type: "SET", key: "rollsToDisplay", payload: [] });
+    }
 
     // Add incoming rolls to display set
     const rollsArrRef = useRef([]);
@@ -90,6 +95,9 @@ const RollsDisplay = () => {
                         </div>
                     </div>);
                 }) : null}
+            </div>
+            <div className="float-right">
+                {state.user ? null : <MyButton fct={clearLsRolls}>Clear Dice Rolls</MyButton>}
             </div>
         </section>
     )

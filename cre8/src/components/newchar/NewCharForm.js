@@ -87,7 +87,10 @@ const NewCharForm = () => {
                 setErrorMessage("Slug in use.");
             } else {
                 const campaignsChecked = Object.keys(inputs).filter(field => field.startsWith("meb_newChar_select_"))
-                    .map((field) => (field.split("_")[3]))
+                    .map((field) => (field.split("_")[3]));
+                if (campaignsChecked.includes("public") && campaignsChecked.includes("standard")) {
+                    campaignsChecked.splice(campaignsChecked.indexOf("public"), 1);
+                }
                 saveNewChar({
                     ...charDefault,
                     owner: state.user.uid,
