@@ -23,7 +23,6 @@ const ConfigureGoodSave = () => {
                 button.classList.remove("selected");
             });
             dispatch({ type: "CHAR_EDIT", field: "good_save", payload: newVal });
-            // ev.target.closest("div").classList.add("selected");
         }
     }
 

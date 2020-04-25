@@ -1,5 +1,7 @@
 import { updateXp, updateGoodSave, updateSkillRanks } from '../helpers/Calculations';
 
+import gc from '../helpers/GameConstants';
+
 const Reducer = (state, action) => {
     switch (action.type) {
         case 'CHAR_EDIT':
@@ -90,6 +92,29 @@ const Reducer = (state, action) => {
                             }
                         }
                     };
+                case "skill_ranks_history":
+                    let skill = gc.skills_list.includes(action.skill) ? action.skill : null;
+                    newVal = state.cur.stats.skill_ranks_history;
+                    for (let i = 0; i <= action.level; i++) {
+                        if (newVal[i] === undefined) {
+                            newVal[i] = [];
+                        }
+                    }
+                    while (newVal[action.level].length < gc.skill_ranks_per_level) {
+                        newVal[action.level].push(null);
+                    }
+                    newVal[action.level][action.col] = skill;
+                    return {
+                        ...state,
+                        curChangesMade: true,
+                        cur: {
+                            ...state.cur,
+                            stats: updateSkillRanks({
+                                ...state.cur.stats,
+                                skill_ranks_history: newVal
+                            })
+                        }
+                    };
                 case "trained_skills_history":
                     newVal = {
                         ...state.cur.stats.trained_skills_history,
@@ -105,7 +130,7 @@ const Reducer = (state, action) => {
                             ...state.cur,
                             stats: updateSkillRanks({
                                 ...state.cur.stats,
-                                [action.field]: newVal
+                                trained_skills_history: newVal
                             })
                         }
                     };
