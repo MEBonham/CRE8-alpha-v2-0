@@ -1,4 +1,4 @@
-import React, { useContext } from 'react';
+import React, { useEffect, useContext } from 'react';
 
 import { Store } from '../GlobalWrapper';
 import MyButton from '../ui/MyButton';
@@ -6,14 +6,24 @@ import MyButton from '../ui/MyButton';
 const ConfigureGoodSave = () => {
     const [state, dispatch] = useContext(Store);
 
-    const setGoodSave = (ev) => {
+    useEffect(() => {
         if (state.cur) {
-            const newVal = ev.target.id.split("_")[2];
-            dispatch({ type: "CHAR_EDIT", field: "goodSave", payload: newVal });
             document.querySelectorAll(".parchment .good-save .my-button").forEach(button => {
                 button.classList.remove("selected");
             });
-            ev.target.closest("div").classList.add("selected");
+            const string = `meb_setGoodSave_${state.cur.stats.good_save}`;
+            document.getElementById(string).parentNode.classList.add("selected");
+        }
+    }, [state.cur])
+
+    const setGoodSave = (ev) => {
+        if (state.cur) {
+            const newVal = ev.target.id.split("_")[2];
+            document.querySelectorAll(".parchment .good-save .my-button").forEach(button => {
+                button.classList.remove("selected");
+            });
+            dispatch({ type: "CHAR_EDIT", field: "good_save", payload: newVal });
+            // ev.target.closest("div").classList.add("selected");
         }
     }
 

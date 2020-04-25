@@ -42,7 +42,7 @@ const Reducer = (state, action) => {
                             })
                         }
                     };
-                case "goodSave":
+                case "good_save":
                     return {
                         ...state,
                         curChangesMade: true,
@@ -91,7 +91,6 @@ const Reducer = (state, action) => {
                         }
                     };
                 case "trained_skills_history":
-                    // console.log(action);
                     newVal = {
                         ...state.cur.stats.trained_skills_history,
                         [action.level]: {
@@ -101,6 +100,7 @@ const Reducer = (state, action) => {
                     };
                     return {
                         ...state,
+                        curChangesMade: true,
                         cur: {
                             ...state.cur,
                             stats: updateSkillRanks({

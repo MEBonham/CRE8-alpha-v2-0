@@ -1,4 +1,4 @@
-import React, { useContext } from 'react';
+import React, { useEffect, useContext } from 'react';
 
 import { Store } from '../GlobalWrapper';
 import gc from '../../helpers/GameConstants';
@@ -16,18 +16,27 @@ const ConfigureSkills = () => {
         });
     }
 
+    useEffect(() => {
+        if (state.cur && state.cur.stats.trained_skills_history[0]) {
+            document.getElementById("meb_charTrainSkill_default1_level-0").value =
+                state.cur.stats.trained_skills_history[0].default1;
+            document.getElementById("meb_charTrainSkill_default2_level-0").value =
+                state.cur.stats.trained_skills_history[0].default2;
+        }
+    }, [state.cur])
+
     return (
         <section className="configure-skills rows">
             <h2>Skills</h2>
             <section className="trained columns">
-                <label>Trained Skills:</label>
-                <select onChange={trainSkill} id="meb_charTrainSkill_default1_level-1">
+                <label>Initial Trained Skills:</label>
+                <select onChange={trainSkill} id="meb_charTrainSkill_default1_level-0">
                     <option value="Choose">Choose</option>
                     {gc.skills_list.map((skill) => (
                         <option key={skill} value={skill}>{skill}</option>
                     ))}
                 </select>
-                <select onChange={trainSkill} id="meb_charTrainSkill_default2_level-1">
+                <select onChange={trainSkill} id="meb_charTrainSkill_default2_level-0">
                     <option value="Choose">Choose</option>
                     {gc.skills_list.map((skill) => (
                         <option key={skill} value={skill}>{skill}</option>

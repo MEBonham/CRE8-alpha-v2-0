@@ -345,7 +345,7 @@ section.configure-skills .trained select {
 
 section.configure-skills .net-ranks-display table {
     border-collapse: separate;
-    border-spacing: 2px 4px;
+    border-spacing: 4px 4px;
     font-size: 1.1rem;
 }
 
