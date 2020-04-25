@@ -21,19 +21,19 @@ const RollsDisplay = () => {
     }, [state.rollsToDisplay]);
 
     // Add incoming rolls to display set
-    const rollsArrRef = useRef(state.rollsToDisplay);
+    const rollsArrRef = useRef([]);
     useEffect(() => {
         const processRoll = () => {
-            dispatch({ type: "SET", key: "rollsToDisplay", payload: [
-                ...rollsArrRef.current, state.latestRoll
-            ] });
+            dispatch({ type: "SET", key: "rollsToDisplay", payload: rollsArrRef.current.concat([state.latestRoll]) });
         }
         if (state.latestRoll) {
             processRoll();
         }
     }, [dispatch, state.latestRoll])
     useEffect(() => {
-        rollsArrRef.current = state.rollsToDisplay;
+        if (state.rollsToDisplay) {
+            rollsArrRef.current = state.rollsToDisplay;
+        }
     }, [state.rollsToDisplay])
 
     // Keep Dice Rolls window scrolled to bottom; style dice rolls display
