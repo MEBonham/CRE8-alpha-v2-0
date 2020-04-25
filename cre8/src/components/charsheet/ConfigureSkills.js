@@ -71,10 +71,10 @@ const ConfigureSkills = () => {
     useEffect(() => {
         Object.keys(tempHistory).forEach((level) => {
             const ranksArr = tempHistory[level];
-            ranksArr.forEach((col) => {
+            ranksArr.forEach((value, col) => {
                 const el = document.getElementById(`meb_skillRank_${level}_${col}`);
                 if (el) {
-                    el.value = ranksArr[col] || "Choose";
+                    el.value = value || "Choose";
                     el.disabled = false;
                 }
             });

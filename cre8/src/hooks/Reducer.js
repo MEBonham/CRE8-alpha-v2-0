@@ -99,9 +99,9 @@ const Reducer = (state, action) => {
                         if (newVal[i] === undefined) {
                             newVal[i] = [];
                         }
-                    }
-                    while (newVal[action.level].length < gc.skill_ranks_per_level) {
-                        newVal[action.level].push(null);
+                        while (newVal[i].length < gc.skill_ranks_per_level) {
+                            newVal[i].push(null);
+                        }
                     }
                     newVal[action.level][action.col] = skill;
                     return {
