@@ -17,6 +17,15 @@ const CharSheetShell = () => {
     const { slug } = useParams();
     const db = fb.db;
 
+    // Protect against memory leak
+    const _isMounted = useRef(false);
+    useEffect(() => {
+        _isMounted.current = true;
+        return(() => {
+            _isMounted.current = false;
+        });
+    }, [])
+
     // Manually triggered re-load from database
     const [manualLoad, setManualLoad] = useState(false);
     const manualLoadFct = (ev) => {
@@ -44,7 +53,9 @@ const CharSheetShell = () => {
                 };
                 dispatch({ type: "UPDATE_CUR_FROM_DB", payload: docDefaulted });
             } else {
-                setCode404(true);
+                if (_isMounted.current) {
+                    setCode404(true);
+                }
             }
         } catch(err) {
             console.log("Error:", err);
@@ -52,6 +63,7 @@ const CharSheetShell = () => {
     }, [db, dispatch, slug]);
     useEffect(() => {
         loadCur();
+        setManualLoad(false);
         // return(() => {
         //     if (charStream.current) {
         //         charStream.current();
@@ -65,7 +77,9 @@ const CharSheetShell = () => {
         const collectUserInfo = async () => {
             try {
                 const doc = await db.collection("users").doc(state.user.uid).get();
-                setRank(doc.data().rank);
+                if (_isMounted.current) {
+                    setRank(doc.data().rank);
+                }
             } catch(err) {
                 console.log("Error:", err);
             }
