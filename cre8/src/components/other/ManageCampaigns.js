@@ -42,6 +42,16 @@ const ManageCampaigns = () => {
         return usersData.filter(datum => !usersAlreadyIds.includes(datum.id));
     }
 
+    useEffect(() => {
+        const els = document.querySelectorAll("section.manage-campaigns section.one-campaign");
+        els.forEach((el) => {
+            const campaignId = el.querySelector(".campaign-id-stored").value;
+            if (state.user && state.activeCampaigns[campaignId].owner === state.user.uid) {
+                el.querySelector("select").disabled = false;
+            }
+        });
+    }, [state.activeCampaigns, state.user])
+
     const addNewPlayer = async (ev) => {
         const campaignNum = ev.target.id.split("_")[2];
         const campaignId = ev.target.id.split("_")[3];
@@ -114,7 +124,8 @@ const ManageCampaigns = () => {
                             <h3>{campaignInfo.name}</h3>
                             <form className="columns">
                                 {/* <select onChange={handleSelectChangeById} id={`meb_addUserToCampaign_${i}`}> */}
-                                <select id={`meb_selectUserForCampaign_${i}`}>
+                                <input type="hidden" value={campaignId} className="campaign-id-stored" />
+                                <select id={`meb_selectUserForCampaign_${i}`} disabled>
                                     <option value="Select User">Select User</option>
                                     {otherUsersList(campaignInfo.members).map((userObj) => (
                                         <option value={userObj.id} key={userObj.id}>{userObj.displayName}</option>

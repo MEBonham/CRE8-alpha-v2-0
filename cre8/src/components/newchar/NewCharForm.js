@@ -7,6 +7,7 @@ import fb from '../../fbConfig';
 import useForm from '../../hooks/useForm';
 import MyFormButton from '../ui/MyFormButton';
 import { charDefault } from '../../helpers/Templates';
+import gc from '../../helpers/GameConstants';
 
 const NewCharForm = () => {
     const [state, dispatch] = useContext(Store);
@@ -83,7 +84,7 @@ const NewCharForm = () => {
     const checkNewChar = (ev) => {
         if (state.characterCache.length || rank === "admin") {
             const allSlugs = ["new"].concat(state.characterCache.map(charDatum => (charDatum.id)));
-            if (allSlugs.includes(inputs.slug)) {
+            if (allSlugs.includes(inputs.slug.toLowerCase())) {
                 setErrorMessage("Slug in use.");
             } else {
                 const campaignsChecked = Object.keys(inputs).filter(field => field.startsWith("meb_newChar_select_"))
@@ -91,12 +92,20 @@ const NewCharForm = () => {
                 if (campaignsChecked.includes("public") && campaignsChecked.includes("standard")) {
                     campaignsChecked.splice(campaignsChecked.indexOf("public"), 1);
                 }
+                const skillRanksObj = {};
+                gc.skills_list.forEach((skill) => {
+                    skillRanksObj[skill] = 0;
+                });
                 saveNewChar({
                     ...charDefault,
                     owner: state.user.uid,
                     name: inputs.name,
                     campaigns: campaignsChecked,
-                    slug: inputs.slug
+                    slug: inputs.slug.toLowerCase(),
+                    stats: {
+                        ...charDefault.stats,
+                        skill_ranks: skillRanksObj
+                    }
                 });
             }
         } else {
@@ -111,7 +120,7 @@ const NewCharForm = () => {
         <form onSubmit={handleSubmit} className="primary-content content-padding new-char-form rows">
             <h1>New Character</h1>
             <div>
-                <label htmlFor="slug">Slug (shortened name; must be unique; <br />difficult to change once established)</label>
+                <label htmlFor="slug">Slug (shortened name; must be unique & lowercase; <br />difficult to change once established)</label>
                 <input
                     type="text"
                     id="slug"

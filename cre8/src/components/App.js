@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from 'react';
-import { Route, Switch } from 'react-router-dom';
+import React, { useState, useEffect, useRef } from 'react';
+import { Route, Switch, useLocation } from 'react-router-dom';
 
 import GlobalWrapper from './GlobalWrapper';
 import Guarded from './auth/Guarded';
@@ -31,6 +31,12 @@ const App = () => {
         setStyleObj({ height: `${bodyHeight - headerHeight - FOOTER_HEIGHT_PX}px` });
     }, [])
 
+    const { pathname } = useLocation();
+    const scrollContainer = useRef(null);
+    useEffect(() => {
+        scrollContainer.current.scroll(0, 0);
+    }, [pathname]);
+
     return(
         <div className="App">
             <GlobalWrapper>
@@ -40,7 +46,7 @@ const App = () => {
                 <FctInitiator />
                 <Header />
                 <div className="main-envelope columns" style={styleObj}>
-                    <div className="contents">
+                    <div className="contents" ref={scrollContainer}>
                         <Switch>
                             <Route exact path="/" component={Home} />
                             <Route path={["/index", "/index.html"]} component={Home} />

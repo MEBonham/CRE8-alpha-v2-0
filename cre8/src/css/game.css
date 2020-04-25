@@ -35,12 +35,13 @@ div.roll-display h3 {
 }
 
 div.roll-display .roll-result {
+    align-items: center;
     position: relative;
 }
 
 div.roll-display .roll-result .equals {
     position: absolute;
-    right: 22px;
+    left: -16px;
 }
 
 div.roll-display p.big-num {

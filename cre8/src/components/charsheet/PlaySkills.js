@@ -41,22 +41,25 @@ const PlaySkills = () => {
     const skillsList2 = gc.skills_list.slice(cutoffNum);
 
     return (
-        <section className="skill-rolls columns">
-            <div className="skills-col-1 rows">
-                {skillsList1.map((skill) => (
-                    <MyButton fct={skillRoll} evData={`meb_roll_${skill}-Check_${state.cur.stats.skill_mods_net[skill]}`} key={skill}>
-                        <img src={d20Icon} alt="" />
-                        {skill} Check ({ifPlus(state.cur.stats.skill_mods_net[skill]) + state.cur.stats.skill_mods_net[skill]})
-                    </MyButton>
-                ))}
-            </div>
-            <div className="skills-col-2 rows">
-                {skillsList2.map((skill) => (
-                    <MyButton fct={skillRoll} evData={`meb_roll_${skill}-Check_${state.cur.stats.skill_mods_net[skill]}`} key={skill}>
-                        <img src={d20Icon} alt="" />
-                        {skill} Check ({ifPlus(state.cur.stats.skill_mods_net[skill]) + state.cur.stats.skill_mods_net[skill]})
-                    </MyButton>
-                ))}
+        <section className="skill-rolls rows">
+            <h2>Skills</h2>
+            <div className="columns">
+                <div className="skills-col-1 rows">
+                    {skillsList1.map((skill) => (
+                        <MyButton fct={skillRoll} evData={`meb_roll_${skill}-Check_${state.cur.stats.skill_mods_net[skill]}`} key={skill}>
+                            <img src={d20Icon} alt="" />
+                            {skill} Check ({ifPlus(state.cur.stats.skill_mods_net[skill]) + state.cur.stats.skill_mods_net[skill]})
+                        </MyButton>
+                    ))}
+                </div>
+                <div className="skills-col-2 rows">
+                    {skillsList2.map((skill) => (
+                        <MyButton fct={skillRoll} evData={`meb_roll_${skill}-Check_${state.cur.stats.skill_mods_net[skill]}`} key={skill}>
+                            <img src={d20Icon} alt="" />
+                            {skill} Check ({ifPlus(state.cur.stats.skill_mods_net[skill]) + state.cur.stats.skill_mods_net[skill]})
+                        </MyButton>
+                    ))}
+                </div>
             </div>
         </section>
     );

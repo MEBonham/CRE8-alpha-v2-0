@@ -33,6 +33,7 @@ export const roll = (dieMode, modBasic, modsMisc, coastVal) => {
         multRoll,
         natRoll,
         netMod,
-        result: Math.max(natRoll, coastVal) + netMod
+        result: Math.max(natRoll, coastVal) + netMod,
+        coastNote: coastVal > natRoll ? true : false
     };
 }

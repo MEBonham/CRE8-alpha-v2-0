@@ -89,9 +89,10 @@ const RollsDisplay = () => {
                             null}
                             <p className="big-num">{`${ifPlus(rollData.resultData.netMod)}${rollData.resultData.netMod}`}</p>
                         </div>
-                        <div className="column-envelope roll-result">
+                        <div className="roll-result rows">
                             <p className="big-num equals">=</p>
                             <p className="big-num bg">{rollData.resultData.result}</p>
+                            {rollData.resultData.coastNote ? <p className="tiny">(coasting)</p> : null}
                         </div>
                     </div>);
                 }) : null}

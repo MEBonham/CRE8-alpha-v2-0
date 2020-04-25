@@ -82,14 +82,16 @@ const CharSheetShell = () => {
         if (state.cur.campaigns.includes("public")) return true;
         if (state.cur.campaigns.includes("standard")) return true;
         if (state.user && state.cur.owner === state.user.uid) return true;
+        if (rank === "admin") return true;
         let activeCampaignsCopy = { ...state.activeCampaigns };
         delete activeCampaignsCopy.standard;
         delete activeCampaignsCopy.public;
+        let test = false;
         state.cur.campaigns.forEach((campaignId) => {
-            if (activeCampaignsCopy[campaignId]) return true;
+            if (activeCampaignsCopy[campaignId]) test = true;
         });
-        return false;
-    }, [state.activeCampaigns, state.cur, state.user]);
+        return test;
+    }, [rank, state.activeCampaigns, state.cur, state.user]);
 
     // Determine which buttons show under the character sheet (based on user's level of access)
     const [owner, setOwner] = useState(null);
