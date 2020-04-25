@@ -30,13 +30,13 @@ const ConfigureSkills = () => {
             <h2>Skills</h2>
             <section className="trained columns">
                 <label>Initial Trained Skills:</label>
-                <select onChange={trainSkill} id="meb_charTrainSkill_default1_level-0">
+                <select onChange={trainSkill} id="meb_charTrainSkill_default1_level-0" defaultValue="Choose">
                     <option value="Choose">Choose</option>
                     {gc.skills_list.map((skill) => (
                         <option key={skill} value={skill}>{skill}</option>
                     ))}
                 </select>
-                <select onChange={trainSkill} id="meb_charTrainSkill_default2_level-0">
+                <select onChange={trainSkill} id="meb_charTrainSkill_default2_level-0" defaultValue="Choose">
                     <option value="Choose">Choose</option>
                     {gc.skills_list.map((skill) => (
                         <option key={skill} value={skill}>{skill}</option>
