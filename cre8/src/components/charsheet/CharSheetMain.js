@@ -16,10 +16,10 @@ const CharSheetMain = () => {
     const loadActiveTabs = useCallback(async () => {
         try {
             let doc = await fb.db.collection("activeTabs").doc(state.user.uid).get();
-            if (!doc.exists) doc = {};
+            const docData = doc.exists ? doc.data() : {};
             const prevTabs = state.activeTabs ? { ...state.activeTabs } : {};
             return {
-                ...doc.data(),
+                ...docData,
                 ...prevTabs
             };
         } catch(err) {
