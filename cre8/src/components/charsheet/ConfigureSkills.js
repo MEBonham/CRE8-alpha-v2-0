@@ -99,7 +99,7 @@ const ConfigureSkills = () => {
                     ))}
                 </select>
             </section>
-            <section className="skill-ranks-assignment">
+            <section className="ranks-assignment">
                 <h3>Skill Ranks Assignment</h3>
                 <table>
                     <tbody>

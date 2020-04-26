@@ -348,6 +348,20 @@ section.configure-skills .trained select {
     top: 1px;
 }
 
+section.configure-skills .ranks-assignment table {
+    margin-bottom: 16px;
+}
+
+section.configure-skills .ranks-assignment th {
+    padding-right: 6px;
+    font-size: 1.1rem;
+    font-weight: bold;
+}
+
+section.configure-skills .ranks-assignment td select {
+    font-size: 1.2rem;
+}
+
 section.configure-skills .net-ranks-display table {
     border-collapse: separate;
     border-spacing: 4px 4px;

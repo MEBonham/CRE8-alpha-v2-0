@@ -41,7 +41,7 @@ const StateSaver = () => {
     const checkSaveReqs = useCallback(() => {
         if (state.curChangesMade && (state.saveButtonHit || Date.now() - lastSaveMoment.current > AUTOSAVE_INTERVAL)) {
             curSave();
-        } else if (activeTabsChangesMade && Date.now() - lastSaveMoment.current > AUTOSAVE_INTERVAL) {
+        } else if (activeTabsChangesMade.current && Date.now() - lastSaveMoment.current > AUTOSAVE_INTERVAL) {
             charTabsSave();
         }
     }, [AUTOSAVE_INTERVAL, charTabsSave, curSave, state.curChangesMade, state.saveButtonHit]);
