@@ -84,3 +84,11 @@ export const rollDefault = {
     dieModsMisc: {},
     coasting: 0
 };
+
+export const kitDefault = {
+    benefits: {},
+    drawbacks: {},
+    prerequisites: {},
+    tags: [],
+    xp_parcels: []
+}

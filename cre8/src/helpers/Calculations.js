@@ -29,7 +29,7 @@ export const mineModifiers = (modsObj) => {
     const bonusTypes = Object.keys(modsObj);
     bonusTypes.forEach(type => {
         const sources = Object.keys(modsObj[type]);
-        if (type === "circumstance") {
+        if (type === "circumstance" || type === "untyped") {
             sources.forEach(source => {
                 total += parseInt(modsObj[type][source].num);
             });
@@ -54,19 +54,19 @@ const mineParcels = (parcelsObj) => {
     return 0;
 }
 
-export const mineTrainedSkillsRequired = (trainedReqObj) => {
-    const result = [];
-    const sources = Object.keys(trainedReqObj);
-    sources.forEach(source => {
-        const skillsArr = trainedReqObj[source].skills;
-        skillsArr.forEach(skill => {
-            if (!result.includes(skill)) {
-                result.push(skill);
-            }
-        });
-    });
-    return result;
-}
+// export const mineTrainedSkillsRequired = (trainedReqObj) => {
+//     const result = [];
+//     const sources = Object.keys(trainedReqObj);
+//     sources.forEach(source => {
+//         const skillsArr = trainedReqObj[source].skills;
+//         skillsArr.forEach(skill => {
+//             if (!result.includes(skill)) {
+//                 result.push(skill);
+//             }
+//         });
+//     });
+//     return result;
+// }
 
 export const numSort = (numArr) => {
     return numArr.sort((a, b) => { return a - b });

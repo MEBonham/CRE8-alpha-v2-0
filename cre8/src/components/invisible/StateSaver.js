@@ -30,8 +30,10 @@ const StateSaver = () => {
     const charTabsSave = useCallback(async () => {
         if (state.cur && state.user && state.activeTabs) {
             try {
-                await db.collection("activeTabs").doc(state.user.uid).set(state.activeTabs, { merge: true });
+                // console.log(state.activeTabs, state.user.uid);
+                await db.collection("activeTabs").doc(state.user.uid).set(state.activeTabs);
                 activeTabsChangesMade.current = false;
+                lastSaveMoment.current = Date.now();
                 console.log("Saved Current Tabs");
             } catch(err) {
                 console.log("Error saving activeTabs to db:", err);

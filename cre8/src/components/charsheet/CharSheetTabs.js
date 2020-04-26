@@ -9,7 +9,7 @@ const CharSheetTabs = () => {
 
     const [tab, setTab] = useState(null);
     useEffect(() => {
-        if (state.cur) {
+        if (state.cur && state.activeTabs[state.cur.id]) {
             const activeTabsCopy = {
                 [state.cur.id]: (state.editPrivilege ? "configure" :"play"),
                 ...state.activeTabs

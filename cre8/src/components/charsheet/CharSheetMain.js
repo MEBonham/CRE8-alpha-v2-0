@@ -16,33 +16,33 @@ const CharSheetMain = () => {
 
     // Once per load of character, sync the activeTabs state object with the database
     const slugRef = useRef(null);
-    const loadActiveTabs = useCallback(async () => {
-        try {
-            let doc = await fb.db.collection("activeTabs").doc(state.user.uid).get();
-            const docData = doc.exists ? doc.data() : {};
-            const prevTabs = state.activeTabs ? { ...state.activeTabs } : {};
-            return {
-                ...docData,
-                ...prevTabs
-            };
-        } catch(err) {
-            console.log("Error loading activeTabs from db:", err);
-        }
-    }, [state.activeTabs, state.user])
-    useEffect(() => {
-        if (state.cur && state.user && state.cur.id !== slugRef.current) {
-            slugRef.current = state.cur.id;
-            loadActiveTabs().then((newVal) => {
-                dispatch({ type: "SET", key: "activeTabs", payload: newVal });
-            }).catch((err) => {
-                console.log("Error:", err);
-            })
-        }
-    }, [dispatch, loadActiveTabs, state.cur, state.user])
+    // const loadActiveTabs = useCallback(async () => {
+    //     try {
+    //         let doc = await fb.db.collection("activeTabs").doc(state.user.uid).get();
+    //         const docData = doc.exists ? doc.data() : {};
+    //         const prevTabs = state.activeTabs ? { ...state.activeTabs } : {};
+    //         return {
+    //             ...prevTabs,
+    //             ...docData
+    //         };
+    //     } catch(err) {
+    //         console.log("Error loading activeTabs from db:", err);
+    //     }
+    // }, [state.activeTabs, state.user])
+    // useEffect(() => {
+    //     if (state.cur && state.user && state.cur.id !== slugRef.current) {
+    //         slugRef.current = state.cur.id;
+    //         loadActiveTabs().then((newVal) => {
+    //             dispatch({ type: "SET", key: "activeTabs", payload: newVal });
+    //         }).catch((err) => {
+    //             console.log("Error:", err);
+    //         })
+    //     }
+    // }, [dispatch, loadActiveTabs, state.cur, state.user])
 
     // Set tab to match global state record, or a default value
     useEffect(() => {
-        if (state.cur && state.activeTabs) {
+        if (state.cur && state.activeTabs[state.cur.id]) {
             const activeTabsCopy = {
                 [state.cur.id]: (state.editPrivilege ? "configure" :"play"),
                 ...state.activeTabs

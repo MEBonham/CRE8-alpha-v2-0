@@ -11,6 +11,12 @@ const gc = {
     ],
     epic_level_xp_increment: 500,
     good_save_boost: 2,
+    kit_tags: [
+        "Core",
+        "Epic",
+        "Monster",
+        "Racial"
+    ],
     max_level_pre_epic: 8,
     other_conditions: [
         "Unconscious",

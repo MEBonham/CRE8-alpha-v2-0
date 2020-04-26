@@ -383,10 +383,25 @@ section.skill-rolls h2 {
     left: -17px;
 }
 
+header.build-library {
+    margin-bottom: 20px;
+}
+
 .parchment .build-library > header {
     margin-bottom: 4px;
 }
 
 .parchment .build-library .my-button {
     margin-right: 10px;
+}
+
+form.build-library div.rows {
+    margin-bottom: 10px;
+}
+
+form.build-library div label {
+    margin-bottom: 4px;
+    font-size: 1.4rem;
+    font-weight: bold;
+    line-height: 1.2;
 }
