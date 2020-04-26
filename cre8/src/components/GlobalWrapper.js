@@ -44,7 +44,6 @@ const toggleCharEditing = (ev) => {
 }
 
 const initialData = {
-    activeTabs: {},
     characterCache: [],
     curChangesMade: false,
     dieRollMode: "normal",

@@ -1,7 +1,8 @@
-import React, { useState, useEffect, useRef, useContext, useCallback } from 'react';
+import React, { useContext } from 'react';
 
 import { Store } from '../GlobalWrapper';
-import fb from '../../fbConfig';
+// import useLsPersistedState from '../../hooks/useLsPersistedState';
+// import fb from '../../fbConfig';
 import CharSheetTabs from './CharSheetTabs';
 import Play from './Play';
 import Configure from './Configure';
@@ -9,13 +10,22 @@ import Bio from './Bio';
 import BuildLibrary from './BuildLibrary';
 
 const CharSheetMain = () => {
-    const [state, dispatch] = useContext(Store);
+    const [state] = useContext(Store);
+
+    // const [activeTabs] = useLsPersistedState(LS_KEY, {});
+
+    // const [tab, setTab] = useState(null);
+    // useEffect(() => {
+    //     if (state.cur) {
+    //         setTab(activeTabs[state.cur.id]);
+    //     }
+    // }, [activeTabs, state.cur])
 
     // const [tab, setTab] = useState(state.editPrivilege ? "configure" : "play");
-    const [tab, setTab] = useState(null);
+    // const [tab, setTab] = useState(null);
 
     // Once per load of character, sync the activeTabs state object with the database
-    const slugRef = useRef(null);
+    // const slugRef = useRef(null);
     // const loadActiveTabs = useCallback(async () => {
     //     try {
     //         let doc = await fb.db.collection("activeTabs").doc(state.user.uid).get();
@@ -41,20 +51,20 @@ const CharSheetMain = () => {
     // }, [dispatch, loadActiveTabs, state.cur, state.user])
 
     // Set tab to match global state record, or a default value
-    useEffect(() => {
-        if (state.cur && state.activeTabs[state.cur.id]) {
-            const activeTabsCopy = {
-                [state.cur.id]: (state.editPrivilege ? "configure" :"play"),
-                ...state.activeTabs
-            };
-            setTab(activeTabsCopy[state.cur.id]);
-        }
-    }, [state.activeTabs, state.cur, state.editPrivilege])
+    // useEffect(() => {
+    //     if (state.cur && state.activeTabs[state.cur.id]) {
+    //         const activeTabsCopy = {
+    //             [state.cur.id]: (state.editPrivilege ? "configure" :"play"),
+    //             ...state.activeTabs
+    //         };
+    //         setTab(activeTabsCopy[state.cur.id]);
+    //     }
+    // }, [state.activeTabs, state.cur, state.editPrivilege])
 
     // Actually invoke the component that goes with the selected tab
     const tabContents = () => {
         if (state.cur) {
-            switch (tab) {
+            switch (state.charSheetTab) {
                 case "configure":
                     return <Configure />;
                 case "bio":

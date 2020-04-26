@@ -204,7 +204,6 @@ const Reducer = (state, action) => {
             }
         case 'SET':
             const newState = {};
-            if (action.key === "activeTabs") console.log(action.payload);
             newState[action.key] = action.payload;
             return {
                 ...state,

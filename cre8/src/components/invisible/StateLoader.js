@@ -20,7 +20,7 @@ const StateLoader = () => {
         });
     }, [dispatch])
 
-    // Pull active campaigns list from database; keep user rank in Store; load activeTabs
+    // Pull active campaigns list from database; keep user rank in Store
     const campaignsStream = useRef(null);
     const prevRank = useRef(null);
     useEffect(() => {
@@ -40,17 +40,6 @@ const StateLoader = () => {
                 prevRank.current = state.user.rank;
                 collectUserInfo();
             }
-
-            const loadActiveTabs = async () => {
-                try {
-                    const doc = await db.collection("activeTabs").doc(state.user.uid).get();
-                    console.log(doc.data());
-                    dispatch({ type: "SET", key: "activeTabs", payload: doc.data() });
-                } catch(err) {
-                    console.log("Error:", err);
-                }
-            }
-            loadActiveTabs();
 
             campaignsStream.current = db.collection("campaigns")
                 //.onSnapshot(querySnapshot => {
@@ -91,7 +80,6 @@ const StateLoader = () => {
             rollsStream.current = db.collection("rolls")
                 .onSnapshot(querySnapshot => {
                     querySnapshot.forEach(roll => {
-                        // console.log(roll.data().processedBy);
                         if (!roll.data().processedBy.includes(state.user.uid)) {
                             uploadRef.current({
                                 ...roll.data(),
