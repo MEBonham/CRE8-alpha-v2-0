@@ -1,4 +1,4 @@
-import React, { useEffect, useContext } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 
 import { Store } from '../GlobalWrapper';
 import useLsPersistedState from '../../hooks/useLsPersistedState';
@@ -10,40 +10,41 @@ const CharSheetTabs = () => {
     const CLASS_ACTIVE = "one-tab active";
 
     const [activeTabs, setActiveTabs] = useLsPersistedState(LS_KEY, {});
+    const [userId, setUserId] = useState("guest");
+    useEffect(() => {
+        const newUserId = state.user ? state.user.uid : "guest";
+        if (!activeTabs[newUserId]) {
+            setActiveTabs({
+                ...activeTabs,
+                [newUserId]: {}
+            })
+        }
+        setUserId(newUserId);
+    }, [activeTabs, setActiveTabs, state.user])
 
     useEffect(() => {
-        if (state.cur) {
-            dispatch({ type: "SET", key: "charSheetTab", payload: (activeTabs[state.cur.id] ? activeTabs[state.cur.id] : null) })
+        if (state.cur && activeTabs[userId]) {
+            dispatch({ type: "SET", key: "charSheetTab", payload: (
+                activeTabs[userId][state.cur.id] ? activeTabs[userId][state.cur.id] : null
+            ) });
         }
-    }, [activeTabs, dispatch, state.cur])
+    }, [activeTabs, dispatch, state.cur, userId])
 
     useEffect(() => {
         const defaultString = (state.editPrivilege ? "configure" :"play");
-        if (state.cur && !activeTabs[state.cur.id]) {
+        if (state.cur && activeTabs[userId] && !activeTabs[userId][state.cur.id]) {
             setActiveTabs({
                 ...activeTabs,
-                [state.cur.id]: defaultString
+                [userId]: {
+                    ...activeTabs[userId],
+                    [state.cur.id]: defaultString
+                }
             });
         }
         if (state.cur && !state.charSheetTab) {
             dispatch({ type: "SET", key: "charSheetTab", payload: defaultString });
         }
-    }, [activeTabs, dispatch, setActiveTabs, state.charSheetTab, state.cur, state.editPrivilege])
-
-    // useEffect(() => {
-    //     if (state.cur) {
-    //         setTab(activeTabs[state.cur.id]);
-    //     }
-    // }, [activeTabs, state.cur])
-    // useEffect(() => {
-    //     if (state.cur && state.activeTabs[state.cur.id]) {
-    //         const activeTabsCopy = {
-    //             [state.cur.id]: (state.editPrivilege ? "configure" :"play"),
-    //             ...state.activeTabs
-    //         };
-    //         setTab(activeTabsCopy[state.cur.id]);
-    //     }
-    // }, [state.activeTabs, state.editPrivilege, state.cur])
+    }, [activeTabs, dispatch, setActiveTabs, state.charSheetTab, state.cur, state.editPrivilege, userId])
 
     const tabClick = (ev) => {
         if (state.cur) {
@@ -51,12 +52,11 @@ const CharSheetTabs = () => {
             dispatch({ type: "SET", key: "charSheetTab", payload: setStr });
             setActiveTabs({
                 ...activeTabs,
-                [state.cur.id]: setStr
+                [userId]: {
+                    ...activeTabs[userId],
+                    [state.cur.id]: setStr
+                }
             });
-            // setActiveTabs({
-            //     ...activeTabs,
-            //     [state.cur.id]: setStr
-            // });
         }
     }
 
