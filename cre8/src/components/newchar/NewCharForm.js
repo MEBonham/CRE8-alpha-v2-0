@@ -54,21 +54,6 @@ const NewCharForm = () => {
         // });
     }, [gatherChars, state.shouldUpdateCharacterCache])
 
-    const [rank, setRank] = useState(null);
-    useEffect(() => {
-        const collectUserInfo = async () => {
-            try {
-                const doc = await db.collection("users").doc(state.user.uid).get();
-                setRank(doc.data().rank);
-            } catch(err) {
-                console.log("Error:", err);
-            }
-        }
-        if (state.user) {
-            collectUserInfo();
-        }
-    }, [db, state.user])
-
     const saveNewChar = async (charObj) => {
         try {
             const id = charObj.slug;
@@ -82,7 +67,7 @@ const NewCharForm = () => {
     }
     const [errorMessage, setErrorMessage] = useState("");
     const checkNewChar = (ev) => {
-        if (state.characterCache.length || rank === "admin") {
+        if (state.characterCache.length || (state.user && state.user.rank === "admin")) {
             const allSlugs = ["new"].concat(state.characterCache.map(charDatum => (charDatum.id)));
             if (allSlugs.includes(inputs.slug.toLowerCase())) {
                 setErrorMessage("Slug in use.");
@@ -143,7 +128,7 @@ const NewCharForm = () => {
                 <div>
                     <label>Campaign(s)</label>
                     <ul>
-                        {rank === "admin" || rank === "archon" ?
+                        {state.user && (state.user.rank === "admin" || state.user.rank === "archon") ?
                             <li key="standard">
                                 <input
                                     type="checkbox"

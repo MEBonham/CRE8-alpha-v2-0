@@ -71,24 +71,6 @@ const CharSheetShell = () => {
         // });
     }, [loadCur, manualLoad])
 
-    // Load the user's Rank
-    const [rank, setRank] = useState(null);
-    useEffect(() => {
-        const collectUserInfo = async () => {
-            try {
-                const doc = await db.collection("users").doc(state.user.uid).get();
-                if (_isMounted.current) {
-                    setRank(doc.data().rank);
-                }
-            } catch(err) {
-                console.log("Error:", err);
-            }
-        }
-        if (state.user) {
-            collectUserInfo();
-        }
-    }, [db, state.user])
-
     // Divert the user if they don't have access to this character
     const [redirectFlag, setRedirectFlag] = useState(false);
     const checkAccess = useCallback(() => {
@@ -96,7 +78,7 @@ const CharSheetShell = () => {
         if (state.cur.campaigns.includes("public")) return true;
         if (state.cur.campaigns.includes("standard")) return true;
         if (state.user && state.cur.owner === state.user.uid) return true;
-        if (rank === "admin") return true;
+        if (state.user && state.user.rank === "admin") return true;
         let activeCampaignsCopy = { ...state.activeCampaigns };
         delete activeCampaignsCopy.standard;
         delete activeCampaignsCopy.public;
@@ -105,7 +87,7 @@ const CharSheetShell = () => {
             if (activeCampaignsCopy[campaignId]) test = true;
         });
         return test;
-    }, [rank, state.activeCampaigns, state.cur, state.user]);
+    }, [state.activeCampaigns, state.cur, state.user]);
 
     // Determine which buttons show under the character sheet (based on user's level of access)
     const [owner, setOwner] = useState(null);
@@ -118,8 +100,8 @@ const CharSheetShell = () => {
         }
     }, [state.cur]);
     const [adminPrivilege, setAdminPrivilege] = useState(false);
-    const checkAdminPriv = useCallback((rank, user) => {
-        if (rank === "admin" || (owner === user.uid)) {
+    const checkAdminPriv = useCallback((user) => {
+        if (user.rank === "admin" || (owner === user.uid)) {
             setAdminPrivilege(true);
             return true;
         } else {
@@ -127,12 +109,12 @@ const CharSheetShell = () => {
             return false;
         }
     }, [owner]);
-    const checkEditPriv = useCallback((rank, user) => {
-        if (checkAdminPriv(rank, user)) {
+    const checkEditPriv = useCallback((user) => {
+        if (checkAdminPriv(user)) {
             dispatch({ type: "SET", key: "editPrivilege", payload: true });
-        } else if (state.cur && state.cur.campaigns.includes("public") && rank === "archon") {
+        } else if (state.cur && state.cur.campaigns.includes("public") && user.rank === "archon") {
             dispatch({ type: "SET", key: "editPrivilege", payload: true });
-        } else if (state.cur && state.cur.campaigns.includes("standard") && rank === "archon") {
+        } else if (state.cur && state.cur.campaigns.includes("standard") && user.rank === "archon") {
             dispatch({ type: "SET", key: "editPrivilege", payload: true });
         } else {
             dispatch({ type: "SET", key: "editPrivilege", payload: false });
@@ -142,9 +124,9 @@ const CharSheetShell = () => {
         if (!checkAccess()) {
             setRedirectFlag(true);
         } else if (state.user) {
-            checkEditPriv(rank, state.user);
+            checkEditPriv(state.user);
         }
-    }, [checkAccess, checkEditPriv, rank, state.user])
+    }, [checkAccess, checkEditPriv, state.user])
 
     const toSaveBtn = (ev) => {
         dispatch({ type: "SET", key: "saveButtonHit", payload: true });

@@ -20,10 +20,23 @@ const StateLoader = () => {
         });
     }, [dispatch])
 
-    // Pull active campaigns list from database
+    // Pull active campaigns list from database; keep user rank in Store
     const campaignsStream = useRef(null);
     useEffect(() => {
         if (state.user) {
+            const collectUserInfo = async () => {
+                try {
+                    const doc = await db.collection("users").doc(state.user.uid).get();
+                    dispatch({ type: "SET", key: "user", payload: {
+                        ...state.user,
+                        rank: doc.data().rank
+                    } });
+                } catch(err) {
+                    console.log("Error:", err);
+                }
+            }
+            collectUserInfo();
+
             campaignsStream.current = db.collection("campaigns")
                 //.onSnapshot(querySnapshot => {
                 .get().then(querySnapshot => {

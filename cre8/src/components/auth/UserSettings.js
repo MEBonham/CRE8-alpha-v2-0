@@ -1,8 +1,7 @@
-import React, { useState, useEffect, useContext, useCallback } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import { Redirect } from 'react-router-dom';
 
 import { Store } from '../GlobalWrapper';
-import fb from '../../fbConfig';
 import ManageCampaigns from '../other/ManageCampaigns';
 import AdminSettings from './Admin';
 import MyButton from '../ui/MyButton';
@@ -19,29 +18,16 @@ const UserSettings = () => {
         dispatch({ type: "SET", key: "rollsToDisplay", payload: [] });
     }
 
-    const [userInfo, setUserInfo] = useState({});
-    const collectUserInfo = useCallback(async () => {
-        try {
-            const doc = await fb.db.collection("users").doc(state.user.uid).get();
-            setUserInfo({
-                ...doc.data(),
-                id: doc.id
-            });
-        } catch(err) {
-            console.log("Error:", err);
-        }
-    }, [state.user]);
+    // If no user is signed in, redirect
     const [redirectFlag, setRedirectFlag] = useState(false);
     useEffect(() => {
-        if (state.user) {
-            collectUserInfo();
-        } else {
+        if (!state.user) {
             setRedirectFlag(true);
         }
-    }, [collectUserInfo, state.user])
+    }, [state.user])
 
     const rankBadge = () => {
-        switch (userInfo.rank) {
+        switch (state.user.rank) {
             case "admin":
                 return <section><p><strong>Rank:</strong> admin (highest)</p></section>;
             case "archon":
@@ -60,7 +46,7 @@ const UserSettings = () => {
                 <MyButton fct={clearLsRolls}>Clear Dice Rolls</MyButton>
             </section>
             <ManageCampaigns />
-            {userInfo && userInfo.rank === "admin" ? <AdminSettings ownId={userInfo.id} /> : null}
+            {state.user && state.user.rank === "admin" ? <AdminSettings ownId={state.user.uid} /> : null}
         </div>
     );
 }

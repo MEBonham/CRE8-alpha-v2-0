@@ -138,7 +138,8 @@ div.char-sheet > div.float-right .my-button {
     margin: 0 2px 14px;
 }
 
-.parchment .good-save .my-button.selected {
+.parchment .good-save .my-button.selected,
+.parchment .build-library .my-button.selected {
     box-shadow: 2px 2px 10px #111177;
 }
 
@@ -380,4 +381,12 @@ section.skill-rolls h2 {
     text-align: center;
     position: relative;
     left: -17px;
+}
+
+.parchment .build-library > header {
+    margin-bottom: 4px;
+}
+
+.parchment .build-library .my-button {
+    margin-right: 10px;
 }
