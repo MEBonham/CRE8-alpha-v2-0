@@ -1,162 +1,167 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useContext } from 'react';
 import { v4 as uuidv4 } from 'uuid';
-import fb from '../../fbConfig';
-import useGlobal from '../../hooks/useGlobal';
-import useForm from '../../hooks/useForm';
 
+import { Store } from '../GlobalWrapper';
+import fb from '../../fbConfig';
+import useForm from '../../hooks/useForm';
 import MyButton from '../ui/MyButton';
+import MyFormButton from '../ui/MyFormButton';
 
 const ManageCampaigns = () => {
-
+    const [state, dispatch] = useContext(Store);
     const db = fb.db;
-    const [userInfo] = useGlobal("user");
-    const [usersCampaigns, setUsersCampaigns] = useGlobal("usersCampaigns");
 
-    const [usersObj, setUsersObj] = useState([]);
-    const usersStream = useRef(null);
-    useEffect(() => {        
-        usersStream.current = db.collection("users")
+    const [usersData, setUsersData] = useState([]);
+    const stream = useRef(null);
+    useEffect(() => {
+        stream.current = db.collection("users")
+            // .onSnapshot(querySnapshot => {
             .get().then(querySnapshot => {
-                const usersData = {};
-                querySnapshot.forEach(userDatum => {
-                    const userDatumDefaulted = {
-                        campaigns: [],
-                        ...userDatum.data()
-                    };
-                    usersData[userDatum.id] = userDatumDefaulted;
+                const usersDataCopy = [];
+                querySnapshot.forEach(doc => {
+                    usersDataCopy.push({
+                        id: doc.id,
+                        displayName: doc.data().displayName
+                    });
                 });
-                setUsersObj(usersData);
+                setUsersData(usersDataCopy);
             });
-    }, [db, userInfo]);
+        // return () => {
+        //     stream.current();
+        // };
+    }, [db]);
 
     const getDisplayNameFromId = (id) => {
-        if (usersObj && usersObj[id]) {
-            return usersObj[id].displayName;
-        } else {
-            return "";
+        if (usersData) {
+            return usersData.filter(userObj => userObj.id === id)
+                .map(userObj => userObj.displayName);
         }
+        return null;
     }
     const otherUsersList = (usersAlreadyIds) => {
-        return Object.keys(usersObj).filter(id => (
-            usersAlreadyIds.indexOf(id) === -1
-        )).map(id => ({
-            ...usersObj[id],
-            uid: id
-        }));
+        return usersData.filter(datum => !usersAlreadyIds.includes(datum.id));
     }
-    
-    const saveNewCampaign = () => {
-        const id = uuidv4();
-        db.collection("campaigns").doc(id).set({
-            owner: userInfo.uid,
-            name: newInputs.newCampaignName,
-            members: [userInfo.uid]
-        })
-        .then(() => {
-            setUsersCampaigns({
-                ...usersCampaigns,
-                [id]: {
-                    owner: userInfo.uid,
-                    name: newInputs.newCampaignName,
-                    members: [userInfo.uid]
-                }
-            });
-        })
-        .catch(err => {
-            console.log(err);
+
+    useEffect(() => {
+        const els = document.querySelectorAll("section.manage-campaigns section.one-campaign");
+        els.forEach((el) => {
+            const campaignId = el.querySelector(".campaign-id-stored").value;
+            if (state.user && state.activeCampaigns[campaignId].owner === state.user.uid) {
+                el.querySelector("select").disabled = false;
+            }
         });
-    }
-    const saveNewForm = useForm(saveNewCampaign);
-    const newInputs = saveNewForm.inputs;
-    const newHandleInputChange = saveNewForm.handleInputChange;
-    const newHandleSubmit = saveNewForm.handleSubmit;
-    
-    const [selectVals, setSelectVals] = useState([]);
-    const handleSelectChangeById = (ev) => {
-        const newArr = selectVals.slice();
-        newArr[ev.target.id.split("_")[1]] = ev.target.value;
-        setSelectVals(newArr);
-    }
-    const addNewPlayer = (ev) => {
-        const idsArr = ev.target.id.split("_");
-        const selectVal = selectVals[idsArr[1]];
-        if (selectVal) {
-            db.collection("campaigns").doc(idsArr[2]).get()
-                .then(doc => {
-                    const prevMembers = doc.data().members;
-                    db.collection("campaigns").doc(idsArr[2])
-                        .set({
+    }, [state.activeCampaigns, state.user])
+
+    const addNewPlayer = async (ev) => {
+        const campaignNum = ev.target.id.split("_")[2];
+        const campaignId = ev.target.id.split("_")[3];
+        const userId = document.getElementById(`meb_selectUserForCampaign_${campaignNum}`).value;
+        if (userId !== "Select User") {
+            try {
+                const doc = await db.collection("campaigns").doc(campaignId).get();
+                const prevMembers = doc.data().members;
+                try {
+                    await db.collection("campaigns").doc(campaignId).set({
+                        members: [
+                            ...prevMembers,
+                            userId
+                        ]
+                    }, { merge: true });
+                    console.log(state.activeCampaigns, campaignId);
+                    dispatch({ type: "SET", key: "activeCampaigns", payload: {
+                        ...state.activeCampaigns,
+                        [campaignId]: {
+                            ...state.activeCampaigns[campaignId],
                             members: [
                                 ...prevMembers,
-                                selectVal
+                                userId
                             ]
-                        }, { merge: true })
-                        .then(() => {
-                            // console.log(usersCampaigns);
-                            setUsersCampaigns({
-                                ...usersCampaigns,
-                                [idsArr[2]]: {
-                                    ...usersCampaigns[idsArr[2]],
-                                    members: [
-                                        ...prevMembers,
-                                        selectVal
-                                    ]
-                                }
-                            })
-                        })
-                        .catch(err => {
-                            console.log(err);
-                        });
-                })
-                .catch(err => {
-                    console.log(err);
-                });
+                        }
+                    } });
+                } catch(err) {
+                    console.log("Error:", err);
+                }
+            } catch(err) {
+                console.log("Error:", err);
+            }
         }
     }
 
-    return(
-        <section className="manage-campaigns">
+    const saveNewCampaign = async (ev) => {
+        const id = uuidv4();
+        try {
+            await db.collection("campaigns").doc(id).set({
+                owner: state.user.uid,
+                name: inputs.newCampaignName,
+                members: [state.user.uid]
+            });
+            dispatch({ type: "SET", key: "activeCampaigns", payload: {
+                ...state.activeCampaigns,
+                [id]: {
+                    owner: state.user.uid,
+                    name: inputs.newCampaignName,
+                    members: [state.user.uid]
+                }
+            } });
+            setInputs({
+                ...inputs,
+                newCampaignName: ""
+            });
+        } catch (err) {
+            console.log("Error:", err);
+        }
+    }
+    const { inputs, handleInputChange, handleSubmit, setInputs } = useForm(saveNewCampaign);
+
+    return (
+        <section className="manage-campaigns rows">
             <h2>Your Campaigns</h2>
-            {Object.keys(usersCampaigns).map((campaignId, i) => {
-                const campaignData = usersCampaigns[campaignId];
-                return(
-                    <section key={campaignId} className="one-campaign">
-                        <h3>{campaignData.name}</h3>
+            {state.activeCampaigns && Object.keys(state.activeCampaigns).length ?
+                Object.keys(state.activeCampaigns).map((campaignId, i) => {
+                    const campaignInfo = state.activeCampaigns[campaignId];
+                    return (
+                        <section key={campaignId} className="one-campaign rows">
+                            <h3>{campaignInfo.name}</h3>
+                            <form className="columns">
+                                {/* <select onChange={handleSelectChangeById} id={`meb_addUserToCampaign_${i}`}> */}
+                                <input type="hidden" value={campaignId} className="campaign-id-stored" />
+                                <select id={`meb_selectUserForCampaign_${i}`} disabled>
+                                    <option value="Select User">Select User</option>
+                                    {otherUsersList(campaignInfo.members).map((userObj) => (
+                                        <option value={userObj.id} key={userObj.id}>{userObj.displayName}</option>
+                                    ))}
+                                </select>
+                                <MyButton fct={addNewPlayer} evData={`meb_addUserToCampaign_${i}_${campaignId}`}>Add Player</MyButton>
+                            </form>
+                            <ul className="columns">
+                                {campaignInfo.members.map(memberId => (
+                                    <li key={`${i}_${memberId}`}>
+                                        {getDisplayNameFromId(memberId)}
+                                    </li>
+                                ))}
+                            </ul>
+                        </section>
+                    );
+                }) :
+            <p><em>(None)</em></p>}
+            {state.user ? 
+                <section className="new-campaign">
+                    <h3>Create New Campaign</h3>
+                    <form onSubmit={handleSubmit}>
                         <div>
-                            <select id={`addusers_${i}`} onChange={handleSelectChangeById}>
-                                <option value="Select User">Select User</option>
-                                {otherUsersList(campaignData.members).map(userObj => {
-                                    return <option key={userObj.uid} value={userObj.uid}>{userObj.displayName}</option>
-                                })}
-                            </select>
-                            <MyButton fct={addNewPlayer} evData={`add-player-to-campaign_${i}_${campaignId}`}>Add Player</MyButton>
+                            <label htmlFor="newCampaignName">Name</label>
+                            <input
+                                type="text"
+                                id="newCampaignName"
+                                onChange={handleInputChange}
+                                value={inputs.newCampaignName || ""}
+                                required
+                            />
                         </div>
-                        <ul>
-                            {campaignData.members.map(memberId => (
-                                <li key={`${i}-${memberId}`}>
-                                    {getDisplayNameFromId(memberId)}
-                                </li>
-                            ))}
-                        </ul>
-                    </section>
-                );
-            })}
-            <section>
-                <h3>Create New Campaign</h3>
-                <form onSubmit={newHandleSubmit}>
-                    <div>
-                        <label htmlFor="newCampaignName">Name</label>
-                        <input
-                            type="text"
-                            id="newCampaignName"
-                            onChange={newHandleInputChange}
-                            value={newInputs.newCampaignName || ""}
-                            required
-                        />
-                    </div>
-                    <button type="submit">Save</button>
-                </form>
-            </section>
+                        <MyFormButton type="submit">Save</MyFormButton>
+                    </form>
+                </section> :
+            null}
         </section>
     );
 }

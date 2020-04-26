@@ -1,6 +1,5 @@
 
 export const charDefault = {
-    activeTab: "configure",
     stats: {
         active_conditions: [],
         awesome_check: 5,
@@ -57,8 +56,12 @@ export const charDefault = {
         spellcraft_mods: {},
         spellcraft_mods_total: 0,
         trained_skills: [],
-        trained_skills_num: 2,
-        trained_skills_required: {},
+        trained_skills_history: {
+            0: {
+                default1: "Choose",
+                default2: "Choose"
+            }
+        },
         vp: 9,
         vp_kits: {},
         vp_kits_total: 0,
@@ -74,3 +77,18 @@ export const charDefault = {
         xp_parcels_total: 0
     }
 };
+
+export const rollDefault = {
+    processedLocally: false,
+    processedBy: [],
+    dieModsMisc: {},
+    coasting: 0
+};
+
+export const kitDefault = {
+    benefits: {},
+    drawbacks: {},
+    prerequisites: {},
+    tags: [],
+    xp_parcels: []
+}

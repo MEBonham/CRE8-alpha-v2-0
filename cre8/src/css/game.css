@@ -1,19 +1,22 @@
-section.rolls-window .column-envelope {
-    display: flex;
-}
 
-section.rolls-window h2 {
+section.rolls-outer-window h2 {
     margin-bottom: 16px;
     font-size: 1.8rem;
     font-weight: bold;
 }
 
-section.rolls-window div.scroll-window {
-    height: 250px;
+section.rolls-outer-window div.rolls-inner-window {
+    margin-bottom: 10px;
+    height: 220px;
     overflow-y: auto;
 }
 
-section.rolls-window div.roll-display {
+section.rolls-outer-window div.float-right {
+    display: flex;
+    justify-content: flex-end;
+}
+
+div.roll-display {
     width: 100%;
     margin-bottom: 14px;
     padding: 6px;
@@ -24,23 +27,24 @@ section.rolls-window div.roll-display {
     align-items: center;
 }
 
-section.rolls-window div.roll-display h3 {
+div.roll-display h3 {
     margin-bottom: 6px;
     font-size: 1.4rem;
     font-weight: bold;
     text-align: center;
 }
 
-section.rolls-window div.roll-display .roll-result {
+div.roll-display .roll-result {
+    align-items: center;
     position: relative;
 }
 
-section.rolls-window div.roll-display .roll-result .equals {
+div.roll-display .roll-result .equals {
     position: absolute;
-    right: 22px;
+    left: -16px;
 }
 
-section.rolls-window div.roll-display p.big-num {
+div.roll-display p.big-num {
     margin: 0 2px;
     width: 24px;
     height: 24px;
@@ -50,7 +54,7 @@ section.rolls-window div.roll-display p.big-num {
     text-align: center;
 }
 
-section.rolls-window div.roll-display p.big-num.bg::after {
+div.roll-display p.big-num.bg::after {
     content: "";
     background-image: url('../media/d20-icon.png');
     background-size: cover;

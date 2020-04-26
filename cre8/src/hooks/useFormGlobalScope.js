@@ -1,23 +1,20 @@
 
-const useForm = (cb, globalInputs, setGlobalInputs) => {
+const useFormGlobalScope = (cb, globalInputs, dispatchInputsFct) => {
 
     const handleSubmit = (ev) => {
-        const savedCopy = {
-            ...globalInputs
-        };
         if (ev) {
             ev.preventDefault();
         }
-        cb(ev, savedCopy);
+        cb(ev, globalInputs);
     }
 
     const handleInputChange = (ev) => {
         ev.persist();
         const value = (ev.target.type === "checkbox") ? ev.target.checked : ev.target.value;
-        setGlobalInputs({
+        dispatchInputsFct({ type: "SET", key: "inputs", payload: {
             ...globalInputs,
             [ev.target.id]: value
-        });
+        } });
     }
 
     return {
@@ -26,4 +23,4 @@ const useForm = (cb, globalInputs, setGlobalInputs) => {
     };
 }
 
-export default useForm;
+export default useFormGlobalScope;

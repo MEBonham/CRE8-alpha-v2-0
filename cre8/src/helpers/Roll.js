@@ -1,9 +1,10 @@
 import { mineModifiers, numSort } from './Calculations';
 
 const MersenneTwister = require('mersenne-twister');
-var gen = new MersenneTwister();
 
-export const d20 = () => {
+let gen = new MersenneTwister();
+
+const d20 = () => {
     return Math.floor(20 * gen.random() + 1)
 }
 
@@ -32,6 +33,7 @@ export const roll = (dieMode, modBasic, modsMisc, coastVal) => {
         multRoll,
         natRoll,
         netMod,
-        result: Math.max(natRoll, coastVal) + netMod
+        result: Math.max(natRoll, coastVal) + netMod,
+        coastNote: coastVal > natRoll ? true : false
     };
 }

@@ -29,7 +29,7 @@ export const mineModifiers = (modsObj) => {
     const bonusTypes = Object.keys(modsObj);
     bonusTypes.forEach(type => {
         const sources = Object.keys(modsObj[type]);
-        if (type === "circumstance") {
+        if (type === "circumstance" || type === "untyped") {
             sources.forEach(source => {
                 total += parseInt(modsObj[type][source].num);
             });
@@ -54,26 +54,22 @@ const mineParcels = (parcelsObj) => {
     return 0;
 }
 
-export const mineTrainedSkillsRequired = (trainedReqObj) => {
-    const result = [];
-    const sources = Object.keys(trainedReqObj);
-    sources.forEach(source => {
-        const skillsArr = trainedReqObj[source].skills;
-        skillsArr.forEach(skill => {
-            if (!result.includes(skill)) {
-                result.push(skill);
-            }
-        });
-    });
-    return result;
-}
+// export const mineTrainedSkillsRequired = (trainedReqObj) => {
+//     const result = [];
+//     const sources = Object.keys(trainedReqObj);
+//     sources.forEach(source => {
+//         const skillsArr = trainedReqObj[source].skills;
+//         skillsArr.forEach(skill => {
+//             if (!result.includes(skill)) {
+//                 result.push(skill);
+//             }
+//         });
+//     });
+//     return result;
+// }
 
 export const numSort = (numArr) => {
     return numArr.sort((a, b) => { return a - b });
-}
-
-export const updateBaseXp = (statsObj) => {
-    return updateXP(statsObj);
 }
 
 export const updateGoodSave = (statsObj) => {
@@ -113,15 +109,24 @@ export const updateGoodSave = (statsObj) => {
     }
     const fortitude_mods = {
         ...statsObj.fortitude_mods,
-        base: fortMod
+        base: {
+            ...statsObj.fortitude_mods.base,
+            fortMod
+        }
     };
     const reflex_mods = {
         ...statsObj.reflex_mods,
-        base: refMod
+        base: {
+            ...statsObj.reflex_mods.base,
+            refMod
+        }
     };
     const willpower_mods = {
         ...statsObj.willpower_mods,
-        base: willMod
+        base: {
+            ...statsObj.willpower_mods.base,
+            willMod
+        }
     };
     const fortitude_base_total = heroic_bonus + mineModifiers({ base: fortMod });
     const reflex_base_total = heroic_bonus + mineModifiers({ base: refMod });
@@ -233,23 +238,32 @@ const updateSkillMods = (statsObj) => {
 export const updateSkillRanks = (statsObj) => {
     const skill_ranks = {};
     gc.skills_list.forEach(skill => {
-        if (statsObj.trained_skills.includes(skill)) {
-            skill_ranks[skill] = 2;
-        } else {
             skill_ranks[skill] = 0;
-        }
     });
-    for (let i = 0; i < Math.min(statsObj.skill_ranks_history.length, statsObj.level_max8); i++) {
-        console.log(statsObj.skill_ranks_history);
-        const level_history = statsObj.skill_ranks_history[i];
-        level_history.forEach(skill => {
-            skill_ranks[skill] += 1;
-        });
+
+    const trained_skills = [];
+    for (let i = 0; i < statsObj.level_max8; i++) {
+        if (statsObj.trained_skills_history[i]) {
+            Object.keys(statsObj.trained_skills_history[i]).forEach(src => {
+                const skill = statsObj.trained_skills_history[i][src];
+                if (gc.skills_list.includes(skill) && !trained_skills.includes(skill)) {
+                    trained_skills.push(skill);
+                    skill_ranks[skill] += gc.trained_skill_extra_ranks;
+                }
+            })
+        }
+        if (statsObj.skill_ranks_history[i]) {
+            for (let j = 0; j < gc.skill_ranks_per_level; j++) {
+                if (statsObj.skill_ranks_history[i][j] && gc.skills_list.includes(statsObj.skill_ranks_history[i][j])) {
+                    skill_ranks[statsObj.skill_ranks_history[i][j]] += 1;
+                }
+            }
+        }
     }
     const maxUntrained = statsObj.level_max8;
     const maxTrained = maxUntrained + gc.trained_skill_extra_ranks;
     gc.skills_list.forEach(skill => {
-        if (statsObj.trained_skills.includes(skill)) {
+        if (trained_skills.includes(skill)) {
             skill_ranks[skill] = Math.min(skill_ranks[skill], maxTrained);
         } else {
             skill_ranks[skill] = Math.min(skill_ranks[skill], maxUntrained);
@@ -257,6 +271,7 @@ export const updateSkillRanks = (statsObj) => {
     });
     let result = {
         ...statsObj,
+        trained_skills,
         skill_ranks
     };
     return updateSkillMods(result);
@@ -286,7 +301,7 @@ const updateVpMax = (statsObj) => {
     };
 }
 
-const updateXP = (statsObj) => {
+export const updateXp = (statsObj) => {
     const xpPerParcel = gc.xp_per_parcel;
 
     const origLevel = statsObj.level;

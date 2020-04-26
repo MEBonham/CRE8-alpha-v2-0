@@ -1,74 +1,67 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { useLocation, Switch, Route } from 'react-router-dom';
-import GlobalWrapper from '../hooks/Store';
+import { Route, Switch, useLocation } from 'react-router-dom';
 
-import StateHolder from './StateHolder';
+import GlobalWrapper from './GlobalWrapper';
+import Guarded from './auth/Guarded';
+import ReverseGuarded from './auth/ReverseGuarded';
+import StateLoader from './invisible/StateLoader';
+import StateSaver from './invisible/StateSaver';
+import RollerEngine from './invisible/RollerEngine';
+import FctInitiator from './invisible/FctInitiator';
 import Header from './header/Header';
 import Footer from './footer/Footer';
-import Guarded from './Guarded';
 import Home from './other/Home';
 import NewCharForm from './newchar/NewCharForm';
-import CharSheetMain from './charsheet/CharSheetMain';
+import CharSheetShell from './charsheet/CharSheetShell';
 import CharMenu from './other/CharMenu';
-import RollsDisplay from './game/RollsDisplay';
-import Testing from './Testing';
+import UserSettings from './auth/UserSettings';
 import ForgotPassword from './auth/ForgotPassword';
 import Login from './auth/Login';
 import Register from './auth/Register';
-import Private from './auth/Private';
-import Settings from './other/Settings';
-
+import RollsDisplay from './game/RollsDisplay';
+import Code404 from './other/Code404';
 import '../css/App.css';
 
 const App = () => {
-
+    const FOOTER_HEIGHT_PX = 21;
+    const [styleObj, setStyleObj] = useState({ height: "700px" });
     useEffect(() => {
-        console.log("rerendering");
+        const bodyHeight = document.querySelector("body").offsetHeight;
+        const headerHeight = document.querySelector(".App > header").offsetHeight;
+        setStyleObj({ height: `${bodyHeight - headerHeight - FOOTER_HEIGHT_PX}px` });
     }, [])
 
-    const firstLoad = useRef(true);
-    const [bodyHeight, setBodyHeight] = useState(900);
-    const [headerHeight, setHeaderHeight] = useState(200);
-    const styleObj = {height: (bodyHeight - headerHeight - 21) + "px"};
+    const { pathname } = useLocation();
+    const scrollContainer = useRef(null);
     useEffect(() => {
-        if (firstLoad.current) {
-            setBodyHeight(document.querySelector("body").offsetHeight);
-            setHeaderHeight(document.querySelector(".main-page-header").offsetHeight);
+        scrollContainer.current.scroll(0, 0);
+    }, [pathname]);
 
-            firstLoad.current = false;
-        }
-    }, []);
-
-    // const { pathname } = useLocation();
-    // const scrollContainer = useRef(null);
-    // useEffect(() => {
-    //     scrollContainer.current.scroll(0, 0);
-    // }, [pathname]);
-
-    return (
+    return(
         <div className="App">
             <GlobalWrapper>
-                {/* <StateHolder /> */}
+                <StateLoader />
+                <StateSaver />
+                <RollerEngine />
+                <FctInitiator />
                 <Header />
-                <div className="main-envelope" style={styleObj}>
-                    {/* <div className="main-contents" ref={scrollContainer}> */}
-                    <div className="main-contents">
+                <div className="main-envelope columns" style={styleObj}>
+                    <div className="contents" ref={scrollContainer}>
                         <Switch>
                             <Route exact path="/" component={Home} />
                             <Route path={["/index", "/index.html"]} component={Home} />
                             <Guarded path="/characters/new"><NewCharForm /></Guarded>
-                            <Route path="/characters/:slug" component={CharSheetMain} />
+                            <Route path="/characters/:slug" component={CharSheetShell} />
                             <Route path="/characters" component={CharMenu} />
-                            <Route path="/login/forgot" component={ForgotPassword} />
-                            <Route path="/login" component={Login} />
-                            <Route path="/register" component={Register} />
-                            <Guarded path="/private"><Private /></Guarded>
-                            <Guarded path="/user/settings"><Settings /></Guarded>
+                            <Guarded path="/user/settings"><UserSettings /></Guarded>
+                            <ReverseGuarded path="/login/forgot"><ForgotPassword /></ReverseGuarded>
+                            <ReverseGuarded path="/login"><Login /></ReverseGuarded>
+                            <ReverseGuarded path="/register"><Register /></ReverseGuarded>
+                            <Route component={Code404} />
                         </Switch>
                     </div>
-                    <div className="main-sidebar">
+                    <div className="sidebar">
                         <RollsDisplay />
-                        <Testing />
                     </div>
                 </div>
                 <Footer />

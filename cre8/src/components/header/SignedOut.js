@@ -1,46 +1,33 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect, useContext } from 'react';
 import { NavLink } from 'react-router-dom';
+import { Store } from '../GlobalWrapper';
 
 import profileButton from '../../media/profile-icon.png';
 
 const SignedOut = () => {
-
-    const delayMilliseconds = 50;
-    let lastClick = Date.now();
-
-    const [menuOpen, setMenuOpen] = useState(false);
-
-    const toggle = () => {
-        setMenuOpen(!menuOpen);
+    const [state, dispatch] = useContext(Store);
+    const toggle = (ev) => {
+        dispatch({ type: "SET", key: "userSettingsMenuOpen", payload: !state.userSettingsMenuOpen });
     }
-
-    const clickToggle = (ev) => {
-        if (Date.now() - lastClick >= delayMilliseconds) {
-            lastClick = Date.now();
-            toggle();
-        }
-    }
-
-    const closeMenu = (ev) => {
-        if (!ev.target.matches(".blockclick")) {
-            setMenuOpen(false);
-        }
-    }
-
     useEffect(() => {
-        document.querySelector('#root').addEventListener('click', closeMenu);
+        const closeUserMenu = (ev) => {
+            if (!ev.target.matches(".blockclick-user-menu")) {
+                dispatch({ type: "SET", key: "userSettingsMenuOpen", payload: false });
+            }
+        }
+        document.querySelector("body").addEventListener('click', closeUserMenu);
         return () => {
-            document.querySelector('#root').removeEventListener('click', closeMenu);
+            document.querySelector("body").removeEventListener('click', closeUserMenu);
         };
-    }, [])
+    }, [dispatch])
 
-    return(
-        <div className="profile signedout">
-            <img className="profile-button" onClick={clickToggle} src={profileButton} alt="User Menu" />
-            {menuOpen ? 
+    return (
+        <div className="profile signed-out">
+            <img onClick={toggle} src={profileButton} alt="User Menu" className="blockclick-user-menu" />
+            {state.userSettingsMenuOpen ?
                 <nav>
-                    <NavLink to="/login">Login</NavLink>
-                    <NavLink to="/register">Register</NavLink>
+                    <NavLink to="/login" className="blockclick-user-menu">Login</NavLink>
+                    <NavLink to="/register" className="blockclick-user-menu">Register</NavLink>
                 </nav> : null}
         </div>
     );

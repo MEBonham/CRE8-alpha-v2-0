@@ -1,30 +1,71 @@
-import React, { useState, useEffect } from 'react';
-import useGlobal from '../../hooks/useGlobal';
+import React, { useState, useEffect, useContext } from 'react';
+
+import { Store } from '../GlobalWrapper';
+import useLsPersistedState from '../../hooks/useLsPersistedState';
 
 const CharSheetTabs = () => {
-    const classInactive = "char-sheet-tab";
-    const classActive = "char-sheet-tab active";
+    const [state, dispatch] = useContext(Store);
+    const LS_KEY = "activeTabs";
+    const CLASS_INACTIVE = "one-tab";
+    const CLASS_ACTIVE = "one-tab active";
 
-    const [cur, setCur] = useGlobal("cur");
-    const [tab, setTab] = useState(null);
+    const [activeTabs, setActiveTabs] = useLsPersistedState(LS_KEY, {});
+    const [userId, setUserId] = useState("guest");
     useEffect(() => {
-        setTab(cur.activeTab);
-    }, [cur])
+        const newUserId = state.user ? state.user.uid : "guest";
+        if (!activeTabs[newUserId]) {
+            setActiveTabs({
+                ...activeTabs,
+                [newUserId]: {}
+            })
+        }
+        setUserId(newUserId);
+    }, [activeTabs, setActiveTabs, state.user])
+
+    useEffect(() => {
+        if (state.cur && activeTabs[userId]) {
+            dispatch({ type: "SET", key: "charSheetTab", payload: (
+                activeTabs[userId][state.cur.id] ? activeTabs[userId][state.cur.id] : null
+            ) });
+        }
+    }, [activeTabs, dispatch, state.cur, userId])
+
+    useEffect(() => {
+        const defaultString = (state.editPrivilege ? "configure" :"play");
+        if (state.cur && activeTabs[userId] && !activeTabs[userId][state.cur.id]) {
+            setActiveTabs({
+                ...activeTabs,
+                [userId]: {
+                    ...activeTabs[userId],
+                    [state.cur.id]: defaultString
+                }
+            });
+        }
+        if (state.cur && !state.charSheetTab) {
+            dispatch({ type: "SET", key: "charSheetTab", payload: defaultString });
+        }
+    }, [activeTabs, dispatch, setActiveTabs, state.charSheetTab, state.cur, state.editPrivilege, userId])
 
     const tabClick = (ev) => {
-        const setStr = ev.target.id.split("_")[1];
-        setCur({
-            ...cur,
-            activeTab: setStr
-        });
+        if (state.cur) {
+            const setStr = ev.target.id.split("_")[2];
+            dispatch({ type: "SET", key: "charSheetTab", payload: setStr });
+            setActiveTabs({
+                ...activeTabs,
+                [userId]: {
+                    ...activeTabs[userId],
+                    [state.cur.id]: setStr
+                }
+            });
+        }
     }
 
     return(
         <div className="char-sheet-tabs">
-            <span onClick={tabClick} id="main-tab_play" className={tab === "play" ? classActive : classInactive}>Play</span>
-            <span onClick={tabClick} id="main-tab_configure" className={tab === "configure" ? classActive : classInactive}>Configure</span>
-            <span onClick={tabClick} id="main-tab_bio" className={tab === "bio" ? classActive : classInactive}>Bio</span>
-            <span onClick={tabClick} id="main-tab_+library" className={tab === "+library" ? classActive : classInactive}>+Library</span>
+            <span onClick={tabClick} id="meb_mainTab_play" className={state.charSheetTab === "play" ? CLASS_ACTIVE : CLASS_INACTIVE}>Play</span>
+            <span onClick={tabClick} id="meb_mainTab_configure" className={state.charSheetTab === "configure" ? CLASS_ACTIVE : CLASS_INACTIVE}>Configure</span>
+            <span onClick={tabClick} id="meb_mainTab_bio" className={state.charSheetTab === "bio" ? CLASS_ACTIVE : CLASS_INACTIVE}>Bio</span>
+            <span onClick={tabClick} id="meb_mainTab_+library" className={state.charSheetTab === "+library" ? CLASS_ACTIVE : CLASS_INACTIVE}>+Library</span>
         </div>
     );
 }

@@ -1,14 +1,18 @@
-import React from 'react';
-import useGlobal from '../../hooks/useGlobal';
+import React, { useContext } from 'react';
+
+import { Store } from '../GlobalWrapper';
 
 const Bio = () => {
-    const [cur] = useGlobal("cur");
-    return(
-        <>
+    const [state] = useContext(Store);
+
+    return (
+        <header>
             <header>
-                <h1 className="char-sheet-name">{cur.name}</h1>
+                <div className="meb-contain-edit">
+                    <h1 onClick={state.toggleEditing} id="meb_tog_name">{state.cur.name}</h1>
+                </div>
             </header>
-        </>
+        </header>
     );
 }
 

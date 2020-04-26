@@ -1,32 +1,35 @@
-import React, { useState } from 'react';
-import { Redirect } from 'react-router-dom';
-import useGlobal from '../../hooks/useGlobal';
-import fb from '../../fbConfig';
+import React, { useState, useEffect, useRef } from 'react';
 
+import fb from '../../fbConfig';
 import useForm from '../../hooks/useForm';
 
 const ForgotPassword = () => {
-
-    const [user] = useGlobal("user");
     const [errorMessage, setErrorMessage] = useState("");
-    const [ confirmMessage, setConfirmMessage ] = useState("");
+    const [confirmMessage, setConfirmMessage] = useState("");
 
-    const resetPw = () => {
-        fb.auth.sendPasswordResetEmail(inputs.email)
-            .then(() => {
-                setConfirmMessage("Password Reset email sent.");
-            })
-            .catch(err => {
+    const _isMounted = useRef(false);
+    useEffect(() => {
+        _isMounted.current = true;
+        return (() => {
+            _isMounted.current = false;
+        });
+    }, [])
+
+    const resetPw = async () => {
+        try {
+            await fb.auth.sendPasswordResetEmail(inputs.email)
+            if (_isMounted) setConfirmMessage("Password Reset email sent. Assuming Google's API worked. I've found it unreliable.");
+        } catch(err) {
+            if (_isMounted) {
                 setErrorMessage("An error occurred. Please try again later.");
                 console.log("Error:", err);
-            });
+            }
+        };
     }
-    
     const { inputs, handleInputChange, handleSubmit } = useForm(resetPw);
 
-    let component = user ? 
-        <Redirect to="/" /> :
-        <form onSubmit={handleSubmit} className="login-form normal-padding">
+    return (
+        <form onSubmit={handleSubmit} className="primary-content content-padding login-form rows">
             <h1>Forgot Password</h1>
             <div>
                 <label htmlFor="email">Email</label>
@@ -39,11 +42,10 @@ const ForgotPassword = () => {
                 />
             </div>
             <button type="submit">Reset Password</button>
-            <p className="error-message buffer">{errorMessage}</p>
-            <p className="buffer">{confirmMessage}</p>
-        </form>;
-
-    return component;
+            {errorMessage ? <p className="buffer-above error-message">{errorMessage}</p> : null}
+            {confirmMessage ? <p className="buffer-above">{confirmMessage}</p> : null}
+        </form>
+    );
 }
 
 export default ForgotPassword;

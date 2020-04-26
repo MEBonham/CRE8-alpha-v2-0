@@ -1,118 +1,109 @@
-import React, { useState, useEffect, useRef } from 'react';
+// import React, { useState, useEffect, useRef, useContext, useCallback } from 'react';
+import React, { useState, useEffect, useContext, useCallback } from 'react';
 import { Link } from 'react-router-dom';
+
+import { Store } from '../GlobalWrapper';
 import fb from '../../fbConfig';
-import useGlobal from '../../hooks/useGlobal';
+import MyLink from '../ui/MyLink';
 
 const CharMenu = () => {
+    const [state, dispatch] = useContext(Store);
+    // Close menu that presumably led you here
+    useEffect(() => {
+        dispatch({ type: "SET", key: "mainNavMenuOpen", payload: false });
+    }, [dispatch])
 
-    const db = fb.db;
-    const [userInfo] = useGlobal("user");
-    const [usersCampaigns] = useGlobal("usersCampaigns");
-
-    const [characters, setCharacters] = useState([]);
     const [orphans, setOrphans] = useState([]);
-    // const [campaigns, setCampaigns] = useState([]);
-    // const campaignStream = useRef(null);
-    const charStream = useRef(null);
-    useEffect(() => {
-        charStream.current = db.collection("characters")
-            // .onSnapshot(querySnapshot => {
-            .get().then(querySnapshot => {
-                const charsData = [];
-                querySnapshot.forEach(doc => {
-                    charsData.push({
-                        id: doc.id,
-                        ...doc.data()
-                    });
+    const gatherChars = useCallback(async () => {
+        const saveCharsToArr = (querySnapshot) => {
+            const charsData = [];
+            querySnapshot.forEach(doc => {
+                charsData.push({
+                    id: doc.id,
+                    ...doc.data()
                 });
-                setCharacters(charsData);
             });
-        
-        // campaignStream.current = db.collection("campaigns")
-        //     // .onSnapshot(querySnapshot => {
-        //     .get().then(querySnapshot => {
-        //         const campaignData = [];
-        //         querySnapshot.forEach(campaign => {
-        //             campaignData.push({
-        //                 id: campaign.id,
-        //                 ...campaign.data()
-        //             });
-        //         });
-        //         if (userInfo) {
-        //             setCampaigns(campaignData.filter(campaignObj => campaignObj.members.indexOf(userInfo.uid) >= 0));
-        //         }
-        //     });
-    
-        // return () => {
-        //     charStream.current();
-        //     // campaignStream.current();
-        // };
-    }, [db, userInfo]);
-
-    useEffect(() => {
-        if (userInfo) {
-            setOrphans(characters.filter(charData => charData.campaigns.length === 0 && charData.owner === userInfo.uid));
+            dispatch({ type: "SAVE_CHARACTERS_TO_CACHE", payload: charsData });
         }
-    }, [characters, userInfo])
+        // charStream.current = fb.db.collection("characters").onSnapshot(querySnapshot => {
+        //     saveChars(querySnapshot);
+        // }).catch((err) => {
+        //     console.log("Error:", err);
+        // });
+        try {
+            const query = await fb.db.collection("characters").get();
+            saveCharsToArr(query);
+        } catch(err) {
+            console.log("Error:", err);
+        }
+    }, [dispatch]);
+    useEffect(() => {
+        if (state.shouldUpdateCharacterCache) {
+            gatherChars();
+        }
+        // return(() => {
+        //     if (charStream.current) {
+        //         charStream.current();
+        //     }
+        // });
+    }, [gatherChars, state.shouldUpdateCharacterCache])
+    useEffect(() => {
+        if (state.user) {
+            setOrphans(state.characterCache.filter(charData => charData.campaigns.length === 0 && charData.owner === state.user.uid));
+        } else {
+            setOrphans([]);
+        }
+    }, [state.characterCache, state.user])
 
     const [campaignIds, setCampaignIds] = useState([]);
     useEffect(() => {
-        const usersCampaignsCopy = { ...usersCampaigns };
+        const usersCampaignsCopy = { ...state.activeCampaigns };
         delete usersCampaignsCopy.standard;
         delete usersCampaignsCopy.public;
-        if (Object.keys(usersCampaignsCopy)) setCampaignIds(Object.keys(usersCampaignsCopy));
-    }, [usersCampaigns])
+        if (Object.keys(usersCampaignsCopy).length) setCampaignIds(Object.keys(usersCampaignsCopy));
+    }, [state.activeCampaigns])
+
+    // Alphabetize Public characters
+    const compareFct = (a, b) => {
+        const nameA = a.name.toUpperCase();
+        const nameB = b.name.toUpperCase();
+        if (nameA < nameB) {
+          return -1;
+        }
+        if (nameA > nameB) {
+          return 1;
+        }
+        return 0;
+    }
 
     return(
-        <div className="main normal-padding char-menu">
-            <h1>Character Library</h1>
-            <div className="my-button spacing-14px">
-                <Link to="/characters/new">New Character</Link>
-            </div>
-            <section>
-                {campaignIds.length ? <h2>Your Campaign Characters</h2> : null}
-                {campaignIds.map((campaignId, i) => {
-                    const campaignObj = usersCampaigns[campaignId];
-                    return (
-                        <section key={campaignId} className={i + 1 < campaignIds.length ? "not-last" : null}>
-                            <h3>{campaignObj.name}</h3>
-                            {characters.filter(charData => charData.campaigns.includes(campaignId))
-                                .map(charData => {
-                                    const toAddress = `/characters/${charData.id}`;
-                                    return(
-                                        <p key={charData.id}>
-                                            <Link to={toAddress}>{charData.name}</Link>
-                                        </p>
-                                    );
-                                })}
-                        </section>
-                    );
-                })}
+        <div className="primary-content content-padding char-library">
+            <section className="rows">
+                <h1>Character Library</h1>
+                <MyLink to="/characters/new">New Character</MyLink>
             </section>
-            <section>
-                <h2>Standard Characters</h2>
-                {characters.filter(charData => charData.campaigns.indexOf("standard") >= 0)
-                    .map(charData => {
-                        const toAddress = `/characters/${charData.id}`;
-                        return(
-                            <p key={charData.id}>
-                                <Link to={toAddress}>{charData.name}</Link>
-                            </p>
-                        );
+            {campaignIds.length ?
+                <section>
+                    <h2>Your Campaign Characters</h2>
+                    {campaignIds.map((campaignId, i) => {
+                        const campaignObj = state.activeCampaigns[campaignId];
+                        return (campaignObj ?
+                            <section key={campaignId} className={i + 1 < campaignIds.length ? "not-last" : null}>
+                                <h3>{campaignObj.name}</h3>
+                                {state.characterCache.filter(charData => charData.campaigns.includes(campaignId))
+                                    .map(charData => {
+                                        const toAddress = `/characters/${charData.id}`;
+                                        return (
+                                            <p key={charData.id}>
+                                                <Link to={toAddress}>{charData.name}</Link>
+                                            </p>
+                                        );
+                                    })}
+                            </section> :
+                        null);
                     })}
-            </section>
-            <section>
-                <h2>Other Public Characters</h2>
-                {characters.filter(charData => charData.campaigns.indexOf("public") >= 0)
-                    .map(charData => {
-                        const toAddress = `/characters/${charData.id}`;
-                        return(
-                            <p key={charData.id}>
-                                <Link to={toAddress}>{charData.name}</Link>
-                            </p>
-                        );
-                    })}
-            </section>
+                </section> :
+            null}
             {orphans.length ?
                 <section>
                     <h2>Your Orphaned Characters</h2>
@@ -125,8 +116,33 @@ const CharMenu = () => {
                         );
                     })}
                 </section> :
-                null
-            }
+            null}
+            <section>
+                <h2>Standard Characters</h2>
+                {state.characterCache.filter(charData => charData.campaigns.includes("standard")).sort(compareFct)
+                    .map(charData => {
+                        const toAddress = `/characters/${charData.id}`;
+                        return (
+                            <p key={charData.id}>
+                                <Link to={toAddress}>{charData.name}</Link>
+                            </p>
+                        );
+                    })
+                }
+            </section>
+            <section>
+                <h2>Other Public Characters</h2>
+                {state.characterCache.filter(charData => charData.campaigns.includes("public"))
+                    .map(charData => {
+                        const toAddress = `/characters/${charData.id}`;
+                        return (
+                            <p key={charData.id}>
+                                <Link to={toAddress}>{charData.name}</Link>
+                            </p>
+                        );
+                    })
+                }
+            </section>
         </div>
     );
 }

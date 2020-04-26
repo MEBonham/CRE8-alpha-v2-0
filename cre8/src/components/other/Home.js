@@ -1,11 +1,12 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
+
+import MyLink from '../ui/MyLink';
 
 const Home = () => {
-    return(
-        <div className="normal-padding main">
+    return (
+        <div className="primary-content content-padding home-page rows">
             <h1>Welcome!</h1>
-            <p><Link to="/characters">Characters</Link></p>
+            <MyLink to="/characters">Characters</MyLink>
         </div>
     );
 }

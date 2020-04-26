@@ -1,6 +1,41 @@
+.columns {
+    display: flex;
+    flex-direction: row;
+}
+
+.rows {
+    display: flex;
+    flex-direction: column;
+}
+
+.my-button {
+    margin-bottom: 2px;
+    padding: 0;
+    border: none;
+    background-color: #91a6c7;
+    border-radius: 10px;
+    box-shadow: 2px 2px 6px #111111;
+    cursor: pointer;
+}
+
+.my-button a,
+.my-button span {
+    display: flex;
+    white-space: nowrap;
+    padding: 6px 12px;
+    font-size: 1.4rem;
+    font-weight: bold;
+    color: #eeeeee;
+}
+
+.my-button.external-link a img {
+    margin-left: 8px;
+    width: 16px;
+}
+
 .App {
     width: 92%;
-    max-width: 1000px;
+    max-width: 1100px;
     height: calc(100vh - 8px);
     margin: 4px auto;
     border-radius: 12px;
@@ -9,47 +44,17 @@
     overflow: hidden;
 }
 
-.App .main-envelope {
-    display: flex;
-    width: 100%;
-}
-
-.App .main-envelope .main-contents {
+.App .main-envelope .contents {
     width: 70%;
     overflow-y: auto;
-    overflow-x: hidden;
 }
 
-.App .main-envelope .main-sidebar {
+.App .main-envelope .sidebar {
     width: 30%;
     background-color: #aaaaaa;
-    overflow-y: auto;
-    overflow-x: hidden;
 }
 
-.App .my-button {
-    margin-bottom: 2px;
-    background-color: #91a6c7;
-    border-radius: 10px;
-    box-shadow: 2px 2px 6px #111111;
-    display: flex;
-    cursor: pointer;
-}
-
-.App .spacing-14px {
-    margin-bottom: 14px;
-}
-
-.App .my-button a,
-.App .my-button span {
-    white-space: nowrap;
-    padding: 6px 12px;
-    font-size: 1.4rem;
-    font-weight: bold;
-    color: #dddddd;
-}
-
-.App .normal-padding {
+.App .content-padding {
     padding: 20px 4%;
 }
 
@@ -57,39 +62,194 @@
     padding: 14px 6%;
 }
 
-.main-envelope h1 {
+.App .primary-content > section {
+    margin-bottom: 14px;
+}
+
+.App .primary-content h1 {
     font-size: 2.8rem;
     font-weight: bold;
     margin-bottom: 12px;
 }
 
-.register-form div,
-.login-form div,
-.new-char-form > div,
-.new-char-form > div > div,
-.manage-campaigns section form div {
+.App .primary-content h2 {
+    font-size: 2.2rem;
+    font-weight: bold;
+    margin-bottom: 8px;
+}
+
+.App .primary-content h3 {
+    font-size: 1.8rem;
+    font-weight: bold;
+    margin-bottom: 8px;
+}
+
+.App .primary-content p,
+.user-management-table {
+    font-size: 1.4rem;
+}
+
+.home-page,
+.char-library > section,
+.manage-campaigns {
+    align-items: flex-start;
+}
+
+.char-library section section.not-last {
+    margin-bottom: 20px;
+}
+
+.char-library p {
+    margin-bottom: 3px;
+}
+
+section.settings-button-bank {
+    margin-bottom: 6px;
+    display: flex;
+    flex-wrap: wrap;
+}
+
+section.settings-button-bank .my-button {
+    margin-right: 10px;
+    margin-bottom: 6px;
+}
+
+.manage-campaigns section {
+    width: calc(60% + 20px);
+    margin-bottom: 20px;
+    padding: 10px 10%;
+    align-items: flex-start;
+}
+
+.manage-campaigns section.one-campaign {
+    border: 1px solid gray;
+    box-shadow: 2px 2px 6px gray;
+}
+
+.manage-campaigns section form select {
+    margin-right: 8px;
+}
+
+.manage-campaigns section ul {
+    width: 100%;
+    margin-top: 10px;
+    justify-content: space-around;
+    flex-wrap: wrap;
+}
+
+.manage-campaigns section li {
+    margin-right: 20px;
+}
+
+section.user-management {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+}
+
+.user-management-table {
+    margin-bottom: 10px;
+    border: 1px solid gray;
+}
+
+.user-management-table th {
+    padding: 4px 20px 7px 0;
+    font-weight: bold;
+}
+
+.user-management-table tr {
+    margin-bottom: 4px;
+    padding-bottom: 4px;
+    border-bottom: 1px solid gray;
+}
+
+.user-management-table td {
+    padding: 0 20px 7px 0;
+}
+
+.user-management-table td .meb-contain-popout {
+    width: 70px;
+    height: 16px;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    /* align-items: flex-start; */
+}
+
+.user-management-table td .meb-contain-popout .popout {
+    display: none;
+}
+
+.user-management-table td .meb-contain-popout .popout.open {
+    display: flex;
+    position: absolute;
+    top: calc(100% + 6px);
+    left: -6px;
+    background-color: #666666;
+    border: 2px solid #444444;
+    border-radius: 2px;
+    z-index: 2;
+}
+
+.user-management-table td .meb-contain-popout .popout.open button {
+    margin: 0 1px;
+}
+
+.App form.login-form,
+.App form.new-char-form {
+    align-items: flex-start;
+}
+
+.App form.login-form > div,
+.App form.new-char-form > div,
+.manage-campaigns section.new-campaign form > div {
     margin-bottom: 14px;
     display: flex;
     flex-direction: column;
     align-items: flex-start;
 }
 
-.register-form div label,
-.login-form div label,
-.login-form a,
+.App form.login-form > div label,
 .manage-campaigns section form div label {
     margin-bottom: 2px;
     font-size: 1.4rem;
 }
 
-.new-char-form label {
+.App form.login-form .buffer-above,
+.App form.new-char-form .buffer-above {
+    margin-top: 14px;
+}
+
+.App form.login-form p,
+.App form.new-char-form p {
+    font-size: 1.2rem;
+}
+
+.App form.login-form p.error-message,
+.App form.new-char-form p.error-message {
+    font-weight: bold;
+    color: #990000;
+}
+
+.App form.new-char-form {
+    width: 84%;
+}
+
+.App form.new-char-form > div > div {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+}
+
+.App form.new-char-form > div label {
     margin-bottom: 4px;
     font-size: 1.4rem;
     font-weight: bold;
+    line-height: 1.2;
 }
 
-.new-char-form > div.column-envelope {
-    display: flex;
+.App form.new-char-form > div.columns {
+    width: 100%;
     flex-direction: row;
     justify-content: space-between;
     align-items: center;
@@ -97,7 +257,6 @@
 
 .new-char-form ul {
     list-style: none;
-    margin-bottom: 8px;
 }
 
 .new-char-form ul li {
@@ -109,131 +268,6 @@
     top: 2px;
 }
 
-.main > section,
-.register-form button,
-.login-form button,
-.new-char-form button,
-.manage-campaigns section form button {
-    margin-bottom: 14px;
-}
-
-.register-form p.error-message
-.login-form p.error-message,
-.new-char-form p.error-message {
-    font-size: 1.2rem;
-    font-weight: bold;
-    color: #990000;
-}
-
-.login-form p {
-    font-size: 1.2rem;
-}
-
-.manage-campaigns section {
-    margin-bottom: 20px;
-    padding: 10px 50px;
-    border: 1px solid gray;
-    box-shadow: 2px 2px 6px gray;
-}
-
-.manage-campaigns .one-campaign select {
-    margin-right: 6px;
-}
-
-.manage-campaigns .one-campaign div {
-    margin-bottom: 4px;
-    display: flex;
-    align-items: center;
-}
-
-.manage-campaigns .one-campaign ul {
-    display: flex;
-    justify-content: space-around;
-    flex-wrap: wrap;
-}
-
-.manage-campaigns .one-campaign ul li {
-    margin-right: 20px;
-}
-
-.manage-campaigns section form {
-    display: flex;
-    align-items: flex-end;
-}
-
-.char-menu section section.not-last {
-    margin-bottom: 14px;
-}
-
-.main {
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-}
-
-.main > section h2 {
-    font-size: 2rem;
-    font-weight: bold;
-    margin-bottom: 8px;
-}
-
-.main > section h3,
-.new-char-form h3 {
-    font-size: 1.8rem;
-    font-weight: bold;
-    margin-bottom: 8px;
-}
-
-.main p,
-.main .user-management-table {
-    font-size: 1.4rem;
-}
-
-.main .user-management-table {
-    margin-bottom: 10px;
-    border: 1px solid gray;
-}
-
-.main .user-management-table th {
-    padding: 4px 20px 7px 0;
-}
-
-.main .user-management-table tr {
-    margin-bottom: 4px;
-    padding-bottom: 4px;
-    border-bottom: 1px solid gray;
-}
-
-.main .user-management-table th {
-    font-weight: bold;
-}
-
-.main .user-management-table td {
-    padding: 0 20px 7px 0;
-}
-
-.main .user-management-table td .popout-system {
-    width: 70px;
-    height: 16px;
-    position: relative;
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-}
-
-.main .user-management-table td .popout {
-    display: none;
-}
-
-.main .user-management-table td .popout.open {
-    display: flex;
-    position: relative;
-    background-color: #666666;
-    border: 2px solid #444444;
-    border-radius: 2px;
-    z-index: 1;
-}
-
-.main .user-management-table td .popout.open button {
-    margin: 0 1px;
+.code-404 h1 {
+    line-height: 1.2;
 }

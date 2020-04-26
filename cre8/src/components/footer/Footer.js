@@ -1,7 +1,6 @@
 import React from 'react';
 
 import gyzLogo from '../../media/GyzaninarLogo.png';
-
 import '../../css/footer.css';
 
 const Footer = () => {
@@ -10,7 +9,7 @@ const Footer = () => {
 
     return(
         <footer>
-            <div className="copyright">
+            <div className="columns copyright">
                 <p>&copy; {d.getFullYear()} Gyzaninar Games <strong>&middot;</strong></p>
                 <img src={gyzLogo} alt="logo" />
             </div>

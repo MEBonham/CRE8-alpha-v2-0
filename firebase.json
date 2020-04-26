@@ -1,0 +1,17 @@
+{
+  "hosting": {
+    "public": "cre8/build",
+    "ignore": [
+      "firebase.json",
+      "**/.*",
+      "**/node_modules/**"
+    ],
+    "rewrites": [ {
+      "source": "**",
+      "destination": "/index.html"
+    }, {
+      "source": "!/@(js|css)/**",
+      "destination": "/index.html"
+    } ]
+  }
+}

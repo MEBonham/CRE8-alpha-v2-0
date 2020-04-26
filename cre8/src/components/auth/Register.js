@@ -1,80 +1,77 @@
-import React, { useState, useEffect, useRef } from 'react';
-import { Redirect, useHistory } from 'react-router-dom';
-import useGlobal from '../../hooks/useGlobal';
-import fb from '../../fbConfig';
+import React, { useState, useEffect, useContext } from 'react';
+import { useHistory } from 'react-router-dom';
 
+import { Store } from '../GlobalWrapper';
+import fb from '../../fbConfig';
 import useForm from '../../hooks/useForm';
 
 const Register = () => {
-
-    const [returnToHistory, setReturnToHistory] = useState(false);
-    const navHistory = useHistory();
+    const [, dispatch] = useContext(Store);
+    // Close menu that presumably led you here
     useEffect(() => {
-        if (returnToHistory) {
-            navHistory.goBack();
-        }
-    }, [ navHistory, returnToHistory ])
-
-    const [user] = useGlobal("user");
-    const [prevUsernames, setPrevUserNames] = useState([]);
-    const [errorMessage, setErrorMessage] = useState("");
+        dispatch({ type: "SET", key: "userSettingsMenuOpen", payload: false });
+    }, [dispatch])
     
-    let unsubscribe = false;
-    useEffect(() => {
-        if (unsubscribe) {
-            return () => {
-                unsubscribe();
-            };
-        }
-    }, [unsubscribe])
+    const [errorMessage, setErrorMessage] = useState("");
 
     const db = fb.db;
-
-    const stream = useRef(null);
+    const [prevUsernames, setPrevUserNames] = useState([]);
+    const [streamOpened, setStreamOpened] = useState(false);
     useEffect(() => {
-        stream.current = db.collection("users")
+        let _isMounted = true;
+        db.collection("users")
             // .onSnapshot(querySnapshot => {
-            .get().then(querySnapshot => {
-                const usernames = [];
+            .get()
+            .then(querySnapshot => {
+                const usernames = ["Select User"];
                 querySnapshot.forEach(doc => {
                     usernames.push(doc.data().displayName);
                 });
-                setPrevUserNames(usernames);
-            });
-    
-        // return () => {
-        //     stream.current();
-        // };
-    }, [db]);
-
-    const addUserToDb = () => {
-        const { uid, email } = fb.auth.currentUser;
-        const displayName = inputs.username;
-        const data = {
-            displayName,
-            email,
-            rank: "peasant"
-        };
-        db.collection("users").doc(uid).set(data)
-            .then(() => {
-                unsubscribe = fb.auth.currentUser.updateProfile({
-                    displayName
-                })
-                .then(() => {
-                    setReturnToHistory(true);
-                });
+                if (_isMounted) {
+                    setPrevUserNames(usernames);
+                    setStreamOpened(true);
+                }
             })
-            .catch(err => {
-                console.log(err);
+            .catch((err) => {
+                if (_isMounted) {
+                    setErrorMessage(err.message || err);
+                    setStreamOpened(false);
+                }
             });
-    }
+        return(() => {
+            _isMounted = false;
+        });
+    }, [db, streamOpened]);
 
-    const registerFct = () => {
-        fb.auth.createUserWithEmailAndPassword(inputs.email, inputs.password)
-            .then(() => {
-                addUserToDb();
-            })
-            .catch(err => {
+    const navHistory = useHistory();
+    const registerFct = async (ev) => {
+        if (!streamOpened) {
+            return;
+        } else if (prevUsernames.includes(inputs.username)) {
+            if (inputs.username === "Select User") {
+                setErrorMessage("Stop trying to hack my system, you jerk!")
+            } else {
+                setErrorMessage("Duplicate username. Please try again.")
+            }
+        } else {
+            try {
+                await fb.auth.createUserWithEmailAndPassword(inputs.email, inputs.password);
+                const { uid } = await fb.auth.currentUser;
+                const displayName = inputs.username;
+                try {
+                    await db.collection("users").doc(uid).set({
+                        displayName,
+                        email: inputs.email,
+                        rank: "peasant"
+                    });
+                    await fb.auth.currentUser.updateProfile({
+                            displayName
+                    });
+                    navHistory.goBack();
+                } catch(err) {
+                    console.log("Error:", err);
+                };
+            } catch(err) {
                 if (err.code && err.code === "auth/email-already-in-use") {
                     setErrorMessage("Email already in use.");
                 } else if (err.code && err.code === "auth/weak-password") {
@@ -83,23 +80,13 @@ const Register = () => {
                     setErrorMessage("Error registering. Please try again later.");
                     console.log("Misc. error registering user:", err);
                 }
-            });
-    }
-
-    const checkUsername = () => {
-        if (!stream.current) {
-            return;
-        } else if (prevUsernames.indexOf(inputs.username) >= 0) {
-            setErrorMessage("Duplicate username. Please try again.");
-        } else {
-            registerFct();
+            };
         }
     }
-    
-    const { inputs, handleInputChange, handleSubmit } = useForm(checkUsername);
+    const { inputs, handleInputChange, handleSubmit } = useForm(registerFct);
 
-    let component = user ? <Redirect to="/" /> : 
-        <form onSubmit={handleSubmit} className="register-form normal-padding">
+    return (
+        <form onSubmit={handleSubmit} className="primary-content content-padding login-form rows">
             <h1>Register</h1>
             <div>
                 <label htmlFor="email">Email</label>
@@ -132,10 +119,10 @@ const Register = () => {
                 />
             </div>
             <button type="submit">Register</button>
-            {errorMessage ? <p className="error-message buffer">{errorMessage}</p> : null}
-        </form>;
-
-    return component;
+            {errorMessage ? <p className="buffer-above error-message">{errorMessage}</p> : null}
+            <p className="buffer-above">I'm going to avoid lengthy Terms Of Service if I can, but know that this site is moderated. If you choose a username that is lewd, deliberately confusable with someone else's, or otherwise troublesome, your account will be modified or deleted.</p>
+        </form>
+    );
 }
 
 export default Register;

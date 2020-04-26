@@ -1,7 +1,25 @@
-.parchment {
-    margin: 20px 0 14px;
+
+ul {
+    list-style: none;
+}
+
+.space-between {
     width: 100%;
-    padding: 14px 0 24px 6%;
+    justify-content: space-between;
+}
+
+div.char-sheet div.float-right {
+    align-items: flex-end;
+}
+
+div.char-sheet > div.float-right .my-button {
+    margin-left: 12px;
+    margin-bottom: 12px;
+}
+
+.parchment {
+    margin: 20px 0 18px;
+    width: 100%;
     border-radius: 12px 0 12px 12px;
     background-color: #d2b48c;
     background-image: url(../media/paper-texture.png);
@@ -9,29 +27,42 @@
     position: relative;
 }
 
-.parchment .column-envelope {
+.parchment .char-sheet-tabs {
+    width: 100%;
     display: flex;
-    align-items: center;
+    justify-content: flex-end;
+    position: relative;
+    top: -25px;
+    right: -1px;
 }
 
-.parchment .column-envelope.space-between {
-    justify-content: space-between;
+.parchment .char-sheet-tabs .one-tab {
+    margin: 0 1px;
+    padding: 4px 10px 5px;
+    border-radius: 12px 12px 0 0;
+    background-color: #bfa480;
+    box-shadow: 1px -1px 1px #111111;
+    font-size: 1.6rem;
+    cursor: pointer;
 }
 
-.parchment .row-envelope {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
+.parchment .char-sheet-tabs .one-tab.active {
+    background-color: #d2b48c;
+    background-image: url(../media/paper-texture.png);
+}
+
+.parchment .parchment-padding {
+    padding: 14px 6% 24px;
 }
 
 .parchment .meb-contain-edit {
     display: flex;
     flex-direction: column;
-    align-items: flex-start;
+    align-items: center;
     position: relative;
 }
 
-.parchment .editable {
+.parchment .editable-text {
     text-shadow: 1px 1px 4px rgba(17, 17, 148, 0.4);
     cursor: pointer;
 }
@@ -47,7 +78,7 @@
     border: 2px solid #444444;
     border-radius: 2px;
     position: absolute;
-    z-index: 1;
+    z-index: 2;
 }
 
 .parchment .meb-popout-edit.meb-open input {
@@ -55,102 +86,77 @@
     margin-right: 2px;
 }
 
-.float-right {
-    width: 100%;
+.parchment header header {
+    margin-bottom: 20px;
     display: flex;
-    justify-content: flex-end;
+    flex-direction: column;
+    align-items: flex-start;
 }
 
-.float-right .my-button {
-    margin-left: 14px;
-}
-
-.char-sheet-tabs {
-    width: 100%;
-    display: flex;
-    justify-content: flex-end;
-    position: relative;
-    top: -39px;
-    right: -1px;
-}
-
-.char-sheet-tabs .char-sheet-tab {
-    margin: 0 1px;
-    padding: 4px 10px 5px;
-    border-radius: 12px 12px 0 0;
-    background-color: #bfa480;
-    box-shadow: 1px -1px 1px #111111;
-    font-size: 1.6rem;
-    cursor: pointer;
-}
-
-.char-sheet-tabs .char-sheet-tab.active {
-    background-color: #d2b48c;
-    background-image: url(../media/paper-texture.png);
-}
-
-.parchment .right-padding {
-    padding-right: calc(6 / 94 * 100%);
-}
-
-.parchment h1.char-sheet-name {
+.parchment h1 {
     font-style: italic;
     margin-bottom: 6px;
 }
 
-.parchment .meb-contain-edit h1.editable {
-    display: inline-block;
-}
-
-.parchment h2.subtitle {
-    display: flex;
+.parchment h2 {
     font-size: 2rem;
-    font-weight: bold;
-}
-
-.parchment h2.section-head {
-    margin-bottom: 10px;
-    font-size: 2rem;
-    font-weight: bold;
-}
-
-.parchment header header {
-    margin-bottom: 16px;
 }
 
 .parchment .stat {
     font-size: 1.4rem;
 }
 
-.parchment .stat.float-right-element,
-.parchment .xp-button.float-right-element {
-    margin-left: 18px;
+.parchment header header .space-between {
+    align-items: center;
 }
 
-.parchment .float-left-element-space {
+.App .parchment h2.subtitle {
+    margin-bottom: 0;
+    display: flex;
+}
+
+.parchment h2.subtitle span.float-left {
     margin-right: 6px;
 }
 
-.parchment header section.good-save {
-    display: flex;
-    flex-direction: column;
+.parchment .xp-summary {
+    justify-content: flex-end;
     align-items: center;
+    flex-wrap: wrap;
+}
+
+.parchment header header .stat.float-right,
+.parchment .xp-button.float-right {
+    margin-left: 20px;
+}
+
+.parchment header section.good-save {
+    align-items: center;
+}
+
+.parchment .good-save .my-button {
+    margin: 0 2px 14px;
+}
+
+.parchment .good-save .my-button.selected,
+.parchment .build-library .my-button.selected {
+    box-shadow: 2px 2px 10px #111177;
 }
 
 .parchment header section.top-breakdowns {
     justify-content: space-around;
+    align-items: center;
     flex-grow: 2;
 }
 
-.parchment .column-envelope.breakdown {
+.parchment .breakdown.columns {
     margin-bottom: 14px;
     align-items: flex-start;
-    position: relative;
 }
 
-.parchment p.big-num,
-.parchment .equals-symbol,
-.parchment .plus-symbol {
+.App .parchment p.big-num,
+.App .parchment .equals-symbol,
+.App .parchment .plus-symbol {
     font-size: 2rem;
     font-weight: bold;
 }
@@ -175,57 +181,6 @@
 
 .parchment .fill-in p.caption {
     font-size: 1.2rem;
-}
-
-.parchment .good-save .my-button {
-    margin: 0 2px 14px;
-}
-
-.parchment .good-save .my-button.selected {
-    box-shadow: 2px 2px 10px #111177;
-}
-
-.parchment h3 {
-    margin-bottom: 10px;
-    font-size: 1.6rem;
-    font-weight: bold;
-}
-
-.parchment section.trained-skills {
-    margin-bottom: 10px;
-}
-
-.parchment h3.trained-skills {
-    margin-right: 50px;
-}
-
-.parchment .checkbox-bank {
-    flex-grow: 1;
-}
-
-.parchment .checkbox-pair div,
-.parchment section.conditions li.checkbox-pair {
-    display: flex;
-    align-items: center;
-}
-
-.parchment .checkbox-pair div input,
-.parchment table.skill-ranks-assignment select,
-.parchment section.conditions li.checkbox-pair input {
-    padding: 0;
-    box-shadow: 0 0 4px rgba(22, 22, 168, 0.4);
-    cursor: pointer;
-}
-
-.parchment .checkbox-pair div span {
-    font-size: 1.1rem;
-    margin-bottom: 2px;
-}
-
-.parchment .skill-ranks-assignment th {
-    padding-right: 8px;
-    font-size: 1.1rem;
-    font-weight: bold;
 }
 
 .parchment header div.pools-n-general {
@@ -267,7 +222,7 @@
 
 .parchment section.pools > div .bar .inner-bar {
     height: 3px;
-    display: flex;
+    /* display: flex; */
 }
 
 .parchment section.pools > div.vp .bar .inner-bar {
@@ -301,33 +256,41 @@
     font-size: 1rem;
 }
 
-.parchment section.general-rolls > div {
-    align-items: stretch;
+.parchment section.pools .meb-contain-edit form.rows {
+    align-items: center;
 }
 
-.parchment section.general-rolls > div.general-general {
+.parchment section.pools .meb-contain-edit label {
+    margin-bottom: 2px;
+    color: #bbbbbb;
+}
+
+.parchment section.general-rolls > div.general-general,
+.parchment section.skill-rolls div.skills-col-1 {
     margin-right: 12px;
     border-right: 1px solid brown;
     padding-right: 12px;
 }
 
-.parchment section.general-rolls > div.saving-throws {
+.parchment section.general-rolls > div.saving-throws,
+.parchment section.skill-rolls div.skills-col-2 {
     margin-right: 20px;
 }
 
-.parchment section.general-rolls > div > div.my-button {
+.parchment section.general-rolls > div > div.my-button,
+.parchment section.skill-rolls div > div.my-button {
     margin-bottom: 12px;
-    display: flex;
-    justify-content: center;
 }
 
-.parchment section.general-rolls > div > div.my-button span {
+.parchment section.general-rolls > div > div.my-button span,
+.parchment section.skill-rolls div > div.my-button span {
     display: flex;
     align-items: center;
     font-size: 1.2rem;
 }
 
-.parchment section.general-rolls > div > div.my-button img {
+.parchment section.general-rolls > div > div.my-button img,
+.parchment section.skill-rolls div > div.my-button img {
     margin-right: 6px;
     width: 14px;
     opacity: 0.5;
@@ -340,7 +303,7 @@
 }
 
 .parchment header section.conditions div.die-mode {
-    margin-bottom: 12px;
+    margin-bottom: 10px;
     border-bottom: 1px solid brown;
     padding-bottom: 12px;
 }
@@ -350,11 +313,8 @@
     font-size: 1.2rem;
 }
 
-.parchment header section.conditions div.die-mode div {
-    font-size: 1.4rem;
-}
-
-.parchment header section.conditions div.die-mode div input {
+.parchment header section.conditions div.die-mode div input,
+.parchment header section.conditions li input {
     position: relative;
     top: 2px;
 }
@@ -365,7 +325,83 @@
     padding-bottom: 12px;
 }
 
+.parchment header section.conditions div.die-mode .checkbox-pair,
 .parchment section.conditions li.checkbox-pair span {
     font-size: 1.4rem;
     margin-bottom: 2px;
+}
+
+section.configure-skills .trained {
+    margin-bottom: 14px;
+    display: flex;
+    align-items: center;
+}
+
+section.configure-skills .trained label {
+    margin-right: 10px;
+    font-size: 1.4rem;
+    font-weight: bold;
+}
+
+section.configure-skills .trained select {
+    margin-right: 6px;
+    position: relative;
+    top: 1px;
+}
+
+section.configure-skills .ranks-assignment table {
+    margin-bottom: 16px;
+}
+
+section.configure-skills .ranks-assignment th {
+    padding-right: 6px;
+    font-size: 1.1rem;
+    font-weight: bold;
+}
+
+section.configure-skills .ranks-assignment td select {
+    font-size: 1.2rem;
+}
+
+section.configure-skills .net-ranks-display table {
+    border-collapse: separate;
+    border-spacing: 4px 4px;
+    font-size: 1.1rem;
+}
+
+section.configure-skills .net-ranks-display th {
+    font-weight: bold;
+}
+
+section.configure-skills .net-ranks-display td {
+    text-align: center;
+}
+
+section.skill-rolls h2 {
+    text-align: center;
+    position: relative;
+    left: -17px;
+}
+
+header.build-library {
+    margin-bottom: 20px;
+}
+
+.parchment .build-library > header {
+    margin-bottom: 4px;
+}
+
+.parchment .build-library .my-button {
+    margin-right: 10px;
+}
+
+form.build-library div.rows {
+    margin-bottom: 10px;
+}
+
+form.build-library div label {
+    margin-bottom: 4px;
+    font-size: 1.4rem;
+    font-weight: bold;
+    line-height: 1.2;
 }

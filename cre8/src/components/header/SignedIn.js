@@ -1,53 +1,40 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useContext } from 'react';
 import { NavLink } from 'react-router-dom';
+import { Store } from '../GlobalWrapper';
 import fb from '../../fbConfig';
-import useGlobal from '../../hooks/useGlobal';
 
 import profileButton from '../../media/profile-icon.png';
 
 const SignedIn = () => {
-
-    const delaySeconds = 0.05;
-    let lastClick = Date.now();
-
-    const [menuOpen, setMenuOpen] = useGlobal("userSettingsMenuOpen");
-
-    const toggle = () => {
-        setMenuOpen(!menuOpen);
+    const [state, dispatch] = useContext(Store);
+    const toggle = (ev) => {
+        dispatch({ type: "SET", key: "userSettingsMenuOpen", payload: !state.userSettingsMenuOpen });
     }
-
-    const clickToggle = (ev) => {
-        if (Date.now() - lastClick >= delaySeconds) {
-            lastClick = Date.now();
-            toggle();
-        }
-    }
-
     useEffect(() => {
-        const closeMenu = (ev) => {
-            if (!ev.target.matches(".blockclick")) {
-                setMenuOpen(false);
+        const closeUserMenu = (ev) => {
+            if (!ev.target.matches(".blockclick-user-menu")) {
+                dispatch({ type: "SET", key: "userSettingsMenuOpen", payload: false });
             }
         }
-
-        document.querySelector('#root').addEventListener('click', closeMenu);
+        document.querySelector("body").addEventListener('click', closeUserMenu);
         return () => {
-            document.querySelector('#root').removeEventListener('click', closeMenu);
+            document.querySelector("body").removeEventListener('click', closeUserMenu);
         };
-    }, [setMenuOpen])
+    }, [dispatch])
 
-    const handleLogout = () => {
-        fb.auth.signOut();
+    const handleLogout = async () => {
+        await fb.auth.signOut();
+        dispatch({ type: "SET", key: "userSettingsMenuOpen", payload: false });
     }
 
-    return(
-        <div className="profile signedin">
-            <img className="profile-button blockclick" onClick={clickToggle} src={profileButton} alt="User Menu" />
-            {(menuOpen && fb.auth.currentUser) ? 
+    return (
+        <div className="profile signed-in">
+            <img onClick={toggle} src={profileButton} alt="User Menu" className="blockclick-user-menu" />
+            {state.userSettingsMenuOpen && state.user ?
                 <nav>
-                    <p className="blockclick">{fb.auth.currentUser.displayName}</p>
-                    <NavLink to="/user/settings" className="blockclick">Settings</NavLink>
-                    <p onClick={handleLogout} className="blockclick logout">Logout</p>
+                    <p className="blockclick-user-menu">{state.user.displayName}</p>
+                    <NavLink to="/user/settings" className="blockclick-user-menu">Settings</NavLink>
+                    <p onClick={handleLogout} className="logout blockclick-user-menu">Logout</p>
                 </nav> : null}
         </div>
     );

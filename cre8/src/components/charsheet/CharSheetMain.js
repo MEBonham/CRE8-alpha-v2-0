@@ -1,173 +1,92 @@
-import React, { useState, useEffect, useRef } from 'react';
-import { Link, Redirect, useParams } from 'react-router-dom';
-import fb from '../../fbConfig';
-import useGlobal from '../../hooks/useGlobal';
+import React, { useContext } from 'react';
 
-import { charDefault } from '../../helpers/Templates';
+import { Store } from '../GlobalWrapper';
+// import useLsPersistedState from '../../hooks/useLsPersistedState';
+// import fb from '../../fbConfig';
 import CharSheetTabs from './CharSheetTabs';
-import EditWrapper from './EditWrapper';
 import Play from './Play';
 import Configure from './Configure';
 import Bio from './Bio';
 import BuildLibrary from './BuildLibrary';
-import '../../css/charSheet.css';
-import MyButton from '../ui/MyButton';
 
 const CharSheetMain = () => {
-    const { slug } = useParams();
-    const [cur, setCur] = useGlobal("cur");
-    const [usersCampaigns] = useGlobal("usersCampaigns");
+    const [state] = useContext(Store);
 
-    const saveIntervalMilliseconds = 500;
-    const lastSave = useRef(Date.now());
+    // const [activeTabs] = useLsPersistedState(LS_KEY, {});
 
-    const db = fb.db;
-
-    // const [campaigns, setCampaigns] = useState([]);
-    // const campaignStream = useRef(null);
-    const firstLoad = useRef(true);
-    const charStream = useRef(null);
+    // const [tab, setTab] = useState(null);
     // useEffect(() => {
-    //     campaignStream.current = db.collection("campaigns")
-    //         //.onSnapshot(querySnapshot => {
-    //         .get().then(querySnapshot => {
-    //             const campaignInfo = {};
-    //             querySnapshot.forEach(campaign => {
-    //                 campaignInfo[campaign.id] = campaign.data();
-    //             });
-    //             setCampaigns(campaignInfo);
-    //         });
-    
-    //     // return () => {
-    //     //     campaignStream.current();
-    //     // };
-    // }, [db])
-    useEffect(() => {
-        if (slug && firstLoad.current) {
-            charStream.current = db.collection("characters").doc(slug)
-                // .onSnapshot(doc => {
-                .get().then(doc => {
-                    const docDefaulted = {
-                        ...charDefault,
-                        ...doc.data(),
-                        stats: {
-                            ...charDefault.stats,
-                            ...doc.data().stats
-                        },
-                        id: slug
-                    }
-                    setCur(docDefaulted);
-                    firstLoad.current = false;
-                });
-        }
-    
-        // return () => {
-        //     charStream.current();
-        // };
-    }, [db, setCur, slug]);
+    //     if (state.cur) {
+    //         setTab(activeTabs[state.cur.id]);
+    //     }
+    // }, [activeTabs, state.cur])
 
-    const [toSave, setToSave] = useState(false);
-    const [charSheetTab, setCharSheetTab] = useState(null);
-    const [tabContents, setTabContents] = useState(null);
-    useEffect(() => {
-        if (cur && cur.activeTab !== charSheetTab) {
-            setCharSheetTab(cur.activeTab);
-        }
-    }, [charSheetTab, cur])
-    useEffect(() => {
-        // if (cur) {
-        //     setToSave(true);
-        // }
-        if (charSheetTab === "play") {
-            setTabContents(<Play />);
-        } else if (charSheetTab === "configure") {
-            setTabContents(<Configure />);
-        } else if (charSheetTab === "bio") {
-            setTabContents(<Bio />);
-        } else if (charSheetTab === "+library") {
-            setTabContents(<BuildLibrary />);
-        }
-    }, [charSheetTab])
+    // const [tab, setTab] = useState(state.editPrivilege ? "configure" : "play");
+    // const [tab, setTab] = useState(null);
 
-    useEffect(() => {
-        if (cur && Date.now() - lastSave.current >= saveIntervalMilliseconds) {
-            setToSave(true);
-            lastSave.current = Date.now();
+    // Once per load of character, sync the activeTabs state object with the database
+    // const slugRef = useRef(null);
+    // const loadActiveTabs = useCallback(async () => {
+    //     try {
+    //         let doc = await fb.db.collection("activeTabs").doc(state.user.uid).get();
+    //         const docData = doc.exists ? doc.data() : {};
+    //         const prevTabs = state.activeTabs ? { ...state.activeTabs } : {};
+    //         return {
+    //             ...prevTabs,
+    //             ...docData
+    //         };
+    //     } catch(err) {
+    //         console.log("Error loading activeTabs from db:", err);
+    //     }
+    // }, [state.activeTabs, state.user])
+    // useEffect(() => {
+    //     if (state.cur && state.user && state.cur.id !== slugRef.current) {
+    //         slugRef.current = state.cur.id;
+    //         loadActiveTabs().then((newVal) => {
+    //             dispatch({ type: "SET", key: "activeTabs", payload: newVal });
+    //         }).catch((err) => {
+    //             console.log("Error:", err);
+    //         })
+    //     }
+    // }, [dispatch, loadActiveTabs, state.cur, state.user])
+
+    // Set tab to match global state record, or a default value
+    // useEffect(() => {
+    //     if (state.cur && state.activeTabs[state.cur.id]) {
+    //         const activeTabsCopy = {
+    //             [state.cur.id]: (state.editPrivilege ? "configure" :"play"),
+    //             ...state.activeTabs
+    //         };
+    //         setTab(activeTabsCopy[state.cur.id]);
+    //     }
+    // }, [state.activeTabs, state.cur, state.editPrivilege])
+
+    // Actually invoke the component that goes with the selected tab
+    const tabContents = () => {
+        if (state.cur) {
+            switch (state.charSheetTab) {
+                case "configure":
+                    return <Configure />;
+                case "bio":
+                    return <Bio />;
+                case "+library":
+                    return <BuildLibrary />;
+                default:
+                    return <Play />;
+            }
+        } else {
+            return null;
         }
-    }, [cur])
-    const toSaveFct = () => {
-        setToSave(true);
     }
-    useEffect(() => {
-        if (toSave) {
-            const curCopy = {
-                ...cur
-            };
-            const slug = curCopy.id;
-            delete curCopy.id;
-            db.collection("characters").doc(slug).set(curCopy)
-                .then(() => {
-                    setToSave(false);
-                    console.log("Saved");
-                    lastSave.current = Date.now();
-                })
-                .catch(err => {
-                    console.log("Character save unsuccessful:", err);
-                });
-        }
-    }, [cur, db, toSave]);
-
-    const [userInfo] = useGlobal("user");
-    const loadComponent = useRef(
-        <div className="main normal-padding">
-            <h1>Loading ...</h1>
+    
+    return (
+        <div className="parchment">
+            <CharSheetTabs />
+            <div className="parchment-padding">
+                {tabContents()}
+            </div>
         </div>
     );
-    const [component, setComponent] = useState(loadComponent.current);
-    useEffect(() => {
-
-        const determineAccess = (campaigns, userInfo) => {
-            console.log(cur.campaigns);
-            if (cur && cur.campaigns && cur.campaigns.includes("standard")) return true;
-            if (cur && cur.campaigns && cur.campaigns.includes("public")) return true;
-            if (cur && userInfo && cur.owner === userInfo.uid) return true;
-            if (campaigns && userInfo) {
-                Object.keys(campaigns).forEach(campaignId => {
-                    if (campaigns[campaignId].members.includes(userInfo.uid)) return true;
-                });
-            }
-            return false;
-        }
-
-        // if (!cur || !usersCampaigns) {
-        if (!cur) {
-            setComponent(loadComponent.current);
-        } else {
-            // const access = determineAccess(campaigns, userInfo.uid);
-            const access = determineAccess(usersCampaigns, userInfo);
-            if (access) {
-                setComponent(<div className="main normal-padding">
-                    <div className="parchment">
-                        <CharSheetTabs />
-                        <EditWrapper>
-                            {tabContents}
-                        </EditWrapper>
-                    </div>
-                    <div className="float-right">
-                        <span className="my-button"><Link to="/characters">Back to Characters</Link></span>
-                        <MyButton fct={toSaveFct}>Save</MyButton>
-                    </div>
-                </div>);
-            } else {
-                setComponent(<Redirect to="/characters" />)
-            }
-        }
-    // }, [campaigns, cur, tabContents, userInfo])
-    }, [usersCampaigns, cur, tabContents, userInfo])
-
-    return(<>
-        {component}
-    </>);
 }
 
 export default CharSheetMain;

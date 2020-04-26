@@ -1,89 +1,111 @@
-import React, { useState, useEffect, useRef } from 'react';
-import { Redirect, Link } from 'react-router-dom';
+// import React, { useState, useEffect, useRef, useContext, useCallback } from 'react';
+import React, { useState, useEffect, useContext, useCallback } from 'react';
+import { Link, Redirect } from 'react-router-dom';
+import { Store } from '../GlobalWrapper';
 import fb from '../../fbConfig';
-import useGlobal from '../../hooks/useGlobal';
+
 import useForm from '../../hooks/useForm';
+import MyFormButton from '../ui/MyFormButton';
+import { charDefault } from '../../helpers/Templates';
+import gc from '../../helpers/GameConstants';
 
 const NewCharForm = () => {
-
+    const [state, dispatch] = useContext(Store);
     const db = fb.db;
-    const [userInfo] = useGlobal("user");
-    const [usersCampaigns] = useGlobal("usersCampaigns");
 
-    const [characters, setCharacters] = useState([]);
-    const charStream = useRef(null);
-    useEffect(() => {
-        charStream.current = db.collection("characters")
-            // .onSnapshot(querySnapshot => {
-            .get().then(querySnapshot => {
-                const charsData = [];
-                querySnapshot.forEach(doc => {
-                    charsData.push({
-                        id: doc.id,
-                        ...doc.data()
-                    });
-                });
-                setCharacters(charsData);
-            });
-    
-        // return () => {
-        //     charStream.current();
-        // };
-    }, [db, userInfo]);
-
-    const [rank, setRank] = useState(null);
-    useEffect(() => {
-        if (userInfo) {
-            const docRef = fb.db.collection("users").doc(userInfo.uid);
-            docRef.get()
-                .then((doc) => {
-                    setRank(doc.data().rank);
-                })
-                .catch(err => {
-                    console.log(err);
-                });
-        }
-    }, [userInfo])
-    
-    const [errorMessage, setErrorMessage] = useState("");
     const [redirectFlag, setRedirectFlag] = useState(false);
-    const saveChar = () => {
-        if (characters.length || rank === "admin") {
-            const allSlugs = ["new"];
-            characters.forEach(charData => {
-                allSlugs.push(charData.id);
+    useEffect(() => {
+        if (!state.user) {
+            setRedirectFlag(true);
+        }
+    }, [state.user])
+
+    const gatherChars = useCallback(async () => {
+        const saveCharsToArr = (querySnapshot) => {
+            const charsData = [];
+            querySnapshot.forEach(doc => {
+                charsData.push({
+                    id: doc.id,
+                    ...doc.data()
+                });
             });
-            if (allSlugs.includes(inputs.slug)) {
-                setErrorMessage("Slug in use.");
-            } else {
-                const fields = Object.keys(inputs).filter(field => field.startsWith("select_"));
-                const campaignsChecked = fields.map(field => (
-                    field.split("_")[1]
-                ));
-                db.collection("characters").doc(inputs.slug).set({
-                    owner: userInfo.uid,
-                    name: inputs.name,
-                    campaigns: campaignsChecked
-                })
-                .then(() => {
-                    setRedirectFlag(true);
-                })
-                .catch(err => {
-                    console.log(err);
-                })
-            }
-        } else {
-            setErrorMessage("Could not check database for slug uniqueness.");
+            dispatch({ type: "SAVE_CHARACTERS_TO_CACHE", payload: charsData });
+        }
+        // charStream.current = db.collection("characters").onSnapshot(querySnapshot => {
+        //     saveChars(querySnapshot);
+        // }).catch((err) => {
+        //     console.log("Error:", err);
+        // });
+        try {
+            const query = await db.collection("characters").get();
+            saveCharsToArr(query);
+        } catch(err) {
+            console.log("Error:", err);
+        }
+    }, [db, dispatch]);
+    useEffect(() => {
+        if (state.shouldUpdateCharacterCache) {
+            gatherChars();
+        }
+        // return(() => {
+        //     if (charStream.current) {
+        //         charStream.current();
+        //     }
+        // });
+    }, [gatherChars, state.shouldUpdateCharacterCache])
+
+    const saveNewChar = async (charObj) => {
+        try {
+            const id = charObj.slug;
+            delete charObj.slug;
+            await db.collection("characters").doc(id).set(charObj);
+            dispatch({ type: "SET", key: "shouldUpdateCharacterCache", payload: true });
+            setRedirectFlag(true);
+        } catch(err) {
+            console.log("Error:", err);
         }
     }
-    const { inputs, handleInputChange, handleSubmit } = useForm(saveChar);
+    const [errorMessage, setErrorMessage] = useState("");
+    const checkNewChar = (ev) => {
+        if (state.characterCache.length || (state.user && state.user.rank === "admin")) {
+            const allSlugs = ["new"].concat(state.characterCache.map(charDatum => (charDatum.id)));
+            if (allSlugs.includes(inputs.slug.toLowerCase())) {
+                setErrorMessage("Slug in use.");
+            } else {
+                const campaignsChecked = Object.keys(inputs).filter(field => field.startsWith("meb_newChar_select_"))
+                    .map((field) => (field.split("_")[3]));
+                if (campaignsChecked.includes("public") && campaignsChecked.includes("standard")) {
+                    campaignsChecked.splice(campaignsChecked.indexOf("public"), 1);
+                }
+                const skillRanksObj = {};
+                gc.skills_list.forEach((skill) => {
+                    skillRanksObj[skill] = 0;
+                });
+                saveNewChar({
+                    ...charDefault,
+                    owner: state.user.uid,
+                    name: inputs.name,
+                    campaigns: campaignsChecked,
+                    slug: inputs.slug.toLowerCase(),
+                    stats: {
+                        ...charDefault.stats,
+                        skill_ranks: skillRanksObj
+                    }
+                });
+            }
+        } else {
+            setErrorMessage("Could not check other characters for slug uniqueness. Please try again later.");
+        }
+    }
+    
+    const { inputs, handleInputChange, handleSubmit } = useForm(checkNewChar);
 
-    const component = redirectFlag ?
-        <Redirect to="/characters" /> :
-        <form onSubmit={handleSubmit} className="new-char-form normal-padding">
+    if (redirectFlag) return <Redirect to="/characters" />;
+    return (
+        <form onSubmit={handleSubmit} className="primary-content content-padding new-char-form rows">
             <h1>New Character</h1>
             <div>
-                <label htmlFor="slug">Slug (shortened name; must be unique; difficult to change once established)</label>
+                <label htmlFor="slug">Slug (shortened name; must be unique & lowercase; <br />difficult to change once established)</label>
                 <input
                     type="text"
                     id="slug"
@@ -92,7 +114,7 @@ const NewCharForm = () => {
                     required
                 />
             </div>
-            <div className="column-envelope">
+            <div className="columns">
                 <div>
                     <label htmlFor="name">Name</label>
                     <input
@@ -100,16 +122,17 @@ const NewCharForm = () => {
                         id="name"
                         onChange={handleInputChange}
                         value={inputs.name || ""}
+                        required
                     />
                 </div>
                 <div>
                     <label>Campaign(s)</label>
                     <ul>
-                        {rank === "admin" || rank === "archon" ?
+                        {state.user && (state.user.rank === "admin" || state.user.rank === "archon") ?
                             <li key="standard">
                                 <input
                                     type="checkbox"
-                                    id={`select_standard`}
+                                    id={`meb_newChar_select_standard`}
                                     onChange={handleInputChange}
                                     value="1"
                                 />
@@ -120,34 +143,31 @@ const NewCharForm = () => {
                         <li key="public">
                             <input
                                 type="checkbox"
-                                id={`select_public`}
+                                id={`meb_newChar_select_public`}
                                 onChange={handleInputChange}
                                 value="1"
                             />
                             Public
                         </li>
-                        {Object.keys(usersCampaigns).map(campaignId => {
-                            return(
-                                <li key={campaignId}>
-                                    <input
-                                        type="checkbox"
-                                        id={`select_${campaignId}`}
-                                        onChange={handleInputChange}
-                                        value="1"
-                                    />
-                                    {usersCampaigns[campaignId].name}
-                                </li>
-                            );
-                        })}
+                        {Object.keys(state.activeCampaigns).map((campaignId) => (
+                            <li key={campaignId}>
+                                <input
+                                    type="checkbox"
+                                    id={`meb_newChar_select_${campaignId}`}
+                                    onChange={handleInputChange}
+                                    value="1"
+                                />
+                                {state.activeCampaigns[campaignId].name}
+                            </li>
+                        ))}
                     </ul>
                     <p>Create new campaigns under <Link to="/user/settings">User Settings</Link>.</p>
                 </div>
             </div>
-            <button type="submit">Save Character</button>
-            {errorMessage ? <p>{errorMessage}</p> : null}
-        </form>;
-
-    return (component);
+            <MyFormButton type="submit" className="my-button">Save</MyFormButton>
+            {errorMessage ? <p className="buffer-above error-message">{errorMessage}</p> : null}
+        </form>
+    );
 }
 
 export default NewCharForm;
