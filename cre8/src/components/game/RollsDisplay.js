@@ -11,8 +11,13 @@ const RollsDisplay = () => {
 
     // Load persisted rolls from local storage
     useEffect(() => {
-        const tempVar = JSON.parse(localStorage.getItem(LS_KEY));
-        dispatch({ type: "SET", key: "rollsToDisplay", payload: tempVar });
+        try {
+            const tempVar = JSON.parse(localStorage.getItem(LS_KEY));
+            dispatch({ type: "SET", key: "rollsToDisplay", payload: tempVar });
+        } catch(err) {
+            console.log(localStorage.getItem(LS_KEY));
+            console.log(err.code);
+        }
     }, [dispatch])
 
     // Save rolls to local storage for persistence

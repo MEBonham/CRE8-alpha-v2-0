@@ -16,11 +16,12 @@ const SignedIn = () => {
                 dispatch({ type: "SET", key: "userSettingsMenuOpen", payload: false });
             }
         }
-        document.querySelector("body").addEventListener('click', closeUserMenu);
-        return () => {
+        if (state.userSettingsMenuOpen) {
+            document.querySelector("body").addEventListener('click', closeUserMenu);
+        } else {
             document.querySelector("body").removeEventListener('click', closeUserMenu);
-        };
-    }, [dispatch])
+        }
+    }, [dispatch, state.userSettingsMenuOpen])
 
     const handleLogout = async () => {
         await fb.auth.signOut();
@@ -29,7 +30,7 @@ const SignedIn = () => {
 
     return (
         <div className="profile signed-in">
-            <img onClick={toggle} src={profileButton} alt="User Menu" className="blockclick-user-menu" />
+            <img onClick={toggle} src={profileButton} alt="User Menu" />
             {state.userSettingsMenuOpen && state.user ?
                 <nav>
                     <p className="blockclick-user-menu">{state.user.displayName}</p>

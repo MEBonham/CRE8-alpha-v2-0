@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useContext } from 'react';
 
 import { Store } from '../GlobalWrapper';
+import useLsPersistedState from '../../hooks/useLsPersistedState';
 import MyButton from '../ui/MyButton';
 import BuildLibraryKits from './BuildLibraryKits';
 import BuildLibraryFeats from './BuildLibraryFeats';
@@ -9,12 +10,13 @@ import BuildLibraryItems from './BuildLibraryItems';
 
 const BuildLibrary = () => {
     const [state] = useContext(Store);
+    const LS_KEY = "buildLibraryTabs";
 
-    const [mode, setMode] = useState("Items");
+    const [mode, setMode] = useLsPersistedState(LS_KEY, "Items");
     const setBuildLibraryMode = (ev) => {
-        const selected = ev.target.id.split("_")[2];
-        if (selected === "Items" || (state.user && (state.user.rank === "archon" || state.user.rank === "admin"))) {
-            setMode(selected);
+        const selectedVal = ev.target.id.split("_")[2];
+        if (selectedVal === "Items" || (state.user && (state.user.rank === "archon" || state.user.rank === "admin"))) {
+            setMode(selectedVal);
         }
     }
 

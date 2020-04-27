@@ -399,9 +399,32 @@ form.build-library div.rows {
     margin-bottom: 10px;
 }
 
+form.build-library > div > div.rows {
+    align-items: flex-start;
+}
+
 form.build-library div label {
     margin-bottom: 4px;
     font-size: 1.4rem;
     font-weight: bold;
     line-height: 1.2;
+}
+
+form.build-library div.rows > ul {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 10px;
+}
+
+form.build-library div.rows > ul {
+    margin-bottom: 10px;
+}
+
+form.build-library div.rows > ul label {
+    margin-right: 10px;
+}
+
+form.build-library .checkbox-pair input {
+    position: relative;
+    top: 2px;
 }

@@ -68,8 +68,9 @@ const NewCharForm = () => {
     const [errorMessage, setErrorMessage] = useState("");
     const checkNewChar = (ev) => {
         if (state.characterCache.length || (state.user && state.user.rank === "admin")) {
+            const encodedSlug = encodeURIComponent(inputs.slug.split(" ").join("").toLowerCase());
             const allSlugs = ["new"].concat(state.characterCache.map(charDatum => (charDatum.id)));
-            if (allSlugs.includes(inputs.slug.toLowerCase())) {
+            if (allSlugs.includes(encodedSlug)) {
                 setErrorMessage("Slug in use.");
             } else {
                 const campaignsChecked = Object.keys(inputs).filter(field => field.startsWith("meb_newChar_select_"))
@@ -86,7 +87,7 @@ const NewCharForm = () => {
                     owner: state.user.uid,
                     name: inputs.name,
                     campaigns: campaignsChecked,
-                    slug: inputs.slug.toLowerCase(),
+                    slug: encodedSlug,
                     stats: {
                         ...charDefault.stats,
                         skill_ranks: skillRanksObj

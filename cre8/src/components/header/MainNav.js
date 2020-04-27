@@ -9,21 +9,23 @@ const MainNav = () => {
     const toggle = (ev) => {
         dispatch({ type: "SET", key: "mainNavMenuOpen", payload: !state.userSettingsMenuOpen });
     }
+
     useEffect(() => {
         const closeNavMenu = (ev) => {
             if (!ev.target.matches(".blockclick-nav-menu")) {
                 dispatch({ type: "SET", key: "mainNavMenuOpen", payload: false });
             }
         }
-        document.querySelector("body").addEventListener('click', closeNavMenu);
-        return () => {
+        if (state.mainNavMenuOpen) {
+            document.querySelector("body").addEventListener('click', closeNavMenu);
+        } else {
             document.querySelector("body").removeEventListener('click', closeNavMenu);
-        };
-    }, [dispatch])
+        }
+    }, [dispatch, state.mainNavMenuOpen])
 
     return (
         <div className="nav-dropdown-system">
-            <img onClick={toggle} src={menuButton} alt="Nav Menu" className="nav-toggle blockclick-nav-menu" />
+            <img onClick={toggle} src={menuButton} alt="Nav Menu" className="nav-toggle" />
             {state.mainNavMenuOpen ?
                 <nav>
                     <NavLink to="/characters" className="blockclick-nav-menu">Characters</NavLink>

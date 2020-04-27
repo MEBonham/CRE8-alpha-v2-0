@@ -15,15 +15,16 @@ const SignedOut = () => {
                 dispatch({ type: "SET", key: "userSettingsMenuOpen", payload: false });
             }
         }
-        document.querySelector("body").addEventListener('click', closeUserMenu);
-        return () => {
+        if (state.userSettingsMenuOpen) {
+            document.querySelector("body").addEventListener('click', closeUserMenu);
+        } else {
             document.querySelector("body").removeEventListener('click', closeUserMenu);
-        };
-    }, [dispatch])
+        }
+    }, [dispatch, state.userSettingsMenuOpen])
 
     return (
         <div className="profile signed-out">
-            <img onClick={toggle} src={profileButton} alt="User Menu" className="blockclick-user-menu" />
+            <img onClick={toggle} src={profileButton} alt="User Menu" />
             {state.userSettingsMenuOpen ?
                 <nav>
                     <NavLink to="/login" className="blockclick-user-menu">Login</NavLink>
