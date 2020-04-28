@@ -38,6 +38,7 @@ export const charDefault = {
         mp_mods: {},
         mp_mods_total: 0,
         next_level_at: 100,
+        passives: [],
         reflex_base_total: 0,
         reflex_mods: {
             base: {}
@@ -94,6 +95,7 @@ export const rollDefault = {
 
 export const kitDefault = {
     name: "",
+    tags: [],
     prereqs: "",
     benefit_traits: [],
     bonus_talents: [],
@@ -107,6 +109,7 @@ export const kitDefault = {
     fighting_level_boost: false,
     fighting_OR_caster_boost: false,
     fighting_OR_coast_boost: false,
+    passives: [],
     selected_options: {},
     various_bonuses: [],
     vp_boost: "0",

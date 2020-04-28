@@ -20,13 +20,21 @@ export const ifPlus = (val) => {
     else return "";
 }
 
-const mineKits = (kitsObj) => {
+const mineKits = (kitsObj, stack1stLevelKits) => {
     let total = 0;
     Object.keys(kitsObj).forEach((level) => {
         const kitsAtLevel = kitsObj[level];
-        Object.keys(kitsAtLevel).forEach((index) => {
-            total += kitsAtLevel[index];
-        });
+        if (stack1stLevelKits) {
+            Object.keys(kitsAtLevel).forEach((index) => {
+                total += kitsAtLevel[index];
+            });
+        } else {
+            let bestSoFar = 0;
+            Object.keys(kitsAtLevel).forEach((index) => {
+                if (kitsAtLevel[index] > bestSoFar) bestSoFar = kitsAtLevel[index];
+            });
+            total += bestSoFar;
+        }
     });
     return total;
 }
@@ -179,7 +187,8 @@ const updateHeroicBonus = (statsObj) => {
 export const updateKits = (statsObj) => {
     let result = {
         ...statsObj,
-        traits_from_kits: []
+        traits_from_kits: [],
+        passives: []
     };
     const kitsAlreadyChecked = [];
     Object.keys(statsObj.kits).forEach((level) => {
@@ -190,6 +199,7 @@ export const updateKits = (statsObj) => {
             if (parseInt(level) >= statsObj.level) kitObj = kitDefault;
 
             result.traits_from_kits = result.traits_from_kits.concat(kitObj.benefit_traits).concat(kitObj.drawback_traits);
+            result.passives = result.passives.concat(kitObj.passives);
 
             const talentsGranted = kitObj.bonus_talents.length;
             const talentsArr = result.talents[level] ? Object.keys(result.talents[level]).filter((index) => index.startsWith("kit")) : [];
@@ -271,15 +281,17 @@ export const updateKits = (statsObj) => {
     });
     result = updateTalents(result);
 
-    result.fighting_level_kits_total = mineKits(result.fighting_level_kits);
+    const stack1stLevelKits = result.traits_from_kits.includes("Stack 1st-Level Kits");
+
+    result.fighting_level_kits_total = mineKits(result.fighting_level_kits, stack1stLevelKits);
     result.fighting_level = result.heroic_bonus + result.fighting_level_kits_total;
 
-    result.caster_level_kits_total = mineKits(result.caster_level_kits);
+    result.caster_level_kits_total = mineKits(result.caster_level_kits, stack1stLevelKits);
     result.caster_level = result.heroic_bonus + result.caster_level_kits_total;
     result = updateSpellcraft(result);
     result = updateMpMax(result);
 
-    result.coast_number_kits_total = mineKits(result.coast_number_kits);
+    result.coast_number_kits_total = mineKits(result.coast_number_kits, stack1stLevelKits);
     result.coast_number = gc.base_coast_number + result.heroic_bonus + result.coast_number_kits_total;
 
     return result;
