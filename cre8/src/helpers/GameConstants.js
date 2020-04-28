@@ -38,6 +38,13 @@ const gc = {
     ],
     skills_list_num: 10,
     skill_ranks_per_level: 5,
+    talent_tags: [
+        "Buff",
+        "Core",
+        "Epic",
+        "Monster",
+        "Seed"
+    ],
     trained_skill_extra_ranks: 2,
     wounded_save_penalty: -2,
     xp_increment_per_level: 100,

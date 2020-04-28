@@ -86,9 +86,15 @@ export const rollDefault = {
 };
 
 export const kitDefault = {
-    benefits: {},
-    drawbacks: {},
-    prerequisites: {},
-    tags: [],
+    name: "",
+    prereqs: "",
+    bonus_talents: [],
+    fighting_level_boost: false,
+    caster_level_boost: false,
+    caster_OR_coast_boost: false,
+    coast_number_boost: false,
+    fighting_OR_caster_boost: false,
+    fighting_OR_coast_boost: false,
+    vp_boost: "0",
     xp_parcels: []
 }

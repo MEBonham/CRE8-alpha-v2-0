@@ -33,6 +33,11 @@
     width: 16px;
 }
 
+.or {
+    font-weight: bold;
+    color: darkred;
+}
+
 .App {
     width: 92%;
     max-width: 1100px;

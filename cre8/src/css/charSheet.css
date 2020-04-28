@@ -399,7 +399,19 @@ form.build-library div.rows {
     margin-bottom: 10px;
 }
 
-form.build-library > div > div.rows {
+form.build-library h3 {
+    margin-top: 10px;
+}
+
+form.build-library .main-body {
+    flex-grow: 2.5;
+}
+
+form.build-library .right-column {
+    flex-grow: 1;
+}
+
+form.build-library > header > div.rows {
     align-items: flex-start;
 }
 
@@ -416,15 +428,36 @@ form.build-library div.rows > ul {
     margin-bottom: 10px;
 }
 
-form.build-library div.rows > ul {
-    margin-bottom: 10px;
+form.build-library div.rows > ul,
+form.build-library div.rows > div {
+    margin-bottom: 6px;
 }
 
-form.build-library div.rows > ul label {
+form.build-library div.main-body > ul.columns label {
     margin-right: 10px;
 }
 
 form.build-library .checkbox-pair input {
     position: relative;
     top: 2px;
+}
+
+form.build-library section.bonus-talents {
+    margin: 12px 0;
+    padding: 0 3% 8px;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    border: 1px solid brown;
+    border-radius: 6px;
+}
+
+form.build-library section.bonus-talents > div {
+    margin-bottom: 8px;
+    display: flex;
+    align-items: center;
+}
+
+form.build-library section.bonus-talents > div label {
+    margin-right: 6px;
 }
