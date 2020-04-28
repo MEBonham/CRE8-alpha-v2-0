@@ -38,6 +38,9 @@ const BuildLibraryKits = (props) => {
     const [bonusTalents, setBonusTalents] = useState([]);
     const [variousBonuses, setVariousBonuses] = useState([]);
     const [extendedRests, setExtendedRests] = useState([]);
+    const [xpParcels, setXpParcels] = useState([]);
+    const [passives, setPassives] = useState([]);
+    const [bonusTrainings, setBonusTrainings] = useState([]);
 
     const newBonusTalent = (ev) => {
         setBonusTalents([
@@ -61,6 +64,27 @@ const BuildLibraryKits = (props) => {
         setExtendedRests([
             ...extendedRests,
             ""
+        ]);
+    }
+    const newParcel = (ev) => {
+        setXpParcels([
+            ...xpParcels,
+            ""
+        ]);
+    }
+    const newPassive = (ev) => {
+        setPassives([
+            ...passives,
+            ""
+        ]);
+    }
+    const newTrainedSkill = (ev) => {
+        setBonusTrainings([
+            ...bonusTrainings,
+            {
+                type: "fullMenu",
+                options: gc.skills_list
+            }
         ]);
     }
 
@@ -87,10 +111,21 @@ const BuildLibraryKits = (props) => {
                     bonusObj.skill = bonus.skill || "Brawn";
                     return bonusObj;
                 }));
+            } else if (key === "bonus_trained_skills") {
+                setBonusTrainings(data[key].map((training) => {
+                    const bonusObj = {};
+                    bonusObj.type = training.type || "fullMenu";
+                    bonusObj.options = training.options || gc.skills_list;
+                    return bonusObj;
+                }));
             } else if (key === "extended_rest_actions") {
                 setExtendedRests(data[key]);
-            } else if (key === "benefit_traits") {
-                const els = document.querySelectorAll(`select[name="benefit_traits"] option`);
+            } else if (key === "xp_parcels") {
+                setXpParcels(data[key]);
+            } else if (key === "passives") {
+                setPassives(data[key]);
+            } else if (key === "benefit_traits" || key === "drawback_traits") {
+                const els = document.querySelectorAll(`select[name="${key}"] option`);
                 els.forEach((option) => {
                     option.selected = data[key].includes(option.value);
                 });
@@ -108,6 +143,16 @@ const BuildLibraryKits = (props) => {
             });
         });
     }, [bonusTalents])
+    useEffect(() => {
+        bonusTrainings.forEach((training, i) => {
+            const el = document.querySelectorAll(".bonus-trainings select")[i];
+            gc.skills_list.forEach((option) => {
+                if (el) {
+                    el.querySelector(`option[value="${option}"]`).selected = (training.options.includes(option));
+                }
+            });
+        });
+    }, [bonusTrainings])
 
     const [variousBonusTypes, setVariousBonusTypes] = useState([]);
     useEffect(() => {
@@ -120,6 +165,18 @@ const BuildLibraryKits = (props) => {
             setVariousBonusTypes(watch("variousBonusType"));
         }
     }
+    const [bonusTrainingTypes, setBonusTrainingTypes] = useState([]);
+    useEffect(() => {
+        if (watch("trainingTypes") && !arraysEqual(watch("trainingTypes"), bonusTrainingTypes)) {
+            setBonusTrainingTypes(watch("trainingTypes"));
+        }
+    }, [bonusTrainingTypes, watch])
+    const updateTrainingType = (ev) => {
+        console.log(watch("trainingTypes"))
+        if (watch("trainingTypes")) {
+            setBonusTrainingTypes(watch("trainingTypes"));
+        }
+    }
 
     const saveKit = async (newSlug, kitObj) => {
         try {
@@ -128,6 +185,12 @@ const BuildLibraryKits = (props) => {
                 fillFormWithPrevInfo(kitObj);
             } else {
                 reset();
+                setBonusTalents([]);
+                setVariousBonuses([]);
+                setPassives([]);
+                setExtendedRests([]);
+                setXpParcels([]);
+                setBonusTrainings([]);
             }
         } catch(err) {
             console.log("Error:", err);
@@ -157,16 +220,32 @@ const BuildLibraryKits = (props) => {
         const newSlug = encodeURIComponent(formData.name.split(" ").join("").toLowerCase());
         const kitObj = {};
         const bonusTalentsArr = [];
+        let bonusTrainingsArr = [];
         Object.keys(formData).forEach((key) => {
             if (key.startsWith("bonus_talent")) {
                 bonusTalentsArr.push({
                     byTag: formData[key]
                 });
-            } else if (!key.startsWith("kitTag") && !key.startsWith("variousBonus")) {
+            } else if (key === "bonusTrainingType") {
+                bonusTrainingsArr = formData[key].map((training, i) => {
+                    if (formData[key][i] === "specific") {
+                        return ({
+                            type: formData[key][i],
+                            options: [formData.bonusTrainingOptions[i]]
+                        });
+                    } else {
+                        return ({
+                            type: formData[key][i],
+                            options: formData.bonusTrainingOptions[i] || gc.skills_list
+                        });
+                    }
+                });
+            } else if (!key.startsWith("kitTag") && !key.startsWith("variousBonus") && key !== "bonusTrainingOptions") {
                 kitObj[key] = formData[key];
             }
         })
         kitObj.bonus_talents = bonusTalentsArr;
+        kitObj.bonus_trained_skills = bonusTrainingsArr;
         kitObj.tags = gc.kit_tags.filter((tagName) => {
             const idString = `kitTag_checkbox_${tagName}`;
             return formData[idString] ? true : false;
@@ -301,6 +380,15 @@ const BuildLibraryKits = (props) => {
                         />
                         <label>Caster Level <span className="or">or</span> Coast Number boost</label>
                     </div>
+                    <div className="checkbox-pair">
+                        <Controller
+                            as="input"
+                            type="checkbox"
+                            name="vpPlus2_OR_mpPlus2"
+                            control={control}
+                        />
+                        <label>VP +2 <span className="or">or</span> MP +2</label>
+                    </div>
                     <section className="various-bonuses rows">
                         <ul>
                             {variousBonuses.map((bonus, i) => (
@@ -354,7 +442,6 @@ const BuildLibraryKits = (props) => {
                             ))}
                         </ul>
                         <MyButton fct={newVBonus}>Add Bonus</MyButton>
-                        <p>{JSON.stringify(variousBonusTypes.current)}</p>
                     </section>
                 </div>
                 <div className="right-column">
@@ -413,21 +500,94 @@ const BuildLibraryKits = (props) => {
                 </div>
                 <MyButton fct={newBonusTalent}>Add Bonus Talent</MyButton>
             </section>
+            <section className="bonus-trainings">
+                <label>Bonus Trained Skills</label>
+                <div className="rows">
+                    {bonusTrainings.map((trainingData, i) => (
+                        <div key={i} className="columns">
+                            <label>({i + 1})</label>
+                            <div className="rows">
+                                <label>Type</label>
+                                <ul className="rows">
+                                    <li className="radio-training-type">
+                                        <input
+                                            type="radio"
+                                            name={`trainingTypes[${i}]`}
+                                            value="fullMenu"
+                                            ref={register}
+                                            onChange={updateTrainingType}
+                                            defaultChecked={true}
+                                        />
+                                        <label>Any Skill</label>
+                                    </li>
+                                    <li className="radio-training-type">
+                                        <input
+                                            type="radio"
+                                            name={`trainingTypes[${i}]`}
+                                            value="specific"
+                                            ref={register}
+                                            onChange={updateTrainingType}
+                                            defaultChecked={false}
+                                        />
+                                        <label>One Specific Skill</label>
+                                    </li>
+                                    <li className="radio-training-type">
+                                        <input
+                                            type="radio"
+                                            name={`trainingTypes[${i}]`}
+                                            value="partialMenu"
+                                            ref={register}
+                                            onChange={updateTrainingType}
+                                            defaultChecked={false}
+                                        />
+                                        <label>Select Skill From Options</label>
+                                    </li>
+                                </ul>
+                            </div>
+                            {bonusTrainingTypes.length > i && bonusTrainingTypes[i] === "specific" ?
+                                <select
+                                    name={`bonusTrainingOptions[${i}]`}
+                                    defaultValue={trainingData.options[0]}
+                                    ref={register}
+                                >
+                                    {gc.skills_list.map((skill) => (
+                                        <option key={skill} value={skill}>{skill}</option>
+                                    ))}
+                                </select> :
+                            null}
+                            {bonusTrainingTypes.length > i && bonusTrainingTypes[i] === "partialMenu" ?
+                                <select
+                                    name={`bonusTrainingOptions[${i}]`}
+                                    defaultValue={trainingData.options}
+                                    ref={register}
+                                    multiple
+                                >
+                                    {gc.skills_list.map((skill) => (
+                                        <option key={skill} value={skill}>{skill}</option>
+                                    ))}
+                                </select> :
+                            null}
+                        </div>
+                    ))}
+                </div>
+                <MyButton fct={newTrainedSkill}>Add Skill Training</MyButton>
+                {/* <p>{JSON.stringify(bonusTrainingTypes)}</p> */}
+            </section>
             <div className="columns">
-                <section className="extended-rests rows main-body">
-                    <label>Extended Rest Abilities</label>
-                    {extendedRests.map((ability, i) => (
+                <section className="passives rows main-body">
+                    <label>Passive Abilities</label>
+                    {passives.map((ability, i) => (
                         <Controller
                             key={i}
                             as="textarea"
                             control={control}
-                            name={`extended_rest_actions[${i}]`}
+                            name={`passives[${i}]`}
                             defaultValue={ability}
                             rows="3"
                             cols="44"
                         />
                     ))}
-                    <MyButton fct={newExtendedRest}>Add Extended Rest Ability</MyButton>
+                    <MyButton fct={newPassive}>Add Passive Ability</MyButton>
                 </section>
                 <section className="right-column rows">
                     <label>Positive Traits</label>
@@ -447,6 +607,56 @@ const BuildLibraryKits = (props) => {
                     </select>
                 </section>
             </div>
+                <section className="extended-rests rows main-body">
+                    <label>Extended Rest Abilities</label>
+                    {extendedRests.map((ability, i) => (
+                        <Controller
+                            key={i}
+                            as="textarea"
+                            control={control}
+                            name={`extended_rest_actions[${i}]`}
+                            defaultValue={ability}
+                            rows="3"
+                            cols="44"
+                        />
+                    ))}
+                    <MyButton fct={newExtendedRest}>Add Extended Rest Ability</MyButton>
+                </section>
+            <section>
+                <h3>Drawbacks</h3>
+                <section className="right-column rows">
+                    <label>Negative Traits</label>
+                    <select
+                        name="drawback_traits"
+                        ref={register}
+                        multiple
+                    >
+                        {gc.drawback_traits.map((trait) => (
+                            <option
+                                key={trait}
+                                value={trait}
+                            >
+                                {trait}
+                            </option>
+                        ))}
+                    </select>
+                </section>
+            </section>
+            <section className="xp-parcels rows">
+                <h3>XP Parcels</h3>
+                {xpParcels.map((parcel, i) => (
+                    <Controller
+                        key={i}
+                        as="textarea"
+                        control={control}
+                        name={`xp_parcels[${i}]`}
+                        defaultValue={parcel}
+                        rows="3"
+                        cols="44"
+                    />
+                ))}
+                <MyButton fct={newParcel}>Add XP Parcel</MyButton>
+            </section>
             <MyFormButton type="submit">Save</MyFormButton>
         </form>
     );

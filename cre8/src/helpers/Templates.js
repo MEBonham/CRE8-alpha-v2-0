@@ -91,6 +91,7 @@ export const kitDefault = {
     prereqs: "",
     benefit_traits: [],
     bonus_talents: [],
+    bonus_trained_skills: [],
     drawback_traits: [],
     extended_rest_actions: [],
     fighting_level_boost: false,
@@ -101,5 +102,6 @@ export const kitDefault = {
     fighting_OR_coast_boost: false,
     various_bonuses: [],
     vp_boost: "0",
+    vpPlus2_OR_mpPlus2: false,
     xp_parcels: []
 }

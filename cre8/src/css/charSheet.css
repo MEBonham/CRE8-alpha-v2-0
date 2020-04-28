@@ -442,7 +442,8 @@ form.build-library .checkbox-pair input {
     top: 2px;
 }
 
-form.build-library section.various-bonuses {
+form.build-library section.various-bonuses,
+form.build-library section.xp-parcels {
     align-items: flex-start;
 }
 
@@ -461,7 +462,9 @@ form.build-library section.various-bonuses .my-button {
 }
 
 form.build-library section.bonus-talents,
-form.build-library section.extended-rests {
+form.build-library section.bonus-trainings,
+form.build-library section.extended-rests,
+form.build-library section.passives {
     margin: 12px 12px 12px 0;
     padding: 0 3% 8px;
     display: flex;
@@ -471,7 +474,8 @@ form.build-library section.extended-rests {
     border-radius: 6px;
 }
 
-form.build-library section.bonus-talents > div.columns {
+form.build-library section.bonus-talents > div.columns,
+form.build-library section.bonus-trainings > div.rows {
     margin-bottom: 8px;
     width: 100%;
     flex-wrap: wrap;
@@ -482,10 +486,22 @@ form.build-library section.bonus-talents > div.columns > div.columns {
     align-items: center;
 }
 
-form.build-library section.bonus-talents > div > div label {
+form.build-library section.bonus-trainings > div.rows > div.columns {
+    width: 80%;
+    align-items: center;
+}
+
+form.build-library section.bonus-talents > div > div label,
+form.build-library section.bonus-trainings label {
     margin-right: 6px;
 }
 
-form.build-library section.extended-rests textarea {
+form.build-library section.extended-rests textarea,
+form.build-library section.xp-parcels textarea,
+form.build-library section.passives textarea {
     margin-bottom: 8px;
+}
+
+form.build-library section.xp-parcels .my-button {
+    margin-bottom: 22px;
 }

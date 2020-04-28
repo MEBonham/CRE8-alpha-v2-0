@@ -65,8 +65,10 @@ const gc = {
         "Buff",
         "Core",
         "Epic",
+        "Ki",
         "Monster",
-        "Seed"
+        "Seed",
+        "Skill Trick"
     ],
     trained_skill_extra_ranks: 2,
     wounded_save_penalty: -2,
