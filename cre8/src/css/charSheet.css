@@ -331,6 +331,10 @@ div.char-sheet > div.float-right .my-button {
     margin-bottom: 2px;
 }
 
+section.configure-skills {
+    margin-bottom: 16px;
+}
+
 section.configure-skills .trained {
     margin-bottom: 14px;
     display: flex;
@@ -383,6 +387,28 @@ section.skill-rolls h2 {
     left: -17px;
 }
 
+section.configure-specials > div.rows > div.columns {
+    flex-wrap: wrap;
+}
+
+section.configure-specials label,
+form.build-library label {
+    margin-bottom: 4px;
+    font-size: 1.4rem;
+    font-weight: bold;
+    line-height: 1.2;
+}
+
+section.configure-specials > div.rows > div.columns div {
+    margin: 0 8px 8px 0;
+    padding: 6px 4%;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    border: 1px solid brown;
+    border-radius: 6px;
+}
+
 header.build-library {
     margin-bottom: 20px;
 }
@@ -413,13 +439,6 @@ form.build-library .right-column {
 
 form.build-library > header > div.rows {
     align-items: flex-start;
-}
-
-form.build-library label {
-    margin-bottom: 4px;
-    font-size: 1.4rem;
-    font-weight: bold;
-    line-height: 1.2;
 }
 
 form.build-library div.rows > ul {

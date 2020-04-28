@@ -5,6 +5,7 @@ import ConfigureHeader from './ConfigureHeader';
 import ConfigureSublevelsBreakdown from './ConfigureSublevelsBreakdown';
 import ConfigurePoolsBreakdown from './ConfigurePoolsBreakdown';
 import ConfigureSkills from './ConfigureSkills';
+import ConfigureSpecials from './ConfigureSpecials';
 
 const Configure = () => {
 
@@ -19,6 +20,7 @@ const Configure = () => {
                 </section>
             </header>
             <ConfigureSkills />
+            <ConfigureSpecials />
         </>
     );
 }
