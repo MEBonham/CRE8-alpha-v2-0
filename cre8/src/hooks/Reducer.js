@@ -1,4 +1,4 @@
-import { updateXp, updateGoodSave, updateSkillRanks } from '../helpers/Calculations';
+import { updateKits, updateXp, updateGoodSave, updateSkillRanks } from '../helpers/Calculations';
 
 import gc from '../helpers/GameConstants';
 
@@ -56,6 +56,18 @@ const Reducer = (state, action) => {
                             })
                         }
                     };
+                case "kits":
+                    return {
+                        ...state,
+                        curChangesMade: true,
+                        cur: {
+                            ...state.cur,
+                            stats: updateKits({
+                                ...state.cur.stats,
+                                kits: action.payload
+                            })
+                        }
+                    }
                 case "mp":
                     newVal = parseInt(action.inputs[`${action.stub}_${action.field}`]);
                     return {

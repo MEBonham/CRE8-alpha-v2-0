@@ -1,10 +1,10 @@
-import React, { useContext } from 'react';
+import React, {  } from 'react';
 
-import { Store } from '../GlobalWrapper';
-import fb from '../../fbConfig';
+// import { Store } from '../GlobalWrapper';
+// import fb from '../../fbConfig';
 
 const ConfigureFeat = (props) => {
-    const [state] = useContext(Store);
+    // const [state] = useContext(Store);
 
     return (
         <div className="select-feat">

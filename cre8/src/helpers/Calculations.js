@@ -1,4 +1,5 @@
 import gc from './GameConstants';
+import { kitDefault } from './Templates';
 
 const determineLevel = (xp_total) => {
     let calcLevel = 0;
@@ -20,8 +21,14 @@ export const ifPlus = (val) => {
 }
 
 const mineKits = (kitsObj) => {
-    // TODO
-    return 0;
+    let total = 0;
+    Object.keys(kitsObj).forEach((level) => {
+        const kitsAtLevel = kitsObj[level];
+        Object.keys(kitsAtLevel).forEach((index) => {
+            total += kitsAtLevel[index];
+        });
+    });
+    return total;
 }
 
 export const mineModifiers = (modsObj) => {
@@ -53,20 +60,6 @@ const mineParcels = (parcelsObj) => {
     // TODO
     return 0;
 }
-
-// export const mineTrainedSkillsRequired = (trainedReqObj) => {
-//     const result = [];
-//     const sources = Object.keys(trainedReqObj);
-//     sources.forEach(source => {
-//         const skillsArr = trainedReqObj[source].skills;
-//         skillsArr.forEach(skill => {
-//             if (!result.includes(skill)) {
-//                 result.push(skill);
-//             }
-//         });
-//     });
-//     return result;
-// }
 
 export const numSort = (numArr) => {
     return numArr.sort((a, b) => { return a - b });
@@ -183,6 +176,115 @@ const updateHeroicBonus = (statsObj) => {
     return result;
 }
 
+export const updateKits = (statsObj) => {
+    let result = {
+        ...statsObj,
+        traits_from_kits: []
+    };
+    const kitsAlreadyChecked = [];
+    Object.keys(statsObj.kits).forEach((level) => {
+        const kitsAtLevel = statsObj.kits[level];
+        Object.keys(kitsAtLevel).forEach((index) => {
+            let kitObj = (kitsAtLevel[index].id) ? kitsAtLevel[index] : kitDefault;
+            if (kitsAlreadyChecked.includes(kitsAtLevel[index].id) && !kitsAtLevel[index].can_repeat) kitObj = kitDefault;
+            if (parseInt(level) >= statsObj.level) kitObj = kitDefault;
+
+            result.traits_from_kits = result.traits_from_kits.concat(kitObj.benefit_traits).concat(kitObj.drawback_traits);
+
+            const talentsGranted = kitObj.bonus_talents.length;
+            const talentsArr = result.talents[level] ? Object.keys(result.talents[level]).filter((index) => index.startsWith("kit")) : [];
+            const talentsClaimed = talentsArr.length;
+            if (talentsClaimed > talentsGranted) {
+                for (let i = talentsGranted; i < talentsClaimed; i++) {
+                    delete result.talents[level][`kit_${index}_${i}`];
+                }
+            }
+
+            if (
+                kitObj.fighting_level_boost ||
+                (kitObj.fighting_OR_caster_boost && kitObj.selected_options.fighting_OR_caster_boost && kitObj.selectedOptions.fighting_OR_caster_boost === "fighting") ||
+                (kitObj.fighting_OR_coast_boost && kitObj.selected_options.fighting_OR_coast_boost && kitObj.selectedOptions.fighting_OR_coast_boost === "fighting")
+            ) {
+                result.fighting_level_kits = {
+                    ...result.fighting_level_kits,
+                    [level]: {
+                        ...result.fighting_level_kits[level],
+                        [index]: 1
+                    }
+                };
+            } else {
+                result.fighting_level_kits = {
+                    ...result.fighting_level_kits,
+                    [level]: {
+                        ...result.fighting_level_kits[level],
+                        [index]: 0
+                    }
+                };
+            }
+
+            if (
+                kitObj.caster_level_boost ||
+                (kitObj.fighting_OR_caster_boost && kitObj.selected_options.fighting_OR_caster_boost && kitObj.selectedOptions.fighting_OR_caster_boost === "caster") ||
+                (kitObj.caster_OR_coast_boost && kitObj.selected_options.caster_OR_coast_boost && kitObj.selectedOptions.caster_OR_coast_boost === "caster")
+            ) {
+                result.caster_level_kits = {
+                    ...result.caster_level_kits,
+                    [level]: {
+                        ...result.caster_level_kits[level],
+                        [index]: 1
+                    }
+                };
+            } else {
+                result.caster_level_kits = {
+                    ...result.caster_level_kits,
+                    [level]: {
+                        ...result.caster_level_kits[level],
+                        [index]: 0
+                    }
+                };
+            }
+
+            if (
+                kitObj.coast_number_boost ||
+                (kitObj.fighting_OR_coast_boost && kitObj.selected_options.fighting_OR_coast_boost && kitObj.selectedOptions.fighting_OR_coast_boost === "coast") ||
+                (kitObj.caster_OR_coast_boost && kitObj.selected_options.caster_OR_coast_boost && kitObj.selectedOptions.caster_OR_coast_boost === "coast")
+            ) {
+                result.coast_number_kits = {
+                    ...result.coast_number_kits,
+                    [level]: {
+                        ...result.coast_number_kits[level],
+                        [index]: 1
+                    }
+                };
+            } else {
+                result.coast_number_kits = {
+                    ...result.coast_number_kits,
+                    [level]: {
+                        ...result.coast_number_kits[level],
+                        [index]: 0
+                    }
+                };
+            }
+
+            kitsAlreadyChecked.push(kitObj.id);
+        });
+    });
+    result = updateTalents(result);
+
+    result.fighting_level_kits_total = mineKits(result.fighting_level_kits);
+    result.fighting_level = result.heroic_bonus + result.fighting_level_kits_total;
+
+    result.caster_level_kits_total = mineKits(result.caster_level_kits);
+    result.caster_level = result.heroic_bonus + result.caster_level_kits_total;
+    result = updateSpellcraft(result);
+    result = updateMpMax(result);
+
+    result.coast_number_kits_total = mineKits(result.coast_number_kits);
+    result.coast_number = gc.base_coast_number + result.heroic_bonus + result.coast_number_kits_total;
+
+    return result;
+}
+
 const updateLevel = (statsObj) => {
     const origHeroicBonus = statsObj.heroic_bonus;
     const heroic_bonus = Math.min(gc.max_level_pre_epic / 2, Math.floor(statsObj.level / 2));
@@ -194,6 +296,7 @@ const updateLevel = (statsObj) => {
         level_max8,
         awesome_check
     };
+    result = updateKits(result);
     result = updateVpMax(result);
     if (heroic_bonus !== origHeroicBonus) {
         result = updateHeroicBonus(result);
@@ -285,6 +388,10 @@ const updateSpellcraft = (statsObj) => {
         spellcraft_check,
         spellcraft_mods_total
     };
+}
+
+export const updateTalents = (statsObj) => {
+    return statsObj;
 }
 
 const updateVpMax = (statsObj) => {
