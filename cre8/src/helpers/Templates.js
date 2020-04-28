@@ -66,6 +66,7 @@ export const charDefault = {
         vp_kits: {},
         vp_kits_total: 0,
         vp_max: 9,
+        weapon_impact_mods: {},
         willpower_base_total: 0,
         willpower_mods: {
             base: {}
@@ -88,13 +89,17 @@ export const rollDefault = {
 export const kitDefault = {
     name: "",
     prereqs: "",
+    benefit_traits: [],
     bonus_talents: [],
+    drawback_traits: [],
+    extended_rest_actions: [],
     fighting_level_boost: false,
     caster_level_boost: false,
     caster_OR_coast_boost: false,
     coast_number_boost: false,
     fighting_OR_caster_boost: false,
     fighting_OR_coast_boost: false,
+    various_bonuses: [],
     vp_boost: "0",
     xp_parcels: []
 }

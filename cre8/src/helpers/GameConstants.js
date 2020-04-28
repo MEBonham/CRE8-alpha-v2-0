@@ -9,6 +9,29 @@ const gc = {
         "Exerted",
         "Wounded"
     ],
+    benefit_traits: [
+        "Martial Weaponry"
+    ],
+    bonus_targets: [
+        { name: "Fortitude", code: "fortitude_mods" },
+        { name: "Magic Points Pool", code: "mp_mods" },
+        { name: "Reflex", code: "reflex_mods" },
+        { name: "Spellcraft", code: "spellcraft_mods" },
+        { name: "Weapon Impact", code: "weapon_impact_mods" },
+        { name: "Willpower", code: "willpower_mods" },
+    ],
+    bonus_types: [
+        "Base",
+        "Circumstance",
+        "Feat",
+        "Racial",
+        "Size",
+        "Synergy",
+        "Untyped"
+    ],
+    drawback_traits: [
+        "Arcane Aversion"
+    ],
     epic_level_xp_increment: 500,
     good_save_boost: 2,
     kit_tags: [

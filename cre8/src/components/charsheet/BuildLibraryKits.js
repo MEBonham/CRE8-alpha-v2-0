@@ -6,6 +6,7 @@ import { Store } from '../GlobalWrapper';
 import fb from '../../fbConfig';
 import gc from '../../helpers/GameConstants';
 import { kitDefault } from '../../helpers/Templates';
+import { arraysEqual } from '../../helpers/Utilities';
 import MyButton from '../ui/MyButton';
 import MyFormButton from '../ui/MyFormButton';
 
@@ -27,7 +28,7 @@ const BuildLibraryKits = (props) => {
     gc.kit_tags.forEach((tag) => {
         tagDefaults[`kitTag_checkbox_${tag}`] = false;
     })
-    const { control, handleSubmit, register, reset, setValue } = useForm({
+    const { control, handleSubmit, register, reset, setValue, watch } = useForm({
         defaultValues: {
             ...kitDefault,
             ...tagDefaults
@@ -35,6 +36,8 @@ const BuildLibraryKits = (props) => {
     });
     const vp_boost_arr = ["0", "1", "2", "3", "4", "5", "6"];
     const [bonusTalents, setBonusTalents] = useState([]);
+    const [variousBonuses, setVariousBonuses] = useState([]);
+    const [extendedRests, setExtendedRests] = useState([]);
 
     const newBonusTalent = (ev) => {
         setBonusTalents([
@@ -42,6 +45,22 @@ const BuildLibraryKits = (props) => {
             {
                 byTag: []
             }
+        ]);
+    }
+    const newVBonus = (ev) => {
+        setVariousBonuses([
+            ...variousBonuses,
+            {
+                type: "Untyped",
+                num: 1,
+                to: "Fortitude"
+            }
+        ]);
+    }
+    const newExtendedRest = (ev) => {
+        setExtendedRests([
+            ...extendedRests,
+            ""
         ]);
     }
 
@@ -59,11 +78,48 @@ const BuildLibraryKits = (props) => {
                 setValue(key, data[key]);
             } else if (key === "bonus_talents") {
                 setBonusTalents(data[key]);
+            } else if (key === "various_bonuses") {
+                setVariousBonuses(data[key].map((bonus) => {
+                    const bonusObj = {};
+                    bonusObj.type = bonus.type || "Untyped";
+                    bonusObj.to = bonus.to || "fortitude_mods";
+                    bonusObj.num = bonus.num || 1;
+                    bonusObj.skill = bonus.skill || "Brawn";
+                    return bonusObj;
+                }));
+            } else if (key === "extended_rest_actions") {
+                setExtendedRests(data[key]);
+            } else if (key === "benefit_traits") {
+                const els = document.querySelectorAll(`select[name="benefit_traits"] option`);
+                els.forEach((option) => {
+                    option.selected = data[key].includes(option.value);
+                });
             } else {
                 controlRef.current.setValue(key, data[key]);
             }
         });
     }, [setValue]);
+
+    useEffect(() => {
+        bonusTalents.forEach((talent, i) => {
+            const el = document.querySelectorAll(".bonus-talents select")[i];
+            gc.talent_tags.forEach((option) => {
+                el.querySelector(`option[value="${option}"]`).selected = (talent.byTag.includes(option));
+            });
+        });
+    }, [bonusTalents])
+
+    const [variousBonusTypes, setVariousBonusTypes] = useState([]);
+    useEffect(() => {
+        if (watch("variousBonusType") && !arraysEqual(watch("variousBonusType"), variousBonusTypes)) {
+            setVariousBonusTypes(watch("variousBonusType"));
+        }
+    }, [variousBonuses, variousBonusTypes, watch])
+    const updateBonusType = (ev) => {
+        if (watch("variousBonusType")) {
+            setVariousBonusTypes(watch("variousBonusType"));
+        }
+    }
 
     const saveKit = async (newSlug, kitObj) => {
         try {
@@ -78,6 +134,24 @@ const BuildLibraryKits = (props) => {
         }
     }
 
+    const bundleVariousBonuses = (data) => {
+        const arr = [];
+        if (data.variousBonusTo) {
+            for (let i = 0; i < data.variousBonusTo.length; i++) {
+                if (data.variousBonusType[i] === "Select" || data.variousBonusTo[i] === "Select") continue;
+                const bonusObj = {};
+                bonusObj.type = data.variousBonusType[i];
+                bonusObj.to = data.variousBonusTo[i];
+                if (data.variousBonusType[i] === "Synergy") {
+                    bonusObj.skill = data.variousBonusSkill[i];
+                } else {
+                    bonusObj.num = parseInt(data.variousBonusNum[i]);
+                }
+                arr.push(bonusObj);
+            }
+        }
+        return arr;
+    }
     const processKitForm = (formData) => {
         console.log(formData);
         const newSlug = encodeURIComponent(formData.name.split(" ").join("").toLowerCase());
@@ -88,7 +162,7 @@ const BuildLibraryKits = (props) => {
                 bonusTalentsArr.push({
                     byTag: formData[key]
                 });
-            } else if (!key.startsWith("kitTag")) {
+            } else if (!key.startsWith("kitTag") && !key.startsWith("variousBonus")) {
                 kitObj[key] = formData[key];
             }
         })
@@ -97,12 +171,12 @@ const BuildLibraryKits = (props) => {
             const idString = `kitTag_checkbox_${tagName}`;
             return formData[idString] ? true : false;
         });
+        kitObj.various_bonuses = bundleVariousBonuses(formData);
         saveKit(newSlug, kitObj);
     }
 
     const [code404, setCode404] = useState(false);
     useEffect(() => {
-        console.log("Here");
         const loadDbKits = async (pageUrl) => {
             try {
                 const doc = await db.collection("kits").doc(pageUrl).get();
@@ -227,6 +301,61 @@ const BuildLibraryKits = (props) => {
                         />
                         <label>Caster Level <span className="or">or</span> Coast Number boost</label>
                     </div>
+                    <section className="various-bonuses rows">
+                        <ul>
+                            {variousBonuses.map((bonus, i) => (
+                                <li key={`${i}`}>
+                                    <input
+                                        type="number"
+                                        defaultValue={bonus.num}
+                                        ref={register}
+                                        name={`variousBonusNum[${i}]`}
+                                        className="small"
+                                        disabled={variousBonusTypes.length > i && variousBonusTypes[i] === "Synergy"}
+                                    />
+                                    <select
+                                        name={`variousBonusType[${i}]`}
+                                        ref={register}
+                                        defaultValue={bonus.type}
+                                        onChange={updateBonusType}
+                                    >
+                                        <option value={"Select"}>Select</option>
+                                        {gc.bonus_types.map((type) => (
+                                            <option key={type} value={type}>{type}</option>
+                                        ))}
+                                    </select>
+                                    <label>bonus to</label>
+                                    <select
+                                        name={`variousBonusTo[${i}]`}
+                                        defaultValue={bonus.to}
+                                        ref={register}
+                                    >
+                                        <option value={"Select"}>Select</option>
+                                        {gc.bonus_targets.map((stat) => (
+                                            <option key={stat.code} value={stat.code}>{stat.name}</option>
+                                        ))}
+                                    </select>
+                                    {variousBonusTypes.length > i && variousBonusTypes[i] === "Synergy" ?
+                                    <>
+                                        <label>(</label>
+                                        <select
+                                            name={`variousBonusSkill[${i}]`}
+                                            defaultValue={bonus.skill}
+                                            ref={register}
+                                        >
+                                            {gc.skills_list.map((skill) => (
+                                                <option key={skill} value={skill}>{skill}</option>
+                                            ))}
+                                        </select>
+                                        <label>)</label>
+                                    </> :
+                                    null}
+                                </li>
+                            ))}
+                        </ul>
+                        <MyButton fct={newVBonus}>Add Bonus</MyButton>
+                        <p>{JSON.stringify(variousBonusTypes.current)}</p>
+                    </section>
                 </div>
                 <div className="right-column">
                     <label htmlFor="vp_boost">VP Boost</label>
@@ -255,33 +384,69 @@ const BuildLibraryKits = (props) => {
                 </div>
             </section>
             <section className="bonus-talents">
-                <h3>Bonus Talents</h3>
-                {bonusTalents.map((talentData, i) => (
-                    <div key={i}>
-                        <label>({i + 1})</label>
-                        {/* <Controller
-                            as="select"
-                            name={`bonus_talent_tags_${i}`}
-                            control={control}
-                            multiple
-                        >
-                            {gc.talent_tags.map((tagName) => (
-                                <option key={tagName} value={tagName}>{tagName}</option>
-                            ))}
-                        </Controller> */}
-                        <select
-                            name={`bonus_talent_tags_${i}`}
-                            ref={register}
-                            multiple
-                        >
-                            {gc.talent_tags.map((tagName) => (
-                                <option key={tagName} value={tagName}>{tagName}</option>
-                            ))}
-                        </select>
-                    </div>
-                ))}
+                <label>Bonus Talents</label>
+                <div className="columns">
+                    {bonusTalents.map((talentData, i) => (
+                        <div key={i} className="columns">
+                            <label>({i + 1})</label>
+                            {/* <Controller
+                                as="select"
+                                name={`bonus_talent_tags_${i}`}
+                                control={control}
+                                multiple
+                            >
+                                {gc.talent_tags.map((tagName) => (
+                                    <option key={tagName} value={tagName}>{tagName}</option>
+                                ))}
+                            </Controller> */}
+                            <select
+                                name={`bonus_talent_tags_${i}`}
+                                ref={register}
+                                multiple
+                            >
+                                {gc.talent_tags.map((tagName) => (
+                                    <option key={tagName} value={tagName}>{tagName}</option>
+                                ))}
+                            </select>
+                        </div>
+                    ))}
+                </div>
                 <MyButton fct={newBonusTalent}>Add Bonus Talent</MyButton>
             </section>
+            <div className="columns">
+                <section className="extended-rests rows main-body">
+                    <label>Extended Rest Abilities</label>
+                    {extendedRests.map((ability, i) => (
+                        <Controller
+                            key={i}
+                            as="textarea"
+                            control={control}
+                            name={`extended_rest_actions[${i}]`}
+                            defaultValue={ability}
+                            rows="3"
+                            cols="44"
+                        />
+                    ))}
+                    <MyButton fct={newExtendedRest}>Add Extended Rest Ability</MyButton>
+                </section>
+                <section className="right-column rows">
+                    <label>Positive Traits</label>
+                    <select
+                        name="benefit_traits"
+                        ref={register}
+                        multiple
+                    >
+                        {gc.benefit_traits.map((trait) => (
+                            <option
+                                key={trait}
+                                value={trait}
+                            >
+                                {trait}
+                            </option>
+                        ))}
+                    </select>
+                </section>
+            </div>
             <MyFormButton type="submit">Save</MyFormButton>
         </form>
     );

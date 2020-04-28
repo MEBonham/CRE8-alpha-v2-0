@@ -415,7 +415,7 @@ form.build-library > header > div.rows {
     align-items: flex-start;
 }
 
-form.build-library div label {
+form.build-library label {
     margin-bottom: 4px;
     font-size: 1.4rem;
     font-weight: bold;
@@ -442,8 +442,27 @@ form.build-library .checkbox-pair input {
     top: 2px;
 }
 
-form.build-library section.bonus-talents {
-    margin: 12px 0;
+form.build-library section.various-bonuses {
+    align-items: flex-start;
+}
+
+form.build-library section.various-bonuses input.small {
+    width: 40px;
+    margin-right: 4px;
+    text-align: right;
+}
+
+form.build-library section.various-bonuses label {
+    margin: 0 8px;
+}
+
+form.build-library section.various-bonuses .my-button {
+    margin-top: 6px;
+}
+
+form.build-library section.bonus-talents,
+form.build-library section.extended-rests {
+    margin: 12px 12px 12px 0;
     padding: 0 3% 8px;
     display: flex;
     flex-direction: column;
@@ -452,12 +471,21 @@ form.build-library section.bonus-talents {
     border-radius: 6px;
 }
 
-form.build-library section.bonus-talents > div {
+form.build-library section.bonus-talents > div.columns {
     margin-bottom: 8px;
-    display: flex;
+    width: 100%;
+    flex-wrap: wrap;
+}
+
+form.build-library section.bonus-talents > div.columns > div.columns {
+    width: 33%;
     align-items: center;
 }
 
-form.build-library section.bonus-talents > div label {
+form.build-library section.bonus-talents > div > div label {
     margin-right: 6px;
+}
+
+form.build-library section.extended-rests textarea {
+    margin-bottom: 8px;
 }
