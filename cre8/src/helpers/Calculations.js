@@ -209,11 +209,11 @@ export const updateKits = (statsObj) => {
                     delete result.talents[level][`kit_${index}_${i}`];
                 }
             }
-
+            
             if (
                 kitObj.fighting_level_boost ||
-                (kitObj.fighting_OR_caster_boost && kitObj.selected_options.fighting_OR_caster_boost && kitObj.selectedOptions.fighting_OR_caster_boost === "fighting") ||
-                (kitObj.fighting_OR_coast_boost && kitObj.selected_options.fighting_OR_coast_boost && kitObj.selectedOptions.fighting_OR_coast_boost === "fighting")
+                (kitObj.fighting_OR_caster_boost && kitObj.selected_options.fighting_OR_caster_boost && kitObj.selected_options.fighting_OR_caster_boost === "fighting") ||
+                (kitObj.fighting_OR_coast_boost && kitObj.selected_options.fighting_OR_coast_boost && kitObj.selected_options.fighting_OR_coast_boost === "fighting")
             ) {
                 result.fighting_level_kits = {
                     ...result.fighting_level_kits,
@@ -234,8 +234,8 @@ export const updateKits = (statsObj) => {
 
             if (
                 kitObj.caster_level_boost ||
-                (kitObj.fighting_OR_caster_boost && kitObj.selected_options.fighting_OR_caster_boost && kitObj.selectedOptions.fighting_OR_caster_boost === "caster") ||
-                (kitObj.caster_OR_coast_boost && kitObj.selected_options.caster_OR_coast_boost && kitObj.selectedOptions.caster_OR_coast_boost === "caster")
+                (kitObj.fighting_OR_caster_boost && kitObj.selected_options.fighting_OR_caster_boost && kitObj.selected_options.fighting_OR_caster_boost === "caster") ||
+                (kitObj.caster_OR_coast_boost && kitObj.selected_options.caster_OR_coast_boost && kitObj.selected_options.caster_OR_coast_boost === "caster")
             ) {
                 result.caster_level_kits = {
                     ...result.caster_level_kits,
@@ -256,8 +256,8 @@ export const updateKits = (statsObj) => {
 
             if (
                 kitObj.coast_number_boost ||
-                (kitObj.fighting_OR_coast_boost && kitObj.selected_options.fighting_OR_coast_boost && kitObj.selectedOptions.fighting_OR_coast_boost === "coast") ||
-                (kitObj.caster_OR_coast_boost && kitObj.selected_options.caster_OR_coast_boost && kitObj.selectedOptions.caster_OR_coast_boost === "coast")
+                (kitObj.fighting_OR_coast_boost && kitObj.selected_options.fighting_OR_coast_boost && kitObj.selected_options.fighting_OR_coast_boost === "coast") ||
+                (kitObj.caster_OR_coast_boost && kitObj.selected_options.caster_OR_coast_boost && kitObj.selected_options.caster_OR_coast_boost === "coast")
             ) {
                 result.coast_number_kits = {
                     ...result.coast_number_kits,
@@ -276,6 +276,41 @@ export const updateKits = (statsObj) => {
                 };
             }
 
+            if (
+                kitObj.vpPlus2_OR_mpPlus2 &&
+                kitObj.selected_options.vpPlus2_OR_mpPlus2 &&
+                kitObj.selected_options.vpPlus2_OR_mpPlus2 === "mpPlus2"
+            ) {
+                result.mp_mods = {
+                    ...result.mp_mods,
+                    Untyped: {
+                        ...result.mp_mods.Untyped,
+                        [kitObj.id]: {
+                            num: 2,
+                            level: level
+                        }
+                    }
+                };
+            } else if (result.mp_mods.Untyped) {
+                delete result.mp_mods.Untyped[kitObj.id];
+            }
+
+            let vp_boost = parseInt(kitObj.vp_boost);
+            if (
+                kitObj.vpPlus2_OR_mpPlus2 &&
+                kitObj.selected_options.vpPlus2_OR_mpPlus2 &&
+                kitObj.selected_options.vpPlus2_OR_mpPlus2 === "vpPlus2"
+            ) {
+                vp_boost += 2;
+            }
+            result.vp_kits = {
+                ...result.vp_kits,
+                [level]: {
+                    ...result.vp_kits[level],
+                    [index]: vp_boost
+                }
+            };
+
             kitsAlreadyChecked.push(kitObj.id);
         });
     });
@@ -293,6 +328,8 @@ export const updateKits = (statsObj) => {
 
     result.coast_number_kits_total = mineKits(result.coast_number_kits, stack1stLevelKits);
     result.coast_number = gc.base_coast_number + result.heroic_bonus + result.coast_number_kits_total;
+
+    result = updateVpMax(result);
 
     return result;
 }

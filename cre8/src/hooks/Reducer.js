@@ -31,6 +31,30 @@ const Reducer = (state, action) => {
                             coasting: action.payload
                         }
                     };
+                case "customizeKit":
+                    return {
+                        ...state,
+                        curChangesMade: true,
+                        cur: {
+                            ...state.cur,
+                            stats: updateKits({
+                                ...state.cur.stats,
+                                kits: {
+                                    ...state.cur.stats.kits,
+                                    [action.level]: {
+                                        ...state.cur.stats.kits[action.level],
+                                        [action.index]: {
+                                            ...state.cur.stats.kits[action.level][action.index],
+                                            selected_options: {
+                                                ...state.cur.stats.kits[action.level][action.index].selected_options,
+                                                [action.property]: action.payload
+                                            }
+                                        }
+                                    }
+                                }
+                            })
+                        }
+                    };
                 case "earnXp":
                     newVal = action.inputs[`${action.stub}_${action.field}`];
                     return {

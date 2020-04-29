@@ -42,10 +42,20 @@ const ConfigureKit = (props) => {
     }, [props.index, props.level, state.cur])
 
     useEffect(() => {
-        const el = document.querySelector(`#meb_editChar_selectKit_${props.level}_${props.index} select`);
-        el.querySelectorAll("option").forEach((optionEl) => {
+        const mainSelectEl = document.querySelector(`#meb_editChar_selectKit_${props.level}_${props.index} select`);
+        mainSelectEl.querySelectorAll("option").forEach((optionEl) => {
             optionEl.selected = (optionEl.value === currentKit.id) ? true : false;
         });
+
+        // if (props.index === 0 && props.level === 0) console.log(currentKit.selected_options);
+        if (currentKit && currentKit.selected_options) {
+            Object.keys(currentKit.selected_options).forEach((choice) => {
+                const radios = mainSelectEl.parentNode.querySelectorAll(`input[name="${choice}-kit-${props.level}-${props.index}"]`);
+                radios.forEach((radio) => {
+                    radio.checked = (radio.value === currentKit.selected_options[choice]);
+                });
+            });
+        }
     }, [currentKit, props.index, props.level, selectKits])
 
     const changeKits = (ev) => {
@@ -69,6 +79,18 @@ const ConfigureKit = (props) => {
         dispatch({ type: "CHAR_EDIT", field: "kits", payload: kitsObj });
     }
 
+    const radioSelection = (ev) => {
+        // console.log(ev.target.name, ev.target.value);
+        dispatch({
+            type: "CHAR_EDIT",
+            field: "customizeKit",
+            level: props.level,
+            index: props.index,
+            property: ev.target.name.split("-")[0],
+            payload: ev.target.value
+        });
+    }
+
     return (
         <div className="select-kit" id={`meb_editChar_selectKit_${props.level}_${props.index}`}>
             <select onChange={changeKits}>
@@ -77,6 +99,92 @@ const ConfigureKit = (props) => {
                     <option key={kitSlug} value={kitSlug} className="non-false">{selectKits[kitSlug].name}</option>
                 ))}
             </select>
+            <div className="columns">
+                {currentKit && currentKit.fighting_OR_caster_boost ?
+                    <div className="radio-bank rows">
+                        <label>Choose one:</label>
+                        <div>
+                            <input
+                                type="radio"
+                                name={`fighting_OR_caster_boost-kit-${props.level}-${props.index}`}
+                                value="fighting"
+                                onChange={radioSelection}
+                            /> Fighting Level +1
+                        </div>
+                        <div>
+                            <input
+                                type="radio"
+                                name={`fighting_OR_caster_boost-kit-${props.level}-${props.index}`}
+                                value="caster"
+                                onChange={radioSelection}
+                            /> Caster Level +1
+                        </div>
+                    </div> :
+                null}
+                {currentKit && currentKit.fighting_OR_coast_boost ?
+                    <div className="radio-bank rows">
+                        <label>Choose one:</label>
+                        <div>
+                            <input
+                                type="radio"
+                                name={`fighting_OR_coast_boost-kit-${props.level}-${props.index}`}
+                                value="fighting"
+                                onChange={radioSelection}
+                            /> Fighting Level +1
+                        </div>
+                        <div>
+                            <input
+                                type="radio"
+                                name={`fighting_OR_coast_boost-kit-${props.level}-${props.index}`}
+                                value="coast"
+                                onChange={radioSelection}
+                            /> Coast Number +1
+                        </div>
+                    </div> :
+                null}
+                {currentKit && currentKit.caster_OR_coast_boost ?
+                    <div className="radio-bank rows">
+                        <label>Choose one:</label>
+                        <div>
+                            <input
+                                type="radio"
+                                name={`caster_OR_coast_boost-kit-${props.level}-${props.index}`}
+                                value="caster"
+                                onChange={radioSelection}
+                            /> Caster Level +1
+                        </div>
+                        <div>
+                            <input
+                                type="radio"
+                                name={`caster_OR_coast_boost-kit-${props.level}-${props.index}`}
+                                value="coast"
+                                onChange={radioSelection}
+                            /> Coast Number +1
+                        </div>
+                    </div> :
+                null}
+                {currentKit && currentKit.vpPlus2_OR_mpPlus2 ?
+                    <div className="radio-bank rows">
+                        <label>Choose one:</label>
+                        <div>
+                            <input
+                                type="radio"
+                                name={`vpPlus2_OR_mpPlus2-kit-${props.level}-${props.index}`}
+                                value="vpPlus2"
+                                onChange={radioSelection}
+                            /> Vitality Points +2
+                        </div>
+                        <div>
+                            <input
+                                type="radio"
+                                name={`vpPlus2_OR_mpPlus2-kit-${props.level}-${props.index}`}
+                                value="mpPlus2"
+                                onChange={radioSelection}
+                            /> Magic Points +2
+                        </div>
+                    </div> :
+                null}
+            </div>
         </div>
     );
 }

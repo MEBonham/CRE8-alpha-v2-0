@@ -399,7 +399,7 @@ form.build-library label {
     line-height: 1.2;
 }
 
-section.configure-specials > div.rows > div.columns div {
+section.configure-specials > div.rows > div.columns > div {
     margin: 0 8px 8px 0;
     padding: 6px 3%;
     display: flex;
@@ -422,6 +422,16 @@ section.configure-specials > div.rows > div.columns div.select-feat select {
 section.configure-specials > div.rows > div.columns div.select-talent select {
     color: green;
     font-weight: bold;
+}
+
+section.configure-specials .radio-bank {
+    margin-right: 6px;
+    font-size: 1.2rem;
+}
+
+section.configure-specials .radio-bank input {
+    position: relative;
+    top: 2px;
 }
 
 header.build-library {
