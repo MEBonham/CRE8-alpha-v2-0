@@ -1,21 +1,25 @@
-import React, { useEffect, useRef, useContext } from 'react';
+import React, { useState, useEffect, useRef, useContext } from 'react';
 
 import { Store } from '../GlobalWrapper';
 import { getDisplayName } from '../../helpers/Calculations';
 import '../../css/library.css';
+import LoadingAlert from '../other/LoadingAlert';
 
 const SpecialPreview = () => {
     const [state, dispatch] = useContext(Store);
     const scrollContainer = useRef(null);
+    const [fillerComponent, setFillerComponent] = useState(<LoadingAlert />);
     useEffect(() => {
         if (state.preview.data && state.preview.data.id) {
             switch(state.preview.type) {
-                case "kit":
+                case "kits":
                     dispatch({ type: "SET", key: "previewComponent", payload: previewKit(state.preview.data) });
                     break;
                 default:
                     dispatch({ type: "SET", key: "previewComponent", payload: previewItem(state.preview.data) });
             }
+        } else {
+            setFillerComponent(null);
         }
     }, [dispatch, state.preview])
 
@@ -129,7 +133,7 @@ const SpecialPreview = () => {
 
     return (
         <div className="library-display" ref={scrollContainer}>
-            {state.previewComponent ? state.previewComponent : null}
+            {state.previewComponent ? state.previewComponent : fillerComponent}
         </div>
     );
 }

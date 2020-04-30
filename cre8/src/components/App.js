@@ -14,7 +14,9 @@ import Home from './other/Home';
 import NewCharForm from './newchar/NewCharForm';
 import CharSheetShell from './charsheet/CharSheetShell';
 import CharMenu from './other/CharMenu';
-import EditShell from './other/EditShell';
+import EditShell from './library/EditShell';
+import LibraryMenu from './library/LibraryMenu';
+import ViewLibraryShell from './library/ViewLibraryShell';
 import UserSettings from './auth/UserSettings';
 import ForgotPassword from './auth/ForgotPassword';
 import Login from './auth/Login';
@@ -56,6 +58,9 @@ const App = () => {
                             <Route path="/characters/:slug" component={CharSheetShell} />
                             <Route path="/characters" component={CharMenu} />
                             <Guarded path="/library/edit"><EditShell /></Guarded>
+                            <Route exact path="/library" render={() => <LibraryMenu category="kits" />} />
+                            <Route exact path="/library/:category" component={LibraryMenu} />
+                            <Route path="/library/:category/:slug" component={ViewLibraryShell} />
                             <Guarded path="/user/settings"><UserSettings /></Guarded>
                             <ReverseGuarded path="/login/forgot"><ForgotPassword /></ReverseGuarded>
                             <ReverseGuarded path="/login"><Login /></ReverseGuarded>

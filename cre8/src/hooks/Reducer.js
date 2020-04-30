@@ -92,7 +92,7 @@ const Reducer = (state, action) => {
                             })
                         },
                         preview: {
-                            type: "kit",
+                            type: "kits",
                             data: action.payload[action.level][action.index]
                         }
                     }

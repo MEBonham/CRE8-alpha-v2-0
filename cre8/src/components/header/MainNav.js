@@ -29,6 +29,7 @@ const MainNav = () => {
             {state.mainNavMenuOpen ?
                 <nav>
                     <NavLink to="/characters" className="blockclick-nav-menu">Characters</NavLink>
+                    <NavLink to="/library" className="blockclick-nav-menu">Library</NavLink>
                 </nav> : null}
         </div>
     );

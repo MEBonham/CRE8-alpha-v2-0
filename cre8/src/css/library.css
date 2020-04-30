@@ -38,3 +38,34 @@
     margin-bottom: 2px;
     font-size: 1.2rem;
 }
+
+.library > div {
+    margin-bottom: 16px;
+}
+
+.library > div .my-button {
+    margin-right: 10px;
+}
+
+.library > section.links a {
+    font-size: 1.4rem;
+}
+
+.App .primary-content .library-display h1 {
+    margin-bottom: 6px;
+}
+
+.primary-content .library-display h2.subtitle {
+    font-size: 1.8rem;
+}
+
+.App .primary-content .library-display p {
+    margin-bottom: 12px;
+    font-size: 1.6rem;
+}
+
+.App .primary-content .library-display li {
+    margin-bottom: 2px;
+    font-size: 1.4rem;
+    line-height: 1.2;
+}
