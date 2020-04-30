@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext } from 'react';
+import React, { useState, useEffect, useContext, useCallback } from 'react';
 
 import { Store } from '../GlobalWrapper';
 import gc from '../../helpers/GameConstants';
@@ -25,6 +25,15 @@ const ConfigureSkills = () => {
             skill: ev.target.value
         });
     }
+
+    const selectPrimary = useCallback((ev) => {
+        dispatch({
+            type: "CHAR_EDIT",
+            field: "primary_synergy",
+            skill: ev.target.name.split("_")[2],
+            primary: ev.target.value
+        });
+    }, [dispatch]);
 
     const [levelsArray, setLevelsArray] = useState([]);
     const [upTo5Array, setUpTo5Array] = useState([]);
@@ -80,6 +89,36 @@ const ConfigureSkills = () => {
             });
         });
     }, [tempHistory])
+
+    const [synergyDiv, setSynergyDiv] = useState(null);
+    useEffect(() => {
+        const contents = Object.keys(state.cur.stats.synergy_bonuses).flatMap((skill) => {
+            if (state.cur.stats.synergy_bonuses[skill].length && state.cur.stats.skill_ranks[skill] >= 3) {
+                let defaultValue;
+                state.cur.stats.synergy_bonuses[skill].forEach((bonusObj) => {
+                    if (bonusObj.primary) defaultValue = bonusObj.to;
+                });
+                return ([
+                    <div key={skill} className="rows">
+                        <label>{skill}</label>
+                        <select onChange={selectPrimary} name={`meb_primarySynergySelect_${skill}`} defaultValue={defaultValue}>
+                            <option value={false}>Choose Primary</option>
+                            {state.cur.stats.synergy_bonuses[skill].map((bonusObj) => (
+                                <option key={bonusObj.to} value={bonusObj.to}>{bonusObj.display}</option>
+                            ))}
+                        </select>
+                    </div>
+                ]);
+            } else {
+                return [];
+            }
+        });
+        setSynergyDiv(contents.length ?
+            <div className="columns">
+                {contents}
+            </div> : null
+        );
+    }, [selectPrimary, state.cur])
 
     return (
         <section className="configure-skills rows">
@@ -142,6 +181,12 @@ const ConfigureSkills = () => {
                     </tbody>
                 </table>
             </section>
+            {synergyDiv ?
+                <section className="synergies rows">
+                    <label>Synergy Bonuses:</label>
+                    {synergyDiv}
+                </section> :
+            null}
         </section>
     );
 }

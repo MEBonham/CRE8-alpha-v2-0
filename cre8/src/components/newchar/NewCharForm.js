@@ -55,6 +55,7 @@ const NewCharForm = () => {
     }, [gatherChars, state.shouldUpdateCharacterCache])
 
     const saveNewChar = async (charObj) => {
+        console.log(charObj.stats.synergy_bonuses);
         try {
             const id = charObj.slug;
             delete charObj.slug;

@@ -1,5 +1,22 @@
 import gc from './GameConstants';
-import { kitDefault } from './Templates';
+import { kitDefault, charDefault } from './Templates';
+
+const clearBonuses = (statsObj, srcTypeArr) => {
+    const result = { ...statsObj };
+    const todoList = Object.keys(charDefault).filter((property) => property.endsWith("_mods"));
+    todoList.forEach((property) => {
+        const modsObj = result[property];
+        Object.keys(modsObj).forEach((bonusType) => {
+            Object.keys(modsObj[bonusType]).forEach((source) => {
+                const prevSrcType = result[property][bonusType][source].srcType;
+                if (!prevSrcType || srcTypeArr.includes(prevSrcType)) {
+                    delete result[property][bonusType][source]
+                }
+            });
+        });
+    });
+    return result;
+}
 
 const determineLevel = (xp_total) => {
     let calcLevel = 0;
@@ -13,6 +30,15 @@ const determineLevel = (xp_total) => {
         xpThreshold += increment;
     }
     return [calcLevel, xpThreshold];
+}
+
+const getDisplayName = (codeProperty) => {
+    switch (codeProperty) {
+        case "mp_mods":
+            return "Magic Points Pool";
+        default:
+            return codeProperty.split("_").slice(0, -1).join("_");
+    }
 }
 
 export const ifPlus = (val) => {
@@ -84,7 +110,8 @@ export const updateGoodSave = (statsObj) => {
         case "fortitude":
             fortMod["Original Good Save"] = {
                 level: 1,
-                num: gc.good_save_boost
+                num: gc.good_save_boost,
+                srcType: "automatic"
             };
             delete refMod["Original Good Save"];
             delete willMod["Original Good Save"];
@@ -93,7 +120,8 @@ export const updateGoodSave = (statsObj) => {
             delete fortMod["Original Good Save"];
             refMod["Original Good Save"] = {
                 level: 1,
-                num: gc.good_save_boost
+                num: gc.good_save_boost,
+                srcType: "automatic"
             };
             delete willMod["Original Good Save"];
             break;
@@ -102,7 +130,8 @@ export const updateGoodSave = (statsObj) => {
             delete refMod["Original Good Save"];
             willMod["Original Good Save"] = {
                 level: 1,
-                num: gc.good_save_boost
+                num: gc.good_save_boost,
+                srcType: "automatic"
             };
             break;
         default:
@@ -112,21 +141,21 @@ export const updateGoodSave = (statsObj) => {
         ...statsObj.fortitude_mods,
         base: {
             ...statsObj.fortitude_mods.base,
-            fortMod
+            "Original Good Save": fortMod
         }
     };
     const reflex_mods = {
         ...statsObj.reflex_mods,
         base: {
             ...statsObj.reflex_mods.base,
-            refMod
+            "Original Good Save": refMod
         }
     };
     const willpower_mods = {
         ...statsObj.willpower_mods,
         base: {
             ...statsObj.willpower_mods.base,
-            willMod
+            "Original Good Save": willMod
         }
     };
     const fortitude_base_total = heroic_bonus + mineModifiers({ base: fortMod });
@@ -187,9 +216,11 @@ const updateHeroicBonus = (statsObj) => {
 export const updateKits = (statsObj) => {
     let result = {
         ...statsObj,
-        traits_from_kits: [],
-        passives: []
+        passives: [],
+        synergy_bonuses: charDefault.stats.synergy_bonuses,
+        traits_from_kits: []
     };
+    result = clearBonuses(result, ["kit"]);
     const kitsAlreadyChecked = [];
     Object.keys(statsObj.kits).forEach((level) => {
         const kitsAtLevel = statsObj.kits[level];
@@ -199,7 +230,7 @@ export const updateKits = (statsObj) => {
             if (parseInt(level) >= statsObj.level) kitObj = kitDefault;
 
             result.traits_from_kits = result.traits_from_kits.concat(kitObj.benefit_traits).concat(kitObj.drawback_traits);
-            result.passives = result.passives.concat(kitObj.passives);
+            result.passives = [ ...result.passives, ...kitObj.passives ];
 
             const talentsGranted = kitObj.bonus_talents.length;
             const talentsArr = result.talents[level] ? Object.keys(result.talents[level]).filter((index) => index.startsWith("kit")) : [];
@@ -311,10 +342,33 @@ export const updateKits = (statsObj) => {
                 }
             };
 
+            kitObj.various_bonuses.forEach((bonusObj) => {
+                if (bonusObj.type === "Synergy") {
+                    if (!result.synergy_bonuses[bonusObj.skill]) result.synergy_bonuses[bonusObj.skill] = [];
+                    result.synergy_bonuses = {
+                        ...result.synergy_bonuses,
+                        [bonusObj.skill]: [
+                            ...result.synergy_bonuses[bonusObj.skill],
+                            {
+                                to: bonusObj.to,
+                                display: getDisplayName(bonusObj.to),
+                                primary: false,
+                                source: kitObj.id,
+                                srcType: "kit"
+                            }
+                        ]
+                    }
+                } else {
+
+                }
+            });
+
             kitsAlreadyChecked.push(kitObj.id);
         });
     });
     result = updateTalents(result);
+
+    result = updateSynergies(result);
 
     const stack1stLevelKits = result.traits_from_kits.includes("Stack 1st-Level Kits");
 
@@ -426,6 +480,7 @@ export const updateSkillRanks = (statsObj) => {
         trained_skills,
         skill_ranks
     };
+    result = updateSynergies(result);
     return updateSkillMods(result);
 }
 
@@ -439,8 +494,70 @@ const updateSpellcraft = (statsObj) => {
     };
 }
 
+export const updateSynergies = (statsObj) => {
+    // Assumes previous use of relevant clearBonuses() function where applicable
+    let result = { ...statsObj };
+    
+    const calcPrimary = (ranks) => {
+        if (ranks >= 7) return 2;
+        if (ranks >= 3) return 1;
+        return 0;
+    }
+    const calcSecondary = (ranks) => {
+        if (ranks >= 9) return 2;
+        if (ranks >= 5) return 1;
+        return 0;
+    }
+
+    Object.keys(result.synergy_bonuses).forEach((skill) => {
+        const ranks = result.skill_ranks[skill];
+        const bonusesArr = result.synergy_bonuses[skill];
+        bonusesArr.forEach((synergy) => {
+            const num = (synergy.primary) ? calcPrimary(ranks) : calcSecondary(ranks);
+            if (gc.skills_list.includes(synergy.to)) {
+                result.skill_mods[skill] = {
+                    ...result.skill_mods[skill],
+                    [synergy.source]: {
+                        num,
+                        srcType: [synergy.srcType]
+                    }
+                };
+            } else {
+                result[synergy.to] = {
+                    ...result[synergy.to],
+                    Synergy: {
+                        ...result[synergy.to].Synergy,
+                        [synergy.source]: {
+                            num,
+                            srcType: synergy.srcType
+                        }
+                    }
+                }
+            }
+        });
+    });
+    result = updateVariousMods(result);
+    return result;
+}
+
 export const updateTalents = (statsObj) => {
     return statsObj;
+}
+
+const updateVariousMods = (statsObj) => {
+    let result = { ...statsObj };
+    // result = updateAv(result);
+    // result = updateAwesome(result);
+    // result = updateDefense(result);
+    result = updateGoodSave(result);
+    result = updateMpMax(result);
+    // result = updateRpMax(result);
+    result = updateSkillMods(result);
+    // result = updateSpeed(result);
+    result = updateVpMax(result);
+    // result = updateWeaponImpact(result);
+
+    return result;
 }
 
 const updateVpMax = (statsObj) => {

@@ -1,4 +1,4 @@
-import { updateKits, updateXp, updateGoodSave, updateSkillRanks } from '../helpers/Calculations';
+import { updateKits, updateXp, updateGoodSave, updateSkillRanks, updateSynergies } from '../helpers/Calculations';
 
 import gc from '../helpers/GameConstants';
 
@@ -113,6 +113,25 @@ const Reducer = (state, action) => {
                         cur: {
                             ...state.cur,
                             name: newVal
+                        }
+                    };
+                case "primary_synergy":
+                    newVal = state.cur.stats.synergy_bonuses[action.skill];
+                    newVal.forEach((synergyBonus, i) => {
+                        newVal[i].primary = (synergyBonus.to === action.primary);
+                    });
+                    return {
+                        ...state,
+                        curChangesMade: true,
+                        cur: {
+                            ...state.cur,
+                            stats: updateSynergies({
+                                ...state.cur.stats,
+                                synergy_bonuses: {
+                                    ...state.cur.stats.synergy_bonuses,
+                                    [action.skill]: newVal
+                                }
+                            })
                         }
                     };
                 case "rp":

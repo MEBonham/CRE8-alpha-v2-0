@@ -341,7 +341,8 @@ section.configure-skills .trained {
     align-items: center;
 }
 
-section.configure-skills .trained label {
+section.configure-skills .trained label,
+section.configure-skills section.synergies label {
     margin-right: 10px;
     font-size: 1.4rem;
     font-weight: bold;
@@ -363,11 +364,14 @@ section.configure-skills .ranks-assignment th {
     font-weight: bold;
 }
 
-section.configure-skills .ranks-assignment td select {
+section.configure-skills .ranks-assignment td select,
+section.configure-skills section.synergies select,
+section.configure-skills section.synergies div div label {
     font-size: 1.2rem;
 }
 
 section.configure-skills .net-ranks-display table {
+    margin-bottom: 12px;
     border-collapse: separate;
     border-spacing: 4px 4px;
     font-size: 1.1rem;
@@ -379,6 +383,16 @@ section.configure-skills .net-ranks-display th {
 
 section.configure-skills .net-ranks-display td {
     text-align: center;
+}
+
+section.configure-skills section.synergies > div {
+    margin-top: 6px;
+    flex-wrap: wrap;
+    align-items: center;
+}
+
+section.configure-skills section.synergies > div div.rows {
+    margin-right: 6px;
 }
 
 section.skill-rolls h2 {
@@ -409,6 +423,10 @@ section.configure-specials > div.rows > div.columns > div {
     border-radius: 6px;
 }
 
+section.configure-specials > div.rows > div.columns > div select {
+    margin-bottom: 6px;
+}
+
 section.configure-specials > div.rows > div.columns div.select-kit select {
     color: darkred;
     font-weight: bold;
@@ -425,7 +443,7 @@ section.configure-specials > div.rows > div.columns div.select-talent select {
 }
 
 section.configure-specials .radio-bank {
-    margin-right: 6px;
+    margin: 0 6px 8px 0;
     font-size: 1.2rem;
 }
 

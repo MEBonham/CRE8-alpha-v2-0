@@ -2,6 +2,8 @@
 export const charDefault = {
     stats: {
         active_conditions: [],
+        armor_value: 2,
+        av_mods: {},
         awesome_check: 5,
         awesome_mods: {},
         awesome_mods_total: 0,
@@ -23,7 +25,8 @@ export const charDefault = {
             base: {
                 "Original Good Save": {
                     level: 1,
-                    num: 2
+                    num: 2,
+                    srcType: "automatic"
                 }
             }
         },
@@ -58,6 +61,24 @@ export const charDefault = {
         spellcraft_check: 0,
         spellcraft_mods: {},
         spellcraft_mods_total: 0,
+        synergy_bonuses: {
+            Brawn: [
+                {
+                    to: "av_mods",
+                    display: "Armor Value",
+                    primary: false,
+                    source: "automatic",
+                    srcType: "automatic"
+                },
+                {
+                    to: "weapon_impact_mods",
+                    display: "Weapon Impact",
+                    primary: false,
+                    source: "automatic",
+                    srcType: "automatic"
+                }
+            ]
+        },
         talents: {},
         trained_skills: [],
         trained_skills_history: {

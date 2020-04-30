@@ -2,6 +2,7 @@ import React, { useState, useEffect, useContext } from 'react';
 
 import { Store } from '../GlobalWrapper';
 import fb from '../../fbConfig';
+import ConfigureTalent from './ConfigureTalent';
 
 const ConfigureKit = (props) => {
     const [state, dispatch] = useContext(Store);
@@ -184,6 +185,13 @@ const ConfigureKit = (props) => {
                         </div>
                     </div> :
                 null}
+            </div>
+            <div className="columns">
+                {currentKit && currentKit.bonus_talents && currentKit.bonus_talents.map((bonusTalent, i) => {
+                    const key = Object.keys(bonusTalent)[0];
+                    const tagFilter = bonusTalent[key];
+                    return (<ConfigureTalent key={i} level={props.level} index={`kit${props.index}_${i}`} tagFilter={tagFilter} />)
+                })}
             </div>
         </div>
     );
