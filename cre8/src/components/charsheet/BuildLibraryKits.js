@@ -56,7 +56,7 @@ const BuildLibraryKits = (props) => {
             {
                 type: "Untyped",
                 num: 1,
-                to: "Fortitude"
+                to: "fortitude_mods"
             }
         ]);
     }
@@ -180,7 +180,10 @@ const BuildLibraryKits = (props) => {
 
     const saveKit = async (newSlug, kitObj) => {
         try {
-            await db.collection("kits").doc(newSlug).set(kitObj);
+            await db.collection("kits").doc(newSlug).set({
+                ...kitDefault,
+                ...kitObj
+            });
             if (props.editing) {
                 fillFormWithPrevInfo(kitObj);
             } else {
@@ -226,17 +229,20 @@ const BuildLibraryKits = (props) => {
                 bonusTalentsArr.push({
                     byTag: formData[key]
                 });
-            } else if (key === "bonusTrainingType") {
+            } else if (key === "trainingTypes") {
+                const options = formData.bonusTrainingOptions ?
+                    formData.bonusTrainingOptions :
+                    formData[key].map(() => (gc.skills_list));
                 bonusTrainingsArr = formData[key].map((training, i) => {
                     if (formData[key][i] === "specific") {
                         return ({
                             type: formData[key][i],
-                            options: [formData.bonusTrainingOptions[i]]
+                            options: [options[i]]
                         });
                     } else {
                         return ({
                             type: formData[key][i],
-                            options: formData.bonusTrainingOptions[i] || gc.skills_list
+                            options: options[i] || gc.skills_list
                         });
                     }
                 });

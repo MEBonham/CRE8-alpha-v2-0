@@ -32,10 +32,10 @@ const determineLevel = (xp_total) => {
     return [calcLevel, xpThreshold];
 }
 
-const getDisplayName = (codeProperty) => {
+export const getDisplayName = (codeProperty) => {
     switch (codeProperty) {
         case "mp_mods":
-            return "Magic Points Pool";
+            return "MP Pool";
         default:
             return codeProperty.split("_").slice(0, -1).join("_");
     }
@@ -141,21 +141,21 @@ export const updateGoodSave = (statsObj) => {
         ...statsObj.fortitude_mods,
         base: {
             ...statsObj.fortitude_mods.base,
-            "Original Good Save": fortMod
+            ...fortMod
         }
     };
     const reflex_mods = {
         ...statsObj.reflex_mods,
         base: {
             ...statsObj.reflex_mods.base,
-            "Original Good Save": refMod
+            ...refMod
         }
     };
     const willpower_mods = {
         ...statsObj.willpower_mods,
         base: {
             ...statsObj.willpower_mods.base,
-            "Original Good Save": willMod
+            ...willMod
         }
     };
     const fortitude_base_total = heroic_bonus + mineModifiers({ base: fortMod });
@@ -228,6 +228,7 @@ export const updateKits = (statsObj) => {
             let kitObj = (kitsAtLevel[index].id) ? kitsAtLevel[index] : kitDefault;
             if (kitsAlreadyChecked.includes(kitsAtLevel[index].id) && !kitsAtLevel[index].can_repeat) kitObj = kitDefault;
             if (parseInt(level) >= statsObj.level) kitObj = kitDefault;
+            console.log(kitObj);
 
             result.traits_from_kits = result.traits_from_kits.concat(kitObj.benefit_traits).concat(kitObj.drawback_traits);
             result.passives = [ ...result.passives, ...kitObj.passives ];
@@ -359,7 +360,17 @@ export const updateKits = (statsObj) => {
                         ]
                     }
                 } else {
-
+                    result[bonusObj.to] = {
+                        ...result[bonusObj.to],
+                        [bonusObj.type]: {
+                            ...result[bonusObj.to][bonusObj.type],
+                            [kitObj.id]: {
+                                level: level,
+                                num: bonusObj.num,
+                                srcType: "kit"
+                            }
+                        }
+                    }
                 }
             });
 
@@ -368,7 +379,7 @@ export const updateKits = (statsObj) => {
     });
     result = updateTalents(result);
 
-    result = updateSynergies(result);
+    result = updateSynergies(result);               // Includes updateVariousMods()
 
     const stack1stLevelKits = result.traits_from_kits.includes("Stack 1st-Level Kits");
 

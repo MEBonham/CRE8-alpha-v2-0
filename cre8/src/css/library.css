@@ -1,0 +1,40 @@
+.sidebar .library-display {
+    height: calc(100% - 220px - 16px - 18px - 50px);
+    padding: 10px 4%;
+    background-color: rgba(255, 255, 255, 0.3);
+    border-radius: 8px;
+    overflow-y: auto;
+}
+
+.sidebar .library-display h1 {
+    margin-bottom: 6px;
+    font-size: 1.8rem;
+    font-weight: bold;
+}
+
+.sidebar .library-display h2.subtitle {
+    margin-bottom: 10px;
+    font-size: 1.6rem;
+    font-weight: bold;
+}
+
+.sidebar .library-display h2 {
+    margin-bottom: 6px;
+    font-size: 1.4rem;
+    font-weight: bold;
+}
+
+.sidebar .library-display p {
+    margin-bottom: 10px;
+    font-size: 1.2rem;
+}
+
+.library-display ul {
+    margin-bottom: 10px;
+    list-style: disc inside;
+}
+
+.sidebar .library-display li {
+    margin-bottom: 2px;
+    font-size: 1.2rem;
+}

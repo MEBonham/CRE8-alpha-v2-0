@@ -90,6 +90,10 @@ const Reducer = (state, action) => {
                                 ...state.cur.stats,
                                 kits: action.payload
                             })
+                        },
+                        preview: {
+                            type: "kit",
+                            data: action.payload[action.level][action.index]
                         }
                     }
                 case "mp":

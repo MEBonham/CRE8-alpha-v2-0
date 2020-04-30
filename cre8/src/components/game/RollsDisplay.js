@@ -80,7 +80,7 @@ const RollsDisplay = () => {
     }, [state.rollsToDisplay])
 
     return(
-        <section className="sidebar-padding rolls-outer-window">
+        <section className="rolls-outer-window">
             <h2>Dice Rolls</h2>
             <div ref={scrollWindow} className="rolls-inner-window">
                 {state.rollsToDisplay ? state.rollsToDisplay.map((rollData, i) => {

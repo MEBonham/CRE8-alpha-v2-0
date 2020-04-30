@@ -77,7 +77,8 @@ const ConfigureKit = (props) => {
             ...kitsObj[props.level],
             [props.index]: kitObj
         };
-        dispatch({ type: "CHAR_EDIT", field: "kits", payload: kitsObj });
+        console.log(kitsObj);
+        dispatch({ type: "CHAR_EDIT", field: "kits", payload: kitsObj, level: props.level, index: props.index });
     }
 
     const radioSelection = (ev) => {

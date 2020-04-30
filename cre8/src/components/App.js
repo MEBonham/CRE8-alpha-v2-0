@@ -20,6 +20,7 @@ import ForgotPassword from './auth/ForgotPassword';
 import Login from './auth/Login';
 import Register from './auth/Register';
 import RollsDisplay from './game/RollsDisplay';
+import SpecialPreview from './library/SpecialPreview';
 import Code404 from './other/Code404';
 import '../css/App.css';
 
@@ -62,8 +63,9 @@ const App = () => {
                             <Route component={Code404} />
                         </Switch>
                     </div>
-                    <div className="sidebar">
+                    <div className="sidebar sidebar-padding">
                         <RollsDisplay />
+                        <SpecialPreview />
                     </div>
                 </div>
                 <Footer />

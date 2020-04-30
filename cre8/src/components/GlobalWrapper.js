@@ -50,6 +50,7 @@ const initialData = {
     editPrivilege: false,
     initialMount: true,
     mainNavMenuOpen: false,
+    preview: {},
     rollQueue: [],
     rollsToDisplay: [],
     shouldUpdateCharacterCache: true,
