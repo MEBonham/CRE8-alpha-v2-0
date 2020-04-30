@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext } from 'react';
+import React, { useState, useEffect, useRef, useContext } from 'react';
 
 import { Store } from '../GlobalWrapper';
 import fb from '../../fbConfig';
@@ -6,6 +6,15 @@ import ConfigureTalent from './ConfigureTalent';
 
 const ConfigureKit = (props) => {
     const [state, dispatch] = useContext(Store);
+
+    // Protect against memory leak
+    const _isMounted = useRef(false);
+    useEffect(() => {
+        _isMounted.current = true;
+        return(() => {
+            _isMounted.current = false;
+        });
+    }, [])
 
     const [allKits, setAllKits] = useState({});
     const [selectKits, setSelectKits] = useState({});
@@ -19,7 +28,9 @@ const ConfigureKit = (props) => {
         } catch(err) {
             console.log("Error:", err);
         }
-        setAllKits(allKitsCopy);
+        if (_isMounted) {
+            setAllKits(allKitsCopy);
+        }
     }
     useEffect(() => {
         loadKits();
@@ -51,10 +62,20 @@ const ConfigureKit = (props) => {
         // if (props.index === 0 && props.level === 0) console.log(currentKit.selected_options);
         if (currentKit && currentKit.selected_options) {
             Object.keys(currentKit.selected_options).forEach((choice) => {
-                const radios = mainSelectEl.parentNode.querySelectorAll(`input[name="${choice}-kit-${props.level}-${props.index}"]`);
-                radios.forEach((radio) => {
-                    radio.checked = (radio.value === currentKit.selected_options[choice]);
-                });
+                if (choice === "trainedSkill") {
+                    const innerSelects = mainSelectEl.parentNode.querySelectorAll("select")
+                    innerSelects.forEach((innerSelect) => {
+                        if (innerSelect.name.startsWith("trainedSkill_")) {
+                            const arrIndex = parseInt(innerSelect.name.split("-")[0].split("_")[1]);
+                            innerSelect.value = currentKit.selected_options[choice][arrIndex];
+                        }
+                    });
+                } else {
+                    const radios = mainSelectEl.parentNode.querySelectorAll(`input[name="${choice}-kit-${props.level}-${props.index}"]`);
+                    radios.forEach((radio) => {
+                        radio.checked = (radio.value === currentKit.selected_options[choice]);
+                    });
+                }
             });
         }
     }, [currentKit, props.index, props.level, selectKits])
@@ -83,6 +104,17 @@ const ConfigureKit = (props) => {
 
     const radioSelection = (ev) => {
         // console.log(ev.target.name, ev.target.value);
+        dispatch({
+            type: "CHAR_EDIT",
+            field: "customizeKit",
+            level: props.level,
+            index: props.index,
+            property: ev.target.name.split("-")[0],
+            payload: ev.target.value
+        });
+    }
+
+    const changeTrainedSkill = (ev) => {
         dispatch({
             type: "CHAR_EDIT",
             field: "customizeKit",
@@ -187,11 +219,29 @@ const ConfigureKit = (props) => {
                     </div> :
                 null}
             </div>
-            <div className="columns">
+            <div className="selects columns">
                 {currentKit && currentKit.bonus_talents && currentKit.bonus_talents.map((bonusTalent, i) => {
                     const key = Object.keys(bonusTalent)[0];
                     const tagFilter = bonusTalent[key];
                     return (<ConfigureTalent key={i} level={props.level} index={`kit${props.index}_${i}`} tagFilter={tagFilter} />)
+                })}
+                {currentKit && currentKit.bonus_trained_skills && currentKit.bonus_trained_skills.map((training, i) => {
+                    // console.log(training);
+                    return (
+                        <div className="rows" key={i}>
+                            <label>Train a Skill:</label>
+                            <select
+                                onChange={changeTrainedSkill}
+                                name={`trainedSkill_${i}-kit-${props.level}-${props.index}`}
+                                disabled={training.type === "specific"}
+                            >
+                                {training.type !== "specific" && <option value={false}>Select Skill</option>}
+                                {training.options.map((skill) => (
+                                    <option key={skill} value={skill}>{skill}</option>
+                                ))}
+                            </select>
+                        </div>
+                    );
                 })}
             </div>
         </div>

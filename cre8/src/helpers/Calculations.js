@@ -18,6 +18,23 @@ const clearBonuses = (statsObj, srcTypeArr) => {
     return result;
 }
 
+const clearTrainings = (statsObj, srcTypeArr) => {
+    const result = { ...statsObj };
+    Object.keys(result.trained_skills_history).forEach((level) => {
+        Object.keys(result.trained_skills_history[level]).forEach((source) => {
+            const prevSrcType = result.trained_skills_history[level][source].srcType;
+            if (!prevSrcType || srcTypeArr.includes(prevSrcType)) {
+                delete result.trained_skills_history[level][source];
+            }
+        });
+    });
+    result.trained_skills_history["0"] = {
+        ...charDefault.stats.trained_skills_history["0"],
+        ...result.trained_skills_history["0"]
+    };
+    return result;
+}
+
 const determineLevel = (xp_total) => {
     let calcLevel = 0;
     let xpThreshold = 0;
@@ -221,6 +238,7 @@ export const updateKits = (statsObj) => {
         traits_from_kits: []
     };
     result = clearBonuses(result, ["kit"]);
+    result = clearTrainings(result, ["kit"]);
     const kitsAlreadyChecked = [];
     Object.keys(statsObj.kits).forEach((level) => {
         const kitsAtLevel = statsObj.kits[level];
@@ -228,7 +246,7 @@ export const updateKits = (statsObj) => {
             let kitObj = (kitsAtLevel[index].id) ? kitsAtLevel[index] : kitDefault;
             if (kitsAlreadyChecked.includes(kitsAtLevel[index].id) && !kitsAtLevel[index].can_repeat) kitObj = kitDefault;
             if (parseInt(level) >= statsObj.level) kitObj = kitDefault;
-            console.log(kitObj);
+            // console.log(kitObj);
 
             result.traits_from_kits = result.traits_from_kits.concat(kitObj.benefit_traits).concat(kitObj.drawback_traits);
             result.passives = [ ...result.passives, ...kitObj.passives ];
@@ -343,6 +361,28 @@ export const updateKits = (statsObj) => {
                 }
             };
 
+            if (kitObj.selected_options.trainedSkill && kitObj.selected_options.trainedSkill.length) {
+                kitObj.selected_options.trainedSkill.forEach((skill, i) => {
+                    if (skill) {
+                        const source = kitObj.selected_options.trainedSkill.length > 1 ?
+                            `${kitObj.id}_${i}` : kitObj.id;
+                        result.trained_skills_history[level] = result.trained_skills_history[level] ?
+                            {
+                                ...result.trained_skills_history[level],
+                                [source]: {
+                                    skill,
+                                    srcType: "kit"
+                                }
+                            } : {
+                                [source]: {
+                                    skill,
+                                    srcType: "kit"
+                                }
+                            };
+                    }
+                })
+            }
+
             kitObj.various_bonuses.forEach((bonusObj) => {
                 if (bonusObj.type === "Synergy") {
                     if (!result.synergy_bonuses[bonusObj.skill]) result.synergy_bonuses[bonusObj.skill] = [];
@@ -380,6 +420,8 @@ export const updateKits = (statsObj) => {
     result = updateTalents(result);
 
     result = updateSynergies(result);               // Includes updateVariousMods()
+
+    result = updateSkillRanks(result);
 
     const stack1stLevelKits = result.traits_from_kits.includes("Stack 1st-Level Kits");
 
@@ -453,16 +495,17 @@ const updateSkillMods = (statsObj) => {
 }
 
 export const updateSkillRanks = (statsObj) => {
+    // console.log(statsObj.trained_skills_history);
     const skill_ranks = {};
     gc.skills_list.forEach(skill => {
-            skill_ranks[skill] = 0;
+        skill_ranks[skill] = 0;
     });
 
     const trained_skills = [];
-    for (let i = 0; i < statsObj.level_max8; i++) {
+    for (let i = 0; i < statsObj.level; i++) {
         if (statsObj.trained_skills_history[i]) {
             Object.keys(statsObj.trained_skills_history[i]).forEach(src => {
-                const skill = statsObj.trained_skills_history[i][src];
+                const skill = statsObj.trained_skills_history[i][src].skill;
                 if (gc.skills_list.includes(skill) && !trained_skills.includes(skill)) {
                     trained_skills.push(skill);
                     skill_ranks[skill] += gc.trained_skill_extra_ranks;

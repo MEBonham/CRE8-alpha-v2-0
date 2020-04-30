@@ -12,6 +12,7 @@ const ConfigureSkills = () => {
             field: "trained_skills_history",
             level: ev.target.id.split("_")[3].split("-")[1],
             src: ev.target.id.split("_")[2],
+            srcType: "automatic",
             payload: ev.target.value
         });
     }
@@ -40,9 +41,9 @@ const ConfigureSkills = () => {
     useEffect(() => {
         if (state.cur && state.cur.stats.trained_skills_history[0]) {
             document.getElementById("meb_charTrainSkill_default1_level-0").value =
-                state.cur.stats.trained_skills_history[0].default1;
+                state.cur.stats.trained_skills_history[0].default1.skill;
             document.getElementById("meb_charTrainSkill_default2_level-0").value =
-                state.cur.stats.trained_skills_history[0].default2;
+                state.cur.stats.trained_skills_history[0].default2.skill;
         }
 
         const tempLevelsArray = [];

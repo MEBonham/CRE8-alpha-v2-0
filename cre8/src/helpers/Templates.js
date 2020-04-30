@@ -83,8 +83,14 @@ export const charDefault = {
         trained_skills: [],
         trained_skills_history: {
             0: {
-                default1: "Choose",
-                default2: "Choose"
+                default1: {
+                    skill: false,
+                    srcType: "automatic"
+                },
+                default2: {
+                    skill: false,
+                    srcType: "automatic"
+                }
             }
         },
         traits_from_feats: [],

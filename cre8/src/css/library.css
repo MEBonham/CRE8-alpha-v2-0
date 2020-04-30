@@ -48,6 +48,7 @@
 }
 
 .library > section.links a {
+    margin-bottom: 3px;
     font-size: 1.4rem;
 }
 

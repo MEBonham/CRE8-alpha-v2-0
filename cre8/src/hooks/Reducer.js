@@ -32,6 +32,23 @@ const Reducer = (state, action) => {
                         }
                     };
                 case "customizeKit":
+                    let property;
+                    if (action.property.startsWith("trainedSkill")) {
+                        property = action.property.split("_")[0];
+                        const arrIndex = parseInt(action.property.split("_")[1]);
+                        let tempArray = [];
+                        if (state.cur.stats.kits[action.level][action.index].selected_options[property]) {
+                            tempArray = [ ...state.cur.stats.kits[action.level][action.index].selected_options[property] ];
+                        }
+                        while (tempArray.length < arrIndex) {
+                            tempArray.push(false);
+                        }
+                        tempArray[arrIndex] = action.payload;
+                        newVal = tempArray;
+                    } else {
+                        property = action.property;
+                        newVal = action.payload;
+                    }
                     return {
                         ...state,
                         curChangesMade: true,
@@ -47,7 +64,7 @@ const Reducer = (state, action) => {
                                             ...state.cur.stats.kits[action.level][action.index],
                                             selected_options: {
                                                 ...state.cur.stats.kits[action.level][action.index].selected_options,
-                                                [action.property]: action.payload
+                                                [property]: newVal
                                             }
                                         }
                                     }
@@ -179,7 +196,10 @@ const Reducer = (state, action) => {
                         ...state.cur.stats.trained_skills_history,
                         [action.level]: {
                             ...state.cur.stats.trained_skills_history[action.level],
-                            [action.src]: action.payload
+                            [action.src]: {
+                                skill: action.payload,
+                                srcType: action.srcType
+                            }
                         }
                     };
                     return {

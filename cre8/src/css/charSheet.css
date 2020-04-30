@@ -452,6 +452,14 @@ section.configure-specials .radio-bank input {
     top: 2px;
 }
 
+section.configure-specials div.select-kit .selects.columns {
+    align-items: flex-end;
+}
+
+section.configure-specials div.select-kit .selects.columns > div {
+    margin-right: 6px;
+}
+
 header.build-library {
     margin-bottom: 20px;
 }
