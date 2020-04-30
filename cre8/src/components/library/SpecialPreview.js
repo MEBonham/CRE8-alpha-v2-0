@@ -2,8 +2,9 @@ import React, { useState, useEffect, useRef, useContext } from 'react';
 
 import { Store } from '../GlobalWrapper';
 import { getDisplayName } from '../../helpers/Calculations';
-import '../../css/library.css';
+import { traitDescriptions } from '../../helpers/TraitDescriptions';
 import LoadingAlert from '../other/LoadingAlert';
+import '../../css/library.css';
 
 const SpecialPreview = () => {
     const [state, dispatch] = useContext(Store);
@@ -90,7 +91,7 @@ const SpecialPreview = () => {
                         }
                     })}
                     {data.benefit_traits.map((trait, i) => (
-                        <li key={i}><strong>{trait}</strong></li>
+                        <li key={i}><strong>{trait}:</strong> {traitDescriptions[trait]}</li>
                     ))}
                     {data.passives.map((passive, i) => (
                         <li key={i}>{passive}</li>
@@ -104,7 +105,7 @@ const SpecialPreview = () => {
                         <h2>Drawbacks:</h2>
                         <ul>
                             {data.drawback_traits.map((trait, i) => (
-                                <li key={i}><strong>{trait}</strong></li>
+                                <li key={i}><strong>{trait}:</strong> {traitDescriptions[trait]}</li>
                             ))}
                         </ul>
                     </> :
