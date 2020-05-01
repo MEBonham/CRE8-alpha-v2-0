@@ -82,13 +82,6 @@ const ConfigureTalent = (props) => {
     }
 
     const consumingModeToggle = (ev) => {
-        // setCurrentTalent({
-        //     ...currentTalent,
-        //     selected_options: {
-        //         ...currentTalent.selected_options,
-        //         consuming_mage_armor: ev.target.checked ? "on" : "off"
-        //     }
-        // });
         dispatch({
             type: "CHAR_EDIT",
             field: "customizeTalent",
@@ -98,10 +91,23 @@ const ConfigureTalent = (props) => {
             payload: ev.target.checked
         });
     }
+    const selectOptionalPassives = (ev) => {
+        console.log(ev.target.name);
+        dispatch({
+            type: "CHAR_EDIT",
+            field: "customizeTalent",
+            level: props.level,
+            index: props.index,
+            // property: ev.target.name.split("-")[0],
+            property: "selectivePassives",
+            payload: ev.target.value
+        });
+    }
 
+    // console.log(currentTalent);
     return (
         <div className="select-talent" id={`meb_editChar_selectTalent_${props.level}_${props.index}`}>
-            <select onChange={changeTalents}>
+            <select onChange={changeTalents} className="color-coded">
                 <option value={false}>Select Talent{props.flaw ? " (flaw)" : null}</option>
                 {Object.keys(selectTalents).sort().map((talentSlug) => (
                     <option key={talentSlug} value={talentSlug} className="non-false">{selectTalents[talentSlug].name}</option>
@@ -117,6 +123,18 @@ const ConfigureTalent = (props) => {
                     />
                     <label>Consuming Mode</label>
                 </div>
+            : null}
+            {currentTalent && currentTalent.selective_passives ?
+                <select
+                    onChange={selectOptionalPassives}
+                    name={`selective_passives-configureSelect-${props.level}-${props.index}`}
+                    defaultValue={currentTalent.selected_options.selectivePassives || false}
+                >
+                    <option value={false}>Select an Option</option>
+                    {Object.keys(currentTalent.selective_passives).sort().map((name) => (
+                        <option key={name} value={name}>{name}</option>
+                    ))}
+                </select>
             : null}
         </div>
     );

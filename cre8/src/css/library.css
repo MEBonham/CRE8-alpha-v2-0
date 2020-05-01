@@ -34,6 +34,16 @@
     list-style: disc inside;
 }
 
+.library-display ul li div {
+    display: inline-block;
+    margin-bottom: 4px;
+}
+
+.library-display ul ul {
+    margin: 0 0 4px 18px;
+    list-style: circle inside;
+}
+
 .sidebar .library-display li {
     margin-bottom: 2px;
     font-size: 1.2rem;

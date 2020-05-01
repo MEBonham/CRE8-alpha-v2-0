@@ -802,6 +802,23 @@ export const updateTalents = (statsObj) => {
                 }
             });
 
+            result = {
+                ...result,
+                passives: [
+                    ...result.passives,
+                    ...Object.keys(talentObj.selected_options).flatMap((optionType) => {
+                        if (optionType === "selectivePassives") {
+                            const selectedOption = talentObj.selected_options[optionType];
+                            return {
+                                text: talentObj.selective_passives[selectedOption],
+                                src: talentObj.id,
+                                srcType: "talent"
+                            };
+                        } else return [];
+                    })
+                ]
+            };
+
             talentsAlreadyChecked.push(talentObj.id);
         });
     });

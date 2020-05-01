@@ -437,7 +437,7 @@ section.configure-specials > div.rows > div.columns div.select-feat select {
     font-weight: bold;
 }
 
-section.configure-specials > div.rows > div.columns div.select-talent select {
+section.configure-specials > div.rows > div.columns div.select-talent select.color-coded {
     color: green;
     font-weight: bold;
 }
@@ -535,6 +535,7 @@ form.build-library section.bonus-talents,
 form.build-library section.bonus-trainings,
 form.build-library section.extended-rests,
 form.build-library section.passives,
+form.build-library section.selective-passives,
 form.build-library.build-talent section.various-bonuses,
 form.build-library.build-talent section.swift-actions,
 form.build-library.build-talent section.extended-rest-actions {
@@ -548,6 +549,8 @@ form.build-library.build-talent section.extended-rest-actions {
 }
 
 form.build-library section.passives textarea,
+form.build-library section.selective-passives textarea,
+form.build-library section.selective-passives .checkbox-pair,
 form.build-library.build-talent section.various-bonuses textarea,
 form.build-library.build-talent section.swift-actions textarea,
 form.build-library.build-talent section.extended-rest-actions textarea {

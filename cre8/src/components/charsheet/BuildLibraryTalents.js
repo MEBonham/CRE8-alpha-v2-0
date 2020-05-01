@@ -42,6 +42,16 @@ const BuildLibraryTalents = (props) => {
             ""
         ]);
     }
+    const [selectivePassives, setSelectivePassives] = useState([]);
+    const newSelectivePassive = (ev) => {
+        setSelectivePassives([
+            ...selectivePassives,
+            {
+                name: "",
+                detail: ""
+            }
+        ]);
+    }
     const [swiftActions, setSwiftActions] = useState([]);
     const newSwift = (ev) => {
         setSwiftActions([
@@ -60,11 +70,20 @@ const BuildLibraryTalents = (props) => {
     const tagDefaults = {};
     gc.talent_tags.forEach((tag) => {
         tagDefaults[`talentTag_checkbox_${tag}`] = false;
-    })
+    });
+    const selectiveNames = selectivePassives.map((selection) => (
+        selection.name
+    ));
+    const selectiveDetails = selectivePassives.map((selection) => (
+        selection.detail
+    ));
     const { control, handleSubmit, register, reset, watch } = useForm({
         defaultValues: {
             ...talentDefault,
-            ...tagDefaults
+            ...tagDefaults,
+            talent_checkbox_repeatable: talentDefault.can_repeat,
+            selectivePassiveName: selectiveNames,
+            selectivePassiveDetail: selectiveDetails
         }
     });
 
@@ -73,7 +92,7 @@ const BuildLibraryTalents = (props) => {
         controlRef.current = control;
     }, [control])
     const fillFormWithPrevInfo = useCallback((data) => {
-        console.log(controlRef.current);
+        // console.log(controlRef.current);
         Object.keys(data).forEach((key) => {
             if (key === "tags") {
                 data[key].forEach((tag) => {
@@ -90,10 +109,20 @@ const BuildLibraryTalents = (props) => {
                 }));
             } else if (key === "passives") {
                 setPassives(data[key]);
+            } else if (key === "selective_passives") {
+                console.log(data[key]);
+                setSelectivePassives(Object.keys(data[key]).sort().map((name) => ({
+                    name,
+                    detail: data[key][name]
+                })));
             } else if (key === "swift_actions") {
                 setSwiftActions(data[key]);
             } else if (key === "extended_rest_actions") {
                 setExtendedRestActions(data[key]);
+            } else if (key === "can_repeat") {
+                // console.log(controlRef.current, data[key], document.querySelector(`input[name="talent_checkbox_repeatable"]`));
+                controlRef.current.setValue("talent_checkbox_repeatable", data[key]);
+                // document.querySelector(`input[name="talent_checkbox_repeatable"]`).value = data[key];
             } else if (key === "benefit_traits" || key === "drawback_traits") {
                 const els = document.querySelectorAll(`select[name="${key}"] option`);
                 els.forEach((option) => {
@@ -129,6 +158,7 @@ const BuildLibraryTalents = (props) => {
                 reset();
                 setVariousBonuses([]);
                 setPassives([]);
+                setSelectivePassives([]);
                 setSwiftActions([]);
                 setExtendedRestActions([]);
             }
@@ -160,7 +190,15 @@ const BuildLibraryTalents = (props) => {
         const newSlug = encodeURIComponent(formData.name.split(" ").join("").toLowerCase());
         const talentObj = {};
         Object.keys(formData).forEach((key) => {
-            if (!key.startsWith("talentTag") && !key.startsWith("variousBonus")) {
+            if (key === "talent_checkbox_repeatable") {
+                talentObj.can_repeat = formData[key];
+            } else if (key === "selectivePassivesName") {
+                talentObj.selective_passives = {};
+                formData[key].forEach((name, i) => {
+                    talentObj.selective_passives[name] = formData.selectivePassivesDetail[i]
+                });
+            } else if (!key.startsWith("talentTag") && !key.startsWith("variousBonus") &&
+                !key.startsWith("selectivePassive")) {
                 talentObj[key] = formData[key];
             }
         })
@@ -311,6 +349,39 @@ const BuildLibraryTalents = (props) => {
                             />
                         ))}
                         <MyButton fct={newPassive}>Add Passive Ability</MyButton>
+                    </section>
+                    <section className="selective-passives rows">
+                        <label>Selective Passive Abilities</label>
+                        <div className="checkbox-pair">
+                                <Controller
+                                    as="input"
+                                    type="checkbox"
+                                    name={`talent_checkbox_repeatable`}
+                                    control={control}
+                                    valueName="checked"
+                                />
+                                <label>Can take more than once with differing selections</label>
+                        </div>
+                        {selectivePassives.map((ability, i) => (
+                            <div key={i} className="rows">
+                                <Controller
+                                    as="input"
+                                    type="text"
+                                    control={control}
+                                    name={`selectivePassivesName[${i}]`}
+                                    defaultValue={ability.name}
+                                />
+                                <Controller
+                                    as="textarea"
+                                    control={control}
+                                    name={`selectivePassivesDetail[${i}]`}
+                                    defaultValue={ability.detail}
+                                    rows="3"
+                                    cols="44"
+                                />
+                            </div>
+                        ))}
+                        <MyButton fct={newSelectivePassive}>Add Selective-Passive Pair</MyButton>
                     </section>
                     <section className="swift-actions rows">
                         <label>Swift Actions</label>

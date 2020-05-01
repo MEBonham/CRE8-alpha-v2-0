@@ -149,14 +149,28 @@ const SpecialPreview = () => {
                             return null;
                         }
                     })}
+                    {data.swift_actions.map((swiftAction, i) => (
+                        <li key={i}><em>Swift Action:</em> {swiftAction}</li>
+                    ))}
                     {data.benefit_traits.map((trait, i) => (
                         <li key={i}><strong>{trait}:</strong> {traitDescriptions[trait]}</li>
                     ))}
                     {data.passives.map((passive, i) => (
                         <li key={i}>{passive}</li>
                     ))}
+                    {Object.keys(data.selective_passives).length ?
+                        <li> <div>Choose one:</div>
+                            <ul>
+                                {Object.keys(data.selective_passives).sort().map((option) => (
+                                    <li key={option}>
+                                        <em>{option}:</em> {data.selective_passives[option]}
+                                    </li>
+                                ))}
+                            </ul>
+                        </li> :
+                    null}
                     {data.extended_rest_actions.map((restAction, i) => (
-                        <li key={i}>Extended Rest: {restAction}</li>
+                        <li key={i}><em>Extended Rest:</em> {restAction}</li>
                     ))}
                 </ul>
             </>

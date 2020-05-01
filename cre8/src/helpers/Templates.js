@@ -165,6 +165,7 @@ export const talentDefault = {
     normal: "",
     passives: [],
     selected_options: {},
+    selective_passives: {},
     swift_actions: [],
     various_bonuses: []
 }
