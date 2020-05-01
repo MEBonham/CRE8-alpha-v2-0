@@ -18,6 +18,21 @@ const clearBonuses = (statsObj, srcTypeArr) => {
     return result;
 }
 
+const clearPassives = (statsObj, srcTypeArr) => {
+    return {
+        ...statsObj,
+        passives: statsObj.passives.filter((item) => !srcTypeArr.includes(item.srcType)),
+    };
+}
+
+const clearRestFeatures = (statsObj, srcTypeArr) => {
+    return {
+        ...statsObj,
+        extended_rest_actions: statsObj.extended_rest_actions.filter((item) => !srcTypeArr.includes(item.srcType)),
+        short_rest_actions: statsObj.short_rest_actions.filter((item) => !srcTypeArr.includes(item.srcType)),
+    };
+}
+
 const clearTrainings = (statsObj, srcTypeArr) => {
     const result = { ...statsObj };
     Object.keys(result.trained_skills_history).forEach((level) => {
@@ -238,6 +253,8 @@ export const updateKits = (statsObj) => {
         traits_from_kits: []
     };
     result = clearBonuses(result, ["kit"]);
+    result = clearPassives(result, ["kit"]);
+    result = clearRestFeatures(result, ["kit"]);
     result = clearTrainings(result, ["kit"]);
     const kitsAlreadyChecked = [];
     Object.keys(statsObj.kits).forEach((level) => {
@@ -249,7 +266,27 @@ export const updateKits = (statsObj) => {
             // console.log(kitObj);
 
             result.traits_from_kits = result.traits_from_kits.concat(kitObj.benefit_traits).concat(kitObj.drawback_traits);
-            result.passives = [ ...result.passives, ...kitObj.passives ];
+            kitObj.passives.forEach((passiveFeature) => {
+                result.passives.push({
+                    text: passiveFeature,
+                    src: kitObj.id,
+                    srcType: "kit"
+                });
+            });
+            kitObj.short_rest_actions.forEach((restAction) => {
+                result.short_rest_actions.push({
+                    text: restAction,
+                    src: kitObj.id,
+                    srcType: "kit"
+                });
+            });
+            kitObj.extended_rest_actions.forEach((restAction) => {
+                result.extended_rest_actions.push({
+                    text: restAction,
+                    src: kitObj.id,
+                    srcType: "kit"
+                });
+            });
 
             const talentsGranted = kitObj.bonus_talents.length;
             const talentsArr = result.talents[level] ? Object.keys(result.talents[level]).filter((index) => index.startsWith("kit")) : [];

@@ -36,30 +36,16 @@ const PlaySkills = () => {
         }
     }
 
-    const cutoffNum = Math.ceil(gc.skills_list.length / 2);
-    const skillsList1 = gc.skills_list.slice(0, cutoffNum);
-    const skillsList2 = gc.skills_list.slice(cutoffNum);
-
     return (
         <section className="skill-rolls rows">
             <h2>Skills</h2>
-            <div className="columns">
-                <div className="skills-col-1 rows">
-                    {skillsList1.map((skill) => (
-                        <MyButton fct={skillRoll} evData={`meb_roll_${skill}-Check_${state.cur.stats.skill_mods_net[skill]}`} key={skill}>
-                            <img src={d20Icon} alt="" />
-                            {skill} Check ({ifPlus(state.cur.stats.skill_mods_net[skill]) + state.cur.stats.skill_mods_net[skill]})
-                        </MyButton>
-                    ))}
-                </div>
-                <div className="skills-col-2 rows">
-                    {skillsList2.map((skill) => (
-                        <MyButton fct={skillRoll} evData={`meb_roll_${skill}-Check_${state.cur.stats.skill_mods_net[skill]}`} key={skill}>
-                            <img src={d20Icon} alt="" />
-                            {skill} Check ({ifPlus(state.cur.stats.skill_mods_net[skill]) + state.cur.stats.skill_mods_net[skill]})
-                        </MyButton>
-                    ))}
-                </div>
+            <div className="rows">
+                {gc.skills_list.map((skill) => (
+                    <MyButton fct={skillRoll} evData={`meb_roll_${skill}-Check_${state.cur.stats.skill_mods_net[skill]}`} key={skill}>
+                        <img src={d20Icon} alt="" />
+                        {skill} Check ({ifPlus(state.cur.stats.skill_mods_net[skill]) + state.cur.stats.skill_mods_net[skill]})
+                    </MyButton>
+                ))}
             </div>
         </section>
     );

@@ -1,5 +1,6 @@
 import React from 'react';
 
+import PlayAccordions from './PlayAccordions';
 import PlayConditions from './PlayConditions';
 import PlayGeneralRolls from './PlayGeneralRolls';
 import PlayHeader from './PlayHeader';
@@ -22,6 +23,7 @@ const Play = () => {
             </header>
             <div className="columns">
                 <PlaySkills />
+                <PlayAccordions />
             </div>
         </>
     );

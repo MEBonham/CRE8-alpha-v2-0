@@ -3,6 +3,7 @@ export const charDefault = {
     stats: {
         active_conditions: [],
         armor_value: 2,
+        attacks: [],
         av_mods: {},
         awesome_check: 5,
         awesome_mods: {},
@@ -16,6 +17,7 @@ export const charDefault = {
         defense_mods: {},
         defense_total: 0,
         epithet: "Adventurer",
+        extended_rest_actions: [],
         feats: {},
         fighting_level: 0,
         fighting_level_kits: {},
@@ -36,11 +38,13 @@ export const charDefault = {
         kits: {},
         level: 1,
         level_max8: 1,
+        move_actions: [],
         mp: 0,
         mp_max: 0,
         mp_mods: {},
         mp_mods_total: 0,
         next_level_at: 100,
+        opportunity_actions: [],
         passives: [],
         reflex_base_total: 0,
         reflex_mods: {
@@ -51,6 +55,7 @@ export const charDefault = {
         rp_max: 4,
         rp_mods: {},
         rp_mods_total: 0,
+        short_rest_actions: [],
         skill_mods: {},
         skill_mods_net: {},
         skill_ranks: {},
@@ -61,6 +66,8 @@ export const charDefault = {
         spellcraft_check: 0,
         spellcraft_mods: {},
         spellcraft_mods_total: 0,
+        standard_actions: [],
+        swift_actions: [],
         synergy_bonuses: {
             Brawn: [
                 {
@@ -138,6 +145,7 @@ export const kitDefault = {
     fighting_OR_coast_boost: false,
     passives: [],
     selected_options: {},
+    short_rest_actions: [],
     various_bonuses: [],
     vp_boost: "0",
     vpPlus2_OR_mpPlus2: false,

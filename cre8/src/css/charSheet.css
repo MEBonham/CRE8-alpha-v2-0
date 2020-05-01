@@ -575,3 +575,12 @@ form.build-library section.passives textarea {
 form.build-library section.xp-parcels .my-button {
     margin-bottom: 22px;
 }
+
+div.play-accordions {
+    padding: 14px 0 14px 8%;
+    flex-grow: 1;
+}
+
+div.play-accordions h3 {
+    margin-left: 6%;
+}
