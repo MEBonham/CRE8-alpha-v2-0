@@ -33,6 +33,7 @@ export const charDefault = {
             }
         },
         fortitude_total: 2,
+        free_actions: [],
         good_save: "fortitude",
         heroic_bonus: 0,
         kits: {},
@@ -150,4 +151,17 @@ export const kitDefault = {
     vp_boost: "0",
     vpPlus2_OR_mpPlus2: false,
     xp_parcels: []
+}
+
+export const talentDefault = {
+    name: "",
+    tags: [],
+    prereqs: "",
+    benefit_traits: [],
+    bonus_talents: [],
+    can_repeat: false,
+    drawback_traits: [],
+    passives: [],
+    selected_options: {},
+    various_bonuses: []
 }

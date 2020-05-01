@@ -1,9 +1,9 @@
 import gc from './GameConstants';
-import { kitDefault, charDefault } from './Templates';
+import { charDefault, kitDefault, talentDefault } from './Templates';
 
 const clearBonuses = (statsObj, srcTypeArr) => {
     const result = { ...statsObj };
-    const todoList = Object.keys(charDefault).filter((property) => property.endsWith("_mods"));
+    const todoList = Object.keys(charDefault.stats).filter((property) => property.endsWith("_mods"));
     todoList.forEach((property) => {
         const modsObj = result[property];
         Object.keys(modsObj).forEach((bonusType) => {
@@ -30,6 +30,24 @@ const clearRestFeatures = (statsObj, srcTypeArr) => {
         ...statsObj,
         extended_rest_actions: statsObj.extended_rest_actions.filter((item) => !srcTypeArr.includes(item.srcType)),
         short_rest_actions: statsObj.short_rest_actions.filter((item) => !srcTypeArr.includes(item.srcType)),
+    };
+}
+
+const clearSynergies = (statsObj, srcTypeArr) => {
+    const result = { ...statsObj };
+    const objCopy = {};
+    Object.keys(result.synergy_bonuses).forEach((skill) => {
+        const arrCopy = [];
+        result.synergy_bonuses[skill].forEach((bonus) => {
+            if (bonus.srcType && !srcTypeArr.includes(bonus.srcType)) {
+                arrCopy.push(bonus);
+            }
+        });
+        objCopy[skill] = arrCopy;
+    })
+    return {
+        ...result,
+        synergy_bonuses: objCopy
     };
 }
 
@@ -248,7 +266,6 @@ const updateHeroicBonus = (statsObj) => {
 export const updateKits = (statsObj) => {
     let result = {
         ...statsObj,
-        passives: [],
         synergy_bonuses: charDefault.stats.synergy_bonuses,
         traits_from_kits: []
     };
@@ -511,6 +528,20 @@ const updateMpMax = (statsObj) => {
     };
 }
 
+const updateRpMax = (statsObj) => {
+    const origRpMax = statsObj.rp_max;
+
+    const rp_mods_total = mineModifiers(statsObj.rp_mods);
+    const rp_max = gc.base_reserve_points + rp_mods_total;
+    const rp = Math.max(0, statsObj.rp + (rp_max - origRpMax));
+    return {
+        ...statsObj,
+        rp_mods_total,
+        rp_max,
+        rp
+    };
+}
+
 const updateSkillMods = (statsObj) => {
     const skill_mods_net = {};
     const initialVals = {};
@@ -632,7 +663,70 @@ export const updateSynergies = (statsObj) => {
 }
 
 export const updateTalents = (statsObj) => {
-    return statsObj;
+    let result = {
+        ...statsObj,
+        traits_from_talents: []
+    };
+    result = clearBonuses(result, ["talent"]);
+    result = clearPassives(result, ["talent"]);
+    result = clearRestFeatures(result, ["talent"]);
+    result = clearSynergies(result, ["talent"]);
+    result = clearTrainings(result, ["talent"]);
+    const talentsAlreadyChecked = [];
+    Object.keys(statsObj.talents).forEach((level) => {
+        const talentsAtLevel = statsObj.talents[level];
+        Object.keys(talentsAtLevel).forEach((index) => {
+            let talentObj = (talentsAtLevel[index].id) ? talentsAtLevel[index] : talentDefault;
+            if (talentsAlreadyChecked.includes(talentsAtLevel[index].id) && !talentsAtLevel[index].can_repeat) talentObj = talentDefault;
+            if (parseInt(level) >= statsObj.level) talentObj = talentDefault;
+            // console.log(talentObj);
+
+            result.traits_from_talents = result.traits_from_talents.concat(talentObj.benefit_traits).concat(talentObj.drawback_traits);
+            talentObj.passives.forEach((passiveFeature) => {
+                result.passives.push({
+                    text: passiveFeature,
+                    src: talentObj.id,
+                    srcType: "talent"
+                });
+            });
+
+            talentObj.various_bonuses.forEach((bonusObj) => {
+                if (bonusObj.type === "Synergy") {
+                    if (!result.synergy_bonuses[bonusObj.skill]) result.synergy_bonuses[bonusObj.skill] = [];
+                    result.synergy_bonuses = {
+                        ...result.synergy_bonuses,
+                        [bonusObj.skill]: [
+                            ...result.synergy_bonuses[bonusObj.skill],
+                            {
+                                to: bonusObj.to,
+                                display: getDisplayName(bonusObj.to),
+                                primary: false,
+                                source: talentObj.id,
+                                srcType: "talent"
+                            }
+                        ]
+                    }
+                } else {
+                    result[bonusObj.to] = {
+                        ...result[bonusObj.to],
+                        [bonusObj.type]: {
+                            ...result[bonusObj.to][bonusObj.type],
+                            [talentObj.id]: {
+                                level: level,
+                                num: bonusObj.num,
+                                srcType: "talent"
+                            }
+                        }
+                    }
+                }
+            });
+
+            talentsAlreadyChecked.push(talentObj.id);
+        });
+    });
+
+    result = updateSynergies(result);               // Includes updateVariousMods()
+    return result;
 }
 
 const updateVariousMods = (statsObj) => {
@@ -642,7 +736,7 @@ const updateVariousMods = (statsObj) => {
     // result = updateDefense(result);
     result = updateGoodSave(result);
     result = updateMpMax(result);
-    // result = updateRpMax(result);
+    result = updateRpMax(result);
     result = updateSkillMods(result);
     // result = updateSpeed(result);
     result = updateVpMax(result);

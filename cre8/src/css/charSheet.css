@@ -534,7 +534,8 @@ form.build-library section.various-bonuses .my-button {
 form.build-library section.bonus-talents,
 form.build-library section.bonus-trainings,
 form.build-library section.extended-rests,
-form.build-library section.passives {
+form.build-library section.passives,
+form.build-library.build-talent section.various-bonuses {
     margin: 12px 12px 12px 0;
     padding: 0 3% 8px;
     display: flex;

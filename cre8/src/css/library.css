@@ -47,6 +47,10 @@
     margin-right: 10px;
 }
 
+.library > div .my-button.on {
+    box-shadow: 2px 2px 10px #111177;
+}
+
 .library > section.links a {
     margin-bottom: 3px;
     font-size: 1.4rem;

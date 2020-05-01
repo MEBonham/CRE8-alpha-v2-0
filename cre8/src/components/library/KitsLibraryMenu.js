@@ -29,7 +29,7 @@ const KitsLibraryMenu = () => {
         <section className="links rows">
             <h2>Kits</h2>
             {allKits.map((kitObj) => (
-                <Link to={`kits/${kitObj.slug}`}>{kitObj.name}</Link>
+                <Link to={`kits/${kitObj.slug}`} key={kitObj.slug}>{kitObj.name}</Link>
             ))}
         </section>
     );

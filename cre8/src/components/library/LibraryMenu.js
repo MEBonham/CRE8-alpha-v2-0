@@ -32,10 +32,10 @@ const LibraryMenu = (props) => {
         <div className="library primary-content content-padding">
             <h1>Library</h1>
             <div className="columns">
-                <MyLink to={`/library/kits`}>Kits</MyLink>
-                <MyLink to={`/library/feats`}>Feats</MyLink>
-                <MyLink to={`/library/talents`}>Talents</MyLink>
-                <MyLink to={`/library/items`}>Items</MyLink>
+                <MyLink to={`/library/kits`} className={category === "kits" ? "on" : "off"}>Kits</MyLink>
+                <MyLink to={`/library/feats`} className={category === "feats" ? "on" : "off"}>Feats</MyLink>
+                <MyLink to={`/library/talents`} className={category === "talents" ? "on" : "off"}>Talents</MyLink>
+                <MyLink to={`/library/items`} className={category === "items" ? "on" : "off"}>Items</MyLink>
             </div>
             <Switch>
                 <Route exact path={`/library/kits`} component={KitsLibraryMenu} />

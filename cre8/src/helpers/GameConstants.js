@@ -16,6 +16,7 @@ const gc = {
         { name: "Fortitude", code: "fortitude_mods" },
         { name: "Magic Points Pool", code: "mp_mods" },
         { name: "Reflex", code: "reflex_mods" },
+        { name: "Reserve Points Pool", code: "rp_mods" },
         { name: "Spellcraft", code: "spellcraft_mods" },
         { name: "Weapon Impact", code: "weapon_impact_mods" },
         { name: "Willpower", code: "willpower_mods" },

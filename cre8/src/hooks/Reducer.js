@@ -1,4 +1,4 @@
-import { updateKits, updateXp, updateGoodSave, updateSkillRanks, updateSynergies } from '../helpers/Calculations';
+import { updateGoodSave, updateKits, updateSkillRanks, updateSynergies, updateTalents, updateXp } from '../helpers/Calculations';
 
 import gc from '../helpers/GameConstants';
 
@@ -191,6 +191,22 @@ const Reducer = (state, action) => {
                             })
                         }
                     };
+                case "talents":
+                    return {
+                        ...state,
+                        curChangesMade: true,
+                        cur: {
+                            ...state.cur,
+                            stats: updateTalents({
+                                ...state.cur.stats,
+                                talents: action.payload
+                            })
+                        },
+                        preview: {
+                            type: "talents",
+                            data: action.payload[action.level][action.index]
+                        }
+                    }
                 case "trained_skills_history":
                     newVal = {
                         ...state.cur.stats.trained_skills_history,
