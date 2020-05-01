@@ -81,14 +81,43 @@ const ConfigureTalent = (props) => {
         dispatch({ type: "CHAR_EDIT", field: "talents", payload: talentsObj, level: props.level, index: props.index });
     }
 
+    const consumingModeToggle = (ev) => {
+        // setCurrentTalent({
+        //     ...currentTalent,
+        //     selected_options: {
+        //         ...currentTalent.selected_options,
+        //         consuming_mage_armor: ev.target.checked ? "on" : "off"
+        //     }
+        // });
+        dispatch({
+            type: "CHAR_EDIT",
+            field: "customizeTalent",
+            level: props.level,
+            index: props.index,
+            property: ev.target.name.split("-")[0],
+            payload: ev.target.checked
+        });
+    }
+
     return (
         <div className="select-talent" id={`meb_editChar_selectTalent_${props.level}_${props.index}`}>
             <select onChange={changeTalents}>
-                <option value={false}>Select Talent</option>
+                <option value={false}>Select Talent{props.flaw ? " (flaw)" : null}</option>
                 {Object.keys(selectTalents).sort().map((talentSlug) => (
                     <option key={talentSlug} value={talentSlug} className="non-false">{selectTalents[talentSlug].name}</option>
                 ))}
             </select>
+            {currentTalent && currentTalent.id === "magearmor" ?
+                <div className="checkbox-pair columns">
+                    <input
+                        type="checkbox"
+                        name={`consuming_mage_armor-talentCheckbox-${props.level}-${props.index}`}
+                        onChange={consumingModeToggle}
+                        defaultChecked={!!currentTalent.selected_options.consuming_mage_armor}
+                    />
+                    <label>Consuming Mode</label>
+                </div>
+            : null}
         </div>
     );
 }

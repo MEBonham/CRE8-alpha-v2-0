@@ -16,6 +16,9 @@ const SpecialPreview = () => {
                 case "kits":
                     dispatch({ type: "SET", key: "previewComponent", payload: previewKit(state.preview.data) });
                     break;
+                case "talents":
+                    dispatch({ type: "SET", key: "previewComponent", payload: previewTalent(state.preview.data) });
+                    break;
                 default:
                     dispatch({ type: "SET", key: "previewComponent", payload: previewItem(state.preview.data) });
             }
@@ -97,7 +100,7 @@ const SpecialPreview = () => {
                         <li key={i}>{passive}</li>
                     ))}
                     {data.extended_rest_actions.map((restAction, i) => (
-                        <li key={i}>{restAction}</li>
+                        <li key={i}>Extended Rest: {restAction}</li>
                     ))}
                 </ul>
                 {data.drawback_traits.length ?
@@ -120,6 +123,42 @@ const SpecialPreview = () => {
                         </ul>
                     </> :
                 null}
+            </>
+        );
+    }
+
+    const previewTalent = (data) => {
+        return(
+            <>
+                <h1>{data.name}</h1>
+                <h2 className="subtitle">[{data.tags.map((tag) => (tag)).join("] [")}] Talent</h2>
+                <p><strong>Prerequisites:</strong> {data.prereqs}</p>
+                <h2>Benefits:</h2>
+                <ul>
+                    {data.various_bonuses.map((modObj, i) => {
+                        if (modObj.type === "Synergy") {
+                            return (<li key={i}>
+                                Gain a{modObj.skill === "Athletics" ? "n" : null} {modObj.skill}-based
+                                synergy bonus to your {getDisplayName(modObj.to)}.
+                            </li>);
+                        } else if (modObj.num > 0) {
+                            return (<li key={i}>
+                                Gain a +{modObj.num} {modObj.type} bonus to your {getDisplayName(modObj.to)}.
+                            </li>);
+                        } else {
+                            return null;
+                        }
+                    })}
+                    {data.benefit_traits.map((trait, i) => (
+                        <li key={i}><strong>{trait}:</strong> {traitDescriptions[trait]}</li>
+                    ))}
+                    {data.passives.map((passive, i) => (
+                        <li key={i}>{passive}</li>
+                    ))}
+                    {data.extended_rest_actions.map((restAction, i) => (
+                        <li key={i}>Extended Rest: {restAction}</li>
+                    ))}
+                </ul>
             </>
         );
     }

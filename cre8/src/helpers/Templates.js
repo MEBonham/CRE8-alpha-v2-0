@@ -161,7 +161,10 @@ export const talentDefault = {
     bonus_talents: [],
     can_repeat: false,
     drawback_traits: [],
+    extended_rest_actions: [],
+    normal: "",
     passives: [],
     selected_options: {},
+    swift_actions: [],
     various_bonuses: []
 }

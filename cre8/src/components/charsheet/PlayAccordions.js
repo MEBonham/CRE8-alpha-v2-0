@@ -25,10 +25,23 @@ const PlayAccordions = () => {
                 <h3>Attacks</h3>
                 <Accordion uniqueKey={"meb_charAttacks"} cur={state.cur.id}>
                     {state.cur.stats.attacks.map((attackObj, i) => (
-                        <AccordionSection>
+                        <AccordionSection key={i}>
                             <h4>{attackObj.name}</h4>
                             <>
                                 {attackObj.impact}
+                            </>
+                        </AccordionSection>
+                    ))}
+                </Accordion>
+            </section>
+            <section>
+                <h3>Swift Actions</h3>
+                <Accordion uniqueKey={"meb_charSwifts"} cur={state.cur.id}>
+                    {state.cur.stats.swift_actions.map((swiftAction, i) => (
+                        <AccordionSection key={i}>
+                            <h4>{swiftAction.displaySource}</h4>
+                            <>
+                                <p>{swiftAction.text}</p>
                             </>
                         </AccordionSection>
                     ))}

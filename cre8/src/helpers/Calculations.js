@@ -29,7 +29,14 @@ const clearRestFeatures = (statsObj, srcTypeArr) => {
     return {
         ...statsObj,
         extended_rest_actions: statsObj.extended_rest_actions.filter((item) => !srcTypeArr.includes(item.srcType)),
-        short_rest_actions: statsObj.short_rest_actions.filter((item) => !srcTypeArr.includes(item.srcType)),
+        short_rest_actions: statsObj.short_rest_actions.filter((item) => !srcTypeArr.includes(item.srcType))
+    };
+}
+
+const clearSwiftActions = (statsObj, srcTypeArr) => {
+    return {
+        ...statsObj,
+        swift_actions: statsObj.swift_actions.filter((item) => !srcTypeArr.includes(item.srcType))
     };
 }
 
@@ -84,8 +91,12 @@ const determineLevel = (xp_total) => {
 
 export const getDisplayName = (codeProperty) => {
     switch (codeProperty) {
+        case "av_mods":
+            return "Armor Value";
         case "mp_mods":
             return "MP Pool";
+        case "rp_mods":
+            return "RP Pool";
         default:
             return codeProperty.split("_").slice(0, -1).join("_");
     }
@@ -485,6 +496,7 @@ export const updateKits = (statsObj) => {
     result.caster_level_kits_total = mineKits(result.caster_level_kits, stack1stLevelKits);
     result.caster_level = result.heroic_bonus + result.caster_level_kits_total;
     result = updateSpellcraft(result);
+    result = updateMageArmor(result);
     result = updateMpMax(result);
 
     result.coast_number_kits_total = mineKits(result.coast_number_kits, stack1stLevelKits);
@@ -510,6 +522,58 @@ const updateLevel = (statsObj) => {
     result = updateVpMax(result);
     if (heroic_bonus !== origHeroicBonus) {
         result = updateHeroicBonus(result);
+    }
+    return result;
+}
+
+const updateMageArmor = (statsObj) => {
+    const slug = "magearmor";
+    let result = { ...statsObj };
+    let foundTalentObj;
+    let foundLevel;
+    Object.keys(statsObj.talents).forEach((level) => {
+        Object.keys(statsObj.talents[level]).forEach((index) => {
+            if (!foundTalentObj && statsObj.talents[level][index].id === slug) {
+                foundTalentObj = statsObj.talents[level][index];
+                foundLevel = level;
+            }
+        });
+    });
+    if (foundTalentObj) {
+        let avNum = 2;
+        if (statsObj.caster_level >= 2 && foundTalentObj.selected_options.consuming_mage_armor &&
+            foundTalentObj.selected_options.consuming_mage_armor === "on") {
+            result.mp_mods = {
+                ...result.mp_mods,
+                Untyped: {
+                    ...result.mp_mods.Untyped,
+                    [slug]: {
+                        level: foundLevel,
+                        num: -1,
+                        srcType: "talent"
+                    }
+                }
+            }
+            avNum += 1;
+
+            if (statsObj.caster_level >= 5) {
+                avNum += 1;
+            }
+            if (statsObj.caster_level >= 9) {
+                avNum += 1;
+            }
+        }
+        result.av_mods = {
+            ...result.av_mods,
+            Item: {
+                ...result.av_mods.Item,
+                [slug]: {
+                    level: foundLevel,
+                    num: avNum,
+                    srcType: "talent"
+                }
+            }
+        };
     }
     return result;
 }
@@ -670,6 +734,7 @@ export const updateTalents = (statsObj) => {
     result = clearBonuses(result, ["talent"]);
     result = clearPassives(result, ["talent"]);
     result = clearRestFeatures(result, ["talent"]);
+    result = clearSwiftActions(result, ["talent"]);
     result = clearSynergies(result, ["talent"]);
     result = clearTrainings(result, ["talent"]);
     const talentsAlreadyChecked = [];
@@ -685,6 +750,22 @@ export const updateTalents = (statsObj) => {
             talentObj.passives.forEach((passiveFeature) => {
                 result.passives.push({
                     text: passiveFeature,
+                    src: talentObj.id,
+                    srcType: "talent"
+                });
+            });
+            talentObj.swift_actions.forEach((action) => {
+                result.swift_actions.push({
+                    displaySource: talentObj.name,
+                    text: action,
+                    src: talentObj.id,
+                    srcType: "talent"
+                });
+            });
+            talentObj.extended_rest_actions.forEach((action) => {
+                result.extended_rest_actions.push({
+                    displaySource: talentObj.name,
+                    text: action,
                     src: talentObj.id,
                     srcType: "talent"
                 });
@@ -726,6 +807,10 @@ export const updateTalents = (statsObj) => {
     });
 
     result = updateSynergies(result);               // Includes updateVariousMods()
+    if (talentsAlreadyChecked.includes("magearmor")) {
+        result = updateMageArmor(result);
+        result = updateMpMax(result);
+    }
     return result;
 }
 

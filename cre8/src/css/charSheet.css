@@ -535,7 +535,9 @@ form.build-library section.bonus-talents,
 form.build-library section.bonus-trainings,
 form.build-library section.extended-rests,
 form.build-library section.passives,
-form.build-library.build-talent section.various-bonuses {
+form.build-library.build-talent section.various-bonuses,
+form.build-library.build-talent section.swift-actions,
+form.build-library.build-talent section.extended-rest-actions {
     margin: 12px 12px 12px 0;
     padding: 0 3% 8px;
     display: flex;
@@ -543,6 +545,13 @@ form.build-library.build-talent section.various-bonuses {
     align-items: flex-start;
     border: 1px solid brown;
     border-radius: 6px;
+}
+
+form.build-library section.passives textarea,
+form.build-library.build-talent section.various-bonuses textarea,
+form.build-library.build-talent section.swift-actions textarea,
+form.build-library.build-talent section.extended-rest-actions textarea {
+    margin-bottom: 6px;
 }
 
 form.build-library section.bonus-talents > div.columns,

@@ -278,6 +278,7 @@ section.user-management {
 }
 
 .accordion {
+    margin-bottom: 8px;
     border-radius: 12px;
     overflow-y: hidden;
     box-shadow: 1px 1px 8px #444444;

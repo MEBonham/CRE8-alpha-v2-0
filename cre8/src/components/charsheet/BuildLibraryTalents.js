@@ -1,6 +1,8 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef, useContext, useCallback } from 'react';
+import { Redirect, useParams } from 'react-router-dom';
 import { Controller, useForm } from 'react-hook-form';
 
+import { Store } from '../GlobalWrapper';
 import fb from '../../fbConfig';
 import MyButton from '../ui/MyButton';
 import MyFormButton from '../ui/MyFormButton';
@@ -9,6 +11,18 @@ import { talentDefault } from '../../helpers/Templates';
 import { arraysEqual } from '../../helpers/Utilities';
 
 const BuildLibraryTalents = (props) => {
+    const [state] = useContext(Store);
+    const { slug } = useParams();
+    const db = fb.db;
+
+    // Protect against memory leak
+    const _isMounted = useRef(false);
+    useEffect(() => {
+        _isMounted.current = true;
+        return(() => {
+            _isMounted.current = false;
+        });
+    }, [])
 
     const [variousBonuses, setVariousBonuses] = useState([]);
     const newVBonus = (ev) => {
@@ -28,6 +42,20 @@ const BuildLibraryTalents = (props) => {
             ""
         ]);
     }
+    const [swiftActions, setSwiftActions] = useState([]);
+    const newSwift = (ev) => {
+        setSwiftActions([
+            ...swiftActions,
+            ""
+        ]);
+    }
+    const [extendedRestActions, setExtendedRestActions] = useState([]);
+    const newExtendedRestAction = (ev) => {
+        setExtendedRestActions([
+            ...extendedRestActions,
+            ""
+        ]);
+    }
 
     const tagDefaults = {};
     gc.talent_tags.forEach((tag) => {
@@ -39,6 +67,43 @@ const BuildLibraryTalents = (props) => {
             ...tagDefaults
         }
     });
+
+    const controlRef = useRef(null);
+    useEffect(() => {
+        controlRef.current = control;
+    }, [control])
+    const fillFormWithPrevInfo = useCallback((data) => {
+        console.log(controlRef.current);
+        Object.keys(data).forEach((key) => {
+            if (key === "tags") {
+                data[key].forEach((tag) => {
+                    controlRef.current.setValue(`talentTag_checkbox_${tag}`, true);
+                });
+            } else if (key === "various_bonuses") {
+                setVariousBonuses(data[key].map((bonus) => {
+                    const bonusObj = {};
+                    bonusObj.type = bonus.type || "Untyped";
+                    bonusObj.to = bonus.to || "fortitude_mods";
+                    bonusObj.num = bonus.num || 1;
+                    bonusObj.skill = bonus.skill || "Brawn";
+                    return bonusObj;
+                }));
+            } else if (key === "passives") {
+                setPassives(data[key]);
+            } else if (key === "swift_actions") {
+                setSwiftActions(data[key]);
+            } else if (key === "extended_rest_actions") {
+                setExtendedRestActions(data[key]);
+            } else if (key === "benefit_traits" || key === "drawback_traits") {
+                const els = document.querySelectorAll(`select[name="${key}"] option`);
+                els.forEach((option) => {
+                    option.selected = data[key].includes(option.value);
+                });
+            } else {
+                controlRef.current.setValue(key, data[key]);
+            }
+        });
+    }, []);
 
     const [variousBonusTypes, setVariousBonusTypes] = useState([]);
     useEffect(() => {
@@ -54,7 +119,7 @@ const BuildLibraryTalents = (props) => {
 
     const saveTalent = async (newSlug, talentObj) => {
         try {
-            await fb.db.collection("talents").doc(newSlug).set({
+            await db.collection("talents").doc(newSlug).set({
                 ...talentDefault,
                 ...talentObj
             });
@@ -64,6 +129,8 @@ const BuildLibraryTalents = (props) => {
                 reset();
                 setVariousBonuses([]);
                 setPassives([]);
+                setSwiftActions([]);
+                setExtendedRestActions([]);
             }
         } catch(err) {
             console.log("Error:", err);
@@ -89,6 +156,7 @@ const BuildLibraryTalents = (props) => {
         return arr;
     }
     const processTalentForm = (formData) => {
+        // console.log(formData);
         const newSlug = encodeURIComponent(formData.name.split(" ").join("").toLowerCase());
         const talentObj = {};
         Object.keys(formData).forEach((key) => {
@@ -101,10 +169,33 @@ const BuildLibraryTalents = (props) => {
             return formData[idString] ? true : false;
         });
         talentObj.various_bonuses = bundleVariousBonuses(formData);
-        // console.log(talentObj);
         saveTalent(newSlug, talentObj);
     }
 
+    const [code404, setCode404] = useState(false);
+    useEffect(() => {
+        const loadDbTalents = async (pageUrl) => {
+            try {
+                const doc = await db.collection("talents").doc(pageUrl).get();
+                if (doc.exists) {
+                    fillFormWithPrevInfo(doc.data());
+                } else {
+                    if (_isMounted.current) {
+                        setCode404(true);
+                    }
+                }
+            } catch(err) {
+                console.log("Error:", err);
+            }
+        }
+        if (props.editing) {
+            loadDbTalents(slug);
+        }
+    }, [db, fillFormWithPrevInfo, slug, props.editing])
+
+    if (props.editing && !slug) return <Redirect to="/library/talents" />;
+    if (code404) return <Redirect to="/library/talents" />;
+    if (state.user && state.user.rank === "peasant") return <Redirect to="/library/talents" />;
     return (
         <form onSubmit={handleSubmit(processTalentForm)} className="build-library build-talent">
             <header className="columns">
@@ -150,8 +241,9 @@ const BuildLibraryTalents = (props) => {
                 </div>
             </header>
             <section className="columns">
-                <div className="main-body">
+                <div className="main-body rows">
                     <section className="various-bonuses rows">
+                        <label>Various Bonuses</label>
                         <ul>
                             {variousBonuses.map((bonus, i) => (
                                 <li key={`${i}`}>
@@ -205,6 +297,61 @@ const BuildLibraryTalents = (props) => {
                         </ul>
                         <MyButton fct={newVBonus}>Add Bonus</MyButton>
                     </section>
+                    <section className="passives rows">
+                        <label>Passive Abilities</label>
+                        {passives.map((ability, i) => (
+                            <Controller
+                                key={i}
+                                as="textarea"
+                                control={control}
+                                name={`passives[${i}]`}
+                                defaultValue={ability}
+                                rows="3"
+                                cols="44"
+                            />
+                        ))}
+                        <MyButton fct={newPassive}>Add Passive Ability</MyButton>
+                    </section>
+                    <section className="swift-actions rows">
+                        <label>Swift Actions</label>
+                        {swiftActions.map((action, i) => (
+                            <Controller
+                                key={i}
+                                as="textarea"
+                                control={control}
+                                name={`swift_actions[${i}]`}
+                                defaultValue={action}
+                                rows="3"
+                                cols="44"
+                            />
+                        ))}
+                        <MyButton fct={newSwift}>Add Swift Action</MyButton>
+                    </section>
+                    <section className="extended-rest-actions rows">
+                        <label>Extended Rest Actions</label>
+                        {extendedRestActions.map((action, i) => (
+                            <Controller
+                                key={i}
+                                as="textarea"
+                                control={control}
+                                name={`extended_rest_actions[${i}]`}
+                                defaultValue={action}
+                                rows="3"
+                                cols="44"
+                            />
+                        ))}
+                        <MyButton fct={newExtendedRestAction}>Add Extended Rest Action</MyButton>
+                    </section>
+                    <div className="rows">
+                        <h3>Normal</h3>
+                        <Controller
+                            as="textarea"
+                            name="normal"
+                            control={control}
+                            rows="3"
+                            cols="54"
+                        />
+                    </div>
                 </div>
             </section>
             <MyFormButton type="submit">Save</MyFormButton>

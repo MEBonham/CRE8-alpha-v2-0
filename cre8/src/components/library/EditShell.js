@@ -3,6 +3,8 @@ import { Route, Switch, useRouteMatch } from 'react-router-dom';
 
 import BuildLibraryKits from '../charsheet/BuildLibraryKits';
 import KitEditingMenu from '../library/KitEditingMenu';
+import BuildLibraryTalents from '../charsheet/BuildLibraryTalents';
+import TalentEditingMenu from '../library/TalentEditingMenu';
 
 const EditShell = () => {
     const match = useRouteMatch();
@@ -13,6 +15,11 @@ const EditShell = () => {
                 <Route
                     path={`${match.url}/kits/:slug`}
                     render={() => <BuildLibraryKits editing />}
+                />
+                <Route exact path={`${match.url}/talents`} component={TalentEditingMenu} />
+                <Route
+                    path={`${match.url}/talents/:slug`}
+                    render={() => <BuildLibraryTalents editing />}
                 />
             </Switch>
         </div>

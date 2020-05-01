@@ -13,6 +13,7 @@ const gc = {
         "Martial Weaponry"
     ],
     bonus_targets: [
+        { name: "Armor Value", code: "av_mods" },
         { name: "Fortitude", code: "fortitude_mods" },
         { name: "Magic Points Pool", code: "mp_mods" },
         { name: "Reflex", code: "reflex_mods" },
@@ -25,6 +26,7 @@ const gc = {
         "Base",
         "Circumstance",
         "Feat",
+        "Item",
         "Racial",
         "Size",
         "Synergy",
@@ -66,8 +68,10 @@ const gc = {
         "Buff",
         "Core",
         "Epic",
+        "Flaw",
         "Ki",
         "Monster",
+        "Proficiency",
         "Seed",
         "Skill Trick"
     ],

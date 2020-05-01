@@ -72,6 +72,31 @@ const Reducer = (state, action) => {
                             })
                         }
                     };
+                case "customizeTalent":
+                    newVal = (action.property === "consuming_mage_armor") ? (action.payload ? "on" : "off") : action.payload;
+                    return {
+                        ...state,
+                        curChangesMade: true,
+                        cur: {
+                            ...state.cur,
+                            stats: updateTalents({
+                                ...state.cur.stats,
+                                talents: {
+                                    ...state.cur.stats.talents,
+                                    [action.level]: {
+                                        ...state.cur.stats.talents[action.level],
+                                        [action.index]: {
+                                            ...state.cur.stats.talents[action.level][action.index],
+                                            selected_options: {
+                                                ...state.cur.stats.talents[action.level][action.index].selected_options,
+                                                [action.property]: newVal
+                                            }
+                                        }
+                                    }
+                                }
+                            })
+                        }
+                    };
                 case "earnXp":
                     newVal = action.inputs[`${action.stub}_${action.field}`];
                     return {
