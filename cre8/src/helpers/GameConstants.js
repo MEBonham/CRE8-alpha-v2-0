@@ -13,6 +13,7 @@ const gc = {
     benefit_traits: [
         "Darkvision",
         "Ignore Armor Speed Penalty",
+        "Low-Light Vision",
         "Martial Weaponry",
         "Skill Ranks for Parcels",
         "Stability",

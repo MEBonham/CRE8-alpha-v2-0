@@ -599,6 +599,26 @@ export const updateKits = (statsObj) => {
                 }
             };
 
+            if (kitObj.bonus_trained_skills.length) {
+                kitObj.bonus_trained_skills.forEach((bonusSkillTrained, i) => {
+                    if (bonusSkillTrained.type === "specific") {
+                        result.trained_skills_history[level] = result.trained_skills_history[level] ?
+                            {
+                                ...result.trained_skills_history[level],
+                                [`${kitObj.id}_specific_${i}`]: {
+                                    skill: bonusSkillTrained.options[0],
+                                    srcType: "kit"
+                                }
+                            } : {
+                                ...result.trained_skills_history[level],
+                                [`${kitObj.id}_specific_${i}`]: {
+                                    skill: bonusSkillTrained.options[0],
+                                    srcType: "kit"
+                                }
+                            };
+                    }
+                })
+            }
             if (kitObj.selected_options.trainedSkill && kitObj.selected_options.trainedSkill.length) {
                 kitObj.selected_options.trainedSkill.forEach((skill, i) => {
                     if (skill) {
