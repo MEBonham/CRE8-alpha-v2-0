@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import fb from '../../fbConfig';
 
 import MyExternalLink from '../ui/MyExternalLink';
+import MyLink from '../ui/MyLink';
 import RankButtonSystem from './RankButtonSystem';
 
 const AdminSettings = ({ ownId }) => {
@@ -74,6 +75,7 @@ const AdminSettings = ({ ownId }) => {
     return (
         <section>
             <h2>Administration</h2>
+            <MyLink to="/obscureaddress">Batch-edit database entities</MyLink>
             <section className="user-management">
                 <h3>Manage Users</h3>
                 <table className="user-management-table">

@@ -124,10 +124,20 @@ const ConfigureKit = (props) => {
             payload: ev.target.value
         });
     }
+    const toggleParcelEarned = (ev) => {
+        dispatch({
+            type: "CHAR_EDIT",
+            field: "toggleParcel",
+            level: props.level,
+            index: props.index,
+            parcelNum: parseInt(ev.target.name.split("_")[4]),
+            payload: ev.target.checked
+        });
+    }
 
     return (
         <div className="select-kit" id={`meb_editChar_selectKit_${props.level}_${props.index}`}>
-            <select onChange={changeKits}>
+            <select onChange={changeKits} className="color-coded">
                 <option value={false}>Select Kit</option>
                 {Object.keys(selectKits).sort().map((kitSlug) => (
                     <option key={kitSlug} value={kitSlug} className="non-false">{selectKits[kitSlug].name}</option>
@@ -244,6 +254,21 @@ const ConfigureKit = (props) => {
                     );
                 })}
             </div>
+            {currentKit && currentKit.xp_parcels ?
+                <div className="parcels rows">
+                    {currentKit.xp_parcels.map((parcel, i) => (
+                        <div key={i} className="checkbox-pair">
+                            <input
+                                type="checkbox"
+                                name={`meb_parcelEarnedCheckbox_${props.level}_${props.index}_${i}`}
+                                onChange={toggleParcelEarned}
+                                defaultChecked={currentKit.xp_parcels_acquired[i] || false}
+                            />
+                            <label>{parcel}</label>
+                        </div>
+                    ))}
+                </div> :
+            null}
         </div>
     );
 }

@@ -23,6 +23,7 @@ import Login from './auth/Login';
 import Register from './auth/Register';
 import RollsDisplay from './game/RollsDisplay';
 import SpecialPreview from './library/SpecialPreview';
+import BatchEdit from './other/BatchEdit';
 import Code404 from './other/Code404';
 import '../css/App.css';
 
@@ -65,6 +66,7 @@ const App = () => {
                             <ReverseGuarded path="/login/forgot"><ForgotPassword /></ReverseGuarded>
                             <ReverseGuarded path="/login"><Login /></ReverseGuarded>
                             <ReverseGuarded path="/register"><Register /></ReverseGuarded>
+                            <Guarded path="/obscureaddress"><BatchEdit /></Guarded>
                             <Route component={Code404} />
                         </Switch>
                     </div>

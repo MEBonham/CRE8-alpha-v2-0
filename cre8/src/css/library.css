@@ -29,6 +29,37 @@
     font-size: 1.2rem;
 }
 
+.view-library-shell {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+}
+
+.view-library-shell div.carousel-nav {
+    position: absolute;
+    right: 20px;
+}
+
+.view-library-shell div.carousel-nav > div {
+    width: 50px;
+    margin-left: 22px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+}
+
+.view-library-shell div.carousel-nav > div .my-button a {
+    position: relative;
+    top: -2px;
+    font-weight: bold;
+}
+
+.view-library-shell > .my-button {
+    margin-top: 20px;
+}
+
 .library-display ul {
     margin-bottom: 10px;
     list-style: disc inside;
@@ -77,6 +108,10 @@
 .App .primary-content .library-display p {
     margin-bottom: 12px;
     font-size: 1.6rem;
+}
+
+.App .primary-content .library-display p.prereqs {
+    max-width: 75%;
 }
 
 .App .primary-content .library-display li {

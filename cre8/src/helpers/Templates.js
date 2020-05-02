@@ -116,7 +116,6 @@ export const charDefault = {
         willpower_mods_total: 0,
         xp: 0,
         xp_base: 0,
-        xp_parcels: {},
         xp_parcels_total: 0
     }
 };
@@ -150,7 +149,8 @@ export const kitDefault = {
     various_bonuses: [],
     vp_boost: "0",
     vpPlus2_OR_mpPlus2: false,
-    xp_parcels: []
+    xp_parcels: [],
+    xp_parcels_acquired: []
 }
 
 export const talentDefault = {
@@ -166,6 +166,8 @@ export const talentDefault = {
     passives: [],
     selected_options: {},
     selective_passives: {},
+    short_rest_actions: [],
+    standard_actions: [],
     swift_actions: [],
     various_bonuses: []
 }

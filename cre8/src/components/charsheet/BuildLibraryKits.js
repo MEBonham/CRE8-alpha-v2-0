@@ -455,15 +455,6 @@ const BuildLibraryKits = (props) => {
                     <ul>
                         {vp_boost_arr.map((numStr) => (
                             <li key={numStr} className="radio-vp_boost">
-                                {/* <Controller
-                                    as="input"
-                                    type="radio"
-                                    name="vp_boost"
-                                    id={`meb-editKit-radio-vp_boost-${numStr}`}
-                                    value={numStr}
-                                    control={control}
-                                    defaultChecked={numStr === "0"}
-                                /> */}
                                 <input
                                     type="radio"
                                     name="vp_boost"

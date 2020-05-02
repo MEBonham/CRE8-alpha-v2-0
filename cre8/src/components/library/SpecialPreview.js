@@ -34,12 +34,11 @@ const SpecialPreview = () => {
     }, [state.previewComponent])
 
     const previewKit = (data) => {
-        console.log(data);
         return(
             <>
                 <h1>{data.name}</h1>
                 <h2 className="subtitle">[{data.tags.map((tag) => (tag)).join("] [")}] Kit</h2>
-                <p><strong>Prerequisites:</strong> {data.prereqs}</p>
+                <p className="prereqs"><strong>Prerequisites:</strong> {data.prereqs}</p>
                 <h2>Benefits:</h2>
                 <ul>
                     {data.fighting_level_boost ?
@@ -132,7 +131,7 @@ const SpecialPreview = () => {
             <>
                 <h1>{data.name}</h1>
                 <h2 className="subtitle">[{data.tags.map((tag) => (tag)).join("] [")}] Talent</h2>
-                <p><strong>Prerequisites:</strong> {data.prereqs}</p>
+                <p className="prereqs"><strong>Prerequisites:</strong> {data.prereqs}</p>
                 <h2>Benefits:</h2>
                 <ul>
                     {data.various_bonuses.map((modObj, i) => {
@@ -149,6 +148,9 @@ const SpecialPreview = () => {
                             return null;
                         }
                     })}
+                    {data.standard_actions.map((standardAction, i) => (
+                        <li key={i}><em>Standard Action:</em> {standardAction}</li>
+                    ))}
                     {data.swift_actions.map((swiftAction, i) => (
                         <li key={i}><em>Swift Action:</em> {swiftAction}</li>
                     ))}
@@ -173,6 +175,12 @@ const SpecialPreview = () => {
                         <li key={i}><em>Extended Rest:</em> {restAction}</li>
                     ))}
                 </ul>
+                {data.normal ?
+                    <>
+                        <h2>Normal</h2>
+                        <p>{data.normal}</p>
+                    </> :
+                null}
             </>
         );
     }

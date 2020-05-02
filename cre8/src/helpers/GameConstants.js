@@ -10,7 +10,11 @@ const gc = {
         "Wounded"
     ],
     benefit_traits: [
-        "Martial Weaponry"
+        "Darkvision",
+        "Ignore Armor Speed Penalty",
+        "Martial Weaponry",
+        "Stability",
+        "Stack 1st-Level Kits"
     ],
     bonus_targets: [
         { name: "Armor Value", code: "av_mods" },
@@ -70,6 +74,7 @@ const gc = {
         "Epic",
         "Flaw",
         "Ki",
+        "Luck",
         "Monster",
         "Proficiency",
         "Seed",

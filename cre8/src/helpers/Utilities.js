@@ -8,3 +8,13 @@ export const arraysEqual = (a, b) => {
     }
     return true;
 }
+
+export const arrayMatch = (arr1, arr2) => {
+    let result = false;
+    arr1.forEach((el1) => {
+        arr2.forEach((el2) => {
+            if (el1 === el2) result = true;
+        });
+    });
+    return result;
+}

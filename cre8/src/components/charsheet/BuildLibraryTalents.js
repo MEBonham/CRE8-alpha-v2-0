@@ -52,10 +52,24 @@ const BuildLibraryTalents = (props) => {
             }
         ]);
     }
+    const [standardActions, setStandardActions] = useState([]);
+    const newStandard = (ev) => {
+        setStandardActions([
+            ...standardActions,
+            ""
+        ]);
+    }
     const [swiftActions, setSwiftActions] = useState([]);
     const newSwift = (ev) => {
         setSwiftActions([
             ...swiftActions,
+            ""
+        ]);
+    }
+    const [shortRestActions, setShortRestActions] = useState([]);
+    const newShortRestAction = (ev) => {
+        setShortRestActions([
+            ...shortRestActions,
             ""
         ]);
     }
@@ -115,8 +129,12 @@ const BuildLibraryTalents = (props) => {
                     name,
                     detail: data[key][name]
                 })));
+            } else if (key === "standard_actions") {
+                setStandardActions(data[key]);
             } else if (key === "swift_actions") {
                 setSwiftActions(data[key]);
+            } else if (key === "short_rest_actions") {
+                setShortRestActions(data[key]);
             } else if (key === "extended_rest_actions") {
                 setExtendedRestActions(data[key]);
             } else if (key === "can_repeat") {
@@ -159,7 +177,9 @@ const BuildLibraryTalents = (props) => {
                 setVariousBonuses([]);
                 setPassives([]);
                 setSelectivePassives([]);
+                setStandardActions([]);
                 setSwiftActions([]);
+                setShortRestActions([]);
                 setExtendedRestActions([]);
             }
         } catch(err) {
@@ -383,6 +403,21 @@ const BuildLibraryTalents = (props) => {
                         ))}
                         <MyButton fct={newSelectivePassive}>Add Selective-Passive Pair</MyButton>
                     </section>
+                    <section className="standard-actions rows">
+                        <label>Standard Actions</label>
+                        {standardActions.map((action, i) => (
+                            <Controller
+                                key={i}
+                                as="textarea"
+                                control={control}
+                                name={`standard_actions[${i}]`}
+                                defaultValue={action}
+                                rows="3"
+                                cols="44"
+                            />
+                        ))}
+                        <MyButton fct={newStandard}>Add Standard Action</MyButton>
+                    </section>
                     <section className="swift-actions rows">
                         <label>Swift Actions</label>
                         {swiftActions.map((action, i) => (
@@ -397,6 +432,21 @@ const BuildLibraryTalents = (props) => {
                             />
                         ))}
                         <MyButton fct={newSwift}>Add Swift Action</MyButton>
+                    </section>
+                    <section className="short-rest-actions rows">
+                        <label>Short Rest Actions</label>
+                        {shortRestActions.map((action, i) => (
+                            <Controller
+                                key={i}
+                                as="textarea"
+                                control={control}
+                                name={`short_rest_actions[${i}]`}
+                                defaultValue={action}
+                                rows="3"
+                                cols="44"
+                            />
+                        ))}
+                        <MyButton fct={newShortRestAction}>Add Short Rest Action</MyButton>
                     </section>
                     <section className="extended-rest-actions rows">
                         <label>Extended Rest Actions</label>

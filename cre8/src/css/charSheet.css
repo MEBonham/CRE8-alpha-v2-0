@@ -427,7 +427,7 @@ section.configure-specials > div.rows > div.columns > div select {
     margin-bottom: 6px;
 }
 
-section.configure-specials > div.rows > div.columns div.select-kit select {
+section.configure-specials > div.rows > div.columns div.select-kit select.color-coded {
     color: darkred;
     font-weight: bold;
 }
@@ -458,6 +458,16 @@ section.configure-specials div.select-kit .selects.columns {
 
 section.configure-specials div.select-kit .selects.columns > div {
     margin-right: 6px;
+}
+
+section.configure-specials div.select-kit div.parcels div.checkbox-pair {
+    display: flex;
+    align-items: center;
+}
+
+section.configure-specials div.select-kit div.parcels div.checkbox-pair label {
+    font-size: 1.1rem;
+    font-weight: normal;
 }
 
 header.build-library {
@@ -537,7 +547,9 @@ form.build-library section.extended-rests,
 form.build-library section.passives,
 form.build-library section.selective-passives,
 form.build-library.build-talent section.various-bonuses,
+form.build-library.build-talent section.standard-actions,
 form.build-library.build-talent section.swift-actions,
+form.build-library.build-talent section.short-rest-actions,
 form.build-library.build-talent section.extended-rest-actions {
     margin: 12px 12px 12px 0;
     padding: 0 3% 8px;
@@ -552,7 +564,9 @@ form.build-library section.passives textarea,
 form.build-library section.selective-passives textarea,
 form.build-library section.selective-passives .checkbox-pair,
 form.build-library.build-talent section.various-bonuses textarea,
+form.build-library.build-talent section.standard-actions textarea,
 form.build-library.build-talent section.swift-actions textarea,
+form.build-library.build-talent section.short-rest-actions textarea,
 form.build-library.build-talent section.extended-rest-actions textarea {
     margin-bottom: 6px;
 }

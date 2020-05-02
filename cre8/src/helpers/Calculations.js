@@ -151,9 +151,19 @@ export const mineModifiers = (modsObj) => {
     return total;
 }
 
-const mineParcels = (parcelsObj) => {
-    // TODO
-    return 0;
+const mineParcels = (kitsObj) => {
+    let total = 0;
+    Object.keys(kitsObj).forEach((level) => {
+        Object.keys(kitsObj[level]).forEach((index) => {
+            const parcelsAcquired = kitsObj[level][index].xp_parcels_acquired || [];
+            parcelsAcquired.forEach((bool) => {
+                if (bool) {
+                    total += 1;
+                }
+            });
+        });
+    });
+    return total;
 }
 
 export const numSort = (numArr) => {
@@ -396,18 +406,20 @@ export const updateKits = (statsObj) => {
                 kitObj.selected_options.vpPlus2_OR_mpPlus2 &&
                 kitObj.selected_options.vpPlus2_OR_mpPlus2 === "mpPlus2"
             ) {
-                result.mp_mods = {
-                    ...result.mp_mods,
-                    Untyped: {
-                        ...result.mp_mods.Untyped,
-                        [kitObj.id]: {
-                            num: 2,
-                            level: level
+                result = {
+                    ...result,
+                    mp_mods: {
+                        ...result.mp_mods,
+                        Untyped: {
+                            ...result.mp_mods.Untyped,
+                            [kitObj.id]: {
+                                num: 2,
+                                level,
+                                srcType: "kit"
+                            }
                         }
                     }
                 };
-            } else if (result.mp_mods.Untyped) {
-                delete result.mp_mods.Untyped[kitObj.id];
             }
 
             let vp_boost = parseInt(kitObj.vp_boost);
@@ -754,8 +766,24 @@ export const updateTalents = (statsObj) => {
                     srcType: "talent"
                 });
             });
+            talentObj.standard_actions.forEach((action) => {
+                result.standard_actions.push({
+                    displaySource: talentObj.name,
+                    text: action,
+                    src: talentObj.id,
+                    srcType: "talent"
+                });
+            });
             talentObj.swift_actions.forEach((action) => {
                 result.swift_actions.push({
+                    displaySource: talentObj.name,
+                    text: action,
+                    src: talentObj.id,
+                    srcType: "talent"
+                });
+            });
+            talentObj.short_rest_actions.forEach((action) => {
+                result.short_rest_actions.push({
                     displaySource: talentObj.name,
                     text: action,
                     src: talentObj.id,
@@ -866,7 +894,7 @@ export const updateXp = (statsObj) => {
 
     const origLevel = statsObj.level;
     
-    const xp_parcels_total = mineParcels(statsObj.xp_parcels);
+    const xp_parcels_total = mineParcels(statsObj.kits);
     const xp = statsObj.xp_base + (xpPerParcel * xp_parcels_total);
     const [level, next_level_at] = determineLevel(xp);
     let result = {

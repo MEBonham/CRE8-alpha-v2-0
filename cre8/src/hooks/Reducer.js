@@ -232,6 +232,32 @@ const Reducer = (state, action) => {
                             data: action.payload[action.level][action.index]
                         }
                     }
+                case "toggleParcel":
+                    newVal = state.cur.stats.kits[action.level][action.index].xp_parcels_acquired || [];
+                    while (newVal.length <= action.parcelNum) {
+                        newVal.push(false);
+                    }
+                    newVal[action.parcelNum] = action.payload;
+                    return {
+                        ...state,
+                        curChangesMade: true,
+                        cur: {
+                            ...state.cur,
+                            stats: updateXp({
+                                ...state.cur.stats,
+                                kits: {
+                                    ...state.cur.stats.kits,
+                                    [action.level]: {
+                                        ...state.cur.stats.kits[action.level],
+                                        [action.index]: {
+                                            ...state.cur.stats.kits[action.level][action.index],
+                                            xp_parcels_acquired: newVal
+                                        }
+                                    }
+                                }
+                            })
+                        }
+                    }
                 case "trained_skills_history":
                     newVal = {
                         ...state.cur.stats.trained_skills_history,

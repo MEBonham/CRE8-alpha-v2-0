@@ -1,9 +1,11 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import { Link } from 'react-router-dom';
 
+import { Store } from '../GlobalWrapper';
 import fb from '../../fbConfig';
 
 const KitsLibraryMenu = () => {
+    const [, dispatch] = useContext(Store);
 
     const [allKits, setAllKits] = useState([]);
     useEffect(() => {
@@ -24,6 +26,13 @@ const KitsLibraryMenu = () => {
         }
         loadFromDb();
     }, [])
+
+    useEffect(() => {
+        if (allKits) {
+            dispatch({ type: "SET", key: "kitCycleLinks", payload: 
+                allKits.sort((a, b) => { return (a.name.toUpperCase() - b.name.toUpperCase())}) });
+        }
+    }, [allKits, dispatch])
 
     return (
         <section className="links rows">

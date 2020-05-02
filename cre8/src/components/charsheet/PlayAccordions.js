@@ -35,6 +35,19 @@ const PlayAccordions = () => {
                 </Accordion>
             </section>
             <section>
+                <h3>Standard Actions</h3>
+                <Accordion uniqueKey={"meb_charStandards"} cur={state.cur.id}>
+                    {state.cur.stats.standard_actions.map((standardAction, i) => (
+                        <AccordionSection key={i}>
+                            <h4>{standardAction.displaySource}</h4>
+                            <>
+                                <p>{standardAction.text}</p>
+                            </>
+                        </AccordionSection>
+                    ))}
+                </Accordion>
+            </section>
+            <section>
                 <h3>Swift Actions</h3>
                 <Accordion uniqueKey={"meb_charSwifts"} cur={state.cur.id}>
                     {state.cur.stats.swift_actions.map((swiftAction, i) => (
@@ -55,6 +68,14 @@ const PlayAccordions = () => {
                         <>
                             {state.cur.stats.passives.map((passiveFeature, i) => (
                                 <p key={i}>{passiveFeature.text}</p>
+                            ))}
+                        </>
+                    </AccordionSection>
+                    <AccordionSection>
+                        <h4>Short Rests</h4>
+                        <>
+                            {state.cur.stats.short_rest_actions.map((shortRestFeature, i) => (
+                                <p key={i}>{shortRestFeature.text}</p>
                             ))}
                         </>
                     </AccordionSection>

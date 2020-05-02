@@ -1,9 +1,11 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import { Link } from 'react-router-dom';
 
+import { Store } from '../GlobalWrapper';
 import fb from '../../fbConfig';
 
 const TalentsLibraryMenu = () => {
+    const [, dispatch] = useContext(Store);
 
     const [allTalents, setAllTalents] = useState([]);
     useEffect(() => {
@@ -24,6 +26,13 @@ const TalentsLibraryMenu = () => {
         }
         loadFromDb();
     }, [])
+    
+    useEffect(() => {
+        if (allTalents) {
+            dispatch({ type: "SET", key: "talentCycleLinks", payload: 
+                allTalents.sort((a, b) => { return (a.name.toUpperCase() - b.name.toUpperCase())}) });
+        }
+    }, [allTalents, dispatch])
 
     return (
         <section className="links rows">

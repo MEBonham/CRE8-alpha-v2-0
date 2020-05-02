@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef, useContext } from 'react';
 
 import { Store } from '../GlobalWrapper';
 import fb from '../../fbConfig';
+import { arrayMatch } from '../../helpers/Utilities';
 
 const ConfigureTalent = (props) => {
     const [state, dispatch] = useContext(Store);
@@ -11,6 +12,7 @@ const ConfigureTalent = (props) => {
     useEffect(() => {
         _isMounted.current = true;
         return(() => {
+            console.log("de-mounting");
             _isMounted.current = false;
         });
     }, [])
@@ -38,10 +40,14 @@ const ConfigureTalent = (props) => {
         const selectTalentsCopy = {};
         Object.keys(allTalents).forEach((talentSlug) => {
             const talentData = allTalents[talentSlug];
-            selectTalentsCopy[talentSlug] = talentData;
+            if (!props.flaw || talentData.tags.includes("Flaw")) {
+                if (!props.tagFilter || arrayMatch(props.tagFilter, talentData.tags)) {
+                    selectTalentsCopy[talentSlug] = talentData;
+                }
+            }
         });
         setSelectTalents(selectTalentsCopy);
-    }, [allTalents])
+    }, [allTalents, props.flaw, props.tagFilter])
 
     const [currentTalent, setCurrentTalent] = useState({ id: false });
     useEffect(() => {
@@ -77,7 +83,6 @@ const ConfigureTalent = (props) => {
             ...talentsObj[props.level],
             [props.index]: talentObj
         };
-        console.log(talentsObj);
         dispatch({ type: "CHAR_EDIT", field: "talents", payload: talentsObj, level: props.level, index: props.index });
     }
 
@@ -92,19 +97,16 @@ const ConfigureTalent = (props) => {
         });
     }
     const selectOptionalPassives = (ev) => {
-        console.log(ev.target.name);
         dispatch({
             type: "CHAR_EDIT",
             field: "customizeTalent",
             level: props.level,
             index: props.index,
-            // property: ev.target.name.split("-")[0],
             property: "selectivePassives",
             payload: ev.target.value
         });
     }
 
-    // console.log(currentTalent);
     return (
         <div className="select-talent" id={`meb_editChar_selectTalent_${props.level}_${props.index}`}>
             <select onChange={changeTalents} className="color-coded">
@@ -124,7 +126,7 @@ const ConfigureTalent = (props) => {
                     <label>Consuming Mode</label>
                 </div>
             : null}
-            {currentTalent && currentTalent.selective_passives ?
+            {currentTalent && currentTalent.selective_passives && Object.keys(currentTalent.selective_passives).length ?
                 <select
                     onChange={selectOptionalPassives}
                     name={`selective_passives-configureSelect-${props.level}-${props.index}`}
