@@ -289,8 +289,9 @@ const BuildLibraryKits = (props) => {
                         });
                     }
                 });
-            } else if (!key.startsWith("kitTag") && !key.startsWith("variousBonus") && key !== "bonusTrainingOptions") {
-                kitObj[key] = formData[key];
+            } else if (!key.startsWith("kitTag") && !key.startsWith("variousBonus") && key !== "bonusTrainingOptions" &&
+                !key.startsWith("variousPenalty")) {
+                    kitObj[key] = formData[key];
             }
         })
         kitObj.bonus_talents = bonusTalentsArr;

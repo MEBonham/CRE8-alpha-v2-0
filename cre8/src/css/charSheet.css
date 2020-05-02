@@ -354,17 +354,24 @@ section.configure-skills .trained select {
     top: 1px;
 }
 
-section.configure-skills .ranks-assignment table {
-    margin-bottom: 16px;
+section.configure-skills .ranks-assignment {
+    margin-bottom: 12px;
 }
 
-section.configure-skills .ranks-assignment th {
+section.configure-skills .ranks-assignment table {
+    margin-bottom: 6px;
+}
+
+section.configure-skills .ranks-assignment th,
+section.configure-skills .ranks-assignment > label {
+    margin-left: 2px;
     padding-right: 6px;
     font-size: 1.1rem;
     font-weight: bold;
 }
 
 section.configure-skills .ranks-assignment td select,
+section.configure-skills .ranks-assignment > select,
 section.configure-skills section.synergies select,
 section.configure-skills section.synergies div div label {
     font-size: 1.2rem;

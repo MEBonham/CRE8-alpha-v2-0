@@ -62,6 +62,7 @@ const SpecialPreview = () => {
                     {data.vpPlus2_OR_mpPlus2 ?
                         <li>VP +2 <span className="or">or</span> MP +2</li> :
                     null}
+                    {data.bonus_feat ? <li>Gain a bonus feat.</li> : null}
                     {data.bonus_talents.map((talent, i) => (
                         <li key={i}>Gain a bonus [{
                             Object.keys(talent).map((descriptor) => (
@@ -102,10 +103,16 @@ const SpecialPreview = () => {
                         <li key={i}>Extended Rest: {restAction}</li>
                     ))}
                 </ul>
-                {data.drawback_traits.length ?
+                {data.drawback_traits.length || data.various_penalties.length ?
                     <>
                         <h2>Drawbacks:</h2>
                         <ul>
+                            {data.various_penalties.map((penalty, i) => (
+                                <li key={i}>
+                                    Incur a {penalty.num} {penalty.type === "Untyped" ? null : penalty.type} penalty 
+                                    to your {getDisplayName(penalty.to)}.
+                                </li>
+                            ))}
                             {data.drawback_traits.map((trait, i) => (
                                 <li key={i}><strong>{trait}:</strong> {traitDescriptions[trait]}</li>
                             ))}

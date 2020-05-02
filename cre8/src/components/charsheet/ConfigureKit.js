@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef, useContext } from 'react';
 
 import { Store } from '../GlobalWrapper';
 import fb from '../../fbConfig';
+import ConfigureFeat from './ConfigureFeat';
 import ConfigureTalent from './ConfigureTalent';
 
 const ConfigureKit = (props) => {
@@ -235,6 +236,9 @@ const ConfigureKit = (props) => {
                     const tagFilter = bonusTalent[key];
                     return (<ConfigureTalent key={i} level={props.level} index={`kit${props.index}_${i}`} tagFilter={tagFilter} />)
                 })}
+                {currentKit && currentKit.bonus_feat ?
+                    <ConfigureFeat level={props.level} index={`kit${props.index}`} /> :
+                null}
                 {currentKit && currentKit.bonus_trained_skills && currentKit.bonus_trained_skills.map((training, i) => {
                     // console.log(training);
                     return (

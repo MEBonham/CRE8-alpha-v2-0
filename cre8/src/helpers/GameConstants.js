@@ -2,6 +2,7 @@ const gc = {
     base_awesome_bonus: 4,
     base_coast_number: 6,
     base_reserve_points: 4,
+    base_speed: 20,
     base_trained_skills: 2,
     base_vitality_points: 5,
     basic_conditions: [
@@ -13,6 +14,7 @@ const gc = {
         "Darkvision",
         "Ignore Armor Speed Penalty",
         "Martial Weaponry",
+        "Skill Ranks for Parcels",
         "Stability",
         "Stack 1st-Level Kits"
     ],

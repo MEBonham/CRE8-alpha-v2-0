@@ -148,6 +148,7 @@ export const kitDefault = {
     selected_options: {},
     short_rest_actions: [],
     various_bonuses: [],
+    various_penalties: [],
     vp_boost: "0",
     vpPlus2_OR_mpPlus2: false,
     xp_parcels: [],

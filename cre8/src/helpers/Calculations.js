@@ -6,14 +6,27 @@ const clearBonuses = (statsObj, srcTypeArr) => {
     const todoList = Object.keys(charDefault.stats).filter((property) => property.endsWith("_mods"));
     todoList.forEach((property) => {
         const modsObj = result[property];
-        Object.keys(modsObj).forEach((bonusType) => {
-            Object.keys(modsObj[bonusType]).forEach((source) => {
-                const prevSrcType = result[property][bonusType][source].srcType;
-                if (!prevSrcType || srcTypeArr.includes(prevSrcType)) {
-                    delete result[property][bonusType][source]
-                }
+        if (property === "skill_mods") {
+            Object.keys(modsObj).forEach((skill) => {
+                Object.keys(modsObj[skill]).forEach((bonusType) => {
+                    Object.keys(modsObj[skill][bonusType]).forEach((source) => {
+                        const prevSrcType = result[property][skill][bonusType][source].srcType;
+                        if (!prevSrcType || srcTypeArr.includes(prevSrcType)) {
+                            delete result[property][skill][bonusType][source]
+                        }
+                    });
+                });
             });
-        });
+        } else {
+            Object.keys(modsObj).forEach((bonusType) => {
+                Object.keys(modsObj[bonusType]).forEach((source) => {
+                    const prevSrcType = result[property][bonusType][source].srcType;
+                    if (!prevSrcType || srcTypeArr.includes(prevSrcType)) {
+                        delete result[property][bonusType][source]
+                    }
+                });
+            });
+        }
     });
     return result;
 }
@@ -98,14 +111,33 @@ const determineLevel = (xp_total) => {
 
 export const getDisplayName = (codeProperty) => {
     switch (codeProperty) {
+        case "Athletics":
+        case "Brawn":
+        case "Charisma":
+        case "Dexterity":
+        case "Gadgetry":
+        case "Glibness":
+        case "Knowledge":
+        case "Nature":
+        case "Perception":
+        case "Stealth":
+            return codeProperty;
         case "av_mods":
             return "Armor Value";
+        case "fortitude_mods":
+            return "Fortitude save";
         case "mp_mods":
             return "MP Pool";
         case "rp_mods":
             return "RP Pool";
         default:
-            return codeProperty.split("_").slice(0, -1).join("_");
+            let result = codeProperty.split("_").slice(0, -1);
+            result = result.map((word) => {
+                const firstLetter = word[0].toUpperCase();
+                return `${firstLetter}${word.slice(1)}`;
+            });
+            return result.join(" ");
+
     }
 }
 
@@ -289,12 +321,9 @@ export const updateFeats = (statsObj) => {
             featsAlreadyChecked.push(featObj.id);
         });
     });
+    result = updateTalents(result);
 
     result = updateSynergies(result);               // Includes updateVariousMods()
-    if (featsAlreadyChecked.includes("magearmor")) {
-        result = updateMageArmor(result);
-        result = updateMpMax(result);
-    }
     return result;
 }
 
@@ -463,7 +492,7 @@ export const updateKits = (statsObj) => {
                 }
             }
 
-            if (!kitObj.bonus_feat) {
+            if (result.feats[level] && !kitObj.bonus_feat) {
                 delete result.feats[level][`kit${index}`];
             }
             
@@ -637,6 +666,9 @@ export const updateKits = (statsObj) => {
 
             kitObj.various_penalties.forEach((penaltyObj) => {
                 if (gc.skills_list.includes(penaltyObj.to)) {
+                    if (!result.skill_mods[penaltyObj.to][penaltyObj.type]) {
+                        result.skill_mods[penaltyObj.to][penaltyObj.type] = {};
+                    }
                     result.skill_mods[penaltyObj.to] = {
                         ...result.skill_mods[penaltyObj.to],
                         [penaltyObj.type]: {
@@ -647,7 +679,7 @@ export const updateKits = (statsObj) => {
                                 srcType: "kit"
                             }
                         }
-                    }
+                    };
                 } else {
                     result[penaltyObj.to] = {
                         ...result[penaltyObj.to],
@@ -672,6 +704,7 @@ export const updateKits = (statsObj) => {
     result = updateSynergies(result);               // Includes updateVariousMods()
 
     result = updateSkillRanks(result);
+    console.log(result.skill_mods.Glibness.Untyped);
 
     const stack1stLevelKits = result.traits_from_kits.includes("Stack 1st-Level Kits");
 
@@ -837,6 +870,13 @@ export const updateSkillRanks = (statsObj) => {
             }
         }
     }
+    if (statsObj.skill_ranks_history.bonus) {
+        Object.keys(statsObj.skill_ranks_history.bonus).forEach((idx) => {
+            if (parseInt(idx) < statsObj.xp_parcels_total && gc.skills_list.includes(statsObj.skill_ranks_history.bonus[idx])) {
+                skill_ranks[statsObj.skill_ranks_history.bonus[idx]] += 1;
+            }
+        });
+    }
     const maxUntrained = statsObj.level_max8;
     const maxTrained = maxUntrained + gc.trained_skill_extra_ranks;
     gc.skills_list.forEach(skill => {
@@ -853,6 +893,16 @@ export const updateSkillRanks = (statsObj) => {
     };
     result = updateSynergies(result);
     return updateSkillMods(result);
+}
+
+const updateSpeed = (statsObj) => {
+    const speed_mods_total = mineModifiers(statsObj.speed_mods);
+    const speed = gc.base_speed + speed_mods_total;
+    return {
+        ...statsObj,
+        speed,
+        speed_mods_total
+    };
 }
 
 const updateSpellcraft = (statsObj) => {
@@ -1042,7 +1092,7 @@ const updateVariousMods = (statsObj) => {
     result = updateMpMax(result);
     result = updateRpMax(result);
     result = updateSkillMods(result);
-    // result = updateSpeed(result);
+    result = updateSpeed(result);
     result = updateVpMax(result);
     // result = updateWeaponImpact(result);
 
@@ -1067,6 +1117,7 @@ export const updateXp = (statsObj) => {
     const xpPerParcel = gc.xp_per_parcel;
 
     const origLevel = statsObj.level;
+    const origParcelTotal = statsObj.xp_parcels_total;
     
     const xp_parcels_total = mineParcels(statsObj.kits);
     const xp = statsObj.xp_base + (xpPerParcel * xp_parcels_total);
@@ -1080,6 +1131,9 @@ export const updateXp = (statsObj) => {
     };
     if (level !== origLevel) {
         result = updateLevel(result);
+    }
+    if (xp_parcels_total !== origParcelTotal && statsObj.traits_from_kits.includes("Skill Ranks for Parcels")) {
+        result = updateSkillRanks(result);
     }
     return result;
 }

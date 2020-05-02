@@ -17,7 +17,7 @@ const ConfigureSkills = () => {
         });
     }
 
-    const assignSkillRank = (ev) => {
+    const assignSkillRank = useCallback((ev) => {
         dispatch({
             type: "CHAR_EDIT",
             field: "skill_ranks_history",
@@ -25,7 +25,7 @@ const ConfigureSkills = () => {
             col: ev.target.id.split("_")[3],
             skill: ev.target.value
         });
-    }
+    }, [dispatch]);
 
     const selectPrimary = useCallback((ev) => {
         dispatch({
@@ -38,12 +38,42 @@ const ConfigureSkills = () => {
 
     const [levelsArray, setLevelsArray] = useState([]);
     const [upTo5Array, setUpTo5Array] = useState([]);
+    const [extraRanksFromParcels, setExtraRanksFromParcels] = useState(null);
     useEffect(() => {
         if (state.cur && state.cur.stats.trained_skills_history[0]) {
             document.getElementById("meb_charTrainSkill_default1_level-0").value =
                 state.cur.stats.trained_skills_history[0].default1.skill;
             document.getElementById("meb_charTrainSkill_default2_level-0").value =
                 state.cur.stats.trained_skills_history[0].default2.skill;
+        }
+
+        if (state.cur && state.cur.stats.traits_from_kits.includes("Skill Ranks for Parcels")) {
+            const compArr = [];
+            for (let i = 0; i < state.cur.stats.xp_parcels_total; i++) {
+                const def = state.cur.stats.skill_ranks_history.bonus ? state.cur.stats.skill_ranks_history.bonus[i] : false;
+                compArr.push(
+                    <select
+                        key={i}
+                        onChange={assignSkillRank}
+                        id={`meb_skillRank_bonus_${i}`}
+                        defaultValue={def ? def : false}
+                    >
+                        <option value={false}>Choose Skill</option>
+                        {gc.skills_list.map(skill => (
+                            <option key={skill} value={skill}>{skill}</option>
+                        ))}
+                    </select>
+                );
+            }
+            if (compArr.length) {
+                setExtraRanksFromParcels(
+                    <>
+                        <label>Bonus:</label> {compArr}
+                    </>
+                );
+            } else {
+                setExtraRanksFromParcels(null);
+            }
         }
 
         const tempLevelsArray = [];
@@ -58,7 +88,7 @@ const ConfigureSkills = () => {
         }
         setUpTo5Array(tempUpTo5Array);
 
-    }, [state.cur])
+    }, [assignSkillRank, state.cur])
 
     const [tempHistory, setTempHistory] = useState({});
     useEffect(() => {
@@ -160,6 +190,7 @@ const ConfigureSkills = () => {
                         ))}
                     </tbody>
                 </table>
+                {extraRanksFromParcels}
             </section>
             <section className="net-ranks-display">
                 <table>

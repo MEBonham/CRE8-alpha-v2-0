@@ -196,12 +196,21 @@ const Reducer = (state, action) => {
                 case "skill_ranks_history":
                     let skill = gc.skills_list.includes(action.skill) ? action.skill : null;
                     newVal = state.cur.stats.skill_ranks_history;
-                    for (let i = 0; i <= action.level; i++) {
-                        if (newVal[i] === undefined) {
-                            newVal[i] = [];
+                    if (action.level === "bonus") {
+                        if (!state.cur.stats.skill_ranks_history.bonus) {
+                            newVal.bonus = [];
                         }
-                        while (newVal[i].length < gc.skill_ranks_per_level) {
-                            newVal[i].push(null);
+                        while (newVal.bonus.length <= state.cur.stats.xp_parcels_total) {
+                            newVal.bonus.push(null);
+                        }
+                    } else {
+                        for (let i = 0; i <= action.level; i++) {
+                            if (newVal[i] === undefined) {
+                                newVal[i] = [];
+                            }
+                            while (newVal[i].length < gc.skill_ranks_per_level) {
+                                newVal[i].push(null);
+                            }
                         }
                     }
                     newVal[action.level][action.col] = skill;
