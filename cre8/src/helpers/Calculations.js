@@ -1,5 +1,5 @@
 import gc from './GameConstants';
-import { charDefault, kitDefault, talentDefault } from './Templates';
+import { charDefault, kitDefault, featDefault, talentDefault } from './Templates';
 
 const clearBonuses = (statsObj, srcTypeArr) => {
     const result = { ...statsObj };
@@ -30,6 +30,13 @@ const clearRestFeatures = (statsObj, srcTypeArr) => {
         ...statsObj,
         extended_rest_actions: statsObj.extended_rest_actions.filter((item) => !srcTypeArr.includes(item.srcType)),
         short_rest_actions: statsObj.short_rest_actions.filter((item) => !srcTypeArr.includes(item.srcType))
+    };
+}
+
+const clearStandardActions = (statsObj, srcTypeArr) => {
+    return {
+        ...statsObj,
+        standard_actions: statsObj.standard_actions.filter((item) => !srcTypeArr.includes(item.srcType))
     };
 }
 
@@ -168,6 +175,127 @@ const mineParcels = (kitsObj) => {
 
 export const numSort = (numArr) => {
     return numArr.sort((a, b) => { return a - b });
+}
+
+export const updateFeats = (statsObj) => {
+    let result = {
+        ...statsObj,
+        traits_from_feats: []
+    };
+    result = clearBonuses(result, ["feat"]);
+    result = clearPassives(result, ["feat"]);
+    result = clearRestFeatures(result, ["feat"]);
+    result = clearStandardActions(result, ["feat"]);
+    result = clearSwiftActions(result, ["feat"]);
+    result = clearSynergies(result, ["feat"]);
+    result = clearTrainings(result, ["feat"]);
+    const featsAlreadyChecked = [];
+    Object.keys(statsObj.feats).forEach((level) => {
+        const featsAtLevel = statsObj.feats[level];
+        Object.keys(featsAtLevel).forEach((index) => {
+            let featObj = (featsAtLevel[index].id) ? featsAtLevel[index] : featDefault;
+            if (featsAlreadyChecked.includes(featsAtLevel[index].id) && !featsAtLevel[index].can_repeat) featObj = featDefault;
+            if (parseInt(level) >= statsObj.level) featObj = featDefault;
+
+            result.traits_from_feats = result.traits_from_feats.concat(featObj.benefit_traits).concat(featObj.drawback_traits);
+            featObj.passives.forEach((passiveFeature) => {
+                result.passives.push({
+                    text: passiveFeature,
+                    src: featObj.id,
+                    srcType: "feat"
+                });
+            });
+            featObj.standard_actions.forEach((action) => {
+                result.standard_actions.push({
+                    displaySource: featObj.name,
+                    text: action,
+                    src: featObj.id,
+                    srcType: "feat"
+                });
+            });
+            featObj.swift_actions.forEach((action) => {
+                result.swift_actions.push({
+                    displaySource: featObj.name,
+                    text: action,
+                    src: featObj.id,
+                    srcType: "feat"
+                });
+            });
+            featObj.short_rest_actions.forEach((action) => {
+                result.short_rest_actions.push({
+                    displaySource: featObj.name,
+                    text: action,
+                    src: featObj.id,
+                    srcType: "feat"
+                });
+            });
+            featObj.extended_rest_actions.forEach((action) => {
+                result.extended_rest_actions.push({
+                    displaySource: featObj.name,
+                    text: action,
+                    src: featObj.id,
+                    srcType: "feat"
+                });
+            });
+
+            featObj.various_bonuses.forEach((bonusObj) => {
+                if (bonusObj.type === "Synergy") {
+                    if (!result.synergy_bonuses[bonusObj.skill]) result.synergy_bonuses[bonusObj.skill] = [];
+                    result.synergy_bonuses = {
+                        ...result.synergy_bonuses,
+                        [bonusObj.skill]: [
+                            ...result.synergy_bonuses[bonusObj.skill],
+                            {
+                                to: bonusObj.to,
+                                display: getDisplayName(bonusObj.to),
+                                primary: false,
+                                source: featObj.id,
+                                srcType: "feat"
+                            }
+                        ]
+                    }
+                } else {
+                    result[bonusObj.to] = {
+                        ...result[bonusObj.to],
+                        [bonusObj.type]: {
+                            ...result[bonusObj.to][bonusObj.type],
+                            [featObj.id]: {
+                                level: level,
+                                num: bonusObj.num,
+                                srcType: "feat"
+                            }
+                        }
+                    }
+                }
+            });
+
+            result = {
+                ...result,
+                passives: [
+                    ...result.passives,
+                    ...Object.keys(featObj.selected_options).flatMap((optionType) => {
+                        if (optionType === "selectivePassives") {
+                            const selectedOption = featObj.selected_options[optionType];
+                            return {
+                                text: featObj.selective_passives[selectedOption],
+                                src: featObj.id,
+                                srcType: "feat"
+                            };
+                        } else return [];
+                    })
+                ]
+            };
+
+            featsAlreadyChecked.push(featObj.id);
+        });
+    });
+
+    result = updateSynergies(result);               // Includes updateVariousMods()
+    if (featsAlreadyChecked.includes("magearmor")) {
+        result = updateMageArmor(result);
+        result = updateMpMax(result);
+    }
+    return result;
 }
 
 export const updateGoodSave = (statsObj) => {
@@ -327,12 +455,16 @@ export const updateKits = (statsObj) => {
             });
 
             const talentsGranted = kitObj.bonus_talents.length;
-            const talentsArr = result.talents[level] ? Object.keys(result.talents[level]).filter((index) => index.startsWith("kit")) : [];
+            const talentsArr = result.talents[level] ? Object.keys(result.talents[level]).filter((i) => i.startsWith(`kit${index}`)) : [];
             const talentsClaimed = talentsArr.length;
             if (talentsClaimed > talentsGranted) {
                 for (let i = talentsGranted; i < talentsClaimed; i++) {
-                    delete result.talents[level][`kit_${index}_${i}`];
+                    delete result.talents[level][`kit${index}_${i}`];
                 }
+            }
+
+            if (!kitObj.bonus_feat) {
+                delete result.feats[level][`kit${index}`];
             }
             
             if (
@@ -476,14 +608,54 @@ export const updateKits = (statsObj) => {
                             }
                         ]
                     }
+                } else if (gc.skills_list.includes(bonusObj.to)) {
+                    result.skill_mods[bonusObj.to] = {
+                        ...result.skill_mods[bonusObj.to],
+                        [bonusObj.type]: {
+                            ...result.skill_mods[bonusObj.to][bonusObj.type],
+                            [kitObj.id]: {
+                                level,
+                                num: bonusObj.num,
+                                srcType: "kit"
+                            }
+                        }
+                    }
                 } else {
                     result[bonusObj.to] = {
                         ...result[bonusObj.to],
                         [bonusObj.type]: {
                             ...result[bonusObj.to][bonusObj.type],
                             [kitObj.id]: {
-                                level: level,
+                                level,
                                 num: bonusObj.num,
+                                srcType: "kit"
+                            }
+                        }
+                    }
+                }
+            });
+
+            kitObj.various_penalties.forEach((penaltyObj) => {
+                if (gc.skills_list.includes(penaltyObj.to)) {
+                    result.skill_mods[penaltyObj.to] = {
+                        ...result.skill_mods[penaltyObj.to],
+                        [penaltyObj.type]: {
+                            ...result.skill_mods[penaltyObj.to][penaltyObj.type],
+                            [kitObj.id]: {
+                                level,
+                                num: penaltyObj.num,
+                                srcType: "kit"
+                            }
+                        }
+                    }
+                } else {
+                    result[penaltyObj.to] = {
+                        ...result[penaltyObj.to],
+                        [penaltyObj.type]: {
+                            ...result[penaltyObj.to][penaltyObj.type],
+                            [kitObj.id]: {
+                                level,
+                                num: penaltyObj.num,
                                 srcType: "kit"
                             }
                         }
@@ -494,6 +666,7 @@ export const updateKits = (statsObj) => {
             kitsAlreadyChecked.push(kitObj.id);
         });
     });
+    result = updateFeats(result);
     result = updateTalents(result);
 
     result = updateSynergies(result);               // Includes updateVariousMods()
@@ -746,6 +919,7 @@ export const updateTalents = (statsObj) => {
     result = clearBonuses(result, ["talent"]);
     result = clearPassives(result, ["talent"]);
     result = clearRestFeatures(result, ["talent"]);
+    result = clearStandardActions(result, ["talent"]);
     result = clearSwiftActions(result, ["talent"]);
     result = clearSynergies(result, ["talent"]);
     result = clearTrainings(result, ["talent"]);

@@ -41,6 +41,7 @@ const BuildLibraryKits = (props) => {
     const [xpParcels, setXpParcels] = useState([]);
     const [passives, setPassives] = useState([]);
     const [bonusTrainings, setBonusTrainings] = useState([]);
+    const [variousPenalties, setVariousPenalties] = useState([]);
 
     const newBonusTalent = (ev) => {
         setBonusTalents([
@@ -56,6 +57,16 @@ const BuildLibraryKits = (props) => {
             {
                 type: "Untyped",
                 num: 1,
+                to: "fortitude_mods"
+            }
+        ]);
+    }
+    const newVPenalty = (ev) => {
+        setVariousPenalties([
+            ...variousPenalties,
+            {
+                type: "Untyped",
+                num: -1,
                 to: "fortitude_mods"
             }
         ]);
@@ -111,6 +122,15 @@ const BuildLibraryKits = (props) => {
                     bonusObj.skill = bonus.skill || "Brawn";
                     return bonusObj;
                 }));
+            } else if (key === "various_penalties") {
+                setVariousPenalties(data[key].map((penalty) => {
+                    const penaltyObj = {};
+                    penaltyObj.type = penalty.type || "Untyped";
+                    penaltyObj.to = penalty.to || "fortitude_mods";
+                    penaltyObj.num = penalty.num || 1;
+                    penaltyObj.skill = penalty.skill || "Brawn";
+                    return penaltyObj;
+                }));
             } else if (key === "bonus_trained_skills") {
                 setBonusTrainings(data[key].map((training) => {
                     const bonusObj = {};
@@ -165,6 +185,17 @@ const BuildLibraryKits = (props) => {
             setVariousBonusTypes(watch("variousBonusType"));
         }
     }
+    const [variousPenaltyTypes, setVariousPenaltyTypes] = useState([]);
+    useEffect(() => {
+        if (watch("variousPenaltyType") && !arraysEqual(watch("variousPenaltyType"), variousPenaltyTypes)) {
+            setVariousPenaltyTypes(watch("variousPenaltyType"));
+        }
+    }, [variousPenalties, variousPenaltyTypes, watch])
+    const updatePenaltyType = (ev) => {
+        if (watch("variousPenaltyType")) {
+            setVariousPenaltyTypes(watch("variousPenaltyType"));
+        }
+    }
     const [bonusTrainingTypes, setBonusTrainingTypes] = useState([]);
     useEffect(() => {
         if (watch("trainingTypes") && !arraysEqual(watch("trainingTypes"), bonusTrainingTypes)) {
@@ -190,6 +221,7 @@ const BuildLibraryKits = (props) => {
                 reset();
                 setBonusTalents([]);
                 setVariousBonuses([]);
+                setVariousPenalties([]);
                 setPassives([]);
                 setExtendedRests([]);
                 setXpParcels([]);
@@ -200,7 +232,7 @@ const BuildLibraryKits = (props) => {
         }
     }
 
-    const bundleVariousBonuses = (data) => {
+    const bundleVariousMods = (data) => {
         const arr = [];
         if (data.variousBonusTo) {
             for (let i = 0; i < data.variousBonusTo.length; i++) {
@@ -216,7 +248,18 @@ const BuildLibraryKits = (props) => {
                 arr.push(bonusObj);
             }
         }
-        return arr;
+        const arr2 = [];
+        if (data.variousPenaltyTo) {
+            for (let i = 0; i < data.variousPenaltyTo.length; i++) {
+                if (data.variousPenaltyType[i] === "Select" || data.variousPenaltyTo[i] === "Select") continue;
+                const penaltyObj = {};
+                penaltyObj.type = data.variousPenaltyType[i];
+                penaltyObj.to = data.variousPenaltyTo[i];
+                penaltyObj.num = parseInt(data.variousPenaltyNum[i]);
+                arr2.push(penaltyObj);
+            }
+        }
+        return [arr, arr2];
     }
     const processKitForm = (formData) => {
         console.log(formData);
@@ -256,7 +299,9 @@ const BuildLibraryKits = (props) => {
             const idString = `kitTag_checkbox_${tagName}`;
             return formData[idString] ? true : false;
         });
-        kitObj.various_bonuses = bundleVariousBonuses(formData);
+        const [bonuses, penalties] = bundleVariousMods(formData);
+        kitObj.various_bonuses = bonuses;
+        kitObj.various_penalties = penalties;
         saveKit(newSlug, kitObj);
     }
 
@@ -395,6 +440,15 @@ const BuildLibraryKits = (props) => {
                         />
                         <label>VP +2 <span className="or">or</span> MP +2</label>
                     </div>
+                    <div className="checkbox-pair">
+                        <Controller
+                            as="input"
+                            type="checkbox"
+                            name="bonus_feat"
+                            control={control}
+                        />
+                        <label>Bonus Feat</label>
+                    </div>
                     <section className="various-bonuses rows">
                         <ul>
                             {variousBonuses.map((bonus, i) => (
@@ -473,16 +527,6 @@ const BuildLibraryKits = (props) => {
                     {bonusTalents.map((talentData, i) => (
                         <div key={i} className="columns">
                             <label>({i + 1})</label>
-                            {/* <Controller
-                                as="select"
-                                name={`bonus_talent_tags_${i}`}
-                                control={control}
-                                multiple
-                            >
-                                {gc.talent_tags.map((tagName) => (
-                                    <option key={tagName} value={tagName}>{tagName}</option>
-                                ))}
-                            </Controller> */}
                             <select
                                 name={`bonus_talent_tags_${i}`}
                                 ref={register}
@@ -497,94 +541,78 @@ const BuildLibraryKits = (props) => {
                 </div>
                 <MyButton fct={newBonusTalent}>Add Bonus Talent</MyButton>
             </section>
-            <section className="bonus-trainings">
-                <label>Bonus Trained Skills</label>
-                <div className="rows">
-                    {bonusTrainings.map((trainingData, i) => (
-                        <div key={i} className="columns">
-                            <label>({i + 1})</label>
-                            <div className="rows">
-                                <label>Type</label>
-                                <ul className="rows">
-                                    <li className="radio-training-type">
-                                        <input
-                                            type="radio"
-                                            name={`trainingTypes[${i}]`}
-                                            value="fullMenu"
-                                            ref={register}
-                                            onChange={updateTrainingType}
-                                            defaultChecked={true}
-                                        />
-                                        <label>Any Skill</label>
-                                    </li>
-                                    <li className="radio-training-type">
-                                        <input
-                                            type="radio"
-                                            name={`trainingTypes[${i}]`}
-                                            value="specific"
-                                            ref={register}
-                                            onChange={updateTrainingType}
-                                            defaultChecked={false}
-                                        />
-                                        <label>One Specific Skill</label>
-                                    </li>
-                                    <li className="radio-training-type">
-                                        <input
-                                            type="radio"
-                                            name={`trainingTypes[${i}]`}
-                                            value="partialMenu"
-                                            ref={register}
-                                            onChange={updateTrainingType}
-                                            defaultChecked={false}
-                                        />
-                                        <label>Select Skill From Options</label>
-                                    </li>
-                                </ul>
-                            </div>
-                            {bonusTrainingTypes.length > i && bonusTrainingTypes[i] === "specific" ?
-                                <select
-                                    name={`bonusTrainingOptions[${i}]`}
-                                    defaultValue={trainingData.options[0]}
-                                    ref={register}
-                                >
-                                    {gc.skills_list.map((skill) => (
-                                        <option key={skill} value={skill}>{skill}</option>
-                                    ))}
-                                </select> :
-                            null}
-                            {bonusTrainingTypes.length > i && bonusTrainingTypes[i] === "partialMenu" ?
-                                <select
-                                    name={`bonusTrainingOptions[${i}]`}
-                                    defaultValue={trainingData.options}
-                                    ref={register}
-                                    multiple
-                                >
-                                    {gc.skills_list.map((skill) => (
-                                        <option key={skill} value={skill}>{skill}</option>
-                                    ))}
-                                </select> :
-                            null}
-                        </div>
-                    ))}
-                </div>
-                <MyButton fct={newTrainedSkill}>Add Skill Training</MyButton>
-                {/* <p>{JSON.stringify(bonusTrainingTypes)}</p> */}
-            </section>
             <div className="columns">
-                <section className="passives rows main-body">
-                    <label>Passive Abilities</label>
-                    {passives.map((ability, i) => (
-                        <Controller
-                            key={i}
-                            as="textarea"
-                            control={control}
-                            name={`passives[${i}]`}
-                            defaultValue={ability}
-                            rows="3"
-                            cols="44"
-                        />
-                    ))}
-                    <MyButton fct={newPassive}>Add Passive Ability</MyButton>
+                <section className="bonus-trainings main-body">
+                    <label>Bonus Trained Skills</label>
+                    <div className="rows">
+                        {bonusTrainings.map((trainingData, i) => (
+                            <div key={i} className="columns">
+                                <label>({i + 1})</label>
+                                <div className="rows">
+                                    <label>Type</label>
+                                    <ul className="rows">
+                                        <li className="radio-training-type">
+                                            <input
+                                                type="radio"
+                                                name={`trainingTypes[${i}]`}
+                                                value="fullMenu"
+                                                ref={register}
+                                                onChange={updateTrainingType}
+                                                defaultChecked={true}
+                                            />
+                                            <label>Any Skill</label>
+                                        </li>
+                                        <li className="radio-training-type">
+                                            <input
+                                                type="radio"
+                                                name={`trainingTypes[${i}]`}
+                                                value="specific"
+                                                ref={register}
+                                                onChange={updateTrainingType}
+                                                defaultChecked={false}
+                                            />
+                                            <label>One Specific Skill</label>
+                                        </li>
+                                        <li className="radio-training-type">
+                                            <input
+                                                type="radio"
+                                                name={`trainingTypes[${i}]`}
+                                                value="partialMenu"
+                                                ref={register}
+                                                onChange={updateTrainingType}
+                                                defaultChecked={false}
+                                            />
+                                            <label>Select Skill From Options</label>
+                                        </li>
+                                    </ul>
+                                </div>
+                                {bonusTrainingTypes.length > i && bonusTrainingTypes[i] === "specific" ?
+                                    <select
+                                        name={`bonusTrainingOptions[${i}]`}
+                                        defaultValue={trainingData.options[0]}
+                                        ref={register}
+                                    >
+                                        {gc.skills_list.map((skill) => (
+                                            <option key={skill} value={skill}>{skill}</option>
+                                        ))}
+                                    </select> :
+                                null}
+                                {bonusTrainingTypes.length > i && bonusTrainingTypes[i] === "partialMenu" ?
+                                    <select
+                                        name={`bonusTrainingOptions[${i}]`}
+                                        defaultValue={trainingData.options}
+                                        ref={register}
+                                        multiple
+                                    >
+                                        {gc.skills_list.map((skill) => (
+                                            <option key={skill} value={skill}>{skill}</option>
+                                        ))}
+                                    </select> :
+                                null}
+                            </div>
+                        ))}
+                    </div>
+                    <MyButton fct={newTrainedSkill}>Add Skill Training</MyButton>
                 </section>
                 <section className="right-column rows">
                     <label>Positive Traits</label>
@@ -604,40 +632,100 @@ const BuildLibraryKits = (props) => {
                     </select>
                 </section>
             </div>
-                <section className="extended-rests rows main-body">
-                    <label>Extended Rest Abilities</label>
-                    {extendedRests.map((ability, i) => (
-                        <Controller
-                            key={i}
-                            as="textarea"
-                            control={control}
-                            name={`extended_rest_actions[${i}]`}
-                            defaultValue={ability}
-                            rows="3"
-                            cols="44"
-                        />
-                    ))}
-                    <MyButton fct={newExtendedRest}>Add Extended Rest Ability</MyButton>
-                </section>
+            <section className="passives rows">
+                <label>Passive Abilities</label>
+                {passives.map((ability, i) => (
+                    <Controller
+                        key={i}
+                        as="textarea"
+                        control={control}
+                        name={`passives[${i}]`}
+                        defaultValue={ability}
+                        rows="3"
+                        cols="44"
+                    />
+                ))}
+                <MyButton fct={newPassive}>Add Passive Ability</MyButton>
+            </section>
+            <section className="extended-rests rows main-body">
+                <label>Extended Rest Abilities</label>
+                {extendedRests.map((ability, i) => (
+                    <Controller
+                        key={i}
+                        as="textarea"
+                        control={control}
+                        name={`extended_rest_actions[${i}]`}
+                        defaultValue={ability}
+                        rows="3"
+                        cols="44"
+                    />
+                ))}
+                <MyButton fct={newExtendedRest}>Add Extended Rest Ability</MyButton>
+            </section>
             <section>
                 <h3>Drawbacks</h3>
-                <section className="right-column rows">
-                    <label>Negative Traits</label>
-                    <select
-                        name="drawback_traits"
-                        ref={register}
-                        multiple
-                    >
-                        {gc.drawback_traits.map((trait) => (
-                            <option
-                                key={trait}
-                                value={trait}
-                            >
-                                {trait}
-                            </option>
-                        ))}
-                    </select>
-                </section>
+                <div className="columns">
+                    <section className="various-penalties main-body rows">
+                        <ul>
+                            {variousPenalties.map((penalty, i) => (
+                                <li key={`${i}`}>
+                                    <input
+                                        type="number"
+                                        defaultValue={penalty.num}
+                                        ref={register}
+                                        name={`variousPenaltyNum[${i}]`}
+                                        className="small"
+                                        disabled={variousPenaltyTypes.length > i && variousPenaltyTypes[i] === "Synergy"}
+                                    />
+                                    <select
+                                        name={`variousPenaltyType[${i}]`}
+                                        ref={register}
+                                        defaultValue={penalty.type}
+                                        onChange={updatePenaltyType}
+                                    >
+                                        <option value={"Select"}>Select</option>
+                                        {gc.bonus_types.flatMap((type) => {
+                                            if (type === "Synergy") {
+                                                return [];
+                                            } else {
+                                                return [<option key={type} value={type}>{type}</option>];
+                                            }
+                                        })}
+                                    </select>
+                                    <label>penalty to</label>
+                                    <select
+                                        name={`variousPenaltyTo[${i}]`}
+                                        defaultValue={penalty.to}
+                                        ref={register}
+                                    >
+                                        <option value={"Select"}>Select</option>
+                                        {gc.bonus_targets.map((stat) => (
+                                            <option key={stat.code} value={stat.code}>{stat.name}</option>
+                                        ))}
+                                    </select>
+                                </li>
+                            ))}
+                        </ul>
+                        <MyButton fct={newVPenalty}>Add Penalty</MyButton>
+                    </section>
+                    <section className="right-column rows">
+                        <label>Negative Traits</label>
+                        <select
+                            name="drawback_traits"
+                            ref={register}
+                            multiple
+                        >
+                            {gc.drawback_traits.map((trait) => (
+                                <option
+                                    key={trait}
+                                    value={trait}
+                                >
+                                    {trait}
+                                </option>
+                            ))}
+                        </select>
+                    </section>
+                </div>
             </section>
             <section className="xp-parcels rows">
                 <h3>XP Parcels</h3>

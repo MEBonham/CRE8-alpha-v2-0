@@ -522,21 +522,25 @@ form.build-library .checkbox-pair input {
     top: 2px;
 }
 
+form.build-library section.various-penalties,
 form.build-library section.various-bonuses,
 form.build-library section.xp-parcels {
     align-items: flex-start;
 }
 
+form.build-library section.various-penalties input.small,
 form.build-library section.various-bonuses input.small {
-    width: 40px;
+    width: 46px;
     margin-right: 4px;
     text-align: right;
 }
 
-form.build-library section.various-bonuses label {
+form.build-library section.various-penalties li label,
+form.build-library section.various-bonuses li label {
     margin: 0 8px;
 }
 
+form.build-library section.various-penalties .my-button,
 form.build-library section.various-bonuses .my-button {
     margin-top: 6px;
 }
@@ -547,6 +551,7 @@ form.build-library section.extended-rests,
 form.build-library section.passives,
 form.build-library section.selective-passives,
 form.build-library.build-talent section.various-bonuses,
+/* form.build-library.build-talent section.various-penalties, */
 form.build-library.build-talent section.standard-actions,
 form.build-library.build-talent section.swift-actions,
 form.build-library.build-talent section.short-rest-actions,
@@ -563,6 +568,7 @@ form.build-library.build-talent section.extended-rest-actions {
 form.build-library section.passives textarea,
 form.build-library section.selective-passives textarea,
 form.build-library section.selective-passives .checkbox-pair,
+/* form.build-library.build-talent section.various-penalties textarea, */
 form.build-library.build-talent section.various-bonuses textarea,
 form.build-library.build-talent section.standard-actions textarea,
 form.build-library.build-talent section.swift-actions textarea,

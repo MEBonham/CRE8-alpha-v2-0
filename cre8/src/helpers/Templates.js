@@ -132,6 +132,7 @@ export const kitDefault = {
     tags: [],
     prereqs: "",
     benefit_traits: [],
+    bonus_feat: false,
     bonus_talents: [],
     bonus_trained_skills: [],
     can_repeat: false,
@@ -153,6 +154,29 @@ export const kitDefault = {
     xp_parcels_acquired: []
 }
 
+export const featDefault = {
+    name: "",
+    tags: [],
+    prereqs: "",
+    benefit_traits: [],
+    bonus_talents: [],
+    can_repeat: false,
+    drawback_traits: [],
+    extended_rest_actions: [],
+    free_actions: [],
+    move_actions: [],
+    normal: "",
+    opportunity_actions: [],
+    passives: [],
+    selected_options: {},
+    selective_passives: {},
+    short_rest_actions: [],
+    standard_actions: [],
+    swift_actions: [],
+    various_bonuses: [],
+    various_penalties: []
+}
+
 export const talentDefault = {
     name: "",
     tags: [],
@@ -169,5 +193,6 @@ export const talentDefault = {
     short_rest_actions: [],
     standard_actions: [],
     swift_actions: [],
-    various_bonuses: []
+    various_bonuses: [],
+    various_penalties: []
 }
