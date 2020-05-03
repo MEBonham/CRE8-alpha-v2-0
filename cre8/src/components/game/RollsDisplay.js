@@ -69,7 +69,7 @@ const RollsDisplay = () => {
                     roll.resultData.multRoll.forEach((natDieRoll, j) => {
                         const el = elArr[j];
                         if (oneBold || natDieRoll !== roll.resultData.natRoll) {
-                            el.style.opacity = 0.5;
+                            el.style.opacity = 0.3;
                         } else {
                             oneBold = true;
                         }

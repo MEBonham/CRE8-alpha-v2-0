@@ -34,6 +34,7 @@ const gc = {
         { name: "Perception", code: "Perception" },
         { name: "Reflex", code: "reflex_mods" },
         { name: "Reserve Points Pool", code: "rp_mods" },
+        { name: "Size", code: "size_mods" },
         { name: "Speed", code: "speed_mods" },
         { name: "Spellcraft", code: "spellcraft_mods" },
         { name: "Stealth", code: "Stealth" },

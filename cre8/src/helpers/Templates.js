@@ -57,6 +57,8 @@ export const charDefault = {
         rp_mods: {},
         rp_mods_total: 0,
         short_rest_actions: [],
+        size_final: 0,
+        size_mods: {},
         skill_mods: {},
         skill_mods_net: {},
         skill_ranks: {},
@@ -108,6 +110,7 @@ export const charDefault = {
         vp_kits: {},
         vp_kits_total: 0,
         vp_max: 9,
+        weapon_accuracy_mods: {},
         weapon_impact_mods: {},
         willpower_base_total: 0,
         willpower_mods: {

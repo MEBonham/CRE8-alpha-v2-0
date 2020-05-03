@@ -209,6 +209,14 @@ export const numSort = (numArr) => {
     return numArr.sort((a, b) => { return a - b });
 }
 
+const updateDefense = (statsObj) => {
+    const defense_total = statsObj.heroic_bonus + mineModifiers(statsObj.defense_mods);
+    return {
+        ...statsObj,
+        defense_total
+    };
+}
+
 export const updateFeats = (statsObj) => {
     let result = {
         ...statsObj,
@@ -721,10 +729,9 @@ export const updateKits = (statsObj) => {
     result = updateFeats(result);
     result = updateTalents(result);
 
-    result = updateSynergies(result);               // Includes updateVariousMods()
+    result = updateSynergies(result);               // Includes updateVariousMods() which includes updateSize()
 
     result = updateSkillRanks(result);
-    console.log(result.skill_mods.Glibness.Untyped);
 
     const stack1stLevelKits = result.traits_from_kits.includes("Stack 1st-Level Kits");
 
@@ -842,6 +849,137 @@ const updateRpMax = (statsObj) => {
         rp_max,
         rp
     };
+}
+
+const updateSize = (statsObj) => {
+    const size_final = mineModifiers(statsObj.size_mods);
+    let result = {
+        ...statsObj,
+        size_final
+    };
+    let hasSizeAlready = false;
+    result.traits_from_kits.forEach((trait) => {
+        if (trait.endsWith(" Size")) hasSizeAlready = true;
+    });
+    if (!hasSizeAlready) {
+        switch (size_final) {
+            case -5:
+            case -4:
+                result.traits_from_kits.push("Fine Size");
+                break;
+            case -3:
+                result.traits_from_kits.push("Diminutive Size");
+                break;
+            case -2:
+                result.traits_from_kits.push("Tiny Size");
+                break;
+            case -1:
+                result.traits_from_kits.push("Small Size");
+                break;
+            case 0:
+                result.traits_from_kits.push("Medium Size");
+                break;
+            case 1:
+                result.traits_from_kits.push("Large Size");
+                break;
+            case 2:
+                result.traits_from_kits.push("Huge Size");
+                break;
+            case 3:
+                result.traits_from_kits.push("Gargantuan Size");
+                break;
+            default:
+                result.traits_from_kits.push("Colossal Size");
+        }
+    }
+    // result = updateWeaponAccuracy({
+    //     ...result,
+    //     weapon_accuracy_mods: {
+    //         ...result.weapon_accuracy_mods,
+    //         Size: {
+    //             ...result.weapon_accuracy_mods.Size,
+    //             "Final Size": {
+    //                 srcType: "kit",
+    //                 num: (-1 * size_final),
+    //                 level: 0
+    //             }
+    //         }
+    //     }
+    // });
+    result = updateDefense({
+        ...result,
+        defense_mods: {
+            ...result.defense_mods,
+            Size: {
+                ...result.defense_mods.Size,
+                "Final Size": {
+                    srcType: "kit",
+                    num: (-1 * size_final),
+                    level: 0
+                }
+            }
+        }
+    });
+    result = updateSkillMods({
+        ...result,
+        skill_mods: {
+            ...result.skill_mods,
+            Brawn: {
+                ...result.skill_mods.Brawn,
+                Size: {
+                    ...result.weapon_accuracy_mods.Size,
+                    "Final Size": {
+                        srcType: "kit",
+                        num: (2 * size_final),
+                        level: 0
+                    }
+                }
+            }
+        }
+    });
+    // result = updateAv({
+    //     ...result,
+    //     av_mods: {
+    //         ...result.av_mods,
+    //         Size: {
+    //             ...result.av_mods.Size,
+    //             "Final Size": {
+    //                 srcType: "kit",
+    //                 num: (size_final),
+    //                 level: 0
+    //             }
+    //         }
+    //     }
+    // });
+    // result = updateWeaponImpact({
+    //     ...result,
+    //     weapon_impact_mods: {
+    //         ...result.weapon_impact_mods,
+    //         Size: {
+    //             ...result.weapon_impact_mods.Size,
+    //             "Final Size": {
+    //                 srcType: "kit",
+    //                 num: (size_final),
+    //                 level: 0
+    //             }
+    //         }
+    //     }
+    // });
+    result = updateSpeed({
+        ...result,
+        speed_mods: {
+            ...result.speed_mods,
+            Size: {
+                ...result.speed_mods.Size,
+                "Final Size": {
+                    srcType: "kit",
+                    num: (5 * size_final),
+                    level: 0
+                }
+            }
+        }
+    });
+    return result;
 }
 
 const updateSkillMods = (statsObj) => {
@@ -1105,16 +1243,13 @@ export const updateTalents = (statsObj) => {
 
 const updateVariousMods = (statsObj) => {
     let result = { ...statsObj };
-    // result = updateAv(result);
+    result = updateSize(result);            // Includes some other updates
     // result = updateAwesome(result);
-    // result = updateDefense(result);
     result = updateGoodSave(result);
     result = updateMpMax(result);
     result = updateRpMax(result);
     result = updateSkillMods(result);
-    result = updateSpeed(result);
     result = updateVpMax(result);
-    // result = updateWeaponImpact(result);
 
     return result;
 }
