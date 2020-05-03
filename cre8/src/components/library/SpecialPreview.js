@@ -13,6 +13,9 @@ const SpecialPreview = () => {
     useEffect(() => {
         if (state.preview.data && state.preview.data.id) {
             switch(state.preview.type) {
+                case "feats":
+                    dispatch({ type: "SET", key: "previewComponent", payload: previewFeat(state.preview.data) });
+                    break;
                 case "kits":
                     dispatch({ type: "SET", key: "previewComponent", payload: previewKit(state.preview.data) });
                     break;
@@ -128,6 +131,222 @@ const SpecialPreview = () => {
                             ))}
                         </ul>
                     </> :
+                null}
+            </>
+        );
+    }
+
+    const previewFeat = (data) => {
+        const actionTypes = [];
+        if (data.standard_actions.length) {
+            actionTypes.push("Standard");
+        }
+        if (data.move_actions.length) {
+            actionTypes.push("Move");
+        }
+        if (data.swift_actions.length) {
+            actionTypes.push("Swift");
+        }
+        if (data.opportunity_actions.length) {
+            actionTypes.push("Opportunity");
+        }
+        if (data.free_actions.length) {
+            actionTypes.push("Free");
+        }
+        if (data.short_rest_actions.length) {
+            actionTypes.push("Short Rest");
+        }
+        if (data.extended_rest_actions.length) {
+            actionTypes.push("Extended Rest");
+        }
+
+        const benefitsArr = data.benefit_traits.map((trait) => ({
+            text: trait,
+            type: "trait"
+        })).concat(data.various_bonuses.flatMap((modObj, i) => {
+            if (modObj.type === "Synergy") {
+                return [({
+                    text: `Gain a${modObj.skill === "Athletics" ? "n" : null} ${modObj.skill}-based
+                    synergy bonus to your ${getDisplayName(modObj.to)}.`,
+                    type: "bonus"
+                })];
+            } else if (modObj.num > 0) {
+                return [({
+                    text: `Gain a +${modObj.num} ${modObj.type} bonus to your ${getDisplayName(modObj.to)}.`,
+                    type: "bonus"
+                })];
+            } else {
+                return [];
+            }
+        }));
+
+        const seedEffectsObj = {};
+        data.seed_effects.forEach((effect) => {
+            if (Object.keys(seedEffectsObj).includes(effect.seed)) {
+                if (effect.Mp === "0" || 
+                    effect.detail === `Using this spell with the ${effect.seed} seed works normally, but at a higher MP cost.`) {
+                        seedEffectsObj[effect.seed].unshift({
+                            Mp: effect.Mp,
+                            detail: effect.detail,
+                            heading: (effect.Mp === "0" || effect.Mp === 0) ? effect.seed : `${effect.seed} (+${effect.Mp} MP)`
+                        });
+                } else {
+                    seedEffectsObj[effect.seed].push({
+                        Mp: effect.Mp,
+                        detail: effect.detail,
+                        heading: (effect.Mp === "0" || effect.Mp === 0) ? effect.seed : `${effect.seed} (+${effect.Mp} MP)`
+                    });
+                }
+            } else {
+                seedEffectsObj[effect.seed] = [{
+                    Mp: effect.Mp,
+                    detail: effect.detail,
+                    heading: (effect.Mp === "0" || effect.Mp === 0) ? effect.seed : `${effect.seed} (+${effect.Mp} MP)`
+                }];
+            }
+        })
+
+        return(
+            <>
+                <h1>{data.name}</h1>
+                <h2 className="subtitle">[{data.tags.map((tag) => (tag)).join("] [")}] Talent</h2>
+                <p className="prereqs"><strong>Prerequisites:</strong> {data.prereqs}</p>
+                {data.tags.includes("Spell") ? 
+                    <p><strong>Seeds:</strong> {data.applicable_seeds || "none"}</p> :
+                null}
+                <p className="action"><strong>Action:</strong> {actionTypes.join(" or ")}</p>
+                {actionTypes.length > 1 ? 
+                    <>
+                        <h2>Effects:</h2>
+                        <ul>
+                            {data.standard_actions.map((standard, i) => (
+                                <li key={i}>
+                                    <em>Standard Action:</em> {standard}
+                                </li>
+                            ))}
+                            {data.move_actions.map((move, i) => (
+                                <li key={i}>
+                                    <em>Move Action:</em> {move}
+                                </li>
+                            ))}
+                            {data.swift_actions.map((swift, i) => (
+                                <li key={i}>
+                                    <em>Swift Action:</em> {swift}
+                                </li>
+                            ))}
+                            {data.opportunity_actions.map((opportunity, i) => (
+                                <li key={i}>
+                                    <em>Opportunity Action:</em> {opportunity}
+                                </li>
+                            ))}
+                            {data.free_actions.map((free, i) => (
+                                <li key={i}>
+                                    <em>Free Action:</em> {free}
+                                </li>
+                            ))}
+                            {data.short_rest_actions.map((restAction, i) => (
+                                <li key={i}>
+                                    <em>Short Rest:</em> {restAction}
+                                </li>
+                            ))}
+                            {data.extended_rest_actions.map((restAction, i) => (
+                                <li key={i}>
+                                    <em>Extended Rest:</em> {restAction}
+                                </li>
+                            ))}
+                        </ul>
+                    </> : 
+                    <>
+                        <h2>Effect:</h2>
+                        {data.standard_actions.map((standard, i) => (
+                            <p key={i}>
+                                {standard}
+                            </p>
+                        ))}
+                        {data.move_actions.map((move, i) => (
+                            <p key={i}>
+                                {move}
+                            </p>
+                        ))}
+                        {data.swift_actions.map((swift, i) => (
+                            <p key={i}>
+                                {swift}
+                            </p>
+                        ))}
+                        {data.opportunity_actions.map((opportunity, i) => (
+                            <p key={i}>
+                                {opportunity}
+                            </p>
+                        ))}
+                        {data.free_actions.map((free, i) => (
+                            <p key={i}>
+                                {free}
+                            </p>
+                        ))}
+                        {data.short_rest_actions.map((restAction, i) => (
+                            <p key={i}>
+                                {restAction}
+                            </p>
+                        ))}
+                        {data.extended_rest_actions.map((restAction, i) => (
+                            <p key={i}>
+                                {restAction}
+                            </p>
+                        ))}
+                    </>}
+                {data.tags.includes("Spell") && data.augment_options.length ?
+                    <section>
+                        <h3>Augmentations:</h3>
+                        <ul>
+                            {data.augment_options.map((option, i) => (
+                                <li key={i}>
+                                    <strong>MP +{option.Mp}:</strong> {option.detail}
+                                </li>
+                            ))}
+                        </ul>
+                    </section> :
+                null}
+                {data.tags.includes("Spell") ?
+                    <section>
+                        <h3>Seed Effects:</h3>
+                        <ul>
+                            {Object.keys(seedEffectsObj).map((seedName) => (
+                                <li key={seedName}>
+                                    <div><strong>{seedEffectsObj[seedName][0].heading}:</strong> {seedEffectsObj[seedName][0].detail}</div>
+                                    {seedEffectsObj[seedName].length > 1 ?
+                                        <ul>
+                                            {seedEffectsObj[seedName].slice(1).map((effectObj, i) => (
+                                                <li key={i}>
+                                                    <strong>MP +{effectObj.Mp}:</strong> {effectObj.detail}
+                                                </li>
+                                            ))}
+                                        </ul> :
+                                    null}
+                                </li>
+                            ))}
+                        </ul>
+                    </section> :
+                null}
+                {benefitsArr.length ? 
+                    (
+                        benefitsArr.length > 1 ? 
+                            <section>
+                                <h2>Benefits:</h2>
+                                <ul>
+                                    {benefitsArr.map((benefit, i) => (
+                                        <li key={i}>
+                                            {benefit.text}
+                                        </li>
+                                    ))}
+                                </ul>
+                            </section> :
+                            <section>
+                                <h2>Benefit:</h2>
+                                {benefitsArr.map((benefit) => (
+                                    <p key={0}>{benefit.text}</p>
+                                ))}
+                            </section>
+                    ) :
                 null}
             </>
         );

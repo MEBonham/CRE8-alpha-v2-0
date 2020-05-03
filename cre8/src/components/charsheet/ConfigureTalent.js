@@ -12,7 +12,6 @@ const ConfigureTalent = (props) => {
     useEffect(() => {
         _isMounted.current = true;
         return(() => {
-            console.log("de-mounting");
             _isMounted.current = false;
         });
     }, [])

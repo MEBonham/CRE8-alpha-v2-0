@@ -5,6 +5,8 @@ import BuildLibraryKits from '../charsheet/BuildLibraryKits';
 import KitEditingMenu from '../library/KitEditingMenu';
 import BuildLibraryTalents from '../charsheet/BuildLibraryTalents';
 import TalentEditingMenu from '../library/TalentEditingMenu';
+import BuildLibraryFeats from '../charsheet/BuildLibraryFeats';
+import FeatEditingMenu from '../library/FeatEditingMenu';
 
 const EditShell = () => {
     const match = useRouteMatch();
@@ -15,6 +17,11 @@ const EditShell = () => {
                 <Route
                     path={`${match.url}/kits/:slug`}
                     render={() => <BuildLibraryKits editing />}
+                />
+                <Route exact path={`${match.url}/feats`} component={FeatEditingMenu} />
+                <Route
+                    path={`${match.url}/feats/:slug`}
+                    render={() => <BuildLibraryFeats editing />}
                 />
                 <Route exact path={`${match.url}/talents`} component={TalentEditingMenu} />
                 <Route

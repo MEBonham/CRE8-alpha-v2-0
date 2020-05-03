@@ -171,7 +171,7 @@ const BuildLibraryTalents = (props) => {
                 ...talentObj
             });
             if (props.editing) {
-                // fillFormWithPrevInfo(talentObj);
+                fillFormWithPrevInfo(talentObj);
             } else {
                 reset();
                 setVariousBonuses([]);

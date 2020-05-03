@@ -8,6 +8,7 @@ const Home = () => {
             <h1>Welcome!</h1>
             <MyLink to="/characters">Characters</MyLink>
             <MyLink to="/library/edit/kits">Edit Kits</MyLink>
+            <MyLink to="/library/edit/feats">Edit Feats</MyLink>
             <MyLink to="/library/edit/talents">Edit Talents</MyLink>
         </div>
     );

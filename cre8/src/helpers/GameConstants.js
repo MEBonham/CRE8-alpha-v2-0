@@ -1,4 +1,5 @@
 const gc = {
+    base_armor_value: 2,
     base_awesome_bonus: 4,
     base_coast_number: 6,
     base_reserve_points: 4,
@@ -8,7 +9,8 @@ const gc = {
     basic_conditions: [
         "Momentum",
         "Exerted",
-        "Wounded"
+        "Wounded",
+        "Dropped"
     ],
     benefit_traits: [
         "Darkvision",
@@ -55,6 +57,17 @@ const gc = {
         "Arcane Aversion"
     ],
     epic_level_xp_increment: 500,
+    feat_tags: [
+        "Boost",
+        "Core",
+        "Grace",
+        "Ki",
+        "Luck",
+        "Monster",
+        "Spell",
+        "Stance",
+        "Strike"
+    ],
     good_save_boost: 2,
     kit_tags: [
         "Core",
@@ -67,8 +80,11 @@ const gc = {
         "Unconscious",
         "Dying",
         "Shaken",
-        "Prone"
+        "Prone",
+        "Dazed",
+        "Stunned"
     ],
+    resistance_boost: 4,
     skills_list: [
         "Athletics",
         "Brawn",

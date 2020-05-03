@@ -52,6 +52,8 @@ export const charDefault = {
             base: {}
         },
         reflex_mods_total: 0,
+        resistance_mods: {},
+        resistance_value: 6,
         rp: 4,
         rp_max: 4,
         rp_mods: {},
@@ -162,6 +164,7 @@ export const featDefault = {
     name: "",
     tags: [],
     prereqs: "",
+    applicable_seeds: "",
     benefit_traits: [],
     bonus_talents: [],
     can_repeat: false,

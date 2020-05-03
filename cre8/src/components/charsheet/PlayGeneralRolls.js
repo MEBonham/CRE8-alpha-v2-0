@@ -59,6 +59,7 @@ const PlayGeneralRolls = () => {
     return (
         <section className="general-rolls columns">
             <div className="general-general rows">
+                <div className="av-display">Armor Value: {state.cur.stats.armor_value}</div>
                 <MyButton fct={generalRoll} evData={`meb_roll_Heroics-Check_${state.cur.stats.heroic_bonus}`}>
                     <img src={d20Icon} alt="" />
                     Heroics Check ({ifPlus(state.cur.stats.heroic_bonus) + state.cur.stats.heroic_bonus})
@@ -77,6 +78,7 @@ const PlayGeneralRolls = () => {
                 </MyButton>
             </div>
             <div className="saving-throws rows">
+                <div className="av-display">Resistance Value: {state.cur.stats.resistance_value}</div>
                 <MyButton fct={savingRoll} evData={`meb_roll_Defense-Save_${state.cur.stats.defense_total}`}>
                     <img src={d20Icon} alt="" />
                     Defense Save ({ifPlus(state.cur.stats.defense_total) + state.cur.stats.defense_total})

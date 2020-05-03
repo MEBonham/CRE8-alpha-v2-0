@@ -209,6 +209,16 @@ export const numSort = (numArr) => {
     return numArr.sort((a, b) => { return a - b });
 }
 
+const updateAv = (statsObj) => {
+    const armor_value = gc.base_armor_value + mineModifiers(statsObj.av_mods);
+    const resistance_value = gc.resistance_boost + Math.max(armor_value, statsObj.level_max8) + mineModifiers(statsObj.resistance_mods);
+    return {
+        ...statsObj,
+        armor_value,
+        resistance_value
+    };
+}
+
 const updateDefense = (statsObj) => {
     const defense_total = statsObj.heroic_bonus + mineModifiers(statsObj.defense_mods);
     return {
@@ -937,20 +947,20 @@ const updateSize = (statsObj) => {
             }
         }
     });
-    // result = updateAv({
-    //     ...result,
-    //     av_mods: {
-    //         ...result.av_mods,
-    //         Size: {
-    //             ...result.av_mods.Size,
-    //             "Final Size": {
-    //                 srcType: "kit",
-    //                 num: (size_final),
-    //                 level: 0
-    //             }
-    //         }
-    //     }
-    // });
+    result = updateAv({
+        ...result,
+        av_mods: {
+            ...result.av_mods,
+            Size: {
+                ...result.av_mods.Size,
+                "Final Size": {
+                    srcType: "kit",
+                    num: (size_final),
+                    level: 0
+                }
+            }
+        }
+    });
     // result = updateWeaponImpact({
     //     ...result,
     //     weapon_impact_mods: {
@@ -1249,6 +1259,7 @@ const updateVariousMods = (statsObj) => {
     result = updateMpMax(result);
     result = updateRpMax(result);
     result = updateSkillMods(result);
+    result = updateSpellcraft(result);
     result = updateVpMax(result);
 
     return result;

@@ -33,7 +33,7 @@ const FeatsLibraryMenu = () => {
                 allFeats.sort((a, b) => { return (a.name.toUpperCase() - b.name.toUpperCase())}) });
         }
     }, [allFeats, dispatch])
-
+    
     return (
         <section className="links rows">
             <h2>Feats</h2>

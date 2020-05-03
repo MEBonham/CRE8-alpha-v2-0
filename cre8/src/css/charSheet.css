@@ -277,6 +277,14 @@ div.char-sheet > div.float-right .my-button {
     margin-right: 20px;
 }
 
+.parchment section.general-rolls div.av-display {
+    margin: 4px 12px 12px 0;
+    width: 100%;
+    text-align: center;
+    font-size: 1.5rem;
+    font-weight: bold;
+}
+
 .parchment section.general-rolls > div > div.my-button,
 .parchment section.skill-rolls div > div.my-button {
     margin-bottom: 12px;
@@ -404,8 +412,6 @@ section.configure-skills section.synergies > div div.rows {
 
 section.skill-rolls h2 {
     text-align: center;
-    position: relative;
-    left: -17px;
 }
 
 section.configure-specials > div.rows > div.columns {
@@ -434,12 +440,12 @@ section.configure-specials > div.rows > div.columns > div select {
     margin-bottom: 6px;
 }
 
-section.configure-specials > div.rows > div.columns div.select-kit select.color-coded {
+section.configure-specials > div.rows > div.columns div.select-kit > select:first-child.color-coded {
     color: darkred;
     font-weight: bold;
 }
 
-section.configure-specials > div.rows > div.columns div.select-feat select {
+section.configure-specials > div.rows > div.columns div.select-feat select.color-coded {
     color: #2ab7de;
     font-weight: bold;
 }
@@ -562,7 +568,8 @@ form.build-library.build-talent section.various-bonuses,
 form.build-library.build-talent section.standard-actions,
 form.build-library.build-talent section.swift-actions,
 form.build-library.build-talent section.short-rest-actions,
-form.build-library.build-talent section.extended-rest-actions {
+form.build-library.build-talent section.extended-rest-actions,
+form.build-library.build-feat section.brown-box {
     margin: 12px 12px 12px 0;
     padding: 0 3% 8px;
     display: flex;
@@ -580,7 +587,8 @@ form.build-library.build-talent section.various-bonuses textarea,
 form.build-library.build-talent section.standard-actions textarea,
 form.build-library.build-talent section.swift-actions textarea,
 form.build-library.build-talent section.short-rest-actions textarea,
-form.build-library.build-talent section.extended-rest-actions textarea {
+form.build-library.build-talent section.extended-rest-actions textarea,
+form.build-library.build-feat section.brown-box textarea {
     margin-bottom: 6px;
 }
 
