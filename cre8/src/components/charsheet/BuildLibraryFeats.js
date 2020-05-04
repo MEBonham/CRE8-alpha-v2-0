@@ -657,7 +657,7 @@ const BuildLibraryFeats = (props) => {
                                 />
                             </div>
                         ))}
-                        <MyButton fct={newSeedEffect}>Add Spell Seed Effecct</MyButton>
+                        <MyButton fct={newSeedEffect}>Add Spell Seed Effect</MyButton>
                     </section>
                     <div className="rows">
                         <h3>Normal</h3>

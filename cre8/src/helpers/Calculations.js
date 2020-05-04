@@ -31,6 +31,27 @@ const clearBonuses = (statsObj, srcTypeArr) => {
     return result;
 }
 
+const clearFreeActions = (statsObj, srcTypeArr) => {
+    return {
+        ...statsObj,
+        free_actions: statsObj.free_actions.filter((item) => !srcTypeArr.includes(item.srcType))
+    };
+}
+
+const clearMoveActions = (statsObj, srcTypeArr) => {
+    return {
+        ...statsObj,
+        move_actions: statsObj.move_actions.filter((item) => !srcTypeArr.includes(item.srcType))
+    };
+}
+
+const clearOpportunityActions = (statsObj, srcTypeArr) => {
+    return {
+        ...statsObj,
+        opportunity_actions: statsObj.opportunity_actions.filter((item) => !srcTypeArr.includes(item.srcType))
+    };
+}
+
 const clearPassives = (statsObj, srcTypeArr) => {
     return {
         ...statsObj,
@@ -236,7 +257,10 @@ export const updateFeats = (statsObj) => {
     result = clearPassives(result, ["feat"]);
     result = clearRestFeatures(result, ["feat"]);
     result = clearStandardActions(result, ["feat"]);
+    result = clearMoveActions(result, ["feat"]);
     result = clearSwiftActions(result, ["feat"]);
+    result = clearOpportunityActions(result, ["feat"]);
+    result = clearFreeActions(result, ["feat"]);
     result = clearSynergies(result, ["feat"]);
     result = clearTrainings(result, ["feat"]);
     const featsAlreadyChecked = [];

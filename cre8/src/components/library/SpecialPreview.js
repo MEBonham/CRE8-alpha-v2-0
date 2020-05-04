@@ -188,20 +188,20 @@ const SpecialPreview = () => {
                         seedEffectsObj[effect.seed].unshift({
                             Mp: effect.Mp,
                             detail: effect.detail,
-                            heading: (effect.Mp === "0" || effect.Mp === 0) ? effect.seed : `${effect.seed} (+${effect.Mp} MP)`
+                            heading: (effect.Mp === "0" || effect.Mp === 0) ? effect.seed : `${effect.seed} (+${effect.Mp} MP${effect.cumulative ? " cumulative" : ""})`
                         });
                 } else {
                     seedEffectsObj[effect.seed].push({
                         Mp: effect.Mp,
                         detail: effect.detail,
-                        heading: (effect.Mp === "0" || effect.Mp === 0) ? effect.seed : `${effect.seed} (+${effect.Mp} MP)`
+                        heading: (effect.Mp === "0" || effect.Mp === 0) ? effect.seed : `${effect.seed} (+${effect.Mp} MP${effect.cumulative ? " cumulative" : ""})`
                     });
                 }
             } else {
                 seedEffectsObj[effect.seed] = [{
                     Mp: effect.Mp,
                     detail: effect.detail,
-                    heading: (effect.Mp === "0" || effect.Mp === 0) ? effect.seed : `${effect.seed} (+${effect.Mp} MP)`
+                    heading: (effect.Mp === "0" || effect.Mp === 0) ? effect.seed : `${effect.seed} (+${effect.Mp} MP${effect.cumulative ? " cumulative" : ""})`
                 }];
             }
         })
@@ -300,7 +300,7 @@ const SpecialPreview = () => {
                         <ul>
                             {data.augment_options.sort((a, b) => (a.Mp - b.Mp)).map((option, i) => (
                                 <li key={i}>
-                                    <strong>MP +{option.Mp}:</strong> {option.detail}
+                                    <strong>MP +{option.Mp}{option.cumulative ? " (cumulative)" : null}:</strong> {option.detail}
                                 </li>
                             ))}
                         </ul>

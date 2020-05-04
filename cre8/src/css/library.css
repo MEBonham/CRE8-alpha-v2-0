@@ -24,6 +24,12 @@
     font-weight: bold;
 }
 
+.sidebar .library-display h3 {
+    margin-bottom: 4px;
+    font-size: 1.2rem;
+    font-weight: bold;
+}
+
 .sidebar .library-display p {
     margin-bottom: 10px;
     font-size: 1.2rem;

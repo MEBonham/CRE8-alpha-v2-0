@@ -92,6 +92,7 @@
 .App .primary-content p,
 .user-management-table {
     font-size: 1.4rem;
+    line-height: 1.1;
 }
 
 .home-page,
@@ -301,13 +302,13 @@ div.accordion > div > div.toggles {
     overflow-y: hidden;
     padding: 0 6%;
     display: flex;
-    background-color: rgba(145, 166, 199, 0.3);
+    background-color: rgba(145, 166, 199, 0.4);
     transition: max-height 0.6s ease-out, padding-top 0.6s ease-out, padding-bottom 0.6s ease-out;
 }
 
 div.accordion > div > div.toggles.open {
     height: auto;
-    max-height: 120px;
+    max-height: 150px;
     padding: 6px 6%;
     overflow-y: auto;
 }
