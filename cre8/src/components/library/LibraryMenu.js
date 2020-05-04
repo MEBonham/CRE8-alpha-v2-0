@@ -30,7 +30,7 @@ const LibraryMenu = (props) => {
 
     return (
         <div className="library primary-content content-padding">
-            <h1>Library</h1>
+            <h1>Character Options Library</h1>
             <div className="columns">
                 <MyLink to={`/library/kits`} className={category === "kits" ? "on" : "off"}>Kits</MyLink>
                 <MyLink to={`/library/feats`} className={category === "feats" ? "on" : "off"}>Feats</MyLink>

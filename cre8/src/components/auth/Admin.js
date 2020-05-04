@@ -73,9 +73,14 @@ const AdminSettings = ({ ownId }) => {
     }
 
     return (
-        <section>
+        <section className="admin-settings">
             <h2>Administration</h2>
-            <MyLink to="/obscureaddress">Batch-edit database entities</MyLink>
+            <div className="buttons-bank columns">
+                <MyLink to="/obscureaddress">Batch-edit database entities</MyLink>
+                <MyLink to="/library/edit/kits">Edit Kits</MyLink>
+                <MyLink to="/library/edit/feats">Edit Feats</MyLink>
+                <MyLink to="/library/edit/talents">Edit Talents</MyLink>
+            </div>
             <section className="user-management">
                 <h3>Manage Users</h3>
                 <table className="user-management-table">

@@ -204,7 +204,7 @@ const SpecialPreview = () => {
                     heading: (effect.Mp === "0" || effect.Mp === 0) ? effect.seed : `${effect.seed} (+${effect.Mp} MP${effect.cumulative ? " cumulative" : ""})`
                 }];
             }
-        })
+        });
 
         return(
             <>
@@ -310,23 +310,30 @@ const SpecialPreview = () => {
                     <section>
                         <h3>Seed Effects:</h3>
                         <ul>
-                            {Object.keys(seedEffectsObj).map((seedName) => (
-                                <li key={seedName}>
-                                    <strong>{seedEffectsObj[seedName][0].heading}:</strong> {seedEffectsObj[seedName][0].detail}
-                                    {seedEffectsObj[seedName].length > 1 ?
-                                        <>
-                                            <div className="height-4px" />
-                                            <ul>
-                                                {seedEffectsObj[seedName].slice(1).map((effectObj, i) => (
-                                                    <li key={i}>
-                                                        <strong>MP +{effectObj.Mp}:</strong> {effectObj.detail}
-                                                    </li>
-                                                ))}
-                                            </ul>
-                                        </> :
-                                    null}
-                                </li>
-                            ))}
+                            {Object.keys(seedEffectsObj).sort((a, b) => {
+                                if (a === "Any") return -1;
+                                if (b === "Any") return 1;
+                                if (a.toUpperCase() < b.toUpperCase()) return -1;
+                                if (a.toUpperCase() > b.toUpperCase()) return 1;
+                                return 0;
+                            })
+                                .map((seedName) => (
+                                    <li key={seedName}>
+                                        <strong>{seedEffectsObj[seedName][0].heading}:</strong> {seedEffectsObj[seedName][0].detail}
+                                        {seedEffectsObj[seedName].length > 1 ?
+                                            <>
+                                                <div className="height-4px" />
+                                                <ul>
+                                                    {seedEffectsObj[seedName].slice(1).map((effectObj, i) => (
+                                                        <li key={i}>
+                                                            <strong>MP +{effectObj.Mp}:</strong> {effectObj.detail}
+                                                        </li>
+                                                    ))}
+                                                </ul>
+                                            </> :
+                                        null}
+                                    </li>
+                                ))}
                         </ul>
                     </section> :
                 null}

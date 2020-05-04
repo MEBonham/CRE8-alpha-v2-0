@@ -274,6 +274,18 @@ section.user-management {
     top: 2px;
 }
 
+.home-page .my-button {
+    margin-bottom: 12px;
+}
+
+.admin-settings .buttons-bank {
+    margin-bottom: 16px;
+}
+
+.admin-settings .buttons-bank .my-button {
+    margin-right: 10px;
+}
+
 .code-404 h1 {
     line-height: 1.2;
 }
