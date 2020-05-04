@@ -60,6 +60,7 @@ const gc = {
     feat_tags: [
         "Boost",
         "Core",
+        "Counter",
         "Grace",
         "Ki",
         "Luck",

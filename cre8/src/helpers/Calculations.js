@@ -263,8 +263,32 @@ export const updateFeats = (statsObj) => {
                     srcType: "feat"
                 });
             });
+            featObj.move_actions.forEach((action) => {
+                result.move_actions.push({
+                    displaySource: featObj.name,
+                    text: action,
+                    src: featObj.id,
+                    srcType: "feat"
+                });
+            });
             featObj.swift_actions.forEach((action) => {
                 result.swift_actions.push({
+                    displaySource: featObj.name,
+                    text: action,
+                    src: featObj.id,
+                    srcType: "feat"
+                });
+            });
+            featObj.opportunity_actions.forEach((action) => {
+                result.opportunity_actions.push({
+                    displaySource: featObj.name,
+                    text: action,
+                    src: featObj.id,
+                    srcType: "feat"
+                });
+            });
+            featObj.free_actions.forEach((action) => {
+                result.free_actions.push({
                     displaySource: featObj.name,
                     text: action,
                     src: featObj.id,

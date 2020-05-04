@@ -48,6 +48,19 @@ const PlayAccordions = () => {
                 </Accordion>
             </section>
             <section>
+                <h3>Move Actions</h3>
+                <Accordion uniqueKey={"meb_charMoves"} cur={state.cur.id}>
+                    {state.cur.stats.move_actions.map((moveAction, i) => (
+                        <AccordionSection key={i}>
+                            <h4>{moveAction.displaySource}</h4>
+                            <>
+                                <p>{moveAction.text}</p>
+                            </>
+                        </AccordionSection>
+                    ))}
+                </Accordion>
+            </section>
+            <section>
                 <h3>Swift Actions</h3>
                 <Accordion uniqueKey={"meb_charSwifts"} cur={state.cur.id}>
                     {state.cur.stats.swift_actions.map((swiftAction, i) => (
@@ -55,6 +68,32 @@ const PlayAccordions = () => {
                             <h4>{swiftAction.displaySource}</h4>
                             <>
                                 <p>{swiftAction.text}</p>
+                            </>
+                        </AccordionSection>
+                    ))}
+                </Accordion>
+            </section>
+            <section>
+                <h3>Opportunity Actions</h3>
+                <Accordion uniqueKey={"meb_charOpportunities"} cur={state.cur.id}>
+                    {state.cur.stats.opportunity_actions.map((opportunityAction, i) => (
+                        <AccordionSection key={i}>
+                            <h4>{opportunityAction.displaySource}</h4>
+                            <>
+                                <p>{opportunityAction.text}</p>
+                            </>
+                        </AccordionSection>
+                    ))}
+                </Accordion>
+            </section>
+            <section>
+                <h3>Free Actions</h3>
+                <Accordion uniqueKey={"meb_charFree"} cur={state.cur.id}>
+                    {state.cur.stats.free_actions.map((freeAction, i) => (
+                        <AccordionSection key={i}>
+                            <h4>{freeAction.displaySource}</h4>
+                            <>
+                                <p>{freeAction.text}</p>
                             </>
                         </AccordionSection>
                     ))}
