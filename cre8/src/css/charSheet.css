@@ -81,6 +81,11 @@ div.char-sheet > div.float-right .my-button {
     z-index: 2;
 }
 
+.parchment .meb-popout-edit.rows.meb-open {
+    flex-direction: column;
+    align-items: flex-end;
+}
+
 .parchment .meb-popout-edit.meb-open input {
     width: 120px;
     margin-right: 2px;
@@ -378,6 +383,15 @@ section.configure-skills .ranks-assignment > label {
     font-weight: bold;
 }
 
+.parchment header .checkbox-pair input {
+    position: relative;
+    top: 2px;
+}
+
+.parchment header .checkbox-pair label {
+    font-size: 1.4rem;
+}
+
 section.configure-skills .ranks-assignment td select,
 section.configure-skills .ranks-assignment > select,
 section.configure-skills section.synergies select,
@@ -426,6 +440,12 @@ form.build-library label {
     line-height: 1.2;
 }
 
+section.configure-specials header.search-parameters {
+    margin-bottom: 12px;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
 section.configure-specials > div.rows > div.columns > div {
     margin: 0 8px 8px 0;
     padding: 6px 3%;
@@ -469,8 +489,15 @@ section.configure-specials div.select-kit .selects.columns {
     align-items: flex-end;
 }
 
-section.configure-specials div.select-kit .selects.columns > div {
+section.configure-specials div.select-kit .selects.columns > div,
+section.configure-specials .search-parameters .checkbox-pair {
     margin-right: 6px;
+}
+
+section.configure-specials .search-parameters .checkbox-pair input {
+    position: relative;
+    top: 2px;
+    left: 1px;
 }
 
 section.configure-specials div.select-kit div.parcels div.checkbox-pair {
@@ -481,6 +508,15 @@ section.configure-specials div.select-kit div.parcels div.checkbox-pair {
 section.configure-specials div.select-kit div.parcels div.checkbox-pair label {
     font-size: 1.1rem;
     font-weight: normal;
+}
+
+.parchment .bio-div {
+    width: 100%;
+    margin-bottom: 16px;
+}
+
+.parchment .bio-div > div {
+    width: 90%;
 }
 
 header.build-library {
@@ -508,7 +544,16 @@ form.build-library .main-body {
 }
 
 form.build-library .right-column {
+    margin-left: 20px;
     flex-grow: 1;
+}
+
+form.build-library .right-column ul {
+    margin-bottom: 14px;
+}
+
+form.build-library .right-column input[type="number"] {
+    width: 50px;
 }
 
 form.build-library > header > div.rows {

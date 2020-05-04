@@ -114,6 +114,17 @@ const gc = {
     ],
     trained_skill_extra_ranks: 2,
     wounded_save_penalty: -2,
+    xp_award_per_level_of_monster: 15,
+    xp_buffer_by_level: {
+        1: 1,
+        2: 5,
+        3: 10,
+        4: 15,
+        5: 20,
+        6: 25,
+        7: 30,
+        8: 35
+    },
     xp_increment_per_level: 100,
     xp_per_parcel: 30
 };

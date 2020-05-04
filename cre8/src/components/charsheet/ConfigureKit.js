@@ -40,10 +40,15 @@ const ConfigureKit = (props) => {
         const selectKitsCopy = {};
         Object.keys(allKits).forEach((kitSlug) => {
             const kitData = allKits[kitSlug];
-            selectKitsCopy[kitSlug] = kitData;
+            let skip = false;
+            if (!props.search.monster && kitData.tags.includes("Monster")) skip = true;
+            if (props.search.level_access && (kitData.intended_level - props.level > 1)) skip = true;
+            if (!skip) {
+                selectKitsCopy[kitSlug] = kitData;
+            }
         });
         setSelectKits(selectKitsCopy);
-    }, [allKits])
+    }, [allKits, props])
 
     const [currentKit, setCurrentKit] = useState({ id: false });
     useEffect(() => {
@@ -234,10 +239,18 @@ const ConfigureKit = (props) => {
                 {currentKit && currentKit.bonus_talents && currentKit.bonus_talents.map((bonusTalent, i) => {
                     const key = Object.keys(bonusTalent)[0];
                     const tagFilter = bonusTalent[key];
-                    return (<ConfigureTalent key={i} level={props.level} index={`kit${props.index}_${i}`} tagFilter={tagFilter} />)
+                    return (
+                        <ConfigureTalent
+                            key={i}
+                            level={props.level}
+                            index={`kit${props.index}_${i}`}
+                            tagFilter={tagFilter}
+                            search={props.search}
+                        />
+                    );
                 })}
                 {currentKit && currentKit.bonus_feat ?
-                    <ConfigureFeat level={props.level} index={`kit${props.index}`} /> :
+                    <ConfigureFeat level={props.level} index={`kit${props.index}`} search={props.search} /> :
                 null}
                 {currentKit && currentKit.bonus_trained_skills && currentKit.bonus_trained_skills.map((training, i) => {
                     // console.log(training);

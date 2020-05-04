@@ -16,7 +16,7 @@ const uploadRoll = (roll, uid) => {
 }
 
 const toggleCharEditing = (ev) => {
-    const field = ev.target.id.split("_")[2];
+    const field = ev.currentTarget.id.split("_")[2];
     if (field) {
         const valHolderId = `meb_charEditForm_${field}`;
         const el = document.querySelector(`#${valHolderId}`);

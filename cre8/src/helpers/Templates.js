@@ -1,5 +1,17 @@
 
 export const charDefault = {
+    bio: {
+        appearance: "",
+        background: "",
+        beliefs: "",
+        ecology: "",
+        possessions: "",
+        personality: "",
+        quirks: "",
+        relationships: "",
+        tactics: ""
+    },
+    monster_flag: false,
     stats: {
         active_conditions: [],
         armor_value: 2,
@@ -120,7 +132,9 @@ export const charDefault = {
         },
         willpower_mods_total: 0,
         xp: 0,
+        xp_award: 15,
         xp_base: 0,
+        xp_buffer: 1,
         xp_parcels_total: 0
     }
 };
@@ -149,6 +163,7 @@ export const kitDefault = {
     fighting_level_boost: false,
     fighting_OR_caster_boost: false,
     fighting_OR_coast_boost: false,
+    intended_level: 1,
     passives: [],
     selected_options: {},
     short_rest_actions: [],
@@ -172,6 +187,7 @@ export const featDefault = {
     drawback_traits: [],
     extended_rest_actions: [],
     free_actions: [],
+    intended_level: 1,
     move_actions: [],
     normal: "",
     opportunity_actions: [],
@@ -195,6 +211,7 @@ export const talentDefault = {
     can_repeat: false,
     drawback_traits: [],
     extended_rest_actions: [],
+    intended_level: 1,
     normal: "",
     passives: [],
     selected_options: {},

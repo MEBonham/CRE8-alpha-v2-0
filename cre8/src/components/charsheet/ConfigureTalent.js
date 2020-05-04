@@ -39,14 +39,18 @@ const ConfigureTalent = (props) => {
         const selectTalentsCopy = {};
         Object.keys(allTalents).forEach((talentSlug) => {
             const talentData = allTalents[talentSlug];
-            if (!props.flaw || talentData.tags.includes("Flaw")) {
-                if (!props.tagFilter || arrayMatch(props.tagFilter, talentData.tags)) {
-                    selectTalentsCopy[talentSlug] = talentData;
-                }
+            let skip = false;
+            if (!props.search.monster && talentData.tags.includes("Monster")) skip = true;
+            if (props.search.level_access && (talentData.intended_level - props.level > 1)) skip = true;
+            if (props.flaw && !talentData.tags.includes("Flaw")) skip = true;
+            if (props.tagFilter && !arrayMatch(props.tagFilter, talentData.tags)) skip = true;
+            
+            if (!skip) {
+                selectTalentsCopy[talentSlug] = talentData;
             }
         });
         setSelectTalents(selectTalentsCopy);
-    }, [allTalents, props.flaw, props.tagFilter])
+    }, [allTalents, props])
 
     const [currentTalent, setCurrentTalent] = useState({ id: false });
     useEffect(() => {

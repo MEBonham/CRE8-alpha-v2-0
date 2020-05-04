@@ -474,6 +474,16 @@ const BuildLibraryTalents = (props) => {
                         />
                     </div>
                 </div>
+                <div className="rows right-column">
+                    <label>Intended Minimum Level</label>
+                    <Controller
+                        as="input"
+                        type="number"
+                        rules={{required: true}}
+                        name="intended_level"
+                        control={control}
+                    />
+                </div>
             </section>
             <MyFormButton type="submit">Save</MyFormButton>
         </form>

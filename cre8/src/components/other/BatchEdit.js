@@ -5,20 +5,19 @@ import MyButton from '../ui/MyButton';
 
 const BatchEdit = () => {
 
-    const collection = "feats";
+    const collection = "talents";
     const editAll = async (ev) => {
         try {
             const collectionCopy = {};
             const query = await fb.db.collection(collection).get();
             query.forEach((item) => {
-                collectionCopy[item.id] = (item.data().seed_effects && item.data().seed_effects.length) ?
+                collectionCopy[item.id] = (item.data().intended_level) ?
                     {
                         ...item.data()
                     } :
                     {
                         ...item.data(),
-                        seed_effects: [],
-                        augment_options: []
+                        intended_level: 1
                     };
             });
             Object.keys(collectionCopy).forEach((id) => {

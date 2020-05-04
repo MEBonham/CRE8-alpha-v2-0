@@ -7,14 +7,31 @@ const ConfigureHeader = () => {
     const [state, dispatch] = useContext(Store);
     const { handleInputChange, handleSubmit } = useFormGlobalScope(state.editCharFct, state.inputs, dispatch);
 
+    const toggleMonsterMode = (ev) => {
+        if (state.cur) {
+            dispatch({ type: "CHAR_EDIT", field: "monster_flag", payload: !state.cur.monster_flag });
+        }
+    }
+
     return (
         <header>
-            <div className="meb-contain-edit">
-                <h1 onClick={state.toggleCharEditing} id="meb_togCharEdit_name" className="editable-text">{state.cur.name}</h1>
-                <form className="meb-popout-edit" onSubmit={handleSubmit} id="meb_charEditForm_name">
-                    <input type="text" onChange={handleInputChange} id="meb_charEditVal_name" />
-                    <button type="submit">Enter</button>
-                </form>
+            <div className="columns space-between">
+                <div className="meb-contain-edit">
+                    <h1 onClick={state.toggleCharEditing} id="meb_togCharEdit_name" className="editable-text">{state.cur.name}</h1>
+                    <form className="meb-popout-edit" onSubmit={handleSubmit} id="meb_charEditForm_name">
+                        <input type="text" onChange={handleInputChange} id="meb_charEditVal_name" />
+                        <button type="submit">Enter</button>
+                    </form>
+                </div>
+                <div className="checkbox-pair">
+                    <input
+                        type="checkbox"
+                        name="meb_checkbox_monsterMode"
+                        onChange={toggleMonsterMode}
+                        defaultChecked={state.cur.monster_flag}
+                    />
+                    <label>Monster Mode</label>
+                </div>
             </div>
             <div className="columns space-between">
                 <h2 className="subtitle">

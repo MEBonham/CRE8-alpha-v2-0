@@ -38,10 +38,15 @@ const ConfigureFeat = (props) => {
         const selectFeatsCopy = {};
         Object.keys(allFeats).forEach((featSlug) => {
             const featData = allFeats[featSlug];
-            selectFeatsCopy[featSlug] = featData;
+            let skip = false;
+            if (!props.search.monster && featData.tags.includes("Monster")) skip = true;
+            if (props.search.level_access && (featData.intended_level - props.level > 1)) skip = true;
+            if (!skip) {
+                selectFeatsCopy[featSlug] = featData;
+            }
         });
         setSelectFeats(selectFeatsCopy);
-    }, [allFeats])
+    }, [allFeats, props])
 
     const [currentFeat, setCurrentFeat] = useState({ id: false });
     useEffect(() => {
@@ -79,8 +84,6 @@ const ConfigureFeat = (props) => {
         };
         dispatch({ type: "CHAR_EDIT", field: "feats", payload: featsObj, level: props.level, index: props.index });
     }
-
-
 
     return (
         <div className="select-feat" id={`meb_editChar_selectFeat_${props.level}_${props.index}`}>

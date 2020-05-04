@@ -815,11 +815,15 @@ const updateLevel = (statsObj) => {
     const heroic_bonus = Math.min(gc.max_level_pre_epic / 2, Math.floor(statsObj.level / 2));
     const level_max8 = Math.min(gc.max_level_pre_epic, statsObj.level);
     const awesome_check = gc.base_awesome_bonus + level_max8 + mineModifiers(statsObj.awesome_mods);
+    const xp_award = gc.xp_award_per_level_of_monster * statsObj.level;
+    const xp_buffer = gc.xp_buffer_by_level[level_max8]; 
     let result = {
         ...statsObj,
         heroic_bonus,
         level_max8,
-        awesome_check
+        awesome_check,
+        xp_award,
+        xp_buffer
     };
     result = updateKits(result);
     result = updateVpMax(result);

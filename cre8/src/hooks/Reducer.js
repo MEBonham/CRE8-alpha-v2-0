@@ -106,8 +106,21 @@ const Reducer = (state, action) => {
                             ...state.cur,
                             stats: updateXp({
                                 ...state.cur.stats,
-                                xp_base: state.cur.stats.xp_base + parseInt(newVal)
+                                xp_base: state.cur.stats.xp_base + Math.max(0, parseInt(newVal) - state.cur.stats.xp_buffer)
                             })
+                        }
+                    };
+                case "epithet":
+                    newVal = action.inputs[`${action.stub}_${action.field}`];
+                    return {
+                        ...state,
+                        curChangesMade: true,
+                        cur: {
+                            ...state.cur,
+                            stats: {
+                                ...state.cur.stats,
+                                epithet: newVal
+                            }
                         }
                     };
                 case "feats":
@@ -154,6 +167,15 @@ const Reducer = (state, action) => {
                             data: action.payload[action.level][action.index]
                         }
                     }
+                case "monster_flag":
+                    return {
+                        ...state,
+                        curChangesMade: true,
+                        cur: {
+                            ...state.cur,
+                            monster_flag: action.payload
+                        }
+                    };
                 case "mp":
                     newVal = parseInt(action.inputs[`${action.stub}_${action.field}`]);
                     return {
@@ -338,8 +360,8 @@ const Reducer = (state, action) => {
                         curChangesMade: true,
                         cur: {
                             ...state.cur,
-                            stats: {
-                                ...state.cur.stats,
+                            bio: {
+                                ...state.cur.bio,
                                 [action.field]: newVal
                             }
                         }

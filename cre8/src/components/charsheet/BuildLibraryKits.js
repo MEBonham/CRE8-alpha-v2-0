@@ -371,6 +371,16 @@ const BuildLibraryKits = (props) => {
                             </li>
                         ))}
                     </ul>
+                    <div className="rows">
+                        <label>Intended Minimum Level</label>
+                        <Controller
+                            as="input"
+                            type="number"
+                            rules={{required: true}}
+                            name="intended_level"
+                            control={control}
+                        />
+                    </div>
                 </div>
             </header>
             <section className="columns">
