@@ -69,7 +69,8 @@ const BuildLibraryFeats = (props) => {
             ...augmentOptions,
             {
                 Mp: "1",
-                detail: ""
+                detail: "",
+                cumulative: false
             }
         ]);
     }
@@ -80,7 +81,8 @@ const BuildLibraryFeats = (props) => {
             {
                 seed: "",
                 Mp: "0",
-                detail: ""
+                detail: "",
+                cumulative: false
             }
         ]);
     }
@@ -117,6 +119,13 @@ const BuildLibraryFeats = (props) => {
     gc.feat_tags.forEach((tag) => {
         tagDefaults[`featTag_checkbox_${tag}`] = false;
     });
+    const cumulativeDefaults = {};
+    for (let i = 0; i < seedEffects.length; i++) {
+        cumulativeDefaults[`seedEffectCumulative_${i}`] = false;
+    }
+    for (let i = 0; i < augmentOptions.length; i++) {
+        cumulativeDefaults[`augmentCumulative_${i}`] = false;
+    }
     const augmentMpCost = augmentOptions.map((option) => (
         option.Mp
     ));
@@ -132,16 +141,21 @@ const BuildLibraryFeats = (props) => {
     const seedEffectSeed = seedEffects.map((effect) => (
         effect.seed
     ));
+    // const seedEffectCumulative = seedEffects.map((effect) => (
+    //     effect.cumulative
+    // ));
     const { control, handleSubmit, register, reset, watch } = useForm({
         defaultValues: {
             ...featDefault,
             ...tagDefaults,
+            ...cumulativeDefaults,
             feat_checkbox_repeatable: featDefault.can_repeat,
             augmentMp: augmentMpCost,
             augmentDetail: augmentDetail,
             seedEffectSeed,
             seedEffectMpCost,
-            seedEffectDetail
+            seedEffectDetail,
+            // seedEffectCumulative
         }
     });
 
@@ -170,13 +184,15 @@ const BuildLibraryFeats = (props) => {
             } else if (key === "augment_options") {
                 setAugmentOptions(data[key].map((augmentObj) => ({
                     Mp: augmentObj.Mp,
-                    detail: augmentObj.detail
+                    detail: augmentObj.detail,
+                    cumulative: augmentObj.cumulative
                 })));
             } else if (key === "seed_effects") {
                 setSeedEffects(data[key].map((effectObj) => ({
                     seed: effectObj.seed,
                     Mp: effectObj.Mp,
-                    detail: effectObj.detail
+                    detail: effectObj.detail,
+                    cumulative: effectObj.cumulative
                 })));
             } else if (key === "standard_actions") {
                 setStandardActions(data[key]);
@@ -275,7 +291,8 @@ const BuildLibraryFeats = (props) => {
                 formData[key].forEach((detail, i) => {
                     featObj.augment_options.push({
                         detail,
-                        Mp: formData.augmentMpCost[i]
+                        Mp: formData.augmentMpCost[i],
+                        cumulative: formData[`augmentCumulative_${i}`]
                     });
                 });
             } else if (key === "seedEffectDetail") {
@@ -284,11 +301,13 @@ const BuildLibraryFeats = (props) => {
                     featObj.seed_effects.push({
                         seed: formData.seedEffectSeed[i],
                         detail,
-                        Mp: formData.seedEffectMpCost[i]
+                        Mp: formData.seedEffectMpCost[i],
+                        // cumulative: formData.seedEffectCumulative[i]
+                        cumulative: formData[`seedEffectCumulative_${i}`]
                     });
                 });
             } else if (!key.startsWith("featTag") && !key.startsWith("variousBonus") &&
-                !(key === "augmentMpCost") && !(key === "seedEffectSeed") && !(key === "seedEffectMpCost")) {
+                !key.startsWith("augment") && !key.startsWith("seedEffect")) {
                 featObj[key] = formData[key];
             }
         })
@@ -568,6 +587,17 @@ const BuildLibraryFeats = (props) => {
                                         defaultValue={option.Mp}
                                     />
                                 </div>
+                                <div className="checkbox-pair">
+                                    <Controller
+                                        as="input"
+                                        type="checkbox"
+                                        name={`augmentCumulative_${i}`}
+                                        control={control}
+                                        valueName="checked"
+                                        defaultValue={option.cumulative}
+                                    />
+                                    <label>Cumulative</label>
+                                </div>
                                 <Controller
                                     as="textarea"
                                     control={control}
@@ -604,6 +634,17 @@ const BuildLibraryFeats = (props) => {
                                         name={`seedEffectMpCost[${i}]`}
                                         defaultValue={effect.Mp}
                                     />
+                                </div>
+                                <div className="checkbox-pair">
+                                    <Controller
+                                        as="input"
+                                        type="checkbox"
+                                        name={`seedEffectCumulative_${i}`}
+                                        control={control}
+                                        valueName="checked"
+                                        defaultValue={effect.cumulative}
+                                    />
+                                    <label>Cumulative</label>
                                 </div>
                                 <Controller
                                     as="textarea"

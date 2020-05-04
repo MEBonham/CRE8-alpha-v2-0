@@ -298,7 +298,7 @@ const SpecialPreview = () => {
                     <section>
                         <h3>Augmentations:</h3>
                         <ul>
-                            {data.augment_options.map((option, i) => (
+                            {data.augment_options.sort((a, b) => (a.Mp - b.Mp)).map((option, i) => (
                                 <li key={i}>
                                     <strong>MP +{option.Mp}:</strong> {option.detail}
                                 </li>
@@ -312,15 +312,18 @@ const SpecialPreview = () => {
                         <ul>
                             {Object.keys(seedEffectsObj).map((seedName) => (
                                 <li key={seedName}>
-                                    <div><strong>{seedEffectsObj[seedName][0].heading}:</strong> {seedEffectsObj[seedName][0].detail}</div>
+                                    <strong>{seedEffectsObj[seedName][0].heading}:</strong> {seedEffectsObj[seedName][0].detail}
                                     {seedEffectsObj[seedName].length > 1 ?
-                                        <ul>
-                                            {seedEffectsObj[seedName].slice(1).map((effectObj, i) => (
-                                                <li key={i}>
-                                                    <strong>MP +{effectObj.Mp}:</strong> {effectObj.detail}
-                                                </li>
-                                            ))}
-                                        </ul> :
+                                        <>
+                                            <div className="height-4px" />
+                                            <ul>
+                                                {seedEffectsObj[seedName].slice(1).map((effectObj, i) => (
+                                                    <li key={i}>
+                                                        <strong>MP +{effectObj.Mp}:</strong> {effectObj.detail}
+                                                    </li>
+                                                ))}
+                                            </ul>
+                                        </> :
                                     null}
                                 </li>
                             ))}

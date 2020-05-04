@@ -65,9 +65,8 @@
     list-style: disc inside;
 }
 
-.library-display ul li div {
-    display: inline-block;
-    margin-bottom: 4px;
+.library-display ul li div.height-4px {
+    height: 4px;
 }
 
 .library-display ul ul {
