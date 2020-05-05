@@ -106,7 +106,11 @@ const BuildLibraryKits = (props) => {
                 detail: "",
                 impactNumDice: 1,
                 impactDiceSides: 6,
-                damageType: "bludgeoning",
+                damageType: {
+                    base: {
+                        bludgeoning: true
+                    }
+                },
                 perilMod: 2
             }
         ]);
@@ -134,9 +138,9 @@ const BuildLibraryKits = (props) => {
     const attackDieSides = attacks.map((attackData) => (
         attackData.impactDiceSides
     ));
-    const attackDamageType = attacks.map((attackData) => {
-        return attackData.damageType;
-    });
+    const attackDamageType = attacks.map((attackData) => (
+        attackData.damageType
+    ));
     const attackPeril = attacks.map((attackData) => (
         attackData.perilMod
     ));
@@ -177,7 +181,9 @@ const BuildLibraryKits = (props) => {
                     detail: attackObj.detail,
                     impactNumDice: attackObj.impact_num_dice,
                     impactDiceSides: attackObj.impact_dice_sides,
-                    damageType: attackObj.damage_type.base[0],
+                    damageType: {
+                        base: attackObj.damage_type.base
+                    },
                     perilMod: attackObj.peril_mod
                 })));
             } else if (key === "various_bonuses") {
@@ -368,9 +374,9 @@ const BuildLibraryKits = (props) => {
                     impact_num_dice: formData.attackNumDice[i],
                     impact_dice_sides: formData.attackDieSides[i],
                     damage_type: {
-                        base: [
-                            attacks[i].damageType
-                        ]
+                        base: {
+                            ...attacks[i].damageType
+                        }
                     },
                     peril_mod: formData.attackPerilMod[i]
                 }));
@@ -414,9 +420,18 @@ const BuildLibraryKits = (props) => {
     }, [db, fillFormWithPrevInfo, slug, props.editing])
 
     const handleRadio = (ev) => {
+        const attacksCopy = [ ...attacks ];
         const attackNum = parseInt(ev.target.id.split("-")[3]);
         const property = ev.target.id.split("-")[2];
-        attacks[attackNum][property] = ev.target.id.split("-")[4];
+        attacksCopy[attackNum][property] = ev.target.id.split("-")[4];
+        setAttacks(attacksCopy);
+    }
+    const handleDamageTypeCheckbox = (ev) => {
+        const attacksCopy = [ ...attacks ];
+        const attackNum = parseInt(ev.target.id.split("-")[3]);
+        const property = ev.target.id.split("-")[2];
+        attacksCopy[attackNum][property][ev.target.id.split("-")[4]] = ev.target.checked;
+        setAttacks(attacksCopy);
     }
 
     if (props.editing && !slug) return <Redirect to="/library/kits" />;
@@ -899,13 +914,13 @@ const BuildLibraryKits = (props) => {
                         </div>
                         <div>
                             {gc.damage_types.map((type) => (
-                                <div key={type}>
+                                <div key={type} className="checkbox-pair">
                                     <input
-                                        type="radio"
+                                        type="checkbox"
                                         id={`meb-attack-damageType-${i}-${type}`}
-                                        name="attackRadio-damageType"
-                                        defaultValue={type === "bludgeoning"}
-                                        onChange={handleRadio}
+                                        name={`attackCheckbox-damageType-${type}`}
+                                        defaultChecked={Object.keys(attacks[i].damageType.base).includes(type)}
+                                        onChange={handleDamageTypeCheckbox}
                                     />
                                     <label>{type}</label>
                                 </div>

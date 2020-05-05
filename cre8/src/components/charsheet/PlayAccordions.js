@@ -32,7 +32,7 @@ const PlayAccordions = () => {
                             <>
                                 <p><strong>Range:</strong> {attackObj.range}</p>
                                 <p>
-                                    <strong>Impact:</strong> {attackObj.impact_num_dice}d{attackObj.impact_dice_sides}{attackObj.impact_total_mod ? `${ifPlus(attackObj.impact_total_mod)}${attackObj.impact_total_mod}` : null} ({attackObj.damage_type.base.join("/")} damage)
+                                    <strong>Impact:</strong> {attackObj.impact_num_dice}d{attackObj.impact_dice_sides}{attackObj.impact_total_mod ? `${ifPlus(attackObj.impact_total_mod)}${attackObj.impact_total_mod}` : null} ({Object.keys(attackObj.damage_type.base).filter((type) => attackObj.damage_type.base[type]).join("/")} damage)
                                 </p>
                                 <p><strong>Accuracy:</strong> {attackObj.accuracy}</p>
                                 <p><strong>Peril Rating:</strong> {attackObj.peril_rating}</p>
@@ -46,7 +46,7 @@ const PlayAccordions = () => {
                             <>
                                 <p><strong>Range:</strong> {attackObj.range}</p>
                                 <p>
-                                    <strong>Impact:</strong> {attackObj.impact_num_dice}d{attackObj.impact_dice_sides}{attackObj.impact_total_mod ? `${ifPlus(attackObj.impact_total_mod)}${attackObj.impact_total_mod}` : null} ({attackObj.damage_type.base.join("/")} damage)
+                                    <strong>Impact:</strong> {attackObj.impact_num_dice}d{attackObj.impact_dice_sides}{attackObj.impact_total_mod ? `${ifPlus(attackObj.impact_total_mod)}${attackObj.impact_total_mod}` : null} ({Object.keys(attackObj.damage_type.base).filter((type) => attackObj.damage_type.base[type]).join("/")} damage)
                                 </p>
                                 <p><strong>Accuracy:</strong> {attackObj.accuracy}</p>
                                 <p><strong>Peril Rating:</strong> {attackObj.peril_rating}</p>

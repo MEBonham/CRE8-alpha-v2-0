@@ -591,6 +591,10 @@ export const updateKits = (statsObj) => {
                 ...kitObj.attacks.map((attackObj) => ({
                     ...attackDefault,
                     ...attackObj,
+                    damage_type: {
+                        ...attackDefault.damage_type,
+                        ...attackObj.damage_type
+                    },
                     src: kitObj.id,
                     srcType: "kit"
                 }))

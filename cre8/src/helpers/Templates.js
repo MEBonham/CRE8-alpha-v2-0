@@ -25,7 +25,9 @@ export const charDefault = {
             impact_dice_sides: 4,
             impact_total_mod: 0,
             damage_type: {
-                base: ["bludgeoning"]
+                base: {
+                    bludgeoning: true
+                }
             },
             peril_mod: 0,
             peril_rating: 0
@@ -165,7 +167,9 @@ export const attackDefault = {
     impact_dice_sides: 6,
     impact_total_mod: 0,
     damage_type: {
-        base: ["bludgeoning"]
+        base: {
+            bludgeoning: true
+        }
     },
     peril_mod: 2,
     peril_rating: 2

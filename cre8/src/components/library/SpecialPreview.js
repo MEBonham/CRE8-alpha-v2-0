@@ -77,7 +77,7 @@ const SpecialPreview = () => {
                     {data.attacks.map((attackObj, i) => (
                         <li key={i}>Gain a {attackObj.name} 
                             {attackObj.type === "natural_weapon" ? "natural weapon" : `${attackObj.type} attack`} (range {attackObj.range}, 
-                            base Impact {attackObj.impact_num_dice}d{attackObj.impact_dice_sides}, {attackObj.damage_type.base.join("/")} damage, 
+                            base Impact {attackObj.impact_num_dice}d{attackObj.impact_dice_sides}, {Object.keys(attackObj.damage_type.base).join("/")} damage, 
                             Peril modifier {`${ifPlus(attackObj.peril_mod)}${attackObj.peril_mod}`}.
                         </li>
                     ))}
@@ -415,7 +415,7 @@ const SpecialPreview = () => {
                     {data.attacks.map((attackObj, i) => (
                         <li key={i}>Gain a {attackObj.name} 
                             {attackObj.type === "natural_weapon" ? "natural weapon" : `${attackObj.type} attack`} (range {attackObj.range}, 
-                            base Impact {attackObj.impact_num_dice}d{attackObj.impact_dice_sides}, {attackObj.damage_type.base.join("/")} damage, 
+                            base Impact {attackObj.impact_num_dice}d{attackObj.impact_dice_sides}, {Object.keys(attackObj.damage_type.base).join("/")} damage, 
                             Peril modifier {`${ifPlus(attackObj.peril_mod)}${attackObj.peril_mod}`}.
                         </li>
                     ))}
