@@ -117,7 +117,7 @@ const CharMenu = () => {
                     })}
                 </section> :
             null}
-            <section>
+            {/* <section>
                 <h2>Standard Characters</h2>
                 {state.characterCache.filter(charData => charData.campaigns.includes("standard")).sort(compareFct)
                     .map(charData => {
@@ -129,10 +129,13 @@ const CharMenu = () => {
                         );
                     })
                 }
+            </section> */}
+            <section>
+                <MyLink to="/bestiary">Standard Monster Library</MyLink>
             </section>
             <section>
                 <h2>Other Public Characters</h2>
-                {state.characterCache.filter(charData => charData.campaigns.includes("public"))
+                {state.characterCache.filter(charData => charData.campaigns.includes("public")).sort(compareFct)
                     .map(charData => {
                         const toAddress = `/characters/${charData.id}`;
                         return (

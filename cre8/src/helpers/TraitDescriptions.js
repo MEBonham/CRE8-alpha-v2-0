@@ -1,5 +1,6 @@
 export const traitDescriptions = {
     "Arcane Aversion": "Incur a penalty to your Spellcraft Check and the Accuracy of your spell attacks. This penalty is equal to any encumbrance penalties you suffer to your Athletics, Dexterity, and Stealth skills (due to armor, shield, or a heavy load). The penalty additionally worsens by 1 if you wear a shield and again by 1 if you wear armor.",
+    "Beast Type": "Cannot speak normal languages. Illiterate. Limited in the Charisma, Dexterity, Gadgetry, Glibness, and Knowledge skills.",
     "Colossal Size": "Your Perception checks to spot Gargantuan or smaller creatures are dragged. Your Athletics or Brawn checks to keep your footing against Gargantuan or smaller creatures are boosted.",
     "Darkvision": "Treat nonmagical darkness as if it were shadowy illumination.",
     "Diminutive Size": "Your Stealth checks to hide from Tiny or larger creatures are boosted. Your Athletics or Brawn checks to keep your footing against Tiny or larger creatures are dragged. Your Perception checks to spot Fine creatures are dragged. Your Athletics or Brawn checks to keep your footing against Fine creatures are boosted.",

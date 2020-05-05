@@ -1,4 +1,4 @@
-import React, { useContext } from 'react';
+import React, { useEffect, useContext } from 'react';
 
 import { Store } from '../GlobalWrapper';
 import useFormGlobalScope from '../../hooks/useFormGlobalScope';
@@ -7,6 +7,11 @@ const ConfigureHeader = () => {
     const [state, dispatch] = useContext(Store);
     const { handleInputChange, handleSubmit } = useFormGlobalScope(state.editCharFct, state.inputs, dispatch);
 
+    useEffect(() => {
+        if (state.cur) {
+            document.querySelector(`input[name="meb_checkbox_monsterMode"]`).checked = state.cur.monster_flag;
+        }
+    }, [state.cur])
     const toggleMonsterMode = (ev) => {
         if (state.cur) {
             dispatch({ type: "CHAR_EDIT", field: "monster_flag", payload: !state.cur.monster_flag });

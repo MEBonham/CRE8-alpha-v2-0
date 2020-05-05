@@ -11,13 +11,13 @@ const BatchEdit = () => {
             const collectionCopy = {};
             const query = await fb.db.collection(collection).get();
             query.forEach((item) => {
-                collectionCopy[item.id] = (item.data().intended_level) ?
+                collectionCopy[item.id] = (item.data().attacks) ?
                     {
                         ...item.data()
                     } :
                     {
                         ...item.data(),
-                        intended_level: 1
+                        attacks: []
                     };
             });
             Object.keys(collectionCopy).forEach((id) => {

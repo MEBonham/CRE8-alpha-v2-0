@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef, useContext, useCallback } from 'react';
-import { Prompt, Redirect, useParams } from 'react-router-dom';
+import { Prompt, Redirect, useParams, useRouteMatch } from 'react-router-dom';
 
 import { Store } from '../GlobalWrapper';
 import fb from '../../fbConfig';
@@ -15,6 +15,7 @@ import '../../css/charSheet.css';
 const CharSheetShell = () => {
     const [state, dispatch] = useContext(Store);
     const { slug } = useParams();
+    const match = useRouteMatch();
     const db = fb.db;
 
     // Protect against memory leak
@@ -142,7 +143,10 @@ const CharSheetShell = () => {
             <div className="float-right rows">
                 <div className="columns">
                     <MyButton fct={manualLoadFct}>Load Latest Version of Character</MyButton>
-                    <MyLink to="/characters">Back to Characters</MyLink>
+                    {match.url.split("/")[0] === "bestiary" ?
+                        <MyLink to="/bestiary">Back to Bestiary</MyLink> :
+                        <MyLink to="/characters">Back to Characters</MyLink>
+                    }
                 </div>
                 <div className="columns">
                     {state.editPrivilege ? <MyButton fct={toSaveBtn}>Save Character</MyButton> : null}

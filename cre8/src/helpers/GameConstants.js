@@ -3,7 +3,7 @@ const gc = {
     base_awesome_bonus: 4,
     base_coast_number: 6,
     base_reserve_points: 4,
-    base_speed: 20,
+    base_speed: 15,
     base_trained_skills: 2,
     base_vitality_points: 5,
     basic_conditions: [
@@ -40,6 +40,7 @@ const gc = {
         { name: "Speed", code: "speed_mods" },
         { name: "Spellcraft", code: "spellcraft_mods" },
         { name: "Stealth", code: "Stealth" },
+        { name: "Wealth (one-time)", code: "wealth_mods" },
         { name: "Weapon Impact", code: "weapon_impact_mods" },
         { name: "Willpower", code: "willpower_mods" },
     ],
@@ -53,8 +54,18 @@ const gc = {
         "Synergy",
         "Untyped"
     ],
+    damage_types: [
+        "bludgeoning",
+        "cold",
+        "fire",
+        "lightning",
+        "piercing",
+        "slashing",
+        "typeless"
+    ],
     drawback_traits: [
-        "Arcane Aversion"
+        "Arcane Aversion",
+        "Beast Type"
     ],
     epic_level_xp_increment: 500,
     feat_tags: [
@@ -86,6 +97,19 @@ const gc = {
         "Stunned"
     ],
     resistance_boost: 4,
+    size_categories: {
+        "-5": "Fine Size",
+        "-4": "Fine Size",
+        "-3": "Diminutive Size",
+        "-2": "Tiny Size",
+        "-1": "Small Size",
+        "0": "Medium Size",
+        "1": "Large Size",
+        "2": "Huge Size",
+        "3": "Gargantuan Size",
+        "4": "Colossal Size",
+        "5": "Colossal Size",
+    },
     skills_list: [
         "Athletics",
         "Brawn",

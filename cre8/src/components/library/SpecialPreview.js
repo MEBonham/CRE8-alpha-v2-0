@@ -3,6 +3,7 @@ import React, { useState, useEffect, useRef, useContext } from 'react';
 import { Store } from '../GlobalWrapper';
 import { getDisplayName } from '../../helpers/Calculations';
 import { traitDescriptions } from '../../helpers/TraitDescriptions';
+import { ifPlus } from '../../helpers/Calculations';
 import LoadingAlert from '../other/LoadingAlert';
 import '../../css/library.css';
 
@@ -73,6 +74,13 @@ const SpecialPreview = () => {
                             ))
                         }] talent.</li>
                     ))}
+                    {data.attacks.map((attackObj, i) => (
+                        <li key={i}>Gain a {attackObj.name} 
+                            {attackObj.type === "natural_weapon" ? "natural weapon" : `${attackObj.type} attack`} (range {attackObj.range}, 
+                            base Impact {attackObj.impact_num_dice}d{attackObj.impact_dice_sides}, {attackObj.damage_type.base.join("/")} damage, 
+                            Peril modifier {`${ifPlus(attackObj.peril_mod)}${attackObj.peril_mod}`}.
+                        </li>
+                    ))}
                     {data.bonus_trained_skills.map((training, i) => {
                         if (training.type === "fullMenu") {
                             return (<li key={i}>Train an additional skill.</li>)
@@ -116,6 +124,18 @@ const SpecialPreview = () => {
                                     to your {getDisplayName(penalty.to)}.
                                 </li>
                             ))}
+                            {data.various_bonuses.map((modObj, i) => {
+                                if (modObj.type !== "Synergy" && modObj.num < 0) {
+                                    return (
+                                        <li key={i}>
+                                            Incur a {modObj.num} {modObj.type === "Untyped" ? null : modObj.type} penalty 
+                                            to your {getDisplayName(modObj.to)}.
+                                        </li>
+                                    );
+                                } else {
+                                    return null;
+                                }
+                            })}
                             {data.drawback_traits.map((trait, i) => (
                                 <li key={i}><strong>{trait}:</strong> {traitDescriptions[trait]}</li>
                             ))}
@@ -366,7 +386,15 @@ const SpecialPreview = () => {
         return(
             <>
                 <h1>{data.name}</h1>
-                <h2 className="subtitle">[{data.tags.map((tag) => (tag)).join("] [")}] Talent</h2>
+                <h2 className="subtitle">
+                    {data.tags.length ? 
+                        <>
+                            [
+                            {data.tags.map((tag) => (tag)).join("] [")}
+                            ]
+                        </> :
+                        null 
+                    } Talent</h2>
                 <p className="prereqs"><strong>Prerequisites:</strong> {data.prereqs}</p>
                 <h2>Benefits:</h2>
                 <ul>
@@ -384,6 +412,13 @@ const SpecialPreview = () => {
                             return null;
                         }
                     })}
+                    {data.attacks.map((attackObj, i) => (
+                        <li key={i}>Gain a {attackObj.name} 
+                            {attackObj.type === "natural_weapon" ? "natural weapon" : `${attackObj.type} attack`} (range {attackObj.range}, 
+                            base Impact {attackObj.impact_num_dice}d{attackObj.impact_dice_sides}, {attackObj.damage_type.base.join("/")} damage, 
+                            Peril modifier {`${ifPlus(attackObj.peril_mod)}${attackObj.peril_mod}`}.
+                        </li>
+                    ))}
                     {data.standard_actions.map((standardAction, i) => (
                         <li key={i}><em>Standard Action:</em> {standardAction}</li>
                     ))}
@@ -393,7 +428,7 @@ const SpecialPreview = () => {
                     {data.benefit_traits.map((trait, i) => (
                         <li key={i}><strong>{trait}:</strong> {traitDescriptions[trait]}</li>
                     ))}
-                    {data.passives.map((passive, i) => (
+                    {data.passives.filter((passive) => !passive.startsWith("[DRAWBACK]")).map((passive, i) => (
                         <li key={i}>{passive}</li>
                     ))}
                     {Object.keys(data.selective_passives).length ?
@@ -411,6 +446,37 @@ const SpecialPreview = () => {
                         <li key={i}><em>Extended Rest:</em> {restAction}</li>
                     ))}
                 </ul>
+                {(data.various_bonuses.filter((modObj) => modObj.num && modObj.num < 0).length) ||
+                    (data.passives.filter((passive) => passive.startsWith("[DRAWBACK]")).length) ?
+                    <>
+                        <h2>Drawbacks</h2>
+                        <ul>
+                            {data.various_bonuses.map((modObj, i) => {
+                                if (modObj.type !== "Synergy" && modObj.num < 0) {
+                                    return (
+                                        <li key={i}>
+                                            Incur a {modObj.num} {modObj.type === "Untyped" ? null : modObj.type} penalty 
+                                            to your {getDisplayName(modObj.to)}.
+                                        </li>
+                                    );
+                                } else {
+                                    return null;
+                                }
+                            })}
+                            {data.passives.map((passive, i) => {
+                                if (passive.startsWith("[DRAWBACK]")) {
+                                    return (
+                                        <li key={i}>
+                                            {passive.split(" ").slice(1).join(" ")}
+                                        </li>
+                                    );
+                                } else {
+                                    return null;
+                                }
+                            })}
+                        </ul>
+                    </> :
+                null}
                 {data.normal ?
                     <>
                         <h2>Normal</h2>

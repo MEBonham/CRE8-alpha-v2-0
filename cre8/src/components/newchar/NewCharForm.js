@@ -79,8 +79,10 @@ const NewCharForm = () => {
                     campaignsChecked.splice(campaignsChecked.indexOf("public"), 1);
                 }
                 const skillRanksObj = {};
+                const skillModsObj = {};
                 gc.skills_list.forEach((skill) => {
                     skillRanksObj[skill] = 0;
+                    skillModsObj[skill] = {};
                 });
                 saveNewChar({
                     ...charDefault,
@@ -90,7 +92,8 @@ const NewCharForm = () => {
                     slug: encodedSlug,
                     stats: {
                         ...charDefault.stats,
-                        skill_ranks: skillRanksObj
+                        skill_ranks: skillRanksObj,
+                        skill_mods: skillModsObj
                     }
                 });
             }

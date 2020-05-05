@@ -141,9 +141,6 @@ const BuildLibraryFeats = (props) => {
     const seedEffectSeed = seedEffects.map((effect) => (
         effect.seed
     ));
-    // const seedEffectCumulative = seedEffects.map((effect) => (
-    //     effect.cumulative
-    // ));
     const { control, handleSubmit, register, reset, watch } = useForm({
         defaultValues: {
             ...featDefault,
@@ -154,8 +151,7 @@ const BuildLibraryFeats = (props) => {
             augmentDetail: augmentDetail,
             seedEffectSeed,
             seedEffectMpCost,
-            seedEffectDetail,
-            // seedEffectCumulative
+            seedEffectDetail
         }
     });
 

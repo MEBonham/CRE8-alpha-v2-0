@@ -17,6 +17,7 @@ import CharMenu from './other/CharMenu';
 import EditShell from './library/EditShell';
 import LibraryMenu from './library/LibraryMenu';
 import ViewLibraryShell from './library/ViewLibraryShell';
+import Bestiary from './other/Bestiary';
 import UserSettings from './auth/UserSettings';
 import ForgotPassword from './auth/ForgotPassword';
 import Login from './auth/Login';
@@ -62,6 +63,8 @@ const App = () => {
                             <Route exact path="/library" render={() => <LibraryMenu category="kits" />} />
                             <Route exact path="/library/:category" component={LibraryMenu} />
                             <Route path="/library/:category/:slug" component={ViewLibraryShell} />
+                            <Route path="/bestiary/:slug" component={CharSheetShell} />
+                            <Route path="/bestiary" component={Bestiary} />
                             <Guarded path="/user/settings"><UserSettings /></Guarded>
                             <ReverseGuarded path="/login/forgot"><ForgotPassword /></ReverseGuarded>
                             <ReverseGuarded path="/login"><Login /></ReverseGuarded>

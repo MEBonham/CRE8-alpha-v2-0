@@ -4,6 +4,8 @@ import { Store } from '../GlobalWrapper';
 import Accordion from '../ui/Accordion';
 import AccordionSection from '../ui/AccordionSection';
 import { traitDescriptions } from '../../helpers/TraitDescriptions';
+import { ifPlus } from '../../helpers/Calculations';
+import { defaultActions } from '../../helpers/DefaultActions';
 
 const PlayAccordions = () => {
     const [state] = useContext(Store);
@@ -24,11 +26,31 @@ const PlayAccordions = () => {
             <section>
                 <h3>Attacks</h3>
                 <Accordion uniqueKey={"meb_charAttacks"} cur={state.cur.id}>
-                    {state.cur.stats.attacks.map((attackObj, i) => (
+                    {state.cur.stats.attacks.filter((attackObj) => attackObj.name !== "Unarmed Strike").map((attackObj, i) => (
                         <AccordionSection key={i}>
                             <h4>{attackObj.name}</h4>
                             <>
-                                {attackObj.impact}
+                                <p><strong>Range:</strong> {attackObj.range}</p>
+                                <p>
+                                    <strong>Impact:</strong> {attackObj.impact_num_dice}d{attackObj.impact_dice_sides}{attackObj.impact_total_mod ? `${ifPlus(attackObj.impact_total_mod)}${attackObj.impact_total_mod}` : null} ({attackObj.damage_type.base.join("/")} damage)
+                                </p>
+                                <p><strong>Accuracy:</strong> {attackObj.accuracy}</p>
+                                <p><strong>Peril Rating:</strong> {attackObj.peril_rating}</p>
+                                {attackObj.detail ? <p>{attackObj.detail}</p> : null}
+                            </>
+                        </AccordionSection>
+                    ))}
+                    {state.cur.stats.attacks.filter((attackObj) => attackObj.name === "Unarmed Strike").map((attackObj, i) => (
+                        <AccordionSection key={i}>
+                            <h4>{attackObj.name}</h4>
+                            <>
+                                <p><strong>Range:</strong> {attackObj.range}</p>
+                                <p>
+                                    <strong>Impact:</strong> {attackObj.impact_num_dice}d{attackObj.impact_dice_sides}{attackObj.impact_total_mod ? `${ifPlus(attackObj.impact_total_mod)}${attackObj.impact_total_mod}` : null} ({attackObj.damage_type.base.join("/")} damage)
+                                </p>
+                                <p><strong>Accuracy:</strong> {attackObj.accuracy}</p>
+                                <p><strong>Peril Rating:</strong> {attackObj.peril_rating}</p>
+                                {attackObj.detail ? <p>{attackObj.detail}</p> : null}
                             </>
                         </AccordionSection>
                     ))}
@@ -45,6 +67,22 @@ const PlayAccordions = () => {
                             </>
                         </AccordionSection>
                     ))}
+                    <AccordionSection>
+                        <h4>Default Options</h4>
+                        <>
+                            {defaultActions.standard.map((action, i) => (
+                                <p key={i}>{action}</p>
+                            ))}
+                        </>
+                    </AccordionSection>
+                    <AccordionSection>
+                        <h4>Special Attacks</h4>
+                        <>
+                            {defaultActions.special_attacks.map((action, i) => (
+                                <p key={i}>{action}</p>
+                            ))}
+                        </>
+                    </AccordionSection>
                 </Accordion>
             </section>
             <section>
@@ -58,6 +96,22 @@ const PlayAccordions = () => {
                             </>
                         </AccordionSection>
                     ))}
+                    <AccordionSection>
+                        <h4>Default Options</h4>
+                        <>
+                            {defaultActions.move.map((action, i) => (
+                                <p key={i}>{action}</p>
+                            ))}
+                        </>
+                    </AccordionSection>
+                    <AccordionSection>
+                        <h4>Maneuvers</h4>
+                        <>
+                            {defaultActions.maneuvers.map((action, i) => (
+                                <p key={i}>{action}</p>
+                            ))}
+                        </>
+                    </AccordionSection>
                 </Accordion>
             </section>
             <section>
@@ -71,6 +125,14 @@ const PlayAccordions = () => {
                             </>
                         </AccordionSection>
                     ))}
+                    <AccordionSection>
+                        <h4>Default Options</h4>
+                        <>
+                            {defaultActions.swift.map((action, i) => (
+                                <p key={i}>{action}</p>
+                            ))}
+                        </>
+                    </AccordionSection>
                 </Accordion>
             </section>
             <section>
@@ -84,6 +146,14 @@ const PlayAccordions = () => {
                             </>
                         </AccordionSection>
                     ))}
+                    <AccordionSection>
+                        <h4>Default Options</h4>
+                        <>
+                            {defaultActions.opportunity.map((action, i) => (
+                                <p key={i}>{action}</p>
+                            ))}
+                        </>
+                    </AccordionSection>
                 </Accordion>
             </section>
             <section>
@@ -97,6 +167,14 @@ const PlayAccordions = () => {
                             </>
                         </AccordionSection>
                     ))}
+                    <AccordionSection>
+                        <h4>Default Options</h4>
+                        <>
+                            {defaultActions.free.map((action, i) => (
+                                <p key={i}>{action}</p>
+                            ))}
+                        </>
+                    </AccordionSection>
                 </Accordion>
             </section>
             <section>
@@ -106,7 +184,12 @@ const PlayAccordions = () => {
                         <h4>Passive Features</h4>
                         <>
                             {state.cur.stats.passives.map((passiveFeature, i) => (
-                                <p key={i}>{passiveFeature.text}</p>
+                                <p key={i}>
+                                    {passiveFeature.text.startsWith("[DRAWBACK]") ? 
+                                        passiveFeature.text.split(" ").slice(1).join(" ") :
+                                        passiveFeature.text
+                                    }
+                                </p>
                             ))}
                         </>
                     </AccordionSection>

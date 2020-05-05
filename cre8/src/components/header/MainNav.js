@@ -30,6 +30,7 @@ const MainNav = () => {
                 <nav>
                     <NavLink to="/characters" className="blockclick-nav-menu">Characters</NavLink>
                     <NavLink to="/library" className="blockclick-nav-menu">Library</NavLink>
+                    <NavLink to="/bestiary" className="blockclick-nav-menu">Bestiary</NavLink>
                 </nav> : null}
         </div>
     );

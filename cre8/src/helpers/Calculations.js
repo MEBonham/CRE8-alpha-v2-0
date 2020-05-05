@@ -1,5 +1,12 @@
 import gc from './GameConstants';
-import { charDefault, kitDefault, featDefault, talentDefault } from './Templates';
+import { charDefault, attackDefault, kitDefault, featDefault, talentDefault } from './Templates';
+
+const clearAttacks = (statsObj, srcTypeArr) => {
+    return {
+        ...statsObj,
+        attacks: statsObj.attacks.filter((item) => !srcTypeArr.includes(item.srcType))
+    };
+}
 
 const clearBonuses = (statsObj, srcTypeArr) => {
     const result = { ...statsObj };
@@ -230,8 +237,37 @@ export const numSort = (numArr) => {
     return numArr.sort((a, b) => { return a - b });
 }
 
+const updateAttacks = (statsObj) => {
+    const attacks = statsObj.attacks.map((attackObj) => {
+        let accuracy;
+        let peril_rating;
+        let impact_total_mod = 0;
+        if (attackObj.type === "vim") {
+            accuracy = 10 + statsObj.fortitude_base_total;
+            peril_rating = statsObj.fortitude_base_total + attackObj.peril_mod;
+        } else if (attackObj.type === "spell") {
+            accuracy = 10 + statsObj.caster_level;
+            peril_rating = statsObj.caster_level + attackObj.peril_mod;
+        } else {
+            accuracy = 10 + statsObj.fighting_level + mineModifiers(statsObj.weapon_accuracy_mods);
+            peril_rating = statsObj.fighting_level + attackObj.peril_mod;
+            impact_total_mod = mineModifiers(statsObj.weapon_impact_mods);
+        }
+        return {
+            ...attackObj,
+            accuracy,
+            peril_rating,
+            impact_total_mod
+        };
+    })
+    return {
+        ...statsObj,
+        attacks
+    };
+}
+
 const updateAv = (statsObj) => {
-    const armor_value = gc.base_armor_value + mineModifiers(statsObj.av_mods);
+    const armor_value = Math.max(0, (gc.base_armor_value + mineModifiers(statsObj.av_mods)));
     const resistance_value = gc.resistance_boost + Math.max(armor_value, statsObj.level_max8) + mineModifiers(statsObj.resistance_mods);
     return {
         ...statsObj,
@@ -513,6 +549,7 @@ export const updateKits = (statsObj) => {
         synergy_bonuses: charDefault.stats.synergy_bonuses,
         traits_from_kits: []
     };
+    result = clearAttacks(result, ["kit"]);
     result = clearBonuses(result, ["kit"]);
     result = clearPassives(result, ["kit"]);
     result = clearRestFeatures(result, ["kit"]);
@@ -548,6 +585,16 @@ export const updateKits = (statsObj) => {
                     srcType: "kit"
                 });
             });
+            console.log(kitObj.attacks[0]);
+            result.attacks = [
+                ...result.attacks,
+                ...kitObj.attacks.map((attackObj) => ({
+                    ...attackDefault,
+                    ...attackObj,
+                    src: kitObj.id,
+                    srcType: "kit"
+                }))
+            ];
 
             const talentsGranted = kitObj.bonus_talents.length;
             const talentsArr = result.talents[level] ? Object.keys(result.talents[level]).filter((i) => i.startsWith(`kit${index}`)) : [];
@@ -787,7 +834,7 @@ export const updateKits = (statsObj) => {
     result = updateFeats(result);
     result = updateTalents(result);
 
-    result = updateSynergies(result);               // Includes updateVariousMods() which includes updateSize()
+    result = updateSynergies(result);               // Includes updateVariousMods() which includes updateSize() and updateAttacks()
 
     result = updateSkillRanks(result);
 
@@ -919,55 +966,8 @@ const updateSize = (statsObj) => {
         ...statsObj,
         size_final
     };
-    let hasSizeAlready = false;
-    result.traits_from_kits.forEach((trait) => {
-        if (trait.endsWith(" Size")) hasSizeAlready = true;
-    });
-    if (!hasSizeAlready) {
-        switch (size_final) {
-            case -5:
-            case -4:
-                result.traits_from_kits.push("Fine Size");
-                break;
-            case -3:
-                result.traits_from_kits.push("Diminutive Size");
-                break;
-            case -2:
-                result.traits_from_kits.push("Tiny Size");
-                break;
-            case -1:
-                result.traits_from_kits.push("Small Size");
-                break;
-            case 0:
-                result.traits_from_kits.push("Medium Size");
-                break;
-            case 1:
-                result.traits_from_kits.push("Large Size");
-                break;
-            case 2:
-                result.traits_from_kits.push("Huge Size");
-                break;
-            case 3:
-                result.traits_from_kits.push("Gargantuan Size");
-                break;
-            default:
-                result.traits_from_kits.push("Colossal Size");
-        }
-    }
-    // result = updateWeaponAccuracy({
-    //     ...result,
-    //     weapon_accuracy_mods: {
-    //         ...result.weapon_accuracy_mods,
-    //         Size: {
-    //             ...result.weapon_accuracy_mods.Size,
-    //             "Final Size": {
-    //                 srcType: "kit",
-    //                 num: (-1 * size_final),
-    //                 level: 0
-    //             }
-    //         }
-    //     }
-    // });
+    result.traits_from_kits = result.traits_from_kits.filter((trait) => !trait.endsWith(" Size"));
+    result.traits_from_kits.push(gc.size_categories[size_final]);
     result = updateDefense({
         ...result,
         defense_mods: {
@@ -1013,20 +1013,20 @@ const updateSize = (statsObj) => {
             }
         }
     });
-    // result = updateWeaponImpact({
-    //     ...result,
-    //     weapon_impact_mods: {
-    //         ...result.weapon_impact_mods,
-    //         Size: {
-    //             ...result.weapon_impact_mods.Size,
-    //             "Final Size": {
-    //                 srcType: "kit",
-    //                 num: (size_final),
-    //                 level: 0
-    //             }
-    //         }
-    //     }
-    // });
+    result = updateAttacks({
+        ...result,
+        weapon_impact_mods: {
+            ...result.weapon_impact_mods,
+            Size: {
+                ...result.weapon_impact_mods.Size,
+                "Final Size": {
+                    srcType: "kit",
+                    num: (size_final),
+                    level: 0
+                }
+            }
+        }
+    });
     result = updateSpeed({
         ...result,
         speed_mods: {
@@ -1259,6 +1259,18 @@ export const updateTalents = (statsObj) => {
                             }
                         ]
                     }
+                } else if (gc.skills_list.includes(bonusObj.to)) {
+                    result.skill_mods[bonusObj.to] = {
+                        ...result.skill_mods[bonusObj.to],
+                        [bonusObj.type]: {
+                            ...result.skill_mods[bonusObj.to][bonusObj.type],
+                            [talentObj.id]: {
+                                level,
+                                num: bonusObj.num,
+                                srcType: "talent"
+                            }
+                        }
+                    }
                 } else {
                     result[bonusObj.to] = {
                         ...result[bonusObj.to],
@@ -1328,6 +1340,14 @@ const updateVpMax = (statsObj) => {
         vp_kits_total,
         vp_max,
         vp
+    };
+}
+
+export const updateWealth = (statsObj) => {
+    const wealth = Math.max(0, statsObj.wealth + mineModifiers(statsObj.wealth_mods));
+    return {
+        ...statsObj,
+        wealth
     };
 }
 

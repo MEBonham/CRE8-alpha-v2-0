@@ -98,6 +98,8 @@
 .home-page,
 .char-library > section,
 .manage-campaigns {
+    display: flex;
+    flex-direction: column;
     align-items: flex-start;
 }
 

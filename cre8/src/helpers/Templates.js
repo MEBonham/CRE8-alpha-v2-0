@@ -15,7 +15,21 @@ export const charDefault = {
     stats: {
         active_conditions: [],
         armor_value: 2,
-        attacks: [],
+        attacks: [{
+            accuracy: 10,
+            name: "Unarmed Strike",
+            type: "natural_weapon",
+            range: "Melee reach 1 (short)",
+            detail: "",
+            impact_num_dice: 1,
+            impact_dice_sides: 4,
+            impact_total_mod: 0,
+            damage_type: {
+                base: ["bludgeoning"]
+            },
+            peril_mod: 0,
+            peril_rating: 0
+        }],
         av_mods: {},
         awesome_check: 5,
         awesome_mods: {},
@@ -124,6 +138,8 @@ export const charDefault = {
         vp_kits: {},
         vp_kits_total: 0,
         vp_max: 9,
+        wealth: 10,
+        wealth_mods: {},
         weapon_accuracy_mods: {},
         weapon_impact_mods: {},
         willpower_base_total: 0,
@@ -139,6 +155,22 @@ export const charDefault = {
     }
 };
 
+export const attackDefault = {
+    accuracy: 10,
+    name: "",
+    type: "natural_weapon",
+    range: "Melee reach 1 (medium)",
+    detail: "",
+    impact_num_dice: 1,
+    impact_dice_sides: 6,
+    impact_total_mod: 0,
+    damage_type: {
+        base: ["bludgeoning"]
+    },
+    peril_mod: 2,
+    peril_rating: 2
+};
+
 export const rollDefault = {
     processedLocally: false,
     processedBy: [],
@@ -150,6 +182,8 @@ export const kitDefault = {
     name: "",
     tags: [],
     prereqs: "",
+    expectation: "",
+    attacks: [],
     benefit_traits: [],
     bonus_feat: false,
     bonus_talents: [],
@@ -179,7 +213,9 @@ export const featDefault = {
     name: "",
     tags: [],
     prereqs: "",
+    expectation: "",
     applicable_seeds: "",
+    attacks: [],
     augment_options: [],
     benefit_traits: [],
     bonus_talents: [],
@@ -206,6 +242,8 @@ export const talentDefault = {
     name: "",
     tags: [],
     prereqs: "",
+    expectation: "",
+    attacks: [],
     benefit_traits: [],
     bonus_talents: [],
     can_repeat: false,
