@@ -206,13 +206,8 @@ const PlayAccordions = () => {
                         <AccordionSection key={i}>
                             <h4>{passiveSource}</h4>
                             <>
-                                {passivesObj[passiveSource].map((passiveText, i) => (
-                                    <p key={i}>
-                                        {passiveText.startsWith("[DRAWBACK]") ? 
-                                            passiveText.split(" ").slice(1).join(" ") :
-                                            passiveText
-                                        }
-                                    </p>
+                                {passivesObj[passiveSource].map((passiveObj, i) => (
+                                    <p key={i}>{passiveObj.text}</p>
                                 ))}
                             </>
                         </AccordionSection>
