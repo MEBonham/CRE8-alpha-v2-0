@@ -66,6 +66,13 @@ const BuildLibraryTalents = (props) => {
             ""
         ]);
     }
+    const [freeActions, setFreeActions] = useState([]);
+    const newFree = (ev) => {
+        setFreeActions([
+            ...freeActions,
+            ""
+        ]);
+    }
     const [shortRestActions, setShortRestActions] = useState([]);
     const newShortRestAction = (ev) => {
         setShortRestActions([
@@ -124,7 +131,6 @@ const BuildLibraryTalents = (props) => {
             } else if (key === "passives") {
                 setPassives(data[key]);
             } else if (key === "selective_passives") {
-                console.log(data[key]);
                 setSelectivePassives(Object.keys(data[key]).sort().map((name) => ({
                     name,
                     detail: data[key][name]
@@ -133,6 +139,8 @@ const BuildLibraryTalents = (props) => {
                 setStandardActions(data[key]);
             } else if (key === "swift_actions") {
                 setSwiftActions(data[key]);
+            } else if (key === "free_actions") {
+                setFreeActions(data[key]);
             } else if (key === "short_rest_actions") {
                 setShortRestActions(data[key]);
             } else if (key === "extended_rest_actions") {
@@ -179,6 +187,7 @@ const BuildLibraryTalents = (props) => {
                 setSelectivePassives([]);
                 setStandardActions([]);
                 setSwiftActions([]);
+                setFreeActions([]);
                 setShortRestActions([]);
                 setExtendedRestActions([]);
             }
@@ -433,6 +442,21 @@ const BuildLibraryTalents = (props) => {
                         ))}
                         <MyButton fct={newSwift}>Add Swift Action</MyButton>
                     </section>
+                    <section className="free-actions rows brown-box">
+                        <label>Free Actions</label>
+                        {freeActions.map((action, i) => (
+                            <Controller
+                                key={i}
+                                as="textarea"
+                                control={control}
+                                name={`free_actions[${i}]`}
+                                defaultValue={action}
+                                rows="3"
+                                cols="44"
+                            />
+                        ))}
+                        <MyButton fct={newFree}>Add Free Action</MyButton>
+                    </section>
                     <section className="short-rest-actions rows">
                         <label>Short Rest Actions</label>
                         {shortRestActions.map((action, i) => (
@@ -468,6 +492,16 @@ const BuildLibraryTalents = (props) => {
                         <Controller
                             as="textarea"
                             name="normal"
+                            control={control}
+                            rows="3"
+                            cols="54"
+                        />
+                    </div>
+                    <div className="rows">
+                        <h3>Special Notes</h3>
+                        <Controller
+                            as="textarea"
+                            name="special_note"
                             control={control}
                             rows="3"
                             cols="54"

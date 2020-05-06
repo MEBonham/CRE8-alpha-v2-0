@@ -3,7 +3,7 @@ export const defaultActions = {
         "Make a melee or ranged weapon attack. A ranged weapon attack provokes opportunity attacks.",
         "Make a special attack.",
         "Draw an item out of a backpack or similar container.",
-        "Withdraw: move up to your Speed + 10 ft, without provoking opportunity attacks for your first 5 ft of movement.",
+        "Withdraw: move up to your Speed + 15 ft, without provoking opportunity attacks for your first 5 ft of movement.",
         "Stand from Prone Defensively: remove the prone condition from yourself without provoking opportunity attacks.",
         "Communicate: speak in a manner that requires coherence and coordination, limited to about ten seconds. TNs for social interaction are still higher than they are outside of combat, but they are possible.",
         "Total Defense: Until the start of your next turn, you may use your Awesome Check in place of your Defense Save.",
@@ -12,7 +12,7 @@ export const defaultActions = {
         "Administer first aid."
     ],
     special_attacks: [
-        "Charge: move up to your Speed + 10 ft in a straight line with a clear path, provoking opportunity attacks if you move through threatened areas. At the end of your movement, make a melee attack.",
+        "Charge: move up to your Speed + 15 ft in a straight line with a clear path, provoking opportunity attacks if you move through threatened areas. At the end of your movement, make a melee attack.",
         "Coup de Grace: provoke opportunity attacks. Make a melee attack against a target that is dropped or otherwise helpless. Roll impact normally, including the +1d4 bonus if the target is Prone. If the impact roll exceeds the target's AV, the target dies. Otherwise, the target still dies unless it succeeds on a TN 15 Fortitude save.",
         "Disarm:",
         "Grab: a target within the threatened area of your unarmed strike must make a Defense Save against your unarmed strike Accuracy. On a failure, the target becomes Grabbed until some effect or action ends the grapple.",
@@ -20,7 +20,7 @@ export const defaultActions = {
         "Sunder: declare an object your foe holds, wears, or wields as your target. Make a normal weapon attack, except instead of the normal Hazard Menu, if your attack Impact exceeds the target's AV, the object must succeed at a Structural Save against your attack's Accuracy or be destroyed."
     ],
     move: [
-        "Standard Movement: move up to your Speed + 10 ft, provoking opportunity attacks if you move through threatened areas. Make a Speed Check (TN = number of feet moved). If it succeeds, add a Maneuver to your movement.",
+        "Standard Movement: move up to your Speed + 15 ft, provoking opportunity attacks if you move through threatened areas. Make a Speed Check (TN = number of feet moved). If it succeeds, add a Maneuver to your movement.",
         "Standard Shifting: move up to 5 ft without provoking opportunity attacks.",
         "Stand from Prone: remove the prone condition from yourself. Provoke opportunity attacks.",
         "Escape Attempt: make an Athletics or Brawn check to remove the Grabbed condition from yourself. The TN of this check is the unarmed strike Accuracy of the grabbing creature."

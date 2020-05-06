@@ -11,13 +11,35 @@ const PlayAccordions = () => {
     const [state] = useContext(Store);
 
     const [traitsArr, setTraitsArr] = useState([]);
+    const [passivesObj, setPassivesObj] = useState({});
     useEffect(() => {
+        const convertPassives = (arr) => {
+            const newObj = {};
+            const sourcesArr = [];
+            arr.forEach((passiveAbilityObj) => {
+                if (sourcesArr.includes(passiveAbilityObj.displaySource)) {
+                    newObj[passiveAbilityObj.displaySource] = [
+                        ...newObj[passiveAbilityObj.displaySource],
+                        passiveAbilityObj.text
+                    ];
+                } else {
+                    newObj[passiveAbilityObj.displaySource] = [
+                        passiveAbilityObj.text
+                    ];
+                    sourcesArr.push(passiveAbilityObj.displaySource);
+                }
+            });
+            setPassivesObj(newObj);
+        }
+
         if (state.cur) {
             setTraitsArr([
-                ...state.cur.stats.traits_from_kits,
-                ...state.cur.stats.traits_from_feats,
-                ...state.cur.stats.traits_from_talents,
+                ...new Set(
+                    state.cur.stats.traits_from_kits.concat(state.cur.stats.traits_from_feats)
+                        .concat(state.cur.stats.traits_from_talents)
+                )
             ]);
+            convertPassives(state.cur.stats.passives);
         }
     }, [state.cur])
 
@@ -42,7 +64,7 @@ const PlayAccordions = () => {
                     ))}
                     {state.cur.stats.attacks.filter((attackObj) => attackObj.name === "Unarmed Strike").map((attackObj, i) => (
                         <AccordionSection key={i}>
-                            <h4>{attackObj.name}</h4>
+                            <h4 className="default-gray">{attackObj.name}</h4>
                             <>
                                 <p><strong>Range:</strong> {attackObj.range}</p>
                                 <p>
@@ -68,7 +90,7 @@ const PlayAccordions = () => {
                         </AccordionSection>
                     ))}
                     <AccordionSection>
-                        <h4>Default Options</h4>
+                        <h4 className="default-gray">Default Options</h4>
                         <>
                             {defaultActions.standard.map((action, i) => (
                                 <p key={i}>{action}</p>
@@ -76,7 +98,7 @@ const PlayAccordions = () => {
                         </>
                     </AccordionSection>
                     <AccordionSection>
-                        <h4>Special Attacks</h4>
+                        <h4 className="default-gray">Special Attacks</h4>
                         <>
                             {defaultActions.special_attacks.map((action, i) => (
                                 <p key={i}>{action}</p>
@@ -97,7 +119,7 @@ const PlayAccordions = () => {
                         </AccordionSection>
                     ))}
                     <AccordionSection>
-                        <h4>Default Options</h4>
+                        <h4 className="default-gray">Default Options</h4>
                         <>
                             {defaultActions.move.map((action, i) => (
                                 <p key={i}>{action}</p>
@@ -105,7 +127,7 @@ const PlayAccordions = () => {
                         </>
                     </AccordionSection>
                     <AccordionSection>
-                        <h4>Maneuvers</h4>
+                        <h4 className="default-gray">Maneuvers</h4>
                         <>
                             {defaultActions.maneuvers.map((action, i) => (
                                 <p key={i}>{action}</p>
@@ -126,7 +148,7 @@ const PlayAccordions = () => {
                         </AccordionSection>
                     ))}
                     <AccordionSection>
-                        <h4>Default Options</h4>
+                        <h4 className="default-gray">Default Options</h4>
                         <>
                             {defaultActions.swift.map((action, i) => (
                                 <p key={i}>{action}</p>
@@ -147,7 +169,7 @@ const PlayAccordions = () => {
                         </AccordionSection>
                     ))}
                     <AccordionSection>
-                        <h4>Default Options</h4>
+                        <h4 className="default-gray">Default Options</h4>
                         <>
                             {defaultActions.opportunity.map((action, i) => (
                                 <p key={i}>{action}</p>
@@ -168,7 +190,7 @@ const PlayAccordions = () => {
                         </AccordionSection>
                     ))}
                     <AccordionSection>
-                        <h4>Default Options</h4>
+                        <h4 className="default-gray">Default Options</h4>
                         <>
                             {defaultActions.free.map((action, i) => (
                                 <p key={i}>{action}</p>
@@ -178,21 +200,36 @@ const PlayAccordions = () => {
                 </Accordion>
             </section>
             <section>
-                <h3>Other Features</h3>
-                <Accordion uniqueKey={"meb_charOtherFeatures"} cur={state.cur.id}>
-                    <AccordionSection>
-                        <h4>Passive Features</h4>
-                        <>
-                            {state.cur.stats.passives.map((passiveFeature, i) => (
-                                <p key={i}>
-                                    {passiveFeature.text.startsWith("[DRAWBACK]") ? 
-                                        passiveFeature.text.split(" ").slice(1).join(" ") :
-                                        passiveFeature.text
-                                    }
-                                </p>
-                            ))}
-                        </>
-                    </AccordionSection>
+                <h3>Passive Features & Traits</h3>
+                <Accordion uniqueKey={"meb_charPassiveFeatures"} cur={state.cur.id}>
+                    {Object.keys(passivesObj).map((passiveSource, i) => (
+                        <AccordionSection key={i}>
+                            <h4>{passiveSource}</h4>
+                            <>
+                                {passivesObj[passiveSource].map((passiveText, i) => (
+                                    <p key={i}>
+                                        {passiveText.startsWith("[DRAWBACK]") ? 
+                                            passiveText.split(" ").slice(1).join(" ") :
+                                            passiveText
+                                        }
+                                    </p>
+                                ))}
+                            </>
+                        </AccordionSection>
+                    ))}
+                    {traitsArr.map((trait, i) => (
+                        <AccordionSection key={i}>
+                            <h4>{trait}</h4>
+                            <>
+                                <p>{traitDescriptions[trait]}</p>
+                            </>
+                        </AccordionSection>
+                    ))}
+                </Accordion>
+            </section>
+            <section>
+                <h3>Slower Features</h3>
+                <Accordion uniqueKey={"meb_charRestFeatures"} cur={state.cur.id}>
                     <AccordionSection>
                         <h4>Short Rests</h4>
                         <>
@@ -209,14 +246,6 @@ const PlayAccordions = () => {
                             ))}
                         </>
                     </AccordionSection>
-                    {traitsArr.map((trait, i) => (
-                        <AccordionSection key={i}>
-                            <h4>{trait}</h4>
-                            <>
-                                <p>{traitDescriptions[trait]}</p>
-                            </>
-                        </AccordionSection>
-                    ))}
                 </Accordion>
             </section>
         </div>

@@ -684,3 +684,7 @@ div.play-accordions {
 div.play-accordions h3 {
     margin-left: 6%;
 }
+
+div.play-accordions h4.default-gray {
+    color: #666666;
+}

@@ -5,19 +5,19 @@ import MyButton from '../ui/MyButton';
 
 const BatchEdit = () => {
 
-    const collection = "kits";
+    const collection = "talents";
     const editAll = async (ev) => {
         try {
             const collectionCopy = {};
             const query = await fb.db.collection(collection).get();
             query.forEach((item) => {
-                collectionCopy[item.id] = (item.data().attacks) ?
+                collectionCopy[item.id] = (item.data().special_note) ?
                     {
                         ...item.data()
                     } :
                     {
                         ...item.data(),
-                        attacks: []
+                        special_note: ""
                     };
             });
             Object.keys(collectionCopy).forEach((id) => {
@@ -36,14 +36,18 @@ const BatchEdit = () => {
             const query = await fb.db.collection("characters").get();
             query.forEach((item) => {
                 collectionCopy[item.id] = { ...item.data() };
-                const abilities_clone = { ...collectionCopy[item.id][collection] };
+                const abilities_clone = { ...collectionCopy[item.id].stats[collection] };
                 Object.keys(abilities_clone).forEach((level) => {
                     Object.keys(abilities_clone[level]).forEach((index) => {
-                        abilities_clone[level][index].size_final = 0;
-                        abilities_clone[level][index].size_mods = {};
+                        if (!abilities_clone[level][index].free_actions) {
+                            abilities_clone[level][index].free_actions = [];
+                        }
+                        if (!abilities_clone[level][index].special_note) {
+                            abilities_clone[level][index].special_note = "";
+                        }
                     });
                 });
-                collectionCopy[item.id][collection] = abilities_clone;
+                collectionCopy[item.id].stats[collection] = abilities_clone;
             });
             Object.keys(collectionCopy).forEach((id) => {
                 fb.db.collection("characters").doc(id).set({

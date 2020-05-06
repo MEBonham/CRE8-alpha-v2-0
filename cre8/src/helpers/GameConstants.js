@@ -19,13 +19,15 @@ const gc = {
         "Martial Weaponry",
         "Skill Ranks for Parcels",
         "Stability",
-        "Stack 1st-Level Kits"
+        "Stack 1st-Level Kits",
+        "Swarm Resilience"
     ],
     bonus_targets: [
         { name: "Armor Value", code: "av_mods" },
         { name: "Athletics", code: "Athletics" },
         { name: "Brawn", code: "Brawn" },
         { name: "Charisma", code: "Charisma" },
+        { name: "Defense", code: "defense_mods" },
         { name: "Dexterity", code: "Dexterity" },
         { name: "Fortitude", code: "fortitude_mods" },
         { name: "Gadgetry", code: "Gadgetry" },
@@ -65,7 +67,8 @@ const gc = {
     ],
     drawback_traits: [
         "Arcane Aversion",
-        "Beast Type"
+        "Beast Type",
+        "Swarm Vulnerabilities"
     ],
     epic_level_xp_increment: 500,
     feat_tags: [
@@ -82,8 +85,10 @@ const gc = {
     ],
     good_save_boost: 2,
     kit_tags: [
+        "Background",
         "Core",
         "Epic",
+        "Heritage",
         "Monster",
         "Racial"
     ],
@@ -130,6 +135,7 @@ const gc = {
         "Core",
         "Epic",
         "Flaw",
+        "Grace",
         "Ki",
         "Luck",
         "Monster",

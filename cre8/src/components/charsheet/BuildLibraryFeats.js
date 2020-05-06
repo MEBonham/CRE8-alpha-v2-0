@@ -365,6 +365,16 @@ const BuildLibraryFeats = (props) => {
                         />
                     </div>
                     <div className="rows">
+                        <h3>Expectation</h3>
+                        <Controller
+                            as="textarea"
+                            name="expectation"
+                            control={control}
+                            rows="3"
+                            cols="54"
+                        />
+                    </div>
+                    <div className="rows">
                         <h3>Applicable Spell Seeds</h3>
                         <Controller
                             as="input"

@@ -31,6 +31,7 @@ const BuildLibraryKits = (props) => {
     const [shortRests, setShortRests] = useState([]);
     const [xpParcels, setXpParcels] = useState([]);
     const [passives, setPassives] = useState([]);
+    const [drawbackPassives, setDrawbackPassives] = useState([]);
     const [bonusTrainings, setBonusTrainings] = useState([]);
     const [variousPenalties, setVariousPenalties] = useState([]);
     const [attacks, setAttacks] = useState([]);
@@ -84,6 +85,12 @@ const BuildLibraryKits = (props) => {
     const newPassive = (ev) => {
         setPassives([
             ...passives,
+            ""
+        ]);
+    }
+    const newDrawbackPassive = (ev) => {
+        setDrawbackPassives([
+            ...drawbackPassives,
             ""
         ]);
     }
@@ -218,7 +225,8 @@ const BuildLibraryKits = (props) => {
             } else if (key === "xp_parcels") {
                 setXpParcels(data[key]);
             } else if (key === "passives") {
-                setPassives(data[key]);
+                setPassives(data[key].filter((passive) => !passive.drawback));
+                setDrawbackPassives(data[key].filter((passive) => passive.drawback));
             } else if (key === "benefit_traits" || key === "drawback_traits") {
                 const els = document.querySelectorAll(`select[name="${key}"] option`);
                 els.forEach((option) => {
@@ -297,6 +305,7 @@ const BuildLibraryKits = (props) => {
                 setVariousBonuses([]);
                 setVariousPenalties([]);
                 setPassives([]);
+                setDrawbackPassives([]);
                 setExtendedRests([]);
                 setShortRests([]);
                 setAttacks([]);
@@ -340,7 +349,9 @@ const BuildLibraryKits = (props) => {
     const processKitForm = (formData) => {
         // console.log(formData, attacks);
         const newSlug = encodeURIComponent(formData.name.split(" ").join("").toLowerCase());
-        const kitObj = {};
+        const kitObj = {
+            passives: []
+        };
         const bonusTalentsArr = [];
         let bonusTrainingsArr = [];
         Object.keys(formData).forEach((key) => {
@@ -380,6 +391,22 @@ const BuildLibraryKits = (props) => {
                     },
                     peril_mod: formData.attackPerilMod[i]
                 }));
+            } else if (key.startsWith("drawbackPass")) {
+                kitObj.passives = [
+                    ...kitObj.passives,
+                    ...formData[key].map((drawback) => ({
+                        text: drawback,
+                        drawback: true
+                    }))
+                ];
+            } else if (key === "passives") {
+                kitObj.passives = [
+                    ...kitObj.passives,
+                    ...formData[key].map((passive) => ({
+                        text: passive,
+                        drawback: false
+                    }))
+                ];
             } else if (!key.startsWith("kitTag") && !key.startsWith("variousBonus") && key !== "bonusTrainingOptions" &&
                 !key.startsWith("variousPenalty") && !key.startsWith("attack")) {
                     kitObj[key] = formData[key];
@@ -394,7 +421,6 @@ const BuildLibraryKits = (props) => {
         const [bonuses, penalties] = bundleVariousMods(formData);
         kitObj.various_bonuses = bonuses;
         kitObj.various_penalties = penalties;
-        console.log(kitObj);
         saveKit(newSlug, kitObj);
     }
 
@@ -787,7 +813,7 @@ const BuildLibraryKits = (props) => {
                         as="textarea"
                         control={control}
                         name={`passives[${i}]`}
-                        defaultValue={ability}
+                        defaultValue={ability.text}
                         rows="3"
                         cols="44"
                     />
@@ -994,6 +1020,21 @@ const BuildLibraryKits = (props) => {
                             ))}
                         </ul>
                         <MyButton fct={newVPenalty}>Add Penalty</MyButton>
+                        <section className="passives rows">
+                            <label>Passive Drawbacks</label>
+                            {drawbackPassives.map((ability, i) => (
+                                <Controller
+                                    key={i}
+                                    as="textarea"
+                                    control={control}
+                                    name={`drawbackPassives[${i}]`}
+                                    defaultValue={ability.text}
+                                    rows="3"
+                                    cols="44"
+                                />
+                            ))}
+                            <MyButton fct={newDrawbackPassive}>Add Passive Drawback</MyButton>
+                        </section>
                     </section>
                     <section className="right-column rows">
                         <label>Negative Traits</label>

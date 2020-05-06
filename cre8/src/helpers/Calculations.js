@@ -310,6 +310,7 @@ export const updateFeats = (statsObj) => {
             result.traits_from_feats = result.traits_from_feats.concat(featObj.benefit_traits).concat(featObj.drawback_traits);
             featObj.passives.forEach((passiveFeature) => {
                 result.passives.push({
+                    displaySource: featObj.name,
                     text: passiveFeature,
                     src: featObj.id,
                     srcType: "feat"
@@ -566,7 +567,9 @@ export const updateKits = (statsObj) => {
             result.traits_from_kits = result.traits_from_kits.concat(kitObj.benefit_traits).concat(kitObj.drawback_traits);
             kitObj.passives.forEach((passiveFeature) => {
                 result.passives.push({
-                    text: passiveFeature,
+                    displaySource: kitObj.name,
+                    text: passiveFeature.text,
+                    drawback: passiveFeature.drawback,
                     src: kitObj.id,
                     srcType: "kit"
                 });
@@ -585,7 +588,6 @@ export const updateKits = (statsObj) => {
                     srcType: "kit"
                 });
             });
-            console.log(kitObj.attacks[0]);
             result.attacks = [
                 ...result.attacks,
                 ...kitObj.attacks.map((attackObj) => ({
@@ -881,6 +883,7 @@ export const updateKits = (statsObj) => {
 
     result.fighting_level_kits_total = mineKits(result.fighting_level_kits, stack1stLevelKits);
     result.fighting_level = result.heroic_bonus + result.fighting_level_kits_total;
+    result = updateAttacks(result);
 
     result.caster_level_kits_total = mineKits(result.caster_level_kits, stack1stLevelKits);
     result.caster_level = result.heroic_bonus + result.caster_level_kits_total;
@@ -1005,6 +1008,7 @@ const updateSize = (statsObj) => {
         ...statsObj,
         size_final
     };
+    result = clearBonuses(result, ["size"]);
     result.traits_from_kits = result.traits_from_kits.filter((trait) => !trait.endsWith(" Size"));
     result.traits_from_kits.push(gc.size_categories[size_final]);
     result = updateDefense({
@@ -1014,7 +1018,7 @@ const updateSize = (statsObj) => {
             Size: {
                 ...result.defense_mods.Size,
                 "Final Size": {
-                    srcType: "kit",
+                    srcType: "size",
                     num: (-1 * size_final),
                     level: 0
                 }
@@ -1030,7 +1034,7 @@ const updateSize = (statsObj) => {
                 Size: {
                     ...result.weapon_accuracy_mods.Size,
                     "Final Size": {
-                        srcType: "kit",
+                        srcType: "size",
                         num: (2 * size_final),
                         level: 0
                     }
@@ -1045,7 +1049,7 @@ const updateSize = (statsObj) => {
             Size: {
                 ...result.av_mods.Size,
                 "Final Size": {
-                    srcType: "kit",
+                    srcType: "size",
                     num: (size_final),
                     level: 0
                 }
@@ -1059,7 +1063,7 @@ const updateSize = (statsObj) => {
             Size: {
                 ...result.weapon_accuracy_mods.Size,
                 "Final Size": {
-                    srcType: "kit",
+                    srcType: "size",
                     num: (-1 * size_final),
                     level: 0
                 }
@@ -1070,7 +1074,7 @@ const updateSize = (statsObj) => {
             Size: {
                 ...result.weapon_impact_mods.Size,
                 "Final Size": {
-                    srcType: "kit",
+                    srcType: "size",
                     num: (size_final),
                     level: 0
                 }
@@ -1084,7 +1088,7 @@ const updateSize = (statsObj) => {
             Size: {
                 ...result.speed_mods.Size,
                 "Final Size": {
-                    srcType: "kit",
+                    srcType: "size",
                     num: (5 * size_final),
                     level: 0
                 }
@@ -1241,6 +1245,7 @@ export const updateTalents = (statsObj) => {
     result = clearRestFeatures(result, ["talent"]);
     result = clearStandardActions(result, ["talent"]);
     result = clearSwiftActions(result, ["talent"]);
+    result = clearFreeActions(result, ["talent"]);
     result = clearSynergies(result, ["talent"]);
     result = clearTrainings(result, ["talent"]);
     const talentsAlreadyChecked = [];
@@ -1255,6 +1260,7 @@ export const updateTalents = (statsObj) => {
             result.traits_from_talents = result.traits_from_talents.concat(talentObj.benefit_traits).concat(talentObj.drawback_traits);
             talentObj.passives.forEach((passiveFeature) => {
                 result.passives.push({
+                    displaySource: talentObj.name,
                     text: passiveFeature,
                     src: talentObj.id,
                     srcType: "talent"
@@ -1270,6 +1276,14 @@ export const updateTalents = (statsObj) => {
             });
             talentObj.swift_actions.forEach((action) => {
                 result.swift_actions.push({
+                    displaySource: talentObj.name,
+                    text: action,
+                    src: talentObj.id,
+                    srcType: "talent"
+                });
+            });
+            talentObj.free_actions.forEach((action) => {
+                result.free_actions.push({
                     displaySource: talentObj.name,
                     text: action,
                     src: talentObj.id,

@@ -104,7 +104,6 @@ const ConfigureKit = (props) => {
             ...kitsObj[props.level],
             [props.index]: kitObj
         };
-        console.log(kitsObj);
         dispatch({ type: "CHAR_EDIT", field: "kits", payload: kitsObj, level: props.level, index: props.index });
     }
 

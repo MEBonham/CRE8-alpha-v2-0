@@ -38,6 +38,7 @@ const SpecialPreview = () => {
     }, [state.previewComponent])
 
     const previewKit = (data) => {
+        console.log(data.vp_boost);
         return(
             <>
                 <h1>{data.name}</h1>
@@ -63,9 +64,16 @@ const SpecialPreview = () => {
                     {data.caster_OR_coast_boost ?
                         <li>Caster Level +1 <span className="or">or</span> Coast Number +1</li> :
                     null}
+                    {data.fightingRpBoost_OR_rpPlus2 ?
+                        <>
+                            <li>Fighting Level +1 <span className="or">or</span> RP +1</li>
+                            <li>RP +1</li>
+                        </> :
+                    null}
                     {data.vpPlus2_OR_mpPlus2 ?
                         <li>VP +2 <span className="or">or</span> MP +2</li> :
                     null}
+                    {data.vp_boost > 0 ? <li>VP +{data.vp_boost}</li> : null}
                     {data.bonus_feat ? <li>Gain a bonus feat.</li> : null}
                     {data.bonus_talents.map((talent, i) => (
                         <li key={i}>Gain a bonus [{
@@ -75,8 +83,7 @@ const SpecialPreview = () => {
                         }] talent.</li>
                     ))}
                     {data.attacks.map((attackObj, i) => (
-                        <li key={i}>Gain a {attackObj.name} 
-                            {attackObj.type === "natural_weapon" ? "natural weapon" : `${attackObj.type} attack`} (range {attackObj.range}, 
+                        <li key={i}>Gain a {attackObj.name} {attackObj.type === "natural_weapon" ? "natural weapon" : `${attackObj.type} attack`} (range {attackObj.range}, 
                             base Impact {attackObj.impact_num_dice}d{attackObj.impact_dice_sides}, {Object.keys(attackObj.damage_type.base).join("/")} damage, 
                             Peril modifier {`${ifPlus(attackObj.peril_mod)}${attackObj.peril_mod}`}.
                         </li>
@@ -104,11 +111,11 @@ const SpecialPreview = () => {
                             return null;
                         }
                     })}
+                    {data.passives.filter((passive) => !passive.drawback).map((passive, i) => (
+                        <li key={i}>{passive.text}</li>
+                    ))}
                     {data.benefit_traits.map((trait, i) => (
                         <li key={i}><strong>{trait}:</strong> {traitDescriptions[trait]}</li>
-                    ))}
-                    {data.passives.map((passive, i) => (
-                        <li key={i}>{passive}</li>
                     ))}
                     {data.extended_rest_actions.map((restAction, i) => (
                         <li key={i}>Extended Rest: {restAction}</li>
@@ -136,6 +143,9 @@ const SpecialPreview = () => {
                                     return null;
                                 }
                             })}
+                            {data.passives.filter((passive) => passive.drawback).map((passive, i) => (
+                                <li key={i}>{passive.text}</li>
+                            ))}
                             {data.drawback_traits.map((trait, i) => (
                                 <li key={i}><strong>{trait}:</strong> {traitDescriptions[trait]}</li>
                             ))}
@@ -231,6 +241,7 @@ const SpecialPreview = () => {
                 <h1>{data.name}</h1>
                 <h2 className="subtitle">[{data.tags.map((tag) => (tag)).join("] [")}] Talent</h2>
                 <p className="prereqs"><strong>Prerequisites:</strong> {data.prereqs}</p>
+                {data.expectation ? <p className="prereqs"><strong>Expectation:</strong> {data.expectation}</p> : null}
                 {data.tags.includes("Spell") ? 
                     <p><strong>Seeds:</strong> {data.applicable_seeds || "none"}</p> :
                 null}
@@ -396,6 +407,7 @@ const SpecialPreview = () => {
                         null 
                     } Talent</h2>
                 <p className="prereqs"><strong>Prerequisites:</strong> {data.prereqs}</p>
+                {data.expectation ? <p className="prereqs"><strong>Expectation:</strong> {data.expectation}</p> : null}
                 <h2>Benefits:</h2>
                 <ul>
                     {data.various_bonuses.map((modObj, i) => {
@@ -424,6 +436,9 @@ const SpecialPreview = () => {
                     ))}
                     {data.swift_actions.map((swiftAction, i) => (
                         <li key={i}><em>Swift Action:</em> {swiftAction}</li>
+                    ))}
+                    {data.free_actions.map((freeAction, i) => (
+                        <li key={i}><em>Free Action:</em> {freeAction}</li>
                     ))}
                     {data.benefit_traits.map((trait, i) => (
                         <li key={i}><strong>{trait}:</strong> {traitDescriptions[trait]}</li>
@@ -481,6 +496,12 @@ const SpecialPreview = () => {
                     <>
                         <h2>Normal</h2>
                         <p>{data.normal}</p>
+                    </> :
+                null}
+                {data.special_note ?
+                    <>
+                        <h2>Special</h2>
+                        <p>{data.special_note}</p>
                     </> :
                 null}
             </>

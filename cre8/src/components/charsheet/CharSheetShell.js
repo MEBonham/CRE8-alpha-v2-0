@@ -143,7 +143,7 @@ const CharSheetShell = () => {
             <div className="float-right rows">
                 <div className="columns">
                     <MyButton fct={manualLoadFct}>Load Latest Version of Character</MyButton>
-                    {match.url.split("/")[0] === "bestiary" ?
+                    {match.url.split("/")[1] === "bestiary" ?
                         <MyLink to="/bestiary">Back to Bestiary</MyLink> :
                         <MyLink to="/characters">Back to Characters</MyLink>
                     }
