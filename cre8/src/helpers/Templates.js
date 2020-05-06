@@ -201,6 +201,8 @@ export const kitDefault = {
     fighting_level_boost: false,
     fighting_OR_caster_boost: false,
     fighting_OR_coast_boost: false,
+    fightingRpBoost_OR_rpPlus2: false,
+    grow_bigger_level: 0,
     intended_level: 1,
     passives: [],
     selected_options: {},

@@ -5,7 +5,7 @@ import MyButton from '../ui/MyButton';
 
 const BatchEdit = () => {
 
-    const collection = "talents";
+    const collection = "kits";
     const editAll = async (ev) => {
         try {
             const collectionCopy = {};

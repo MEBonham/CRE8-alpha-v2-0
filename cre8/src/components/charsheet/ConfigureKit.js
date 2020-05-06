@@ -234,6 +234,27 @@ const ConfigureKit = (props) => {
                         </div>
                     </div> :
                 null}
+                {currentKit && currentKit.fightingRpBoost_OR_rpPlus2 ?
+                    <div className="radio-bank rows">
+                        <label>Choose one:</label>
+                        <div>
+                            <input
+                                type="radio"
+                                name={`fightingRpBoost_OR_rpPlus2-kit-${props.level}-${props.index}`}
+                                value="fightingRpBoosts"
+                                onChange={radioSelection}
+                            /> Fighting Level +1, RP +1
+                        </div>
+                        <div>
+                            <input
+                                type="radio"
+                                name={`fightingRpBoost_OR_rpPlus2-kit-${props.level}-${props.index}`}
+                                value="rpPlus2"
+                                onChange={radioSelection}
+                            /> Reserve Points +2
+                        </div>
+                    </div> :
+                null}
             </div>
             <div className="selects columns">
                 {currentKit && currentKit.bonus_talents && currentKit.bonus_talents.map((bonusTalent, i) => {

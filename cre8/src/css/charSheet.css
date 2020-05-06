@@ -586,8 +586,7 @@ form.build-library section.xp-parcels {
     align-items: flex-start;
 }
 
-form.build-library section.various-penalties input.small,
-form.build-library section.various-bonuses input.small {
+form.build-library input.small {
     width: 46px;
     margin-right: 4px;
     text-align: right;

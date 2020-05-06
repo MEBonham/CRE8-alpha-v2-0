@@ -616,7 +616,8 @@ export const updateKits = (statsObj) => {
             if (
                 kitObj.fighting_level_boost ||
                 (kitObj.fighting_OR_caster_boost && kitObj.selected_options.fighting_OR_caster_boost && kitObj.selected_options.fighting_OR_caster_boost === "fighting") ||
-                (kitObj.fighting_OR_coast_boost && kitObj.selected_options.fighting_OR_coast_boost && kitObj.selected_options.fighting_OR_coast_boost === "fighting")
+                (kitObj.fighting_OR_coast_boost && kitObj.selected_options.fighting_OR_coast_boost && kitObj.selected_options.fighting_OR_coast_boost === "fighting") ||
+                (kitObj.fightingRpBoost_OR_rpPlus2 && kitObj.selected_options.fightingRpBoost_OR_rpPlus2 && kitObj.selected_options.fightingRpBoost_OR_rpPlus2 === "fightingRpBoosts")
             ) {
                 result.fighting_level_kits = {
                     ...result.fighting_level_kits,
@@ -715,6 +716,40 @@ export const updateKits = (statsObj) => {
                     [index]: vp_boost
                 }
             };
+
+            if (kitObj.selected_options.fightingRpBoost_OR_rpPlus2 && kitObj.selected_options.fightingRpBoost_OR_rpPlus2 === "rpPlus2") {
+                if (!result.rp_mods.Untyped) {
+                    result.rp_mods.Untyped = {};
+                }
+                result.rp_mods = {
+                    ...result.rp_mods,
+                    Untyped: {
+                        ...result.rp_mods.Untyped,
+                        [kitObj.id]: {
+                            num: 2,
+                            level: [level],
+                            srcType: "kit"
+                        }
+                    }
+                };
+            } else if (
+                (kitObj.selected_options.fightingRpBoost_OR_rpPlus2 && kitObj.selected_options.fightingRpBoost_OR_rpPlus2 === "fightingRpBoosts")
+            ) {
+                if (!result.rp_mods.Untyped) {
+                    result.rp_mods.Untyped = {};
+                }
+                result.rp_mods = {
+                    ...result.rp_mods,
+                    Untyped: {
+                        ...result.rp_mods.Untyped,
+                        [kitObj.id]: {
+                            num: 1,
+                            level: [level],
+                            srcType: "kit"
+                        }
+                    }
+                };
+            }
 
             if (kitObj.bonus_trained_skills.length) {
                 kitObj.bonus_trained_skills.forEach((bonusSkillTrained, i) => {
@@ -1019,6 +1054,17 @@ const updateSize = (statsObj) => {
     });
     result = updateAttacks({
         ...result,
+        weapon_accuracy_mods: {
+            ...result.weapon_accuracy_mods,
+            Size: {
+                ...result.weapon_accuracy_mods.Size,
+                "Final Size": {
+                    srcType: "kit",
+                    num: (-1 * size_final),
+                    level: 0
+                }
+            }
+        },
         weapon_impact_mods: {
             ...result.weapon_impact_mods,
             Size: {

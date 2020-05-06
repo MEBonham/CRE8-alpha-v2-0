@@ -125,6 +125,7 @@ const gc = {
     skills_list_num: 10,
     skill_ranks_per_level: 5,
     talent_tags: [
+        "Background",
         "Buff",
         "Core",
         "Epic",

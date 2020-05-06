@@ -338,7 +338,7 @@ const BuildLibraryKits = (props) => {
         return [arr, arr2];
     }
     const processKitForm = (formData) => {
-        // console.log(formData);
+        // console.log(formData, attacks);
         const newSlug = encodeURIComponent(formData.name.split(" ").join("").toLowerCase());
         const kitObj = {};
         const bonusTalentsArr = [];
@@ -375,7 +375,7 @@ const BuildLibraryKits = (props) => {
                     impact_dice_sides: formData.attackDieSides[i],
                     damage_type: {
                         base: {
-                            ...attacks[i].damageType
+                            ...attacks[i].damageType.base
                         }
                     },
                     peril_mod: formData.attackPerilMod[i]
@@ -394,7 +394,7 @@ const BuildLibraryKits = (props) => {
         const [bonuses, penalties] = bundleVariousMods(formData);
         kitObj.various_bonuses = bonuses;
         kitObj.various_penalties = penalties;
-        // console.log(kitObj);
+        console.log(kitObj);
         saveKit(newSlug, kitObj);
     }
 
@@ -430,7 +430,7 @@ const BuildLibraryKits = (props) => {
         const attacksCopy = [ ...attacks ];
         const attackNum = parseInt(ev.target.id.split("-")[3]);
         const property = ev.target.id.split("-")[2];
-        attacksCopy[attackNum][property][ev.target.id.split("-")[4]] = ev.target.checked;
+        attacksCopy[attackNum][property].base[ev.target.id.split("-")[4]] = ev.target.checked;
         setAttacks(attacksCopy);
     }
 
@@ -563,10 +563,29 @@ const BuildLibraryKits = (props) => {
                         <Controller
                             as="input"
                             type="checkbox"
+                            name="fightingRpBoost_OR_rpPlus2"
+                            control={control}
+                        />
+                        <label>Fighting Level +1, RP +1 <span className="or">or</span> RP +2</label>
+                    </div>
+                    <div className="checkbox-pair">
+                        <Controller
+                            as="input"
+                            type="checkbox"
                             name="vpPlus2_OR_mpPlus2"
                             control={control}
                         />
                         <label>VP +2 <span className="or">or</span> MP +2</label>
+                    </div>
+                    <div className="columns">
+                        <label>Grow a size category at level: (zero to disable)</label>
+                        <Controller
+                            as="input"
+                            type="number"
+                            name="grow_bigger_level"
+                            control={control}
+                            className="small"
+                        />
                     </div>
                     <div className="checkbox-pair">
                         <Controller
