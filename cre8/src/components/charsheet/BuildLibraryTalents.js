@@ -217,7 +217,9 @@ const BuildLibraryTalents = (props) => {
     const processTalentForm = (formData) => {
         // console.log(formData);
         const newSlug = encodeURIComponent(formData.name.split(" ").join("").toLowerCase());
-        const talentObj = {};
+        const talentObj = {
+            passives: []
+        };
         Object.keys(formData).forEach((key) => {
             if (key === "talent_checkbox_repeatable") {
                 talentObj.can_repeat = formData[key];
@@ -226,6 +228,14 @@ const BuildLibraryTalents = (props) => {
                 formData[key].forEach((name, i) => {
                     talentObj.selective_passives[name] = formData.selectivePassivesDetail[i]
                 });
+            } else if (key === "passives") {
+                talentObj.passives = {
+                    ...talentObj.passives,
+                    ...formData[key].map((passive) => ({
+                        text: passive,
+                        drawback: false
+                    }))
+                }
             } else if (!key.startsWith("talentTag") && !key.startsWith("variousBonus") &&
                 !key.startsWith("selectivePassive")) {
                 talentObj[key] = formData[key];
@@ -372,7 +382,7 @@ const BuildLibraryTalents = (props) => {
                                 as="textarea"
                                 control={control}
                                 name={`passives[${i}]`}
-                                defaultValue={ability}
+                                defaultValue={ability.text}
                                 rows="3"
                                 cols="44"
                             />

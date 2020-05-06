@@ -46,7 +46,6 @@ const TalentsLibraryMenu = () => {
         allTalents.forEach((talentObj) => {
             let skip = false;
             if (!state.talentFilters.monster && talentObj.tags.includes("Monster")) skip = true;
-            console.log(state.talentFilters.levelCap, talentObj.intended_level);
             if (state.talentFilters.levelCap && (talentObj.intended_level > state.talentFilters.levelCap)) skip = true;
             if (state.talentFilters.levelCap && state.talentFilters.levelExact && (talentObj.intended_level !== state.talentFilters.levelCap)) skip = true;
             if (state.talentFilters.coreOnly && !talentObj.tags.includes("Core")) skip = true;

@@ -278,7 +278,9 @@ const BuildLibraryFeats = (props) => {
     }
     const processFeatForm = (formData) => {
         const newSlug = encodeURIComponent(formData.name.split(" ").join("").toLowerCase());
-        const featObj = {};
+        const featObj = {
+            passives: []
+        };
         Object.keys(formData).forEach((key) => {
             if (key === "feat_checkbox_repeatable") {
                 featObj.can_repeat = formData[key];
@@ -302,6 +304,14 @@ const BuildLibraryFeats = (props) => {
                         cumulative: formData[`seedEffectCumulative_${i}`]
                     });
                 });
+            } else if (key === "passives") {
+                featObj.passives = {
+                    ...featObj.passives,
+                    ...formData[key].map((passive) => ({
+                        text: passive,
+                        drawback: false
+                    }))
+                }
             } else if (!key.startsWith("featTag") && !key.startsWith("variousBonus") &&
                 !key.startsWith("augment") && !key.startsWith("seedEffect")) {
                 featObj[key] = formData[key];

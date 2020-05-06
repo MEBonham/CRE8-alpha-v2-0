@@ -110,13 +110,14 @@
     font-size: 1.8rem;
 }
 
-.App .primary-content .library-display p {
+.App .primary-content .library-display p.prereqs {
+    max-width: 75%;
     margin-bottom: 12px;
     font-size: 1.6rem;
 }
 
-.App .primary-content .library-display p.prereqs {
-    max-width: 75%;
+.App .primary-content .library-display p {
+    font-size: 1.4rem;
 }
 
 .App .primary-content .library-display li {

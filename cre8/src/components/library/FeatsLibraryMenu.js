@@ -46,7 +46,6 @@ const FeatsLibraryMenu = () => {
         allFeats.forEach((featObj) => {
             let skip = false;
             if (!state.featFilters.monster && featObj.tags.includes("Monster")) skip = true;
-            console.log(state.featFilters.levelCap, featObj.intended_level);
             if (state.featFilters.levelCap && (featObj.intended_level > state.featFilters.levelCap)) skip = true;
             if (state.featFilters.levelCap && state.featFilters.levelExact && (featObj.intended_level !== state.featFilters.levelCap)) skip = true;
             if (state.featFilters.coreOnly && !featObj.tags.includes("Core")) skip = true;

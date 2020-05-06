@@ -38,7 +38,7 @@ const SpecialPreview = () => {
     }, [state.previewComponent])
 
     const previewKit = (data) => {
-        console.log(data.vp_boost);
+        // console.log(data.passives);
         return(
             <>
                 <h1>{data.name}</h1>
@@ -118,7 +118,7 @@ const SpecialPreview = () => {
                         <li key={i}><strong>{trait}:</strong> {traitDescriptions[trait]}</li>
                     ))}
                     {data.extended_rest_actions.map((restAction, i) => (
-                        <li key={i}>Extended Rest: {restAction}</li>
+                        <li key={i}><em>Extended Rest:</em> {restAction}</li>
                     ))}
                 </ul>
                 {data.drawback_traits.length || data.various_penalties.length ?
@@ -394,6 +394,7 @@ const SpecialPreview = () => {
     }
 
     const previewTalent = (data) => {
+        console.log(data.passives);
         return(
             <>
                 <h1>{data.name}</h1>
@@ -443,8 +444,8 @@ const SpecialPreview = () => {
                     {data.benefit_traits.map((trait, i) => (
                         <li key={i}><strong>{trait}:</strong> {traitDescriptions[trait]}</li>
                     ))}
-                    {data.passives.filter((passive) => !passive.startsWith("[DRAWBACK]")).map((passive, i) => (
-                        <li key={i}>{passive}</li>
+                    {data.passives.filter((passive) => !passive.drawback).map((passive, i) => (
+                        <li key={i}>{passive.text}</li>
                     ))}
                     {Object.keys(data.selective_passives).length ?
                         <li> <div>Choose one:</div>
@@ -457,12 +458,15 @@ const SpecialPreview = () => {
                             </ul>
                         </li> :
                     null}
+                    {data.short_rest_actions.map((restAction, i) => (
+                        <li key={i}><em>Short Rest:</em> {restAction}</li>
+                    ))}
                     {data.extended_rest_actions.map((restAction, i) => (
                         <li key={i}><em>Extended Rest:</em> {restAction}</li>
                     ))}
                 </ul>
                 {(data.various_bonuses.filter((modObj) => modObj.num && modObj.num < 0).length) ||
-                    (data.passives.filter((passive) => passive.startsWith("[DRAWBACK]")).length) ?
+                    (data.passives.filter((passive) => passive.drawback).length) ?
                     <>
                         <h2>Drawbacks</h2>
                         <ul>
@@ -478,17 +482,11 @@ const SpecialPreview = () => {
                                     return null;
                                 }
                             })}
-                            {data.passives.map((passive, i) => {
-                                if (passive.startsWith("[DRAWBACK]")) {
-                                    return (
-                                        <li key={i}>
-                                            {passive.split(" ").slice(1).join(" ")}
-                                        </li>
-                                    );
-                                } else {
-                                    return null;
-                                }
-                            })}
+                            {data.passives.filter((passive) => passive.drawback).map((passive, i) => (
+                                <li key={i}>
+                                    {passive.text}
+                                </li>
+                            ))}
                         </ul>
                     </> :
                 null}

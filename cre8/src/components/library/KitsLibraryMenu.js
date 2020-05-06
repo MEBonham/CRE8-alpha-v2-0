@@ -46,7 +46,6 @@ const KitsLibraryMenu = () => {
         allKits.forEach((kitObj) => {
             let skip = false;
             if (!state.kitFilters.monster && kitObj.tags.includes("Monster")) skip = true;
-            console.log(state.kitFilters.levelCap, kitObj.intended_level);
             if (state.kitFilters.levelCap && (kitObj.intended_level > state.kitFilters.levelCap)) skip = true;
             if (state.kitFilters.levelCap && state.kitFilters.levelExact && (kitObj.intended_level !== state.kitFilters.levelCap)) skip = true;
             if (state.kitFilters.coreOnly && !kitObj.tags.includes("Core")) skip = true;

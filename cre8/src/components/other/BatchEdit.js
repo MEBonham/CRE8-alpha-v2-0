@@ -11,13 +11,18 @@ const BatchEdit = () => {
             const collectionCopy = {};
             const query = await fb.db.collection(collection).get();
             query.forEach((item) => {
-                collectionCopy[item.id] = (item.data().special_note) ?
+                collectionCopy[item.id] = (item.data().passives[0] && item.data().passives[0].text) ?
                     {
                         ...item.data()
                     } :
                     {
                         ...item.data(),
-                        special_note: ""
+                        passives: [
+                            ...item.data().passives.map((oldText) => ({
+                                drawback: false,
+                                text: oldText
+                            }))
+                        ]
                     };
             });
             Object.keys(collectionCopy).forEach((id) => {
