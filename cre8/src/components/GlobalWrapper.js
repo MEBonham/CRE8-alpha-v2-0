@@ -48,12 +48,21 @@ const initialData = {
     curChangesMade: false,
     dieRollMode: "normal",
     editPrivilege: false,
+    featFilters: {
+        coreOnly: true
+    },
     initialMount: true,
+    kitFilters: {
+        coreOnly: true
+    },
     mainNavMenuOpen: false,
     preview: {},
     rollQueue: [],
     rollsToDisplay: [],
     shouldUpdateCharacterCache: true,
+    talentFilters: {
+        coreOnly: true
+    },
     toggleCharEditing,
     uploadRoll,
     userSettingsMenuOpen: false

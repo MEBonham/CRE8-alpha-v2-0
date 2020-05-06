@@ -124,3 +124,28 @@
     font-size: 1.4rem;
     line-height: 1.2;
 }
+
+div.primary-content.library div.filters .checkbox-pair {
+    margin-bottom: 6px;
+    font-size: 1.4rem;
+}
+
+div.primary-content.library div.filters .num-input {
+    align-items: center;
+    font-size: 1.4rem;
+}
+
+div.primary-content.library div.filters .num-input label {
+    margin-right: 6px;
+    position: relative;
+    top: -2px;
+}
+
+div.primary-content.library div.filters .short {
+    width: 54px;
+}
+
+div.primary-content.library div.filters input[type="checkbox"] {
+    position: relative;
+    top: 2px;
+}
