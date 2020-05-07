@@ -109,7 +109,7 @@ const NewCharForm = () => {
         <form onSubmit={handleSubmit} className="primary-content content-padding new-char-form rows">
             <h1>New Character</h1>
             <div>
-                <label htmlFor="slug">Slug (shortened name; must be unique & lowercase; <br />difficult to change once established)</label>
+                <label htmlFor="slug">Slug (short name; must be unique & lowercase; <br />difficult to change once established)</label>
                 <input
                     type="text"
                     id="slug"

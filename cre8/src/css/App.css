@@ -330,3 +330,49 @@ div.accordion > div > div.toggles.open {
 div.accordion > div > div.toggles.open p {
     margin-bottom: 8px;
 }
+
+.rules .float-right {
+    display: flex;
+    justify-content: flex-end;
+}
+
+.rules ul.bullets {
+    margin: 8px 0 0 26px;
+    list-style: disc outside none;
+}
+
+.rules li {
+    margin-bottom: 6px;
+    font-size: 1.4rem;
+}
+
+.App .primary-content.rules p {
+    margin-bottom: 10px;
+    font-size: 1.4rem;
+    line-height: 1.2;
+}
+
+.rules table {
+    margin-bottom: 10px;
+    font-size: 1.4rem;
+    border: 1px solid #444444;
+}
+
+.rules h3 {
+    margin-top: 12px;
+}
+
+.rules tr {
+    border-bottom: 1px solid #444444;
+}
+
+.rules th {
+    padding: 8px;
+    font-weight: bold;
+    line-height: 1.1;
+}
+
+.rules td {
+    padding: 4px 6px 8px 6px;
+    line-height: 1.1;
+}

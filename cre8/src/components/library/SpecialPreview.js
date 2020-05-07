@@ -394,7 +394,6 @@ const SpecialPreview = () => {
     }
 
     const previewTalent = (data) => {
-        console.log(data.passives);
         return(
             <>
                 <h1>{data.name}</h1>
@@ -466,10 +465,17 @@ const SpecialPreview = () => {
                     ))}
                 </ul>
                 {(data.various_bonuses.filter((modObj) => modObj.num && modObj.num < 0).length) ||
-                    (data.passives.filter((passive) => passive.drawback).length) ?
+                    (data.passives.filter((passive) => passive.drawback).length) ||
+                    (data.various_penalties.length) || (data.drawback_traits.length) ?
                     <>
                         <h2>Drawbacks</h2>
                         <ul>
+                            {data.various_penalties.map((penalty, i) => (
+                                <li key={i}>
+                                    Incur a {penalty.num} {penalty.type === "Untyped" ? null : penalty.type} penalty 
+                                    to your {getDisplayName(penalty.to)}.
+                                </li>
+                            ))}
                             {data.various_bonuses.map((modObj, i) => {
                                 if (modObj.type !== "Synergy" && modObj.num < 0) {
                                     return (
@@ -486,6 +492,9 @@ const SpecialPreview = () => {
                                 <li key={i}>
                                     {passive.text}
                                 </li>
+                            ))}
+                            {data.drawback_traits.map((trait, i) => (
+                                <li key={i}><strong>{trait}:</strong> {traitDescriptions[trait]}</li>
                             ))}
                         </ul>
                     </> :

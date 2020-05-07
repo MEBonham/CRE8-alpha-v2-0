@@ -254,6 +254,23 @@ const ConfigureKit = (props) => {
                         </div>
                     </div> :
                 null}
+                {currentKit && currentKit.select_one_from_attacks ?
+                    <div className="radio-bank rows">
+                        <label>Choose one:</label>
+                        {currentKit.attacks.map((attackObj, i) => (
+                            <div className="columns" key={i}>
+                                <input
+                                    type="radio"
+                                    name={`select_one_from_attacks-kit-${props.level}-${props.index}`}
+                                    value={attackObj.name}
+                                    onChange={radioSelection}
+                                    key={attackObj.name}
+                                    className="strangely-already-low-enough"
+                                /> {attackObj.name}
+                            </div>
+                        ))}
+                    </div> :
+                null}
             </div>
             <div className="selects columns">
                 {currentKit && currentKit.bonus_talents && currentKit.bonus_talents.map((bonusTalent, i) => {

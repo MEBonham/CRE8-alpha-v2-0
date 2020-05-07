@@ -485,6 +485,11 @@ section.configure-specials .radio-bank input {
     top: 2px;
 }
 
+section.configure-specials .radio-bank input.strangely-already-low-enough {
+    position: relative;
+    top: -3px;
+}
+
 section.configure-specials div.select-kit .selects.columns {
     align-items: flex-end;
 }

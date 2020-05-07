@@ -35,6 +35,17 @@ const BuildLibraryTalents = (props) => {
             }
         ]);
     }
+    const [variousPenalties, setVariousPenalties] = useState([]);
+    const newVPenalty = (ev) => {
+        setVariousPenalties([
+            ...variousPenalties,
+            {
+                type: "Untyped",
+                num: -1,
+                to: "fortitude_mods"
+            }
+        ]);
+    }
     const [passives, setPassives] = useState([]);
     const newPassive = (ev) => {
         setPassives([
@@ -50,6 +61,13 @@ const BuildLibraryTalents = (props) => {
                 name: "",
                 detail: ""
             }
+        ]);
+    }
+    const [drawbackPassives, setDrawbackPassives] = useState([]);
+    const newDrawbackPassive = (ev) => {
+        setDrawbackPassives([
+            ...drawbackPassives,
+            ""
         ]);
     }
     const [standardActions, setStandardActions] = useState([]);
@@ -128,8 +146,18 @@ const BuildLibraryTalents = (props) => {
                     bonusObj.skill = bonus.skill || "Brawn";
                     return bonusObj;
                 }));
+            } else if (key === "various_penalties") {
+                setVariousPenalties(data[key].map((penalty) => {
+                    const penaltyObj = {};
+                    penaltyObj.type = penalty.type || "Untyped";
+                    penaltyObj.to = penalty.to || "fortitude_mods";
+                    penaltyObj.num = penalty.num || -1;
+                    penaltyObj.skill = penalty.skill || "Brawn";
+                    return penaltyObj;
+                }));
             } else if (key === "passives") {
-                setPassives(data[key]);
+                setPassives(data[key].filter((passive) => !passive.drawback));
+                setDrawbackPassives(data[key].filter((passive) => passive.drawback));
             } else if (key === "selective_passives") {
                 setSelectivePassives(Object.keys(data[key]).sort().map((name) => ({
                     name,
@@ -171,6 +199,17 @@ const BuildLibraryTalents = (props) => {
             setVariousBonusTypes(watch("variousBonusType"));
         }
     }
+    const [variousPenaltyTypes, setVariousPenaltyTypes] = useState([]);
+    useEffect(() => {
+        if (watch("variousPenaltyType") && !arraysEqual(watch("variousPenaltyType"), variousPenaltyTypes)) {
+            setVariousPenaltyTypes(watch("variousPenaltyType"));
+        }
+    }, [variousPenalties, variousPenaltyTypes, watch])
+    const updatePenaltyType = (ev) => {
+        if (watch("variousPenaltyType")) {
+            setVariousPenaltyTypes(watch("variousPenaltyType"));
+        }
+    }
 
     const saveTalent = async (newSlug, talentObj) => {
         try {
@@ -183,7 +222,9 @@ const BuildLibraryTalents = (props) => {
             } else {
                 reset();
                 setVariousBonuses([]);
+                setVariousPenalties([]);
                 setPassives([]);
+                setDrawbackPassives([]);
                 setSelectivePassives([]);
                 setStandardActions([]);
                 setSwiftActions([]);
@@ -196,7 +237,7 @@ const BuildLibraryTalents = (props) => {
         }
     }
     
-    const bundleVariousBonuses = (data) => {
+    const bundleVariousMods = (data) => {
         const arr = [];
         if (data.variousBonusTo) {
             for (let i = 0; i < data.variousBonusTo.length; i++) {
@@ -212,7 +253,18 @@ const BuildLibraryTalents = (props) => {
                 arr.push(bonusObj);
             }
         }
-        return arr;
+        const arr2 = [];
+        if (data.variousPenaltyTo) {
+            for (let i = 0; i < data.variousPenaltyTo.length; i++) {
+                if (data.variousPenaltyType[i] === "Select" || data.variousPenaltyTo[i] === "Select") continue;
+                const penaltyObj = {};
+                penaltyObj.type = data.variousPenaltyType[i];
+                penaltyObj.to = data.variousPenaltyTo[i];
+                penaltyObj.num = parseInt(data.variousPenaltyNum[i]);
+                arr2.push(penaltyObj);
+            }
+        }
+        return [arr, arr2];
     }
     const processTalentForm = (formData) => {
         // console.log(formData);
@@ -229,15 +281,23 @@ const BuildLibraryTalents = (props) => {
                     talentObj.selective_passives[name] = formData.selectivePassivesDetail[i]
                 });
             } else if (key === "passives") {
-                talentObj.passives = {
+                talentObj.passives = [
                     ...talentObj.passives,
                     ...formData[key].map((passive) => ({
                         text: passive,
                         drawback: false
                     }))
-                }
+                ];
+            } else if (key.startsWith("drawbackPass")) {
+                talentObj.passives = [
+                    ...talentObj.passives,
+                    ...formData[key].map((drawback) => ({
+                        text: drawback,
+                        drawback: true
+                    }))
+                ];
             } else if (!key.startsWith("talentTag") && !key.startsWith("variousBonus") &&
-                !key.startsWith("selectivePassive")) {
+                !key.startsWith("variousPenal") && !key.startsWith("selectivePassive")) {
                 talentObj[key] = formData[key];
             }
         })
@@ -245,7 +305,9 @@ const BuildLibraryTalents = (props) => {
             const idString = `talentTag_checkbox_${tagName}`;
             return formData[idString] ? true : false;
         });
-        talentObj.various_bonuses = bundleVariousBonuses(formData);
+        const [bonuses, penalties] = bundleVariousMods(formData);
+        talentObj.various_bonuses = bonuses;
+        talentObj.various_penalties = penalties;
         saveTalent(newSlug, talentObj);
     }
 
@@ -497,6 +559,65 @@ const BuildLibraryTalents = (props) => {
                         ))}
                         <MyButton fct={newExtendedRestAction}>Add Extended Rest Action</MyButton>
                     </section>
+                    <section className="passives rows brown-box">
+                        <label>Passive Drawbacks</label>
+                        {drawbackPassives.map((ability, i) => (
+                            <Controller
+                                key={i}
+                                as="textarea"
+                                control={control}
+                                name={`drawbackPassives[${i}]`}
+                                defaultValue={ability.text}
+                                rows="3"
+                                cols="44"
+                            />
+                        ))}
+                        <MyButton fct={newDrawbackPassive}>Add Passive Drawback</MyButton>
+                    </section>
+                    <section className="various-penalties rows brown-box">
+                        <label>Various Penalties</label>
+                        <ul>
+                            {variousPenalties.map((penalty, i) => (
+                                <li key={`${i}`}>
+                                    <input
+                                        type="number"
+                                        defaultValue={penalty.num}
+                                        ref={register}
+                                        name={`variousPenaltyNum[${i}]`}
+                                        className="small"
+                                        disabled={variousPenaltyTypes.length > i && variousPenaltyTypes[i] === "Synergy"}
+                                    />
+                                    <select
+                                        name={`variousPenaltyType[${i}]`}
+                                        ref={register}
+                                        defaultValue={penalty.type}
+                                        onChange={updatePenaltyType}
+                                    >
+                                        <option value={"Select"}>Select</option>
+                                        {gc.bonus_types.flatMap((type) => {
+                                            if (type === "Synergy") {
+                                                return [];
+                                            } else {
+                                                return [<option key={type} value={type}>{type}</option>];
+                                            }
+                                        })}
+                                    </select>
+                                    <label>penalty to</label>
+                                    <select
+                                        name={`variousPenaltyTo[${i}]`}
+                                        defaultValue={penalty.to}
+                                        ref={register}
+                                    >
+                                        <option value={"Select"}>Select</option>
+                                        {gc.bonus_targets.map((stat) => (
+                                            <option key={stat.code} value={stat.code}>{stat.name}</option>
+                                        ))}
+                                    </select>
+                                </li>
+                            ))}
+                        </ul>
+                        <MyButton fct={newVPenalty}>Add Penalty</MyButton>
+                    </section>
                     <div className="rows">
                         <h3>Normal</h3>
                         <Controller
@@ -527,6 +648,40 @@ const BuildLibraryTalents = (props) => {
                         name="intended_level"
                         control={control}
                     />
+                    <section className="rows">
+                        <label>Positive Traits</label>
+                        <select
+                            name="benefit_traits"
+                            ref={register}
+                            multiple
+                        >
+                            {gc.benefit_traits.map((trait) => (
+                                <option
+                                    key={trait}
+                                    value={trait}
+                                >
+                                    {trait}
+                                </option>
+                            ))}
+                        </select>
+                    </section>
+                    <section className="rows">
+                        <label>Negative Traits</label>
+                        <select
+                            name="drawback_traits"
+                            ref={register}
+                            multiple
+                        >
+                            {gc.drawback_traits.map((trait) => (
+                                <option
+                                    key={trait}
+                                    value={trait}
+                                >
+                                    {trait}
+                                </option>
+                            ))}
+                        </select>
+                    </section>
                 </div>
             </section>
             <MyFormButton type="submit">Save</MyFormButton>

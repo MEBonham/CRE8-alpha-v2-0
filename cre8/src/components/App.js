@@ -14,10 +14,11 @@ import Home from './other/Home';
 import NewCharForm from './newchar/NewCharForm';
 import CharSheetShell from './charsheet/CharSheetShell';
 import CharMenu from './other/CharMenu';
+import Bestiary from './other/Bestiary';
 import EditShell from './library/EditShell';
 import LibraryMenu from './library/LibraryMenu';
 import ViewLibraryShell from './library/ViewLibraryShell';
-import Bestiary from './other/Bestiary';
+import Rules from './rules/Rules';
 import UserSettings from './auth/UserSettings';
 import ForgotPassword from './auth/ForgotPassword';
 import Login from './auth/Login';
@@ -59,12 +60,14 @@ const App = () => {
                             <Guarded path="/characters/new"><NewCharForm /></Guarded>
                             <Route path="/characters/:slug" component={CharSheetShell} />
                             <Route path="/characters" component={CharMenu} />
+                            <Route path="/bestiary/:slug" component={CharSheetShell} />
+                            <Route path="/bestiary" component={Bestiary} />
                             <Guarded path="/library/edit"><EditShell /></Guarded>
                             <Route exact path="/library" render={() => <LibraryMenu category="kits" />} />
                             <Route exact path="/library/:category" component={LibraryMenu} />
                             <Route path="/library/:category/:slug" component={ViewLibraryShell} />
-                            <Route path="/bestiary/:slug" component={CharSheetShell} />
-                            <Route path="/bestiary" component={Bestiary} />
+                            <Route path="/rules/:chapter" component={Rules} />
+                            <Route path="/rules" component={Rules} />
                             <Guarded path="/user/settings"><UserSettings /></Guarded>
                             <ReverseGuarded path="/login/forgot"><ForgotPassword /></ReverseGuarded>
                             <ReverseGuarded path="/login"><Login /></ReverseGuarded>

@@ -13,8 +13,10 @@ const gc = {
         "Dropped"
     ],
     benefit_traits: [
+        "Climber",
         "Darkvision",
         "Ignore Armor Speed Penalty",
+        "Instinctual Immunities",
         "Low-Light Vision",
         "Martial Weaponry",
         "Skill Ranks for Parcels",
@@ -40,9 +42,11 @@ const gc = {
         { name: "Reserve Points Pool", code: "rp_mods" },
         { name: "Size", code: "size_mods" },
         { name: "Speed", code: "speed_mods" },
+        { name: "Spell Accuracy", code: "spell_accuracy_mods" },
         { name: "Spellcraft", code: "spellcraft_mods" },
         { name: "Stealth", code: "Stealth" },
         { name: "Wealth (one-time)", code: "wealth_mods" },
+        { name: "Weapon Accuracy", code: "weapon_accuracy_mods" },
         { name: "Weapon Impact", code: "weapon_impact_mods" },
         { name: "Willpower", code: "willpower_mods" },
     ],
@@ -68,6 +72,7 @@ const gc = {
     drawback_traits: [
         "Arcane Aversion",
         "Beast Type",
+        "Instinctual",
         "Swarm Vulnerabilities"
     ],
     epic_level_xp_increment: 500,
@@ -141,7 +146,8 @@ const gc = {
         "Monster",
         "Proficiency",
         "Seed",
-        "Skill Trick"
+        "Skill Trick",
+        "Style"
     ],
     trained_skill_extra_ranks: 2,
     wounded_save_penalty: -2,

@@ -207,7 +207,7 @@ const BuildLibraryKits = (props) => {
                     const penaltyObj = {};
                     penaltyObj.type = penalty.type || "Untyped";
                     penaltyObj.to = penalty.to || "fortitude_mods";
-                    penaltyObj.num = penalty.num || 1;
+                    penaltyObj.num = penalty.num || -1;
                     penaltyObj.skill = penalty.skill || "Brawn";
                     return penaltyObj;
                 }));
@@ -389,7 +389,7 @@ const BuildLibraryKits = (props) => {
                             ...attacks[i].damageType.base
                         }
                     },
-                    peril_mod: formData.attackPerilMod[i]
+                    peril_mod: parseInt(formData.attackPerilMod[i])
                 }));
             } else if (key.startsWith("drawbackPass")) {
                 kitObj.passives = [
@@ -408,7 +408,7 @@ const BuildLibraryKits = (props) => {
                     }))
                 ];
             } else if (!key.startsWith("kitTag") && !key.startsWith("variousBonus") && key !== "bonusTrainingOptions" &&
-                !key.startsWith("variousPenalty") && !key.startsWith("attack")) {
+                !key.startsWith("variousPenal") && !key.startsWith("attack")) {
                     kitObj[key] = formData[key];
             }
         })
@@ -621,6 +621,15 @@ const BuildLibraryKits = (props) => {
                             control={control}
                         />
                         <label>Bonus Feat</label>
+                    </div>
+                    <div className="checkbox-pair">
+                        <Controller
+                            as="input"
+                            type="checkbox"
+                            name="select_one_from_attacks"
+                            control={control}
+                        />
+                        <label>Select One From Attacks</label>
                     </div>
                     <section className="various-bonuses rows">
                         <ul>
@@ -881,8 +890,8 @@ const BuildLibraryKits = (props) => {
                                     <input
                                         type="radio"
                                         id={`meb-attack-type-${i}-weapon`}
-                                        name="attackRadio-type"
-                                        defaultValue={false}
+                                        name={`attackRadio-type-${i}`}
+                                        defaultChecked={false}
                                         onChange={handleRadio}
                                     />
                                     <label>Weapon attack</label>
@@ -891,8 +900,8 @@ const BuildLibraryKits = (props) => {
                                     <input
                                         type="radio"
                                         id={`meb-attack-type-${i}-natural_weapon`}
-                                        name="attackRadio-type"
-                                        defaultValue={true}
+                                        name={`attackRadio-type-${i}`}
+                                        defaultChecked={true}
                                         onChange={handleRadio}
                                     />
                                     <label>Natural weapon attack</label>
@@ -901,8 +910,8 @@ const BuildLibraryKits = (props) => {
                                     <input
                                         type="radio"
                                         id={`meb-attack-type-${i}-spell`}
-                                        name="attackRadio-type"
-                                        defaultValue={false}
+                                        name={`attackRadio-type-${i}`}
+                                        defaultChecked={false}
                                         onChange={handleRadio}
                                     />
                                     <label>Spell attack</label>
@@ -911,8 +920,8 @@ const BuildLibraryKits = (props) => {
                                     <input
                                         type="radio"
                                         id={`meb-attack-type-${i}-vim`}
-                                        name="attackRadio-type"
-                                        defaultValue={false}
+                                        name={`attackRadio-type-${i}`}
+                                        defaultChecked={false}
                                         onChange={handleRadio}
                                     />
                                     <label>Vim attack</label>

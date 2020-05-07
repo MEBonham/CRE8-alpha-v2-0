@@ -567,9 +567,8 @@ export const updateKits = (statsObj) => {
             result.traits_from_kits = result.traits_from_kits.concat(kitObj.benefit_traits).concat(kitObj.drawback_traits);
             kitObj.passives.forEach((passiveFeature) => {
                 result.passives.push({
+                    ...passiveFeature,
                     displaySource: kitObj.name,
-                    text: passiveFeature.text,
-                    drawback: passiveFeature.drawback,
                     src: kitObj.id,
                     srcType: "kit"
                 });
@@ -588,9 +587,31 @@ export const updateKits = (statsObj) => {
                     srcType: "kit"
                 });
             });
+
+            if (kitObj.select_one_from_attacks) {
+                kitObj.attacks = kitObj.attacks.map((attackObj) => ({
+                    ...attackObj,
+                    skip: true
+                }));
+            }
+            if (
+                kitObj.select_one_from_attacks &&
+                kitObj.selected_options.select_one_from_attacks
+            ) {
+                kitObj.attacks = kitObj.attacks.map((attackObj) => {
+                    if (attackObj.name === kitObj.selected_options.select_one_from_attacks) {
+                        return {
+                            ...attackObj,
+                            skip: false
+                        };
+                    } else {
+                        return { ...attackObj };
+                    }
+                });
+            }
             result.attacks = [
                 ...result.attacks,
-                ...kitObj.attacks.map((attackObj) => ({
+                ...kitObj.attacks.filter((attackObj) => !attackObj.skip).map((attackObj) => ({
                     ...attackDefault,
                     ...attackObj,
                     damage_type: {
@@ -1255,13 +1276,12 @@ export const updateTalents = (statsObj) => {
             let talentObj = (talentsAtLevel[index].id) ? talentsAtLevel[index] : talentDefault;
             if (talentsAlreadyChecked.includes(talentsAtLevel[index].id) && !talentsAtLevel[index].can_repeat) talentObj = talentDefault;
             if (parseInt(level) >= statsObj.level) talentObj = talentDefault;
-            // console.log(talentObj);
 
             result.traits_from_talents = result.traits_from_talents.concat(talentObj.benefit_traits).concat(talentObj.drawback_traits);
             talentObj.passives.forEach((passiveFeature) => {
                 result.passives.push({
+                    ...passiveFeature,
                     displaySource: talentObj.name,
-                    text: passiveFeature,
                     src: talentObj.id,
                     srcType: "talent"
                 });
@@ -1343,6 +1363,37 @@ export const updateTalents = (statsObj) => {
                             [talentObj.id]: {
                                 level: level,
                                 num: bonusObj.num,
+                                srcType: "talent"
+                            }
+                        }
+                    }
+                }
+            });
+
+            talentObj.various_penalties.forEach((penaltyObj) => {
+                if (gc.skills_list.includes(penaltyObj.to)) {
+                    if (!result.skill_mods[penaltyObj.to][penaltyObj.type]) {
+                        result.skill_mods[penaltyObj.to][penaltyObj.type] = {};
+                    }
+                    result.skill_mods[penaltyObj.to] = {
+                        ...result.skill_mods[penaltyObj.to],
+                        [penaltyObj.type]: {
+                            ...result.skill_mods[penaltyObj.to][penaltyObj.type],
+                            [talentObj.id]: {
+                                level,
+                                num: penaltyObj.num,
+                                srcType: "talent"
+                            }
+                        }
+                    };
+                } else {
+                    result[penaltyObj.to] = {
+                        ...result[penaltyObj.to],
+                        [penaltyObj.type]: {
+                            ...result[penaltyObj.to][penaltyObj.type],
+                            [talentObj.id]: {
+                                level,
+                                num: penaltyObj.num,
                                 srcType: "talent"
                             }
                         }

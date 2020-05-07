@@ -22,6 +22,7 @@ export const defaultActions = {
     move: [
         "Standard Movement: move up to your Speed + 15 ft, provoking opportunity attacks if you move through threatened areas. Make a Speed Check (TN = number of feet moved). If it succeeds, add a Maneuver to your movement.",
         "Standard Shifting: move up to 5 ft without provoking opportunity attacks.",
+        "Hustle: move up to your Speed +25 ft, provoking opportunity attacks if you move through threatened areas. Make a boosted Speed Check (TN = number of feet moved). If it succeeds, add a Maneuver to your movement. From the start of your Hustle until the start of your next turn, attacks against you enjoy Combat Advantage.",
         "Stand from Prone: remove the prone condition from yourself. Provoke opportunity attacks.",
         "Escape Attempt: make an Athletics or Brawn check to remove the Grabbed condition from yourself. The TN of this check is the unarmed strike Accuracy of the grabbing creature."
     ],

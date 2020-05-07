@@ -1,6 +1,7 @@
 export const traitDescriptions = {
     "Arcane Aversion": "Incur a penalty to your Spellcraft Check and the Accuracy of your spell attacks. This penalty is equal to any encumbrance penalties you suffer to your Athletics, Dexterity, and Stealth skills (due to armor, shield, or a heavy load). The penalty additionally worsens by 1 if you wear a shield and again by 1 if you wear armor.",
     "Beast Type": "Cannot speak normal languages. Illiterate. Limited in the Charisma, Dexterity, Gadgetry, Glibness, and Knowledge skills.",
+    "Climber": "You can coast Athletics checks to climb, even under pressure.",
     "Colossal Size": "Your Perception checks to spot Gargantuan or smaller creatures are dragged. Your Athletics or Brawn checks to keep your footing or resist Grabbing against Gargantuan or smaller creatures are boosted.",
     "Darkvision": "Treat nonmagical darkness as if it were shadowy illumination.",
     "Diminutive Size": "Your Stealth checks to hide from Tiny or larger creatures are boosted. Your Athletics or Brawn checks to keep your footing or resist Grabbing against Tiny or larger creatures are dragged. Your Perception checks to spot Fine creatures are dragged. Your Athletics or Brawn checks to keep your footing or resist Grabbing against Fine creatures are boosted.",
@@ -8,6 +9,8 @@ export const traitDescriptions = {
     "Gargantuan Size": "Your Stealth checks to hide from Colossal creatures are boosted. Your Athletics or Brawn checks to keep your footing or resist Grabbing against Colossal creatures are dragged. Your Perception checks to spot Huge or smaller creatures are dragged. Your Athletics or Brawn checks to keep your footing or resist Grabbing against Huge or smaller creatures are boosted.",
     "Huge Size": "Your Stealth checks to hide from Gargantuan or larger creatures are boosted. Your Athletics or Brawn checks to keep your footing or resist Grabbing against Gargantuan or larger creatures are dragged. Your Perception checks to spot Large or smaller creatures are dragged. Your Athletics or Brawn checks to keep your footing or resist Grabbing against Large or smaller creatures are boosted.",
     "Ignore Armor Speed Penalty": "Ignore Speed penalty for wearing heavy armor (or chainmail), as long as you're proficient.",
+    "Instinctual": "Cannot speak normal languages. Illiterate. Limited in the Gadgetry, Glibness, and Knowledge skills.",
+    "Instinctual Immunities": "You are immune to Fear and to [Charm] effects.",
     "Large Size": "Your Stealth checks to hide from Huge or larger creatures are boosted. Your Athletics or Brawn checks to keep your footing or resist Grabbing against Huge or larger creatures are dragged. Your Perception checks to spot Medium or smaller creatures are dragged. Your Athletics or Brawn checks to keep your footing or resist Grabbing against Medium or smaller creatures are boosted.",
     "Low-Light Vision": "Treat nonmagical shadowy illumination as well-lit.",
     "Martial Weaponry": "You are proficient with all martial weapons and with light armor. (You may immediately retrain Light Armor Proficiency.)",
