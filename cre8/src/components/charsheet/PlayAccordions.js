@@ -206,8 +206,8 @@ const PlayAccordions = () => {
                         <AccordionSection key={i}>
                             <h4>{passiveSource}</h4>
                             <>
-                                {passivesObj[passiveSource].map((passiveText, i) => (
-                                    <p key={i}>{passiveText}</p>
+                                {passivesObj[passiveSource].map((passiveObj, i) => (
+                                    <p key={i}>{passiveObj}</p>
                                 ))}
                             </>
                         </AccordionSection>

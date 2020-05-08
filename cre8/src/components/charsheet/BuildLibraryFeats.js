@@ -93,6 +93,26 @@ const BuildLibraryFeats = (props) => {
             ""
         ]);
     }
+    const [attacks, setAttacks] = useState([]);
+    const newAttack = (ev) => {
+        setAttacks([
+            ...attacks,
+            {
+                name: "",
+                type: "natural_weapon",
+                range: "Melee reach 1 (medium)",
+                detail: "",
+                impactNumDice: 1,
+                impactDiceSides: 6,
+                damageType: {
+                    base: {
+                        bludgeoning: true
+                    }
+                },
+                perilMod: 2
+            }
+        ]);
+    }
     const [swiftActions, setSwiftActions] = useState([]);
     const newSwift = (ev) => {
         setSwiftActions([
@@ -141,6 +161,30 @@ const BuildLibraryFeats = (props) => {
     const seedEffectSeed = seedEffects.map((effect) => (
         effect.seed
     ));
+    const attackName = attacks.map((attackData) => (
+        attackData.name
+    ));
+    const attackType = attacks.map((attackData) => (
+        attackData.type
+    ));
+    const attackRange = attacks.map((attackData) => (
+        attackData.range
+    ));
+    const attackDetail = attacks.map((attackData) => (
+        attackData.detail
+    ));
+    const attackNumDice = attacks.map((attackData) => (
+        attackData.impactNumDice
+    ));
+    const attackDieSides = attacks.map((attackData) => (
+        attackData.impactDiceSides
+    ));
+    const attackDamageType = attacks.map((attackData) => (
+        attackData.damageType
+    ));
+    const attackPeril = attacks.map((attackData) => (
+        attackData.perilMod
+    ));
     const { control, handleSubmit, register, reset, watch } = useForm({
         defaultValues: {
             ...featDefault,
@@ -151,7 +195,15 @@ const BuildLibraryFeats = (props) => {
             augmentDetail: augmentDetail,
             seedEffectSeed,
             seedEffectMpCost,
-            seedEffectDetail
+            seedEffectDetail,
+            attackName,
+            attackType,
+            attackRange,
+            attackDetail,
+            attackNumDice,
+            attackDieSides,
+            attackDamageType,
+            attackPeril
         }
     });
 
@@ -175,6 +227,19 @@ const BuildLibraryFeats = (props) => {
                     bonusObj.skill = bonus.skill || "Brawn";
                     return bonusObj;
                 }));
+            } else if (key === "attacks") {
+                setAttacks(data[key].map((attackObj) => ({
+                    name: attackObj.name,
+                    type: attackObj.type,
+                    range: attackObj.range,
+                    detail: attackObj.detail,
+                    impactNumDice: attackObj.impact_num_dice,
+                    impactDiceSides: attackObj.impact_dice_sides,
+                    damageType: {
+                        base: attackObj.damage_type.base
+                    },
+                    perilMod: attackObj.peril_mod
+                })));
             } else if (key === "passives") {
                 setPassives(data[key]);
             } else if (key === "augment_options") {
@@ -246,6 +311,7 @@ const BuildLibraryFeats = (props) => {
                 setAugmentOptions([]);
                 setSeedEffects([]);
                 setStandardActions([]);
+                setAttacks([]);
                 setMoveActions([]);
                 setOpportunityActions([]);
                 setFreeActions([]);
@@ -312,8 +378,23 @@ const BuildLibraryFeats = (props) => {
                         drawback: false
                     }))
                 }
+            } else if (key === "attackDetail") {
+                featObj.attacks = formData[key].map((detail, i) => ({
+                    name: formData.attackName[i],
+                    type: attacks[i].type,
+                    range: formData.attackRange[i],
+                    detail,
+                    impact_num_dice: formData.attackNumDice[i],
+                    impact_dice_sides: formData.attackDieSides[i],
+                    damage_type: {
+                        base: {
+                            ...attacks[i].damageType.base
+                        }
+                    },
+                    peril_mod: parseInt(formData.attackPerilMod[i])
+                }));
             } else if (!key.startsWith("featTag") && !key.startsWith("variousBonus") &&
-                !key.startsWith("augment") && !key.startsWith("seedEffect")) {
+                !key.startsWith("augment") && !key.startsWith("seedEffect") && !key.startsWith("attack")) {
                 featObj[key] = formData[key];
             }
         })
@@ -345,6 +426,21 @@ const BuildLibraryFeats = (props) => {
             loadDbFeats(slug);
         }
     }, [db, fillFormWithPrevInfo, slug, props.editing])
+
+    const handleRadio = (ev) => {
+        const attacksCopy = [ ...attacks ];
+        const attackNum = parseInt(ev.target.id.split("-")[3]);
+        const property = ev.target.id.split("-")[2];
+        attacksCopy[attackNum][property] = ev.target.id.split("-")[4];
+        setAttacks(attacksCopy);
+    }
+    const handleDamageTypeCheckbox = (ev) => {
+        const attacksCopy = [ ...attacks ];
+        const attackNum = parseInt(ev.target.id.split("-")[3]);
+        const property = ev.target.id.split("-")[2];
+        attacksCopy[attackNum][property].base[ev.target.id.split("-")[4]] = ev.target.checked;
+        setAttacks(attacksCopy);
+    }
 
     if (props.editing && !slug) return <Redirect to="/library/feats" />;
     if (code404) return <Redirect to="/library/feats" />;
@@ -674,6 +770,131 @@ const BuildLibraryFeats = (props) => {
                             </div>
                         ))}
                         <MyButton fct={newSeedEffect}>Add Spell Seed Effect</MyButton>
+                    </section>
+                    <section className="attack-form brown-box rows">
+                        <label>Attacks</label>
+                        {attacks.map((attackObj, i) => (
+                            <div key={i} className="columns">
+                                <div className="rows">
+                                    <div>
+                                        <label className="buffer-right">Name:</label>
+                                        <Controller
+                                            as="input"
+                                            type="text"
+                                            control={control}
+                                            name={`attackName[${i}]`}
+                                            defaultValue={attackObj.name}
+                                        />
+                                    </div>
+                                    <div>
+                                        <label className="buffer-right">Range:</label>
+                                        <Controller
+                                            as="input"
+                                            type="text"
+                                            control={control}
+                                            name={`attackRange[${i}]`}
+                                            defaultValue={attackObj.range}
+                                        />
+                                    </div>
+                                    <div>
+                                        <label>Type of Attack:</label>
+                                        <div>
+                                            <input
+                                                type="radio"
+                                                id={`meb-attack-type-${i}-weapon`}
+                                                name={`attackRadio-type-${i}`}
+                                                defaultChecked={false}
+                                                onChange={handleRadio}
+                                            />
+                                            <label>Weapon attack</label>
+                                        </div>
+                                        <div>
+                                            <input
+                                                type="radio"
+                                                id={`meb-attack-type-${i}-natural_weapon`}
+                                                name={`attackRadio-type-${i}`}
+                                                defaultChecked={true}
+                                                onChange={handleRadio}
+                                            />
+                                            <label>Natural weapon attack</label>
+                                        </div>
+                                        <div>
+                                            <input
+                                                type="radio"
+                                                id={`meb-attack-type-${i}-spell`}
+                                                name={`attackRadio-type-${i}`}
+                                                defaultChecked={false}
+                                                onChange={handleRadio}
+                                            />
+                                            <label>Spell attack</label>
+                                        </div>
+                                        <div>
+                                            <input
+                                                type="radio"
+                                                id={`meb-attack-type-${i}-vim`}
+                                                name={`attackRadio-type-${i}`}
+                                                defaultChecked={false}
+                                                onChange={handleRadio}
+                                            />
+                                            <label>Vim attack</label>
+                                        </div>
+                                    </div>
+                                    <div>
+                                        <Controller
+                                            as="input"
+                                            type="number"
+                                            control={control}
+                                            name={`attackNumDice[${i}]`}
+                                            defaultValue={1}
+                                        />
+                                        <label>d</label>
+                                        <Controller
+                                            as="input"
+                                            type="number"
+                                            control={control}
+                                            name={`attackDieSides[${i}]`}
+                                            className="buffer-right"
+                                            defaultValue={6}
+                                        />
+                                        <label>base Impact</label>
+                                    </div>
+                                    <div>
+                                        <label>Peril Mod +</label>
+                                        <Controller
+                                            as="input"
+                                            type="number"
+                                            control={control}
+                                            name={`attackPerilMod[${i}]`}
+                                            defaultValue={2}
+                                        />
+                                    </div>
+                                    <Controller
+                                        as="textarea"
+                                        control={control}
+                                        name={`attackDetail[${i}]`}
+                                        defaultValue={attackObj.detail}
+                                        placeholder="Details"
+                                        rows="4"
+                                        cols="42"
+                                    />
+                                </div>
+                                <div>
+                                    {gc.damage_types.map((type) => (
+                                        <div key={type} className="checkbox-pair">
+                                            <input
+                                                type="checkbox"
+                                                id={`meb-attack-damageType-${i}-${type}`}
+                                                name={`attackCheckbox-damageType-${type}`}
+                                                defaultChecked={Object.keys(attacks[i].damageType.base).includes(type)}
+                                                onChange={handleDamageTypeCheckbox}
+                                            />
+                                            <label>{type}</label>
+                                        </div>
+                                    ))}
+                                </div>
+                            </div>
+                        ))}
+                        <MyButton fct={newAttack}>Add Attached Attack</MyButton>
                     </section>
                     <div className="rows">
                         <h3>Normal</h3>

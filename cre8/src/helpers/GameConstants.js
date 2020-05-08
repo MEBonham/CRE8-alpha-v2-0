@@ -58,6 +58,7 @@ const gc = {
         "Racial",
         "Size",
         "Synergy",
+        "TwoHanded",
         "Untyped"
     ],
     damage_types: [
@@ -67,6 +68,7 @@ const gc = {
         "lightning",
         "piercing",
         "slashing",
+        "thunder",
         "typeless"
     ],
     drawback_traits: [

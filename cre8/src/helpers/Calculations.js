@@ -193,23 +193,29 @@ const mineKits = (kitsObj, stack1stLevelKits) => {
     return total;
 }
 
-export const mineModifiers = (modsObj) => {
+export const mineModifiers = (modsObj, qualifiers) => {
     let total = 0;
     const bonusTypes = Object.keys(modsObj);
     bonusTypes.forEach(type => {
         const sources = Object.keys(modsObj[type]);
-        if (type === "circumstance" || type === "untyped") {
+        if (type === "Circumstance" || type === "Untyped") {
             sources.forEach(source => {
-                total += parseInt(modsObj[type][source].num);
+                const obj = modsObj[type][source];
+                if (!obj.conditional || qualifiers[obj.condition.split("=")[0]] === obj.condition.split("=")[1]) {
+                    total += parseInt(obj.num);
+                }
             });
         } else {
             let bestSoFar = 0;
             sources.forEach(source => {
-                const mod = parseInt(modsObj[type][source].num);
-                if (mod < 0) {
-                    total += mod;
-                } else if (mod > bestSoFar) {
-                    bestSoFar = mod;
+                const obj = modsObj[type][source];
+                if (!obj.conditional || qualifiers[obj.condition.split("=")[0]] === obj.condition.split("=")[1]) {
+                    const mod = parseInt(obj.num);
+                    if (mod < 0) {
+                        total += mod;
+                    } else if (mod > bestSoFar) {
+                        bestSoFar = mod;
+                    }
                 }
             });
             total += bestSoFar;
@@ -243,15 +249,15 @@ const updateAttacks = (statsObj) => {
         let peril_rating;
         let impact_total_mod = 0;
         if (attackObj.type === "vim") {
-            accuracy = 10 + statsObj.fortitude_base_total;
-            peril_rating = statsObj.fortitude_base_total + attackObj.peril_mod;
+            accuracy = 10 + statsObj.fortitude_total;
+            peril_rating = statsObj.fortitude_total + attackObj.peril_mod;
         } else if (attackObj.type === "spell") {
             accuracy = 10 + statsObj.caster_level;
             peril_rating = statsObj.caster_level + attackObj.peril_mod;
         } else {
-            accuracy = 10 + statsObj.fighting_level + mineModifiers(statsObj.weapon_accuracy_mods);
+            accuracy = 10 + statsObj.fighting_level + mineModifiers(statsObj.weapon_accuracy_mods, { ...attackObj, level: statsObj.level });
             peril_rating = statsObj.fighting_level + attackObj.peril_mod;
-            impact_total_mod = mineModifiers(statsObj.weapon_impact_mods);
+            impact_total_mod = mineModifiers(statsObj.weapon_impact_mods, { ...attackObj, level: statsObj.level });
         }
         return {
             ...attackObj,
@@ -267,8 +273,8 @@ const updateAttacks = (statsObj) => {
 }
 
 const updateAv = (statsObj) => {
-    const armor_value = Math.max(0, (gc.base_armor_value + mineModifiers(statsObj.av_mods)));
-    const resistance_value = gc.resistance_boost + Math.max(armor_value, statsObj.level_max8) + mineModifiers(statsObj.resistance_mods);
+    const armor_value = Math.max(0, (gc.base_armor_value + mineModifiers(statsObj.av_mods, { level: statsObj.level })));
+    const resistance_value = gc.resistance_boost + Math.max(armor_value, statsObj.level_max8) + mineModifiers(statsObj.resistance_mods, { level: statsObj.level });
     return {
         ...statsObj,
         armor_value,
@@ -277,7 +283,7 @@ const updateAv = (statsObj) => {
 }
 
 const updateDefense = (statsObj) => {
-    const defense_total = statsObj.heroic_bonus + mineModifiers(statsObj.defense_mods);
+    const defense_total = statsObj.heroic_bonus + mineModifiers(statsObj.defense_mods, { level: statsObj.level });
     return {
         ...statsObj,
         defense_total
@@ -289,6 +295,7 @@ export const updateFeats = (statsObj) => {
         ...statsObj,
         traits_from_feats: []
     };
+    result = clearAttacks(result, ["feat"]);
     result = clearBonuses(result, ["feat"]);
     result = clearPassives(result, ["feat"]);
     result = clearRestFeatures(result, ["feat"]);
@@ -404,6 +411,20 @@ export const updateFeats = (statsObj) => {
                 }
             });
 
+            result.attacks = [
+                ...result.attacks,
+                ...featObj.attacks.map((attackObj) => ({
+                    ...attackDefault,
+                    ...attackObj,
+                    damage_type: {
+                        ...attackDefault.damage_type,
+                        ...attackObj.damage_type
+                    },
+                    src: featObj.id,
+                    srcType: "feat"
+                }))
+            ];
+
             result = {
                 ...result,
                 passives: [
@@ -489,20 +510,20 @@ export const updateGoodSave = (statsObj) => {
             ...willMod
         }
     };
-    const fortitude_base_total = heroic_bonus + mineModifiers({ base: fortMod });
-    const reflex_base_total = heroic_bonus + mineModifiers({ base: refMod });
-    const willpower_base_total = heroic_bonus + mineModifiers({ base: willMod });
+    const fortitude_base_total = heroic_bonus + mineModifiers({ base: fortMod }, { level: statsObj.level });
+    const reflex_base_total = heroic_bonus + mineModifiers({ base: refMod }, { level: statsObj.level });
+    const willpower_base_total = heroic_bonus + mineModifiers({ base: willMod }, { level: statsObj.level });
     let result = {
         ...statsObj,
         fortitude_base_total,
         fortitude_mods,
-        fortitude_total: heroic_bonus + mineModifiers(fortitude_mods),
+        fortitude_total: heroic_bonus + mineModifiers(fortitude_mods, { level: statsObj.level }),
         reflex_base_total,
         reflex_mods,
-        reflex_total: heroic_bonus + mineModifiers(reflex_mods),
+        reflex_total: heroic_bonus + mineModifiers(reflex_mods, { level: statsObj.level }),
         willpower_base_total,
         willpower_mods,
-        willpower_total: heroic_bonus + mineModifiers(willpower_mods),
+        willpower_total: heroic_bonus + mineModifiers(willpower_mods, { level: statsObj.level }),
     };
     if (fortitude_base_total !== origFortBase) {
         result = updateVpMax(result);
@@ -513,13 +534,13 @@ export const updateGoodSave = (statsObj) => {
 const updateHeroicBonus = (statsObj) => {
     const hb = statsObj.heroic_bonus;
 
-    const defense_total = hb + mineModifiers(statsObj.defense_mods);
-    const fortitude_base_total = hb + mineModifiers({ base: statsObj.fortitude_mods.base });
-    const fortitude_total = hb + mineModifiers(statsObj.fortitude_mods);
-    const reflex_base_total = hb + mineModifiers({ base: statsObj.reflex_mods.base });
-    const reflex_total = hb + mineModifiers(statsObj.reflex_mods);
-    const willpower_base_total = hb + mineModifiers({ base: statsObj.willpower_mods.base });
-    const willpower_total = hb + mineModifiers(statsObj.willpower_mods);
+    const defense_total = hb + mineModifiers(statsObj.defense_mods, { level: statsObj.level });
+    const fortitude_base_total = hb + mineModifiers({ base: statsObj.fortitude_mods.base }, { level: statsObj.level });
+    const fortitude_total = hb + mineModifiers(statsObj.fortitude_mods, { level: statsObj.level });
+    const reflex_base_total = hb + mineModifiers({ base: statsObj.reflex_mods.base }, { level: statsObj.level });
+    const reflex_total = hb + mineModifiers(statsObj.reflex_mods, { level: statsObj.level });
+    const willpower_base_total = hb + mineModifiers({ base: statsObj.willpower_mods.base }, { level: statsObj.level });
+    const willpower_total = hb + mineModifiers(statsObj.willpower_mods, { level: statsObj.level });
 
     const fighting_level = hb + statsObj.fighting_level_kits_total;
     const caster_level = hb + statsObj.caster_level_kits_total;
@@ -924,7 +945,7 @@ const updateLevel = (statsObj) => {
     const origHeroicBonus = statsObj.heroic_bonus;
     const heroic_bonus = Math.min(gc.max_level_pre_epic / 2, Math.floor(statsObj.level / 2));
     const level_max8 = Math.min(gc.max_level_pre_epic, statsObj.level);
-    const awesome_check = gc.base_awesome_bonus + level_max8 + mineModifiers(statsObj.awesome_mods);
+    const awesome_check = gc.base_awesome_bonus + level_max8 + mineModifiers(statsObj.awesome_mods, { level: statsObj.level });
     const xp_award = gc.xp_award_per_level_of_monster * statsObj.level;
     const xp_buffer = gc.xp_buffer_by_level[level_max8]; 
     let result = {
@@ -998,7 +1019,7 @@ const updateMageArmor = (statsObj) => {
 const updateMpMax = (statsObj) => {
     const origMpMax = statsObj.mp_max;
 
-    const mp_mods_total = mineModifiers(statsObj.mp_mods);
+    const mp_mods_total = mineModifiers(statsObj.mp_mods, { level: statsObj.level });
     const mp_max = statsObj.caster_level + mp_mods_total;
     const mp = Math.max(0, statsObj.mp + (mp_max - origMpMax));
     return {
@@ -1012,7 +1033,7 @@ const updateMpMax = (statsObj) => {
 const updateRpMax = (statsObj) => {
     const origRpMax = statsObj.rp_max;
 
-    const rp_mods_total = mineModifiers(statsObj.rp_mods);
+    const rp_mods_total = mineModifiers(statsObj.rp_mods, { level: statsObj.level });
     const rp_max = gc.base_reserve_points + rp_mods_total;
     const rp = Math.max(0, statsObj.rp + (rp_max - origRpMax));
     return {
@@ -1024,7 +1045,7 @@ const updateRpMax = (statsObj) => {
 }
 
 const updateSize = (statsObj) => {
-    const size_final = mineModifiers(statsObj.size_mods);
+    const size_final = mineModifiers(statsObj.size_mods, { level: statsObj.level });
     let result = {
         ...statsObj,
         size_final
@@ -1130,7 +1151,7 @@ const updateSkillMods = (statsObj) => {
         ...statsObj.skill_mods
     };
     gc.skills_list.forEach(skill => {
-        skill_mods_net[skill] = statsObj.skill_ranks[skill] + mineModifiers(skill_mods[skill]);
+        skill_mods_net[skill] = statsObj.skill_ranks[skill] + mineModifiers(skill_mods[skill], { level: statsObj.level });
     });
     return {
         ...statsObj,
@@ -1191,7 +1212,7 @@ export const updateSkillRanks = (statsObj) => {
 }
 
 const updateSpeed = (statsObj) => {
-    const speed_mods_total = mineModifiers(statsObj.speed_mods);
+    const speed_mods_total = mineModifiers(statsObj.speed_mods, { level: statsObj.level });
     const speed = gc.base_speed + speed_mods_total;
     return {
         ...statsObj,
@@ -1201,7 +1222,7 @@ const updateSpeed = (statsObj) => {
 }
 
 const updateSpellcraft = (statsObj) => {
-    const spellcraft_mods_total = mineModifiers(statsObj.spellcraft_mods);
+    const spellcraft_mods_total = mineModifiers(statsObj.spellcraft_mods, { level: statsObj.level });
     const spellcraft_check = statsObj.caster_level + spellcraft_mods_total;
     return {
         ...statsObj,
@@ -1278,14 +1299,16 @@ export const updateTalents = (statsObj) => {
             if (parseInt(level) >= statsObj.level) talentObj = talentDefault;
 
             result.traits_from_talents = result.traits_from_talents.concat(talentObj.benefit_traits).concat(talentObj.drawback_traits);
-            talentObj.passives.forEach((passiveFeature) => {
-                result.passives.push({
-                    ...passiveFeature,
-                    displaySource: talentObj.name,
-                    src: talentObj.id,
-                    srcType: "talent"
+            if (!talentObj.mighty_constitution && !talentObj.lightning_agility && !talentObj.steely_focus) {
+                talentObj.passives.forEach((passiveFeature) => {
+                    result.passives.push({
+                        ...passiveFeature,
+                        displaySource: talentObj.name,
+                        src: talentObj.id,
+                        srcType: "talent"
+                    });
                 });
-            });
+            }
             talentObj.standard_actions.forEach((action) => {
                 result.standard_actions.push({
                     displaySource: talentObj.name,
@@ -1327,6 +1350,107 @@ export const updateTalents = (statsObj) => {
                 });
             });
 
+            if (talentObj.mighty_constitution) {
+                if (result.good_save === "fortitude") {
+                    result.passives.push({
+                        ...talentObj.passives[0],
+                        displaySource: talentObj.name,
+                        src: talentObj.id,
+                        srcType: "talent"
+                    });
+                } else if (result.level > 4) {
+                    result.fortitude_mods = {
+                        ...result.fortitude_mods,
+                        base: {
+                            ...result.fortitude_mods.base,
+                            [talentObj.id]: {
+                                level: level,
+                                num: 2,
+                                srcType: "talent"
+                            }
+                        }
+                    };
+                } else {
+                    result.fortitude_mods = {
+                        ...result.fortitude_mods,
+                        base: {
+                            ...result.fortitude_mods.base,
+                            [talentObj.id]: {
+                                level: level,
+                                num: 1,
+                                srcType: "talent"
+                            }
+                        }
+                    };
+                }
+            } else if (talentObj.lightning_agility) {
+                if (result.good_save === "reflex") {
+                    result.passives.push({
+                        ...talentObj.passives[0],
+                        displaySource: talentObj.name,
+                        src: talentObj.id,
+                        srcType: "talent"
+                    });
+                } else if (result.level > 4) {
+                    result.reflex_mods = {
+                        ...result.reflex_mods,
+                        base: {
+                            ...result.reflex_mods.base,
+                            [talentObj.id]: {
+                                level: level,
+                                num: 2,
+                                srcType: "talent"
+                            }
+                        }
+                    };
+                } else {
+                    result.reflex_mods = {
+                        ...result.reflex_mods,
+                        base: {
+                            ...result.reflex_mods.base,
+                            [talentObj.id]: {
+                                level: level,
+                                num: 1,
+                                srcType: "talent"
+                            }
+                        }
+                    };
+                }
+            } else if (talentObj.steely_focus) {
+                if (result.good_save === "willpower") {
+                    result.passives.push({
+                        ...talentObj.passives[0],
+                        displaySource: talentObj.name,
+                        src: talentObj.id,
+                        srcType: "talent"
+                    });
+                } else if (result.level > 4) {
+                    result.willpower_mods = {
+                        ...result.willpower_mods,
+                        base: {
+                            ...result.willpower_mods.base,
+                            [talentObj.id]: {
+                                level: level,
+                                num: 2,
+                                srcType: "talent"
+                            }
+                        }
+                    };
+                } else {
+                    result.willpower_mods = {
+                        ...result.willpower_mods,
+                        base: {
+                            ...result.willpower_mods.base,
+                            [talentObj.id]: {
+                                level: level,
+                                num: 1,
+                                srcType: "talent"
+                            }
+                        }
+                    };
+                }
+            }
+
             talentObj.various_bonuses.forEach((bonusObj) => {
                 if (bonusObj.type === "Synergy") {
                     if (!result.synergy_bonuses[bonusObj.skill]) result.synergy_bonuses[bonusObj.skill] = [];
@@ -1349,8 +1473,8 @@ export const updateTalents = (statsObj) => {
                         [bonusObj.type]: {
                             ...result.skill_mods[bonusObj.to][bonusObj.type],
                             [talentObj.id]: {
+                                ...bonusObj,
                                 level,
-                                num: bonusObj.num,
                                 srcType: "talent"
                             }
                         }
@@ -1361,15 +1485,14 @@ export const updateTalents = (statsObj) => {
                         [bonusObj.type]: {
                             ...result[bonusObj.to][bonusObj.type],
                             [talentObj.id]: {
+                                ...bonusObj,
                                 level: level,
-                                num: bonusObj.num,
                                 srcType: "talent"
                             }
                         }
                     }
                 }
             });
-
             talentObj.various_penalties.forEach((penaltyObj) => {
                 if (gc.skills_list.includes(penaltyObj.to)) {
                     if (!result.skill_mods[penaltyObj.to][penaltyObj.type]) {
@@ -1408,16 +1531,17 @@ export const updateTalents = (statsObj) => {
                     ...Object.keys(talentObj.selected_options).flatMap((optionType) => {
                         if (optionType === "selectivePassives") {
                             const selectedOption = talentObj.selected_options[optionType];
-                            return {
+                            return [{
                                 text: talentObj.selective_passives[selectedOption],
                                 src: talentObj.id,
-                                srcType: "talent"
-                            };
+                                srcType: "talent",
+                                displaySource: talentObj.name,
+                                drawback: false
+                            }];
                         } else return [];
                     })
                 ]
             };
-
             talentsAlreadyChecked.push(talentObj.id);
         });
     });
@@ -1459,7 +1583,7 @@ const updateVpMax = (statsObj) => {
 }
 
 export const updateWealth = (statsObj) => {
-    const wealth = Math.max(0, statsObj.wealth + mineModifiers(statsObj.wealth_mods));
+    const wealth = Math.max(0, statsObj.wealth + mineModifiers(statsObj.wealth_mods, { level: statsObj.level }));
     return {
         ...statsObj,
         wealth

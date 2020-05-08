@@ -25,7 +25,6 @@ const PlaySkills = () => {
     }
     const skillRoll = (ev) => {
         if (state.cur) {
-            console.log(ev.target.id.split("_")[3]);
             dispatchRollData({
                 ...constructRollData(),
                 name: ev.target.id.split("_")[2].split("-").join(" "),

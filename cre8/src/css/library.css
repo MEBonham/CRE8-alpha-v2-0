@@ -67,8 +67,8 @@
 }
 
 .library-display ul {
-    margin-bottom: 10px;
-    list-style: disc inside;
+    margin: 0 0 10px 18px;
+    list-style: disc outside;
 }
 
 .library-display ul li div.height-4px {
@@ -76,8 +76,8 @@
 }
 
 .library-display ul ul {
-    margin: 0 0 4px 18px;
-    list-style: circle inside;
+    margin: 0 0 4px 26px;
+    list-style: circle outside;
 }
 
 .sidebar .library-display li {
@@ -110,7 +110,7 @@
     font-size: 1.8rem;
 }
 
-.App .primary-content .library-display p.prereqs {
+.App .primary-content .library-display header p {
     max-width: 75%;
     margin-bottom: 12px;
     font-size: 1.6rem;

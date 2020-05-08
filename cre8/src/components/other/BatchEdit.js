@@ -5,23 +5,19 @@ import MyButton from '../ui/MyButton';
 
 const BatchEdit = () => {
 
-    const collection = "characters";
+    const collection = "talents";
     const editAll = async (ev) => {
         try {
             const collectionCopy = {};
             const query = await fb.db.collection(collection).get();
             query.forEach((item) => {
-                collectionCopy[item.id] = (item.data().stats.spell_accuracy_mods) ?
+                collectionCopy[item.id] = (item.data().various_penalties) ?
                     {
                         ...item.data()
                     } :
                     {
                         ...item.data(),
-                        stats: {
-                            ...item.data().stats,
-                            spell_accuracy_mods: {},
-                            spell_impact_mods: {}
-                        }
+                        various_penalties: []
                     };
             });
             Object.keys(collectionCopy).forEach((id) => {
@@ -43,11 +39,8 @@ const BatchEdit = () => {
                 const abilities_clone = { ...collectionCopy[item.id].stats[collection] };
                 Object.keys(abilities_clone).forEach((level) => {
                     Object.keys(abilities_clone[level]).forEach((index) => {
-                        if (!abilities_clone[level][index].free_actions) {
-                            abilities_clone[level][index].free_actions = [];
-                        }
-                        if (!abilities_clone[level][index].special_note) {
-                            abilities_clone[level][index].special_note = "";
+                        if (!abilities_clone[level][index].various_penalties) {
+                            abilities_clone[level][index].various_penalties = [];
                         }
                     });
                 });

@@ -270,7 +270,8 @@ const BuildLibraryTalents = (props) => {
         // console.log(formData);
         const newSlug = encodeURIComponent(formData.name.split(" ").join("").toLowerCase());
         const talentObj = {
-            passives: []
+            passives: [],
+            various_bonuses: []
         };
         Object.keys(formData).forEach((key) => {
             if (key === "talent_checkbox_repeatable") {
@@ -296,6 +297,18 @@ const BuildLibraryTalents = (props) => {
                         drawback: true
                     }))
                 ];
+            } else if (key === "claw_rend" && formData[key]) {
+                talentObj.various_bonuses = [
+                    ...talentObj.various_bonuses,
+                    {
+                        to: "weapon_impact_mods",
+                        type: "TwoHanded",
+                        num: 1,
+                        conditional: true,
+                        condition: "name=Claws"
+                    }
+                ];
+                talentObj[key] = formData[key];
             } else if (!key.startsWith("talentTag") && !key.startsWith("variousBonus") &&
                 !key.startsWith("variousPenal") && !key.startsWith("selectivePassive")) {
                 talentObj[key] = formData[key];
@@ -306,7 +319,7 @@ const BuildLibraryTalents = (props) => {
             return formData[idString] ? true : false;
         });
         const [bonuses, penalties] = bundleVariousMods(formData);
-        talentObj.various_bonuses = bonuses;
+        talentObj.various_bonuses = [ ...talentObj.various_bonuses, ...bonuses ];
         talentObj.various_penalties = penalties;
         saveTalent(newSlug, talentObj);
     }
@@ -359,6 +372,42 @@ const BuildLibraryTalents = (props) => {
                             rows="3"
                             cols="54"
                         />
+                    </div>
+                    <div className="checkbox-pair">
+                        <Controller
+                            as="input"
+                            type="checkbox"
+                            name="mighty_constitution"
+                            control={control}
+                        />
+                        <label>Mighty Constitution</label>
+                    </div>
+                    <div className="checkbox-pair">
+                        <Controller
+                            as="input"
+                            type="checkbox"
+                            name="lightning_agility"
+                            control={control}
+                        />
+                        <label>Lightning Agility</label>
+                    </div>
+                    <div className="checkbox-pair">
+                        <Controller
+                            as="input"
+                            type="checkbox"
+                            name="steely_focus"
+                            control={control}
+                        />
+                        <label>Steely Focus</label>
+                    </div>
+                    <div className="checkbox-pair">
+                        <Controller
+                            as="input"
+                            type="checkbox"
+                            name="claw_rend"
+                            control={control}
+                        />
+                        <label>Claw Rend</label>
                     </div>
                 </div>
                 <div className="right-column">

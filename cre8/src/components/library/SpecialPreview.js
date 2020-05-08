@@ -41,9 +41,11 @@ const SpecialPreview = () => {
         // console.log(data.passives);
         return(
             <>
-                <h1>{data.name}</h1>
-                <h2 className="subtitle">[{data.tags.map((tag) => (tag)).join("] [")}] Kit</h2>
-                <p className="prereqs"><strong>Prerequisites:</strong> {data.prereqs}</p>
+                <header>
+                    <h1>{data.name}</h1>
+                    <h2 className="subtitle">[{data.tags.map((tag) => (tag)).join("] [")}] Kit</h2>
+                    <p className="prereqs"><strong>Prerequisites:</strong> {data.prereqs}</p>
+                </header>
                 <h2>Benefits:</h2>
                 <ul>
                     {data.fighting_level_boost ?
@@ -82,12 +84,23 @@ const SpecialPreview = () => {
                             ))
                         }] talent.</li>
                     ))}
-                    {data.attacks.map((attackObj, i) => (
-                        <li key={i}>Gain a {attackObj.name} {attackObj.type === "natural_weapon" ? "natural weapon" : `${attackObj.type} attack`} (range {attackObj.range}, 
-                            base Impact {attackObj.impact_num_dice}d{attackObj.impact_dice_sides}, {Object.keys(attackObj.damage_type.base).join("/")} damage, 
-                            Peril modifier {`${ifPlus(attackObj.peril_mod)}${attackObj.peril_mod}`}.
-                        </li>
-                    ))}
+                    {data.select_one_from_attacks ?
+                        <li>
+                            Gain {data.attacks.map((attackObj, i) => (
+                                <span key={i}>
+                                    a {attackObj.name} {attackObj.type === "natural_weapon" ? "natural weapon" : `${attackObj.type} attack`} (range {attackObj.range}, 
+                                    base Impact {attackObj.impact_num_dice}d{attackObj.impact_dice_sides}, {Object.keys(attackObj.damage_type.base).filter((type) => attackObj.damage_type.base[type]).join("/")} damage, 
+                            Peril modifier {`${ifPlus(attackObj.peril_mod)}${attackObj.peril_mod}`}{attackObj.detail ? `, details: ${attackObj.detail.slice(0, -1)}` : null}{(i < data.attacks.length - 1) ? <span> <span className="or">or</span> gain </span> : "."}
+                                </span>
+                            ))}
+                        </li> :    
+                        data.attacks.map((attackObj, i) => (
+                            <li key={i}>Gain a {attackObj.name} {attackObj.type === "natural_weapon" ? "natural weapon" : `${attackObj.type} attack`} (range {attackObj.range}, 
+                                base Impact {attackObj.impact_num_dice}d{attackObj.impact_dice_sides}, {Object.keys(attackObj.damage_type.base).filter((type) => attackObj.damage_type.base[type]).join("/")} damage, 
+                                Peril modifier {`${ifPlus(attackObj.peril_mod)}${attackObj.peril_mod}`}. {attackObj.detail ? `Details: ${attackObj.detail}` : null}
+                            </li>
+                        ))
+                    }
                     {data.bonus_trained_skills.map((training, i) => {
                         if (training.type === "fullMenu") {
                             return (<li key={i}>Train an additional skill.</li>)
@@ -168,6 +181,9 @@ const SpecialPreview = () => {
 
     const previewFeat = (data) => {
         const actionTypes = [];
+        if (data.attacks.length) {
+            actionTypes.push("Attack");
+        }
         if (data.standard_actions.length) {
             actionTypes.push("Standard");
         }
@@ -238,18 +254,26 @@ const SpecialPreview = () => {
 
         return(
             <>
-                <h1>{data.name}</h1>
-                <h2 className="subtitle">[{data.tags.map((tag) => (tag)).join("] [")}] Talent</h2>
-                <p className="prereqs"><strong>Prerequisites:</strong> {data.prereqs}</p>
-                {data.expectation ? <p className="prereqs"><strong>Expectation:</strong> {data.expectation}</p> : null}
-                {data.tags.includes("Spell") ? 
-                    <p><strong>Seeds:</strong> {data.applicable_seeds || "none"}</p> :
-                null}
-                <p className="action"><strong>Action:</strong> {actionTypes.join(" or ")}</p>
+                <header>
+                    <h1>{data.name}</h1>
+                    <h2 className="subtitle">[{data.tags.map((tag) => (tag)).join("] [")}] Talent</h2>
+                    <p className="prereqs"><strong>Prerequisites:</strong> {data.prereqs}</p>
+                    {data.expectation ? <p className="prereqs"><strong>Expectation:</strong> {data.expectation}</p> : null}
+                    {data.tags.includes("Spell") ? 
+                        <p><strong>Seeds:</strong> {data.applicable_seeds || "none"}</p> :
+                    null}
+                    <p className="action"><strong>Action:</strong> {actionTypes.join(" or ")}</p>
+                </header>
                 {actionTypes.length > 1 ? 
                     <>
                         <h2>Effects:</h2>
                         <ul>
+                            {data.attacks.map((attackObj, i) => (
+                                <li key={i}>Gain a {attackObj.name} {attackObj.type === "natural_weapon" ? "natural weapon" : `${attackObj.type} attack`} (range {attackObj.range}, 
+                                    base Impact {attackObj.impact_num_dice}d{attackObj.impact_dice_sides}, {Object.keys(attackObj.damage_type.base).join("/")} damage, 
+                                    Peril modifier {`${ifPlus(attackObj.peril_mod)}${attackObj.peril_mod}`}. {attackObj.detail ? `Details: ${attackObj.detail}` : null}
+                                </li>
+                            ))}
                             {data.standard_actions.map((standard, i) => (
                                 <li key={i}>
                                     <em>Standard Action:</em> {standard}
@@ -289,6 +313,12 @@ const SpecialPreview = () => {
                     </> : 
                     <>
                         <h2>Effect:</h2>
+                        {data.attacks.map((attackObj, i) => (
+                            <p key={i}>Gain a {attackObj.name} {attackObj.type === "natural_weapon" ? "natural weapon" : `${attackObj.type} attack`} (range {attackObj.range}, 
+                                base Impact {attackObj.impact_num_dice}d{attackObj.impact_dice_sides}, {Object.keys(attackObj.damage_type.base).join("/")} damage, 
+                                Peril modifier {`${ifPlus(attackObj.peril_mod)}${attackObj.peril_mod}`}. {attackObj.detail ? `Details: ${attackObj.detail}` : null}
+                            </p>
+                        ))}
                         {data.standard_actions.map((standard, i) => (
                             <p key={i}>
                                 {standard}
@@ -396,17 +426,19 @@ const SpecialPreview = () => {
     const previewTalent = (data) => {
         return(
             <>
-                <h1>{data.name}</h1>
-                <h2 className="subtitle">
-                    {data.tags.length ? 
-                        <>
-                            [
-                            {data.tags.map((tag) => (tag)).join("] [")}
-                            ]
-                        </> :
-                        null 
-                    } Talent</h2>
-                <p className="prereqs"><strong>Prerequisites:</strong> {data.prereqs}</p>
+                <header>
+                    <h1>{data.name}</h1>
+                    <h2 className="subtitle">
+                        {data.tags.length ? 
+                            <>
+                                [
+                                {data.tags.map((tag) => (tag)).join("] [")}
+                                ]
+                            </> :
+                            null 
+                        } Talent</h2>
+                    <p className="prereqs"><strong>Prerequisites:</strong> {data.prereqs}</p>
+                </header>
                 {data.expectation ? <p className="prereqs"><strong>Expectation:</strong> {data.expectation}</p> : null}
                 <h2>Benefits:</h2>
                 <ul>
@@ -418,7 +450,8 @@ const SpecialPreview = () => {
                             </li>);
                         } else if (modObj.num > 0) {
                             return (<li key={i}>
-                                Gain a +{modObj.num} {modObj.type} bonus to your {getDisplayName(modObj.to)}.
+                                Gain a +{modObj.num} {modObj.type} bonus to your {getDisplayName(modObj.to)}
+                                {modObj.conditional ? ` (${modObj.condition})` : null}.
                             </li>);
                         } else {
                             return null;
