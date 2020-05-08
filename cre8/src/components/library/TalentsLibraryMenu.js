@@ -113,6 +113,7 @@ const TalentsLibraryMenu = () => {
                         type="checkbox"
                         id="meb_talentFilters_monster"
                         onChange={handleChange}
+                        disabled={state.talentFilters.coreOnly}
                     />
                     <label>Show [Monster] Abilities</label>
                 </div>

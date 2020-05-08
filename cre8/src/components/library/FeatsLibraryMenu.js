@@ -113,6 +113,7 @@ const FeatsLibraryMenu = () => {
                         type="checkbox"
                         id="meb_featFilters_monster"
                         onChange={handleChange}
+                        disabled={state.featFilters.coreOnly}
                     />
                     <label>Show [Monster] Abilities</label>
                 </div>

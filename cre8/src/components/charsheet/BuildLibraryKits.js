@@ -407,6 +407,8 @@ const BuildLibraryKits = (props) => {
                         drawback: false
                     }))
                 ];
+            } else if (key === "intended_level") {
+                kitObj[key] = parseInt(formData[key]);
             } else if (!key.startsWith("kitTag") && !key.startsWith("variousBonus") && key !== "bonusTrainingOptions" &&
                 !key.startsWith("variousPenal") && !key.startsWith("attack")) {
                     kitObj[key] = formData[key];

@@ -393,6 +393,8 @@ const BuildLibraryFeats = (props) => {
                     },
                     peril_mod: parseInt(formData.attackPerilMod[i])
                 }));
+            } else if (key === "intended_level") {
+                featObj[key] = parseInt(formData[key]);
             } else if (!key.startsWith("featTag") && !key.startsWith("variousBonus") &&
                 !key.startsWith("augment") && !key.startsWith("seedEffect") && !key.startsWith("attack")) {
                 featObj[key] = formData[key];

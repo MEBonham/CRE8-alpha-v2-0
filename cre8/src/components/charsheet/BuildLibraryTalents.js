@@ -309,6 +309,8 @@ const BuildLibraryTalents = (props) => {
                     }
                 ];
                 talentObj[key] = formData[key];
+            } else if (key === "intended_level") {
+                talentObj[key] = parseInt(formData[key]);
             } else if (!key.startsWith("talentTag") && !key.startsWith("variousBonus") &&
                 !key.startsWith("variousPenal") && !key.startsWith("selectivePassive")) {
                 talentObj[key] = formData[key];

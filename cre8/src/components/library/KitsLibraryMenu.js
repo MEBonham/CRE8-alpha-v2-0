@@ -48,6 +48,7 @@ const KitsLibraryMenu = () => {
             if (!state.kitFilters.monster && kitObj.tags.includes("Monster")) skip = true;
             if (state.kitFilters.levelCap && (kitObj.intended_level > state.kitFilters.levelCap)) skip = true;
             if (state.kitFilters.levelCap && state.kitFilters.levelExact && (kitObj.intended_level !== state.kitFilters.levelCap)) skip = true;
+            // if (kitObj.name === "Swarm") console.log(kitObj.intended_level, state.kitFilters.levelCap, skip);
             if (state.kitFilters.coreOnly && !kitObj.tags.includes("Core")) skip = true;
             if (!skip) {
                 selectKitsCopy.push({
@@ -83,8 +84,11 @@ const KitsLibraryMenu = () => {
     }, [selectKits, dispatch])
 
     const handleChange = (ev) => {
-        const value = (ev.target.type === "checkbox") ? ev.target.checked : ev.target.value;
+        let value = (ev.target.type === "checkbox") ? ev.target.checked : ev.target.value;
         const property = ev.target.id.split("_")[2];
+        if (property === "levelCap") {
+            value = parseInt(value);
+        }
         dispatch({ type: "SET", key: "kitFilters", payload: {
             ...state.kitFilters,
             [property]: value
@@ -113,6 +117,7 @@ const KitsLibraryMenu = () => {
                         type="checkbox"
                         id="meb_kitFilters_monster"
                         onChange={handleChange}
+                        disabled={state.kitFilters.coreOnly}
                     />
                     <label>Show [Monster] Abilities</label>
                 </div>
