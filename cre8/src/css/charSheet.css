@@ -359,15 +359,40 @@ div.char-sheet > div.float-right .my-button {
     align-items: center;
 }
 
-.parchment section.play-equipment .float-right {
+.parchment section.play-equipment div.float-right {
+    margin-bottom: 14px;
     display: flex;
     justify-content: flex-end;
     align-items: center;
 }
 
-.parchment section.play-equipment .float-right div,
+.parchment section.play-equipment .float-right div.my-button,
 .parchment section.play-equipment .float-right input {
     margin-left: 10px;
+}
+
+section.play-equipment section.inventory-display {
+    margin-bottom: 14px;
+}
+
+section.play-equipment section.inventory-display h4 {
+    width: 100%;
+    padding: 4px 4%;
+}
+
+section.play-equipment section.inventory-display h4 span.name-qty {
+    display: inline-block;
+    width: 60%;
+}
+
+section.play-equipment section.inventory-display h4 span.bulk {
+    display: inline-block;
+    width: 20%;
+}
+
+section.play-equipment section.acquiring-center select,
+section.play-equipment section.acquiring-center div.my-button {
+    margin-right: 8px;
 }
 
 section.configure-skills {

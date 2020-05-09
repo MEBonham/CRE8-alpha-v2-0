@@ -56,7 +56,7 @@ const ItemsLibraryMenu = () => {
                 <>
                     <h3>Wealth Scale</h3>
                     {Object.keys(results).map((wealthNum) => (
-                        <p>Wealth {wealthNum}: {results[wealthNum]}</p>
+                        <p key={wealthNum}>Wealth {wealthNum}: {results[wealthNum]}</p>
                     ))}
                     <br />
                     <p># drinks = ~1.95 * 1.5^w</p>

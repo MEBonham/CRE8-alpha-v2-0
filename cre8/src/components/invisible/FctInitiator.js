@@ -1,6 +1,7 @@
 import { useEffect, useContext, useCallback } from 'react';
 
 import { Store } from '../GlobalWrapper';
+import { rollDefault } from '../../helpers/Templates';
 
 const FctInitiator = () => {
     const [state, dispatch] = useContext(Store);
@@ -51,6 +52,20 @@ const FctInitiator = () => {
             document.addEventListener('keydown', state.blockShortcutKeysFct);
         }
     }, [state.blockShortcutKeysFct, state.keyShortcutsFct])
+
+    // Initiate constructRollData function
+    const constructRollData = useCallback(() => {
+        const userStamp = state.user ? state.user.uid : "anon";
+        return {
+            ...rollDefault,
+            id: `${Date.now()}-${userStamp}`,
+            character: state.cur.name,
+            campaigns: state.cur.campaigns
+        };
+    }, [state.cur, state.user]);
+    useEffect(() => {
+        dispatch({ type: "SET", key: "constructRollData", payload: constructRollData });
+    }, [constructRollData, dispatch])
 
     return (null);
 }

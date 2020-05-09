@@ -63,9 +63,11 @@ const RollsDisplay = () => {
         clientHeightRef.current = scrollWindow.current.clientHeight;
 
         if (state.rollsToDisplay) {
-            state.rollsToDisplay.filter((rollData) => (!!rollData.resultData.multRoll)).forEach((roll, i) => {
-                if (roll.resultData.multRoll.length > 1) {
+            for (let i = 0; i < state.rollsToDisplay.length; i++) {
+                const roll = state.rollsToDisplay[i];
+                if (roll.resultData.multRoll && roll.resultData.multRoll.length > 1) {
                     const elArr = document.querySelectorAll(`#meb_showNatRollsD20_${i} p.bg`);
+                    console.log(elArr);
                     let oneBold = false;
                     roll.resultData.multRoll.forEach((natDieRoll, j) => {
                         const el = elArr[j];
@@ -76,7 +78,7 @@ const RollsDisplay = () => {
                         }
                     });
                 }
-            });
+            }
         }
     }, [state.rollsToDisplay])
 

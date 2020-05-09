@@ -143,7 +143,7 @@ export const charDefault = {
         vp_kits: {},
         vp_kits_total: 0,
         vp_max: 9,
-        wealth: 19,
+        wealth: 20,
         wealth_mods: {
             buy_history: []
         },

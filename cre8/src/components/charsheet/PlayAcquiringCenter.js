@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef, useContext } from 'react';
 
 import { Store } from '../GlobalWrapper';
 import fb from '../../fbConfig';
+import MyButton from '../ui/MyButton';
 
 const PlayAcquiringCenter = (props) => {
     const [state, dispatch] = useContext(Store);
@@ -49,8 +50,35 @@ const PlayAcquiringCenter = (props) => {
 
     const [currentItem, setCurrentItem] = useState(false);
     const selectItem = (ev) => {
-        console.log(selectItems[ev.target.value]);
-        setCurrentItem(selectItems[ev.target.value]);
+        setCurrentItem({
+            id: ev.target.value,
+            ...selectItems[ev.target.value]
+        });
+    }
+
+    const dispatchRollData = (data) => {
+        dispatch({ type: "ROLL_PENDING", payload: data });
+    }
+    const buyItem = (ev) => {
+        if (currentItem && state.cur) {
+            dispatchRollData({
+                ...state.constructRollData(),
+                name: "Buy Item",
+                merchant: false,
+                prevWealth: state.cur.stats.wealth,
+                adjustMoneyQty: (0 - currentItem.price),
+                type: "wealth roll"
+            });
+            gainItem();
+        }
+    }
+    const gainItem = () => {
+        if (currentItem && state.cur) {
+            const itemCopy = { ...currentItem };
+            dispatch({ type: "CHAR_EDIT", field: "addItem", payload: itemCopy });
+            setCurrentItem(false);
+            document.querySelector('.acquiring-center select').value = false;
+        }
     }
 
     return (
@@ -61,7 +89,8 @@ const PlayAcquiringCenter = (props) => {
                     <option key={itemSlug} value={itemSlug} className="non-false">{selectItems[itemSlug].name}</option>
                 ))}
             </select>
-
+            <MyButton fct={buyItem}>Buy</MyButton>
+            <MyButton fct={gainItem}>Just Acquire</MyButton>
         </section>
     );
 }

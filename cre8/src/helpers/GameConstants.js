@@ -2,7 +2,7 @@ const gc = {
     base_armor_value: 2,
     base_awesome_bonus: 4,
     base_coast_number: 6,
-    base_initial_wealth: 19,
+    base_initial_wealth: 20,
     base_reserve_points: 4,
     base_speed: 15,
     base_trained_skills: 2,

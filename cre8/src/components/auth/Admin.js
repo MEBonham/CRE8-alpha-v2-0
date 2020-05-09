@@ -80,6 +80,7 @@ const AdminSettings = ({ ownId }) => {
                 <MyLink to="/library/edit/kits">Edit Kits</MyLink>
                 <MyLink to="/library/edit/feats">Edit Feats</MyLink>
                 <MyLink to="/library/edit/talents">Edit Talents</MyLink>
+                <MyLink to="/library/edit/items">Edit Items</MyLink>
             </div>
             <section className="user-management">
                 <h3>Manage Users</h3>

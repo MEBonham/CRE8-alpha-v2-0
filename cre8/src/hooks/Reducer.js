@@ -23,6 +23,46 @@ const Reducer = (state, action) => {
                             }
                         }
                     };
+                case "addItem":
+                    if (state.cur.stats.inventory.filter((itemObj) => (itemObj.id === action.payload.id)).length) {
+                        const inventoryCopy = state.cur.stats.inventory.slice();
+                        for (let i = 0; i < inventoryCopy.length; i++) {
+                            if (inventoryCopy[i].id === action.payload.id) {
+                                inventoryCopy[i].quantity += 1;
+                            }
+                        }
+                        return {
+                            ...state,
+                            curChangesMade: true,
+                            saveButtonHit: true,
+                            cur: {
+                                ...state.cur,
+                                stats: {
+                                    ...state.cur.stats,
+                                    inventory: inventoryCopy
+                                }
+                            }
+                        };
+                    } else {
+                        return {
+                            ...state,
+                            curChangesMade: true,
+                            saveButtonHit: true,
+                            cur: {
+                                ...state.cur,
+                                stats: {
+                                    ...state.cur.stats,
+                                    inventory: [
+                                        ...state.cur.stats.inventory,
+                                        {
+                                            ...action.payload,
+                                            quantity: 1
+                                        }
+                                    ]
+                                }
+                            }
+                        };
+                    }
                 case "coasting":
                     return {
                         ...state,
@@ -341,7 +381,6 @@ const Reducer = (state, action) => {
                         }
                     };
                 case "wealthAdj":
-                    console.log(action.payload);
                     return {
                         ...state,
                         curChangesMade: true,

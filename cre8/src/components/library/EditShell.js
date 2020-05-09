@@ -3,10 +3,12 @@ import { Route, Switch, useRouteMatch } from 'react-router-dom';
 
 import BuildLibraryKits from '../charsheet/BuildLibraryKits';
 import KitEditingMenu from '../library/KitEditingMenu';
-import BuildLibraryTalents from '../charsheet/BuildLibraryTalents';
-import TalentEditingMenu from '../library/TalentEditingMenu';
 import BuildLibraryFeats from '../charsheet/BuildLibraryFeats';
 import FeatEditingMenu from '../library/FeatEditingMenu';
+import BuildLibraryTalents from '../charsheet/BuildLibraryTalents';
+import TalentEditingMenu from '../library/TalentEditingMenu';
+import BuildLibraryItems from '../charsheet/BuildLibraryItems';
+import ItemsEditingMenu from '../library/ItemsEditingMenu';
 
 const EditShell = () => {
     const match = useRouteMatch();
@@ -27,6 +29,11 @@ const EditShell = () => {
                 <Route
                     path={`${match.url}/talents/:slug`}
                     render={() => <BuildLibraryTalents editing />}
+                />
+                <Route exact path={`${match.url}/items`} component={ItemsEditingMenu} />
+                <Route
+                    path={`${match.url}/items/:slug`}
+                    render={() => <BuildLibraryItems editing />}
                 />
             </Switch>
         </div>
