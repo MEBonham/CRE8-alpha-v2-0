@@ -8,6 +8,7 @@ import useForm from '../../hooks/useForm';
 import MyFormButton from '../ui/MyFormButton';
 import { charDefault } from '../../helpers/Templates';
 import gc from '../../helpers/GameConstants';
+import { updateVariousMods } from '../../helpers/Calculations';
 
 const NewCharForm = () => {
     const [state, dispatch] = useContext(Store);
@@ -90,11 +91,11 @@ const NewCharForm = () => {
                     name: inputs.name,
                     campaigns: campaignsChecked,
                     slug: encodedSlug,
-                    stats: {
+                    stats: updateVariousMods({
                         ...charDefault.stats,
                         skill_ranks: skillRanksObj,
                         skill_mods: skillModsObj
-                    }
+                    })
                 });
             }
         } else {

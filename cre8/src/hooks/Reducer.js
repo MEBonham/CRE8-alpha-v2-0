@@ -1,4 +1,4 @@
-import { updateFeats, updateGoodSave, updateKits, updateSkillRanks, updateSynergies, updateTalents, updateXp } from '../helpers/Calculations';
+import { updateFeats, updateGoodSave, updateKits, updateSkillRanks, updateSynergies, updateTalents, updateXp, updateWealth } from '../helpers/Calculations';
 
 import gc from '../helpers/GameConstants';
 
@@ -340,6 +340,33 @@ const Reducer = (state, action) => {
                             }
                         }
                     };
+                case "wealthAdj":
+                    console.log(action.payload);
+                    return {
+                        ...state,
+                        curChangesMade: true,
+                        saveButtonHit: true,
+                        rollQueue: action.local ?
+                            [ action.payload, ...state.rollQueue ] :
+                            [ ...state.rollQueue, action.payload ],
+                        cur: {
+                            ...state.cur,
+                            stats: updateWealth({
+                                ...state.cur.stats,
+                                wealth_undo_used: false,
+                                wealth_mods: {
+                                    ...state.cur.stats.wealth_mods,
+                                    buy_history: [
+                                        ...state.cur.stats.wealth_mods.buy_history,
+                                        {
+                                            num: action.payload.resultData.finalDifference,
+                                            srcType: action.payload.name
+                                        }
+                                    ]
+                                }
+                            })
+                        }
+                    }
                 case "xpBase":
                     newVal = action.inputs[`${action.stub}_${action.field}`];
                     return {
@@ -382,11 +409,13 @@ const Reducer = (state, action) => {
                 saveButtonHit: false
             };
         case 'ROLL_PENDING':
-            action.elementToReset.value = "normal";
+            if (action.elementToReset) action.elementToReset.value = "normal";
+            // Reset dieRollMode if this roll is "using it up," otherwise don't change it:
+            const resetMode = (action.payload.dieMode) ? "normal" : state.dieRollMode;
             return {
                 ...state,
                 pendingRoll: action.payload,
-                dieRollMode: "normal"
+                dieRollMode: resetMode
             };
         case 'ROLL_TO_QUEUE':
             return {

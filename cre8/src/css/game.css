@@ -30,11 +30,19 @@ div.roll-display {
     align-items: center;
 }
 
+div.roll-display.wealth {
+    padding: 6px 26px;
+}
+
 div.roll-display h3 {
     margin-bottom: 6px;
     font-size: 1.4rem;
     font-weight: bold;
     text-align: center;
+}
+
+div.roll-display.wealth div.columns {
+    flex-wrap: wrap;
 }
 
 div.roll-display .roll-result {
@@ -47,7 +55,7 @@ div.roll-display .roll-result .equals {
     left: -20px;
 }
 
-div.roll-display p.big-num {
+div.roll-display p.big-num.bg {
     margin: 0 2px;
     width: 24px;
     height: 24px;
@@ -57,7 +65,15 @@ div.roll-display p.big-num {
     text-align: center;
 }
 
-div.roll-display p.big-num.bg::after {
+div.roll-display.d20 p.big-num,
+div.roll-display.wealth p.big-num {
+    margin: 0 2px;
+    font-size: 2rem;
+    font-weight: bold;
+    text-align: center;
+}
+
+div.roll-display.d20 p.big-num.bg::after {
     content: "";
     background-image: url('../media/d20-icon.png');
     background-size: cover;
@@ -67,4 +83,16 @@ div.roll-display p.big-num.bg::after {
     bottom: 0;
     left: 0;
     right: 0;
+}
+
+div.roll-display.wealth p.big-num.bg::after {
+    content: "";
+    background-image: url('../media/d6-icon.png');
+    background-size: cover;
+    opacity: 0.2;
+    position: absolute;
+    top: -6px;
+    bottom: 6px;
+    left: -6px;
+    right: 6px;
 }

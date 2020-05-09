@@ -2,8 +2,9 @@ import React, { useEffect, useRef, useContext } from 'react';
 
 import { Store } from '../GlobalWrapper';
 import MyButton from '../ui/MyButton';
-import { ifPlus } from '../../helpers/Calculations';
 import '../../css/game.css';
+import D20RollDisplay from './D20RollDisplay';
+import WealthRollDisplay from './WealthRollDisplay';
 
 const RollsDisplay = () => {
     const [state, dispatch] = useContext(Store);
@@ -62,9 +63,9 @@ const RollsDisplay = () => {
         clientHeightRef.current = scrollWindow.current.clientHeight;
 
         if (state.rollsToDisplay) {
-            state.rollsToDisplay.forEach((roll, i) => {
+            state.rollsToDisplay.filter((rollData) => (!!rollData.resultData.multRoll)).forEach((roll, i) => {
                 if (roll.resultData.multRoll.length > 1) {
-                    const elArr = document.querySelectorAll(`#meb_showNatRolls_${i} p.bg`);
+                    const elArr = document.querySelectorAll(`#meb_showNatRollsD20_${i} p.bg`);
                     let oneBold = false;
                     roll.resultData.multRoll.forEach((natDieRoll, j) => {
                         const el = elArr[j];
@@ -84,22 +85,11 @@ const RollsDisplay = () => {
             <h2>Dice Rolls</h2>
             <div ref={scrollWindow} className="rolls-inner-window">
                 {state.rollsToDisplay ? state.rollsToDisplay.map((rollData, i) => {
-                    return(<div key={i} className="roll-display">
-                        <h3>{rollData.character} <br />{rollData.name}</h3>
-                        <div className="columns" id={`meb_showNatRolls_${i}`}>
-                            {rollData.resultData.multRoll ?
-                                rollData.resultData.multRoll.map((oneDie, j) => (
-                                    <p key={j} className="big-num bg">{oneDie}</p>
-                                )) :
-                            null}
-                            <p className="big-num">{`${ifPlus(rollData.resultData.netMod)}${rollData.resultData.netMod}`}</p>
-                        </div>
-                        <div className="roll-result rows">
-                            <p className="big-num equals">=</p>
-                            <p className="big-num bg">{rollData.resultData.result}</p>
-                            {rollData.resultData.coastNote ? <p className="tiny">(coasting)</p> : null}
-                        </div>
-                    </div>);
+                    if (rollData.type === "wealth roll") {
+                        return <WealthRollDisplay key={i} index={i} rollData={rollData} />
+                    } else {
+                        return <D20RollDisplay key={i} index={i} rollData={rollData} />
+                    }
                 }) : null}
             </div>
             <div className="float-right">

@@ -257,7 +257,8 @@ div.char-sheet > div.float-right .my-button {
     flex-grow: 1.4;
 }
 
-.parchment section.pools > div div.main-pool-val p.small {
+.parchment section.pools > div div.main-pool-val p.small,
+.parchment section.play-equipment header p.small {
     font-size: 1rem;
 }
 
@@ -342,6 +343,31 @@ div.char-sheet > div.float-right .my-button {
 .parchment section.conditions li.checkbox-pair span {
     font-size: 1.4rem;
     margin-bottom: 2px;
+}
+
+.parchment section.play-equipment input.short {
+    width: 60px;
+}
+
+.parchment section.play-equipment header.columns {
+    margin-bottom: 8px;
+    align-items: center;
+}
+
+.parchment section.play-equipment header div.rows {
+    margin-right: 18px;
+    align-items: center;
+}
+
+.parchment section.play-equipment .float-right {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+}
+
+.parchment section.play-equipment .float-right div,
+.parchment section.play-equipment .float-right input {
+    margin-left: 10px;
 }
 
 section.configure-skills {

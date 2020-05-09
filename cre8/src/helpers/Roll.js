@@ -7,6 +7,9 @@ let gen = new MersenneTwister();
 const d20 = () => {
     return Math.floor(20 * gen.random() + 1)
 }
+const d6 = () => {
+    return Math.floor(6 * gen.random() + 1)
+}
 
 export const roll = (dieMode, modBasic, modsMisc, coastVal) => {
     let multRoll;
@@ -35,5 +38,28 @@ export const roll = (dieMode, modBasic, modsMisc, coastVal) => {
         netMod,
         result: Math.max(natRoll, coastVal) + netMod,
         coastNote: coastVal > natRoll ? true : false
+    };
+}
+
+export const wealthRoll = (prevWealth, vector, merchant) => {
+    const d6history = [];
+    let finalDifference;
+    let finalWealth;
+    const subtotal = Math.max(0, prevWealth + vector);
+    const diceNumber = (merchant && vector > 0) ? prevWealth : subtotal;
+    for (let i = 0; i < diceNumber; i++) {
+        d6history.push(d6());
+    }
+    const successes = d6history.filter((result) => (result > 4)).length;
+    if (vector < 0) {
+        finalWealth = Math.min(prevWealth, subtotal + successes);
+    } else {
+        finalWealth = Math.max(prevWealth, subtotal - successes);
+    }
+    finalDifference = finalWealth - prevWealth;
+    return {
+        d6history,
+        finalDifference,
+        finalWealth
     };
 }

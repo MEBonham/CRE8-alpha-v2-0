@@ -2,6 +2,7 @@ import React from 'react';
 
 import PlayAccordions from './PlayAccordions';
 import PlayConditions from './PlayConditions';
+import PlayEquipment from './PlayEquipment';
 import PlayGeneralRolls from './PlayGeneralRolls';
 import PlayHeader from './PlayHeader';
 import PlayPools from './PlayPools';
@@ -25,6 +26,7 @@ const Play = () => {
                 <PlaySkills />
                 <PlayAccordions />
             </div>
+            <PlayEquipment />
         </>
     );
 }

@@ -198,7 +198,7 @@ export const mineModifiers = (modsObj, qualifiers) => {
     const bonusTypes = Object.keys(modsObj);
     bonusTypes.forEach(type => {
         const sources = Object.keys(modsObj[type]);
-        if (type === "Circumstance" || type === "Untyped") {
+        if (type === "Circumstance" || type === "Untyped" || type === "buy_history") {
             sources.forEach(source => {
                 const obj = modsObj[type][source];
                 if (!obj.conditional || qualifiers[obj.condition.split("=")[0]] === obj.condition.split("=")[1]) {
@@ -1554,7 +1554,7 @@ export const updateTalents = (statsObj) => {
     return result;
 }
 
-const updateVariousMods = (statsObj) => {
+export const updateVariousMods = (statsObj) => {
     let result = { ...statsObj };
     result = updateSize(result);            // Includes some other updates
     // result = updateAwesome(result);
@@ -1583,7 +1583,7 @@ const updateVpMax = (statsObj) => {
 }
 
 export const updateWealth = (statsObj) => {
-    const wealth = Math.max(0, statsObj.wealth + mineModifiers(statsObj.wealth_mods, { level: statsObj.level }));
+    const wealth = gc.base_initial_wealth + mineModifiers(statsObj.wealth_mods, {});
     return {
         ...statsObj,
         wealth

@@ -1,7 +1,7 @@
 import { useEffect, useRef, useContext, useCallback } from 'react';
 
 import { Store } from '../GlobalWrapper';
-import { roll } from '../../helpers/Roll';
+import { roll, wealthRoll } from '../../helpers/Roll';
 
 const RollerEngine = () => {
     const [state, dispatch] = useContext(Store);
@@ -10,15 +10,25 @@ const RollerEngine = () => {
     // Roll dice as they come through the system
     useEffect(() => {
         if (state.pendingRoll) {
-            dispatch({ type: "ROLL_TO_QUEUE", local: true, payload: {
-                ...state.pendingRoll,
-                resultData: roll(
-                    state.pendingRoll.dieMode,
-                    state.pendingRoll.dieModBasic,
-                    state.pendingRoll.dieModsMisc,
-                    state.pendingRoll.coasting
-                )
-            } });
+            if (state.pendingRoll.type === "wealth roll") {
+                dispatch({ type: "CHAR_EDIT", field: "wealthAdj", local: true, payload: {
+                    ...state.pendingRoll,
+                    resultData: wealthRoll(
+                        state.pendingRoll.prevWealth,
+                        state.pendingRoll.adjustMoneyQty
+                    )
+                } });
+            } else {
+                dispatch({ type: "ROLL_TO_QUEUE", local: true, payload: {
+                    ...state.pendingRoll,
+                    resultData: roll(
+                        state.pendingRoll.dieMode,
+                        state.pendingRoll.dieModBasic,
+                        state.pendingRoll.dieModsMisc,
+                        state.pendingRoll.coasting
+                    )
+                } });
+            }
         }
     }, [dispatch, state.pendingRoll])
 

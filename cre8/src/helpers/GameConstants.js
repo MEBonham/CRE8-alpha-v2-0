@@ -2,6 +2,7 @@ const gc = {
     base_armor_value: 2,
     base_awesome_bonus: 4,
     base_coast_number: 6,
+    base_initial_wealth: 19,
     base_reserve_points: 4,
     base_speed: 15,
     base_trained_skills: 2,
@@ -91,6 +92,13 @@ const gc = {
         "Strike"
     ],
     good_save_boost: 2,
+    item_tags: [
+        "Armor",
+        "Container",
+        "Custom",
+        "Gear",
+        "Weapon"
+    ],
     kit_tags: [
         "Background",
         "Core",

@@ -64,6 +64,7 @@ export const charDefault = {
         free_actions: [],
         good_save: "fortitude",
         heroic_bonus: 0,
+        inventory: [],
         kits: {},
         level: 1,
         level_max8: 1,
@@ -142,8 +143,11 @@ export const charDefault = {
         vp_kits: {},
         vp_kits_total: 0,
         vp_max: 9,
-        wealth: 10,
-        wealth_mods: {},
+        wealth: 19,
+        wealth_mods: {
+            buy_history: []
+        },
+        wealth_undo_used: true,
         weapon_accuracy_mods: {},
         weapon_impact_mods: {},
         willpower_base_total: 0,
@@ -274,4 +278,22 @@ export const talentDefault = {
     swift_actions: [],
     various_bonuses: [],
     various_penalties: []
+}
+
+export const itemDefault = {
+    name: "",
+    tags: [],
+    price: 10,
+    bulk: 1,
+    description: "",
+    attacks: [],
+    hands_occupied: 1,
+    investments: {},
+    magic_item: false,
+    passives: [],
+    selected_options: {},
+    selective_passives: {},
+    various_bonuses: [],
+    various_penalties: [],
+    worn_or_wielded: false
 }

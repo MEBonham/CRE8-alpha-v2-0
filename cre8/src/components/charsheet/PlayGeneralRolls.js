@@ -22,6 +22,7 @@ const PlayGeneralRolls = () => {
     }
     const dispatchRollData = (data) => {
         dispatch({ type: "ROLL_PENDING", payload: data, elementToReset: document.getElementById("meb_select_d20dieMode") });
+        // dispatch({ type: "ROLL_PENDING", payload: data });
     }
     const generalRoll = (ev) => {
         if (state.cur) {
@@ -31,6 +32,7 @@ const PlayGeneralRolls = () => {
                 dieModBasic: parseInt(ev.target.id.split("_")[3]),
                 type: "general roll"
             });
+            // document.getElementById("meb_select_d20dieMode").value = "normal";
         }
     }
     const savingRoll = (ev) => {
@@ -53,6 +55,7 @@ const PlayGeneralRolls = () => {
                 },
                 type: "saving throw"
             });
+            // document.getElementById("meb_select_d20dieMode").value = "normal";
         }
     }
 
