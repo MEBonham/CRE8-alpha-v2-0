@@ -60,18 +60,27 @@ export const FormFcts = createContext({});
 
 const Form = ({ children, onSubmit, defaultValues, ...otherProps }) => {
     const [state, dispatch] = useReducer(reducer, {});
-    const formData = useFormWContext(onSubmit, state, dispatch);
+    const formData = useFormWContext(onSubmit, dispatch);
     const formDataRef = useRef(formData);
-    // const { inputs, handleInputChange, handleSubmitPassInputs, setInputs } = useForm(onSubmit);
 
     useEffect(() => {
+        Object.keys(defaultValues).forEach((inputName) => {
+            const el = document.querySelector(`input[name="${inputName}"]`);
+            if (el && el.type === "checkbox") {
+                el.defaultChecked = !!defaultValues[inputName];
+            } else if (el && el.type === "radio") {
+                el.defaultChecked = (defaultValues[inputName] === el.value);
+            } else if (el) {
+                el.defaultValue = defaultValues[inputName];
+            }
+        });
         dispatch({ type: "INITIALIZE", payload: formDataRef.current, values: defaultValues });
-        // dispatch({ type: "SET_INPUTS", payload: defaultValues });
-    }, [defaultValues, dispatch, onSubmit])
+    }, [defaultValues, dispatch])
     
     if (!state.handleSubmit) return <h1>Loading ...</h1>;
     return (
         <FormFcts.Provider value={[state, dispatch]}>
+            {/* <p>{JSON.stringify(state.inputs, null, 2)}</p> */}
             <form onSubmit={state.handleSubmit.bind(null, state.inputs)} {...otherProps}>
                 {children}
             </form>

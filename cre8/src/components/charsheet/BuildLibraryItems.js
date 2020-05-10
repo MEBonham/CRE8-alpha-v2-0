@@ -27,12 +27,22 @@ const BuildLibraryItems = (props) => {
 
     const tagDefaults = {};
     gc.item_tags.forEach((tag) => {
-        tagDefaults[`itemTag_checkbox_${tag}`] = false;
+        tagDefaults[`tag_checkbox_${tag}`] = false;
     });
     const [defaultValues, setDefaultValues] = useState({ ...itemDefault, ...tagDefaults });
     
     const fillFormWithPrevInfo = useCallback((data) => {
-        setDefaultValues(data);
+        const newDefaults = {};
+        Object.keys(data).forEach((key) => {
+            if (key === "tags") {
+                data[key].forEach((trueTag) => {
+                    newDefaults[`tag_checkbox_${trueTag}`] = true;
+                });
+            } else {
+                newDefaults[key] = data[key];
+            }
+        });
+        setDefaultValues(newDefaults);
     }, []);
 
     const saveItem = async (newSlug, itemObj) => {
@@ -50,17 +60,17 @@ const BuildLibraryItems = (props) => {
             console.log("Error:", err);
         }
     }
-    const processItemForm = (formData) => {
-        // console.log(formData);
+    const processItemForm = (ev, formData) => {
+        console.log(formData);
         const newSlug = encodeURIComponent(formData.name.split(" ").join("").toLowerCase());
         const itemObj = {};
         Object.keys(formData).forEach((key) => {
-            if (!key.startsWith("itemTag")) {
+            if (!key.startsWith("tag")) {
                 itemObj[key] = formData[key];
             }
         })
         itemObj.tags = gc.item_tags.filter((tagName) => {
-            const idString = `itemTag_checkbox_${tagName}`;
+            const idString = `tag_checkbox_${tagName}`;
             return formData[idString] ? true : false;
         });
         saveItem(newSlug, itemObj);
@@ -87,21 +97,47 @@ const BuildLibraryItems = (props) => {
         }
     }, [db, fillFormWithPrevInfo, slug, props.editing])
 
-    const test = (ev, inputs) => {
-        alert(JSON.stringify(inputs, null, 2));
-    }
-
     if (props.editing && !slug) return <Redirect to="/library/items" />;
     if (code404) return <Redirect to="/library/items" />;
     if (state.user && state.user.rank === "peasant") return <Redirect to="/library/items" />;
     return (
-        <Form onSubmit={test} defaultValues={defaultValues} className="build-items">
+        <Form onSubmit={processItemForm} defaultValues={defaultValues} className="build-items">
             <h1>{props.editing ? "Edit Item" : "New Item"}</h1>
-            <div className="rows">
-                <label htmlFor="name">Name</label>
-                <Field name="name" />
-                <MyFormButton type="submit">Save</MyFormButton>
+            <div className="columns">
+                <div className="main-body rows">
+                    <div className="rows">
+                        <label htmlFor="name">Name</label>
+                        <Field name="name" type="text" required />
+                    </div>
+                    <div className="rows">
+                        <label htmlFor="price">Price</label>
+                        <Field name="price" type="number" />
+                    </div>
+                    <div className="rows">
+                        <label htmlFor="bulk">Bulk</label>
+                        <Field name="bulk" type="number" />
+                    </div>
+                    <div className="rows">
+                        <label htmlFor="description">Description</label>
+                        <Field name="description" as="textarea" rows="4" cols="50" />
+                    </div>
+                </div>
+                <div className="right-column rows">
+                    <label>Tags</label>
+                    <ul>
+                        {gc.item_tags.map((tag) => (
+                            <li key={tag} className="checkbox-pair">
+                                <Field
+                                    type="checkbox"
+                                    name={`tag_checkbox_${tag}`}
+                                />
+                                <label>{tag}</label>
+                            </li>
+                        ))}
+                    </ul>
+                </div>
             </div>
+            <MyFormButton type="submit">Save</MyFormButton>
         </Form>
     );
     // return (
@@ -149,24 +185,8 @@ const BuildLibraryItems = (props) => {
     //                     />
     //                 </div>
     //             </div>
-    //             <div className="right-column">
-    //                 <h3>Tags</h3>
-    //                 <ul>
-    //                     {gc.item_tags.map((tag) => (
-    //                         <li key={tag} className="checkbox-pair">
-    //                             <Controller
-    //                                 as="input"
-    //                                 type="checkbox"
-    //                                 name={`itemTag_checkbox_${tag}`}
-    //                                 control={control}
-    //                                 valueName="checked"
-    //                                 onChange={handleCheckbox}
-    //                             />
-    //                             <label>{tag}</label>
-    //                         </li>
-    //                     ))}
-    //                 </ul>
-    //             </div>
+                // <div className="right-column">
+    //          </div>
     //         </header>
     //         <MyFormButton type="submit">Save</MyFormButton>
     //     </form>

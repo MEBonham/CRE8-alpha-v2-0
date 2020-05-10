@@ -1,6 +1,6 @@
 // import { useState } from 'react';
 
-const useForm = (cb, state, dispatch) => {
+const useForm = (cb, dispatch) => {
     // const [inputs, setInputs] = useState({});
 
     const handleSubmit = (inputs, ev) => {
