@@ -46,7 +46,7 @@ export const wealthRoll = (prevWealth, vector, merchant) => {
     let finalDifference;
     let finalWealth;
     const subtotal = Math.max(0, prevWealth + vector);
-    const diceNumber = (merchant && vector > 0) ? prevWealth : subtotal;
+    const diceNumber = (merchant || vector < 0) ? prevWealth : subtotal;
     for (let i = 0; i < diceNumber; i++) {
         d6history.push(d6());
     }

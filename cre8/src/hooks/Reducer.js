@@ -24,13 +24,13 @@ const Reducer = (state, action) => {
                         }
                     };
                 case "addItem":
-                    if (state.cur.stats.inventory.filter((itemObj) => (itemObj.id === action.payload.id)).length) {
-                        const inventoryCopy = state.cur.stats.inventory.slice();
-                        for (let i = 0; i < inventoryCopy.length; i++) {
-                            if (inventoryCopy[i].id === action.payload.id) {
-                                inventoryCopy[i].quantity += 1;
-                            }
+                    let foundIndex = -1;
+                    for (let i = 0; i < state.cur.stats.inventory.length; i++) {
+                        if (state.cur.stats.inventory[i].id === action.payload.id) {
+                            foundIndex = i;
                         }
+                    }
+                    if (foundIndex >= 0) {
                         return {
                             ...state,
                             curChangesMade: true,
@@ -39,7 +39,14 @@ const Reducer = (state, action) => {
                                 ...state.cur,
                                 stats: {
                                     ...state.cur.stats,
-                                    inventory: inventoryCopy
+                                    inventory: [
+                                        ...state.cur.stats.inventory.slice(0, foundIndex),
+                                        {
+                                            ...state.cur.stats.inventory[foundIndex],
+                                            quantity: state.cur.stats.inventory[foundIndex].quantity + 1
+                                        },
+                                        ...state.cur.stats.inventory.slice(foundIndex + 1)
+                                    ]
                                 }
                             }
                         };

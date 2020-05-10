@@ -59,6 +59,12 @@ const PlayAcquiringCenter = (props) => {
     const dispatchRollData = (data) => {
         dispatch({ type: "ROLL_PENDING", payload: data });
     }
+    const dispatchGain = () => {
+        const itemCopy = { ...currentItem };
+        dispatch({ type: "CHAR_EDIT", field: "addItem", payload: itemCopy });
+        setCurrentItem(false);
+        document.querySelector('.acquiring-center select').value = false;
+    }
     const buyItem = (ev) => {
         if (currentItem && state.cur) {
             dispatchRollData({
@@ -69,15 +75,12 @@ const PlayAcquiringCenter = (props) => {
                 adjustMoneyQty: (0 - currentItem.price),
                 type: "wealth roll"
             });
-            gainItem();
+            dispatchGain();
         }
     }
-    const gainItem = () => {
+    const gainItem = (ev) => {
         if (currentItem && state.cur) {
-            const itemCopy = { ...currentItem };
-            dispatch({ type: "CHAR_EDIT", field: "addItem", payload: itemCopy });
-            setCurrentItem(false);
-            document.querySelector('.acquiring-center select').value = false;
+            dispatchGain();
         }
     }
 
