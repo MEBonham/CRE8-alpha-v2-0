@@ -29,7 +29,7 @@ const ConfigureKit = (props) => {
         } catch(err) {
             console.log("Error:", err);
         }
-        if (_isMounted) {
+        if (_isMounted.current) {
             setAllKits(allKitsCopy);
         }
     }

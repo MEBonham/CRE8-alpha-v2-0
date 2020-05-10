@@ -484,7 +484,8 @@ section.configure-specials > div.rows > div.columns {
 }
 
 section.configure-specials label,
-form.build-library label {
+form.build-library label,
+.build-items label {
     margin-bottom: 4px;
     font-size: 1.4rem;
     font-weight: bold;
@@ -595,16 +596,19 @@ form.build-library h3 {
     margin-top: 10px;
 }
 
-form.build-library .main-body {
+form.build-library .main-body,
+.build-items .main-body {
     flex-grow: 2.5;
 }
 
-form.build-library .right-column {
+form.build-library .right-column,
+.build-items .right-column {
     margin-left: 20px;
     flex-grow: 1;
 }
 
-form.build-library .right-column ul {
+form.build-library .right-column ul,
+.build-items .right-column ul {
     margin-bottom: 14px;
 }
 
@@ -612,7 +616,8 @@ form.build-library .right-column input[type="number"] {
     width: 50px;
 }
 
-form.build-library > header > div.rows {
+form.build-library > header > div.rows,
+.build-items div.rows {
     align-items: flex-start;
 }
 
@@ -730,6 +735,11 @@ form.build-library section.passives textarea {
 
 form.build-library section.xp-parcels .my-button {
     margin-bottom: 22px;
+}
+
+.build-items input,
+.build-items textarea {
+    margin-bottom: 10px;
 }
 
 div.play-accordions {

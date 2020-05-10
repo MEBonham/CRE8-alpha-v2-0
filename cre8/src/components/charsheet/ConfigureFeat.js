@@ -27,7 +27,7 @@ const ConfigureFeat = (props) => {
         } catch(err) {
             console.log("Error:", err);
         }
-        if (_isMounted) {
+        if (_isMounted.current) {
             setAllFeats(allFeatsCopy);
         }
     }

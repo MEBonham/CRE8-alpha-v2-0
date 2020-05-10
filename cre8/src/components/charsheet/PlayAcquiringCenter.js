@@ -17,7 +17,6 @@ const PlayAcquiringCenter = (props) => {
     }, [])
 
     const [allItems, setAllItems] = useState({});
-    const [selectItems, setSelectItems] = useState({});
     const loadItems = async () => {
         const allItemsCopy = {};
         try {
@@ -28,13 +27,15 @@ const PlayAcquiringCenter = (props) => {
         } catch(err) {
             console.log("Error:", err);
         }
-        if (_isMounted) {
+        if (_isMounted.current) {
             setAllItems(allItemsCopy);
         }
     }
     useEffect(() => {
         loadItems();
     }, [])
+
+    const [selectItems, setSelectItems] = useState({});
     useEffect(() => {
         const selectItemsCopy = {};
         Object.keys(allItems).forEach((itemSlug) => {
