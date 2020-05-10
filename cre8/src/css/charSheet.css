@@ -674,7 +674,8 @@ form.build-library.build-talent section.standard-actions,
 form.build-library.build-talent section.swift-actions,
 form.build-library.build-talent section.short-rest-actions,
 form.build-library.build-talent section.extended-rest-actions,
-form.build-library section.brown-box {
+form.build-library section.brown-box,
+form.build-items section.brown-box {
     margin: 12px 12px 12px 0;
     padding: 0 3% 8px;
     display: flex;
@@ -701,7 +702,8 @@ form.build-library.build-talent section.standard-actions textarea,
 form.build-library.build-talent section.swift-actions textarea,
 form.build-library.build-talent section.short-rest-actions textarea,
 form.build-library.build-talent section.extended-rest-actions textarea,
-form.build-library section.brown-box textarea {
+form.build-library section.brown-box textarea,
+form.build-items section.brown-box textarea {
     margin-bottom: 6px;
 }
 
@@ -735,6 +737,10 @@ form.build-library section.passives textarea {
 
 form.build-library section.xp-parcels .my-button {
     margin-bottom: 22px;
+}
+
+form.build-items > div.columns {
+    flex-wrap: wrap;
 }
 
 .build-items input,

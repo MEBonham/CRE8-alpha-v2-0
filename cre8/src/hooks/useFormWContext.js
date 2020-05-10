@@ -3,9 +3,12 @@
 const useForm = (cb, dispatch) => {
     // const [inputs, setInputs] = useState({});
 
-    const handleSubmit = (inputs, ev) => {
+    const handleSubmit = (inputs, reset, defaults, ev) => {
         if (ev) {
             ev.preventDefault();
+        }
+        if (reset) {
+            dispatch({ type: "RESET", payload: defaults });
         }
         cb(ev, inputs);
     }

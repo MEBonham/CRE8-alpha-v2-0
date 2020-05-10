@@ -9,14 +9,6 @@ const reducer = (state, action) => {
         //         ...state,
         //         errors: action.payload,
         //     };
-        case 'SET_INPUTS':
-            return {
-                ...state,
-                inputs: {
-                    ...state.inputs,
-                    ...action.payload,
-                },
-            };
         case 'INITIALIZE':
             return {
                 ...state,
@@ -25,6 +17,21 @@ const reducer = (state, action) => {
                     ...action.payload.inputs,
                     ...action.values
                 }
+            };
+        case 'RESET':
+            return {
+                ...state,
+                inputs: {
+                    ...action.payload
+                }
+            }
+        case 'SET_INPUTS':
+            return {
+                ...state,
+                inputs: {
+                    ...state.inputs,
+                    ...action.payload,
+                },
             };
         // case 'SET_FIELD_TOUCHED':
         //     return {
@@ -58,7 +65,7 @@ const reducer = (state, action) => {
 
 export const FormFcts = createContext({});
 
-const Form = ({ children, onSubmit, defaultValues, ...otherProps }) => {
+const Form = ({ children, onSubmit, defaultValues, reset, sections, ...otherProps }) => {
     const [state, dispatch] = useReducer(reducer, {});
     const formData = useFormWContext(onSubmit, dispatch);
     const formDataRef = useRef(formData);
@@ -76,12 +83,16 @@ const Form = ({ children, onSubmit, defaultValues, ...otherProps }) => {
         });
         dispatch({ type: "INITIALIZE", payload: formDataRef.current, values: defaultValues });
     }, [defaultValues, dispatch])
+
+    // useEffect(() => {
+    //     console.log(sections, defaultValues);
+    // }, [sections])
     
     if (!state.handleSubmit) return <h1>Loading ...</h1>;
     return (
         <FormFcts.Provider value={[state, dispatch]}>
             {/* <p>{JSON.stringify(state.inputs, null, 2)}</p> */}
-            <form onSubmit={state.handleSubmit.bind(null, state.inputs)} {...otherProps}>
+            <form onSubmit={state.handleSubmit.bind(null, state.inputs, reset, defaultValues)} {...otherProps}>
                 {children}
             </form>
         </FormFcts.Provider>
