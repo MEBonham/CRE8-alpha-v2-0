@@ -72,21 +72,31 @@ const Form = ({ children, onSubmit, defaultValues, reset, sections, ...otherProp
 
     useEffect(() => {
         Object.keys(defaultValues).forEach((inputName) => {
-            const el = document.querySelector(`input[name="${inputName}"]`);
-            if (el && el.type === "checkbox") {
-                el.defaultChecked = !!defaultValues[inputName];
-            } else if (el && el.type === "radio") {
-                el.defaultChecked = (defaultValues[inputName] === el.value);
+            let el = document.querySelectorAll(`input[name="${inputName}"]`);
+            if (el.length && el[0].type === "checkbox") {
+                el[0].defaultChecked = !!defaultValues[inputName];
+            } else if (el.length && el[0].type === "radio") {
+                el.forEach((radioInput) => {
+                    radioInput.defaultChecked = (defaultValues[inputName] === radioInput.value);
+                });
+            } else if (el.length) {
+                el[0].defaultValue = defaultValues[inputName];
+            }
+            el = document.querySelector(`select[name="${inputName}"]`);
+            if (el && el.multiple) {
+                const options = el.querySelectorAll("option");
+                options.forEach((optionEl) => {
+                    optionEl.selected = (el.value.includes(optionEl.value));
+                });
             } else if (el) {
-                el.defaultValue = defaultValues[inputName];
+                const options = el.querySelectorAll("option");
+                options.forEach((optionEl) => {
+                    optionEl.selected = (el.value === optionEl.value);
+                });
             }
         });
         dispatch({ type: "INITIALIZE", payload: formDataRef.current, values: defaultValues });
     }, [defaultValues, dispatch])
-
-    // useEffect(() => {
-    //     console.log(sections, defaultValues);
-    // }, [sections])
     
     if (!state.handleSubmit) return <h1>Loading ...</h1>;
     return (

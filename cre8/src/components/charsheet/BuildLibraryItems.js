@@ -26,48 +26,96 @@ const BuildLibraryItems = (props) => {
         });
     }, [])
 
-    const [attacks, setAttacks] = useState([]);
-    const newAttack = (ev) => {
-        setAttacks([
-            ...attacks,
-            {
-                name: "",
-                type: "weapon",
-                range: "Melee reach 1 (medium)",
-                detail: "",
-                impact_num_dice: 1,
-                impact_dice_sides: 6,
-                damage_type: {
-                    base: {
-                        bludgeoning: true
-                    }
-                },
-                perilMod: 2
-            }
-        ]);
-    }
-
     const tagDefaults = {};
     gc.item_tags.forEach((tag) => {
         tagDefaults[`tag_checkbox_${tag}`] = false;
     });
-    const [defaultValues, setDefaultValues] = useState({ ...itemDefault, ...tagDefaults, attacks });
-    const tagsRef = useRef(tagDefaults);
-    useEffect(() => {
-        const attacksObj = {};
-        attacks.forEach((attackObj, i) => {
-            Object.keys(attackObj).forEach((attackKey) => {
-                if (attackKey === "damage_type") {
-    
-                } else {
-                    attacksObj[`attacks.${i}.${attackKey}`] = attackObj[attackKey];
+    const [defaultValues, setDefaultValues] = useState({ ...itemDefault, ...tagDefaults });
+    const defaultsRef = useRef(defaultValues);
+    // useEffect(() => {
+    //     defaultsRef.current = defaultValues;
+    //     // console.log(defaultValues);
+    // }, [defaultValues])
+
+    const [attacks, setAttacks] = useState([]);
+    const newAttack = (ev) => {
+        const newestIndex = attacks.length;
+        const baseAttackObj = {
+            name: "",
+            categories: [ "Light Blade" ],
+            range: "Melee reach 1 (medium)",
+            detail: "",
+            impact_num_dice: "1",
+            impact_dice_sides: "6",
+            damage_type: {
+                base: {
+                    bludgeoning: true
                 }
-            });
+            },
+            peril_mod: 2
+        };
+        setAttacks([
+            ...attacks,
+            baseAttackObj
+        ]);
+        const defaultsObj = {};
+        Object.keys(baseAttackObj).forEach((attackKey) => {
+            if (attackKey === "damage_type") {
+                Object.keys(baseAttackObj[attackKey].base).forEach((damage_type) => {
+                    defaultsObj[`attacks.${newestIndex}.${attackKey}.${damage_type}`] = baseAttackObj[attackKey].base[damage_type];
+                });
+            } else {
+                defaultsObj[`attacks.${newestIndex}.${attackKey}`] = baseAttackObj[attackKey];
+            }
         });
-        setDefaultValues({ ...itemDefault, ...tagsRef.current, ...attacksObj });
+        fillFormWithPrevInfo({ ...defaultValues, ...defaultsObj });
+        defaultsRef.current = { ...defaultValues, ...defaultsObj };
+        // setDefaultValues({ ...defaultsObj, ...defaultValues });
+    }
+    useEffect(() => {
+        // console.log(attacks, attacks.length);
+        setDefaultValues(defaultsRef.current);
     }, [attacks])
     
+    const bundleAttackFields = (index, data) => {
+        const damage_type = {
+            base: {}
+        };
+        gc.damage_types.forEach((damageType) => {
+            if (data[`attacks.${index}.damage_type.${damageType}`]) {
+                damage_type.base[damageType] = true;
+            }
+        });
+        return {
+            name: data[`attacks.${index}.name`],
+            categories: data[`attacks.${index}.categories`],
+            range: data[`attacks.${index}.range`],
+            detail: data[`attacks.${index}.detail`],
+            impact_num_dice: parseInt(data[`attacks.${index}.impact_num_dice`]),
+            impact_dice_sides: parseInt(data[`attacks.${index}.impact_dice_sides`]),
+            damage_type,
+            peril_mod: parseInt(data[`attacks.${index}.peril_mod`]),
+        };
+    }
+    const unbundleAttacks = (attacksObj) => {
+        const result = {};
+        attacksObj.forEach((attackObj, i) => {
+            result[`attacks.${i}.name`] = attackObj.name;
+            result[`attacks.${i}.categories`] = attackObj.categories;
+            result[`attacks.${i}.range`] = attackObj.range;
+            result[`attacks.${i}.detail`] = attackObj.detail;
+            result[`attacks.${i}.impact_num_dice`] = `${attackObj.impact_num_dice}`;
+            result[`attacks.${i}.impact_dice_sides`] = `${attackObj.impact_dice_sides}`;
+            result[`attacks.${i}.peril_mod`] = `${attackObj.peril_mod}`;
+            Object.keys(attackObj.damage_type.base).forEach((damageType) => {
+                result[`attacks.${i}.damage_type.${damageType}`] = attackObj.damage_type.base[damageType];
+            });
+        });
+        return result;
+    }
+    
     const fillFormWithPrevInfo = useCallback((data) => {
+        // console.log(data);
         const newDefaults = {};
         Object.keys(data).forEach((key) => {
             if (key === "tags") {
@@ -78,7 +126,12 @@ const BuildLibraryItems = (props) => {
                 newDefaults[key] = data[key];
             }
         });
-        setDefaultValues(newDefaults);
+        if (data.attacks.length) {
+            defaultsRef.current = { ...newDefaults, ...unbundleAttacks(data.attacks) };
+            setAttacks(data.attacks);
+        } else {
+            setDefaultValues(newDefaults);
+        }
     }, []);
 
     const saveItem = async (newSlug, itemObj) => {
@@ -101,7 +154,7 @@ const BuildLibraryItems = (props) => {
         const newSlug = encodeURIComponent(formData.name.split(" ").join("").toLowerCase());
         const itemObj = {};
         Object.keys(formData).forEach((key) => {
-            if (!key.startsWith("tag")) {
+            if (!key.startsWith("tag") && !key.startsWith("attack")) {
                 itemObj[key] = formData[key];
             }
         })
@@ -109,6 +162,13 @@ const BuildLibraryItems = (props) => {
             const idString = `tag_checkbox_${tagName}`;
             return formData[idString] ? true : false;
         });
+        const attacksCopy = [];
+        let i = 0;
+        while (formData[`attacks.${i}.name`]) {
+            attacksCopy.push(bundleAttackFields(i, formData));
+            i++;
+        }
+        itemObj.attacks = attacksCopy;
         saveItem(newSlug, itemObj);
     }
 
@@ -141,7 +201,6 @@ const BuildLibraryItems = (props) => {
             onSubmit={processItemForm}
             defaultValues={defaultValues}
             reset={!props.editing}
-            sections={{ attacks }}
             className="build-items"
         >
             <h1>{props.editing ? "Edit Item" : "New Item"}</h1>
@@ -151,13 +210,15 @@ const BuildLibraryItems = (props) => {
                         <label htmlFor="name">Name</label>
                         <Field name="name" type="text" required />
                     </div>
-                    <div className="rows">
-                        <label htmlFor="price">Price</label>
-                        <Field name="price" type="number" />
-                    </div>
-                    <div className="rows">
-                        <label htmlFor="bulk">Bulk</label>
-                        <Field name="bulk" type="number" />
+                    <div className="columns">
+                        <div className="rows">
+                            <label htmlFor="price">Price</label>
+                            <Field name="price" type="number" className="medium" />
+                        </div>
+                        <div className="rows">
+                            <label htmlFor="bulk">Bulk</label>
+                            <Field name="bulk" type="number" className="medium" />
+                        </div>
                     </div>
                     <div className="rows">
                         <label htmlFor="description">Description</label>
@@ -178,18 +239,47 @@ const BuildLibraryItems = (props) => {
                         ))}
                     </ul>
                 </div>
+                <div className="columns">
+                    <Field type="checkbox" name="worn_or_wielded" />
+                    <label htmlFor="worn_or_wielded">Worn or Wielded?</label>
+                    <Field type="radio" name="hands_occupied" radioValue={0} />
+                    <label>0 hands</label>
+                    <Field type="radio" name="hands_occupied" radioValue={1} />
+                    <label>1 hand</label>
+                    <Field type="radio" name="hands_occupied" radioValue={2} />
+                    <label>2 hands</label>
+                    <Field type="radio" name="hands_occupied" radioValue={[1, 2]} />
+                    <label>1-2 hands</label>
+                </div>
+                <div className="rows">
+                    <label htmlFor="weapon_heft">Weapon Heft</label>
+                    <Field name="weapon_heft" as="select">
+                        {gc.weapon_hefts.map((heft, j) => (
+                            <option key={j} value={heft}>{heft}</option>
+                        ))}
+                    </Field>
+                </div>
                 <section className="attack-form brown-box rows">
                     <h3>Attacks</h3>
                     {attacks.map((attackObj, i) => (
-                        <div key={i}>
+                        <div key={i} className="columns">
                             <div className="main-body">
                                 <div className="rows">
                                     <label htmlFor={`attacks.${i}.name`}>Name of Attack</label>
                                     <Field name={`attacks.${i}.name`} type="text" required />
                                 </div>
                                 <div className="rows">
-                                    <label htmlFor={`attacks.${i}.type`}>Type</label>
-                                    <ul className="radio-bank">
+                                    <label htmlFor={`attacks.${i}.categories`}>Categories</label>
+                                    <Field name={`attacks.${i}.categories`} as="select" multiple>
+                                        {gc.weapon_categories.map((category, j) => (
+                                            <option key={j} value={category}>Weapon: {category}</option>
+                                        ))}
+                                        <option value="Natural Weapon">Weapon: Natural</option>
+                                        <option value="MiscWeapon">Weapon: Other</option>
+                                        <option value="Spell">Nonweapon: Spell Attack</option>
+                                        <option value="Vim">Nonweapon: Vim Attack</option>
+                                    </Field>
+                                    {/* <ul className="radio-bank">
                                         <li>
                                             <Field name={`attacks.${i}.type`} type="radio" radioValue="weapon" />
                                             <label>Weapon attack</label>
@@ -206,15 +296,37 @@ const BuildLibraryItems = (props) => {
                                             <Field name={`attacks.${i}.type`} type="radio" radioValue="vim" />
                                             <label>Vim attack</label>
                                         </li>
-                                    </ul>
+                                    </ul> */}
                                     <div className="rows">
                                         <label htmlFor={`attacks.${i}.range`}>Attack Range(s)</label>
                                         <Field name={`attacks.${i}.range`} type="text" required />
                                     </div>
+                                    <div className="columns">
+                                        <Field name={`attacks.${i}.impact_num_dice`} type="number" className="short" />
+                                        <label>d</label>
+                                        <Field name={`attacks.${i}.impact_dice_sides`} type="number" className="short s" />
+                                        <label className="pre">base Impact; Peril mod +</label>
+                                        <Field name={`attacks.${i}.peril_mod`} type="number" className="short" />
+                                    </div>
                                 </div>
                             </div>
-                            <div className="right-column">
-
+                            <div className="right-column rows">
+                                <label>Base Damage Types</label>
+                                <ul>
+                                    {gc.damage_types.map((damageType, j) => (
+                                        <li key={j} className="checkbox-pair">
+                                            <Field
+                                                type="checkbox"
+                                                name={`attacks.${i}.damage_type.${damageType}`}
+                                            />
+                                            <label>{damageType}</label>
+                                        </li>
+                                    ))}
+                                </ul>
+                            </div>
+                            <div className="rows">
+                                <label htmlFor={`attacks.${i}.detail`}>Details</label>
+                                <Field name={`attacks.${i}.detail`} as="textarea" rows="4" cols="50" />
                             </div>
                         </div>
                     ))}

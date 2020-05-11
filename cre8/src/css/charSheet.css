@@ -739,13 +739,39 @@ form.build-library section.xp-parcels .my-button {
     margin-bottom: 22px;
 }
 
-form.build-items > div.columns {
+form.build-items > div.columns,
+form.build-items section.attack-form > div.columns {
     flex-wrap: wrap;
 }
 
-.build-items input,
+.build-items input[type="text"],
+.build-items input[type="number"],
+.build-items select,
 .build-items textarea {
     margin-bottom: 10px;
+}
+
+.build-items input[type="checkbox"] {
+    position: relative;
+    top: 1px;
+}
+
+.build-items ul input[type="checkbox"] {
+    position: relative;
+    top: 2px;
+}
+
+.build-items input.medium {
+    margin-right: 12px;
+    width: 80px;
+}
+
+.build-items input.short {
+    width: 46px;
+}
+
+.build-items input.short.s {
+    margin-right: 8px;
 }
 
 div.play-accordions {

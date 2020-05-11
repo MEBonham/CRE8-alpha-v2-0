@@ -160,6 +160,23 @@ const gc = {
         "Style"
     ],
     trained_skill_extra_ranks: 2,
+    weapon_categories: [
+        "Axe",
+        "Bow",
+        "Club",
+        "Crossbow",
+        "Flail",
+        "Heavy Blade",
+        "Light Blade",
+        "Polearm",
+        "Spear"
+    ],
+    weapon_hefts: [
+        "Light",
+        "One-Handed",
+        "Versatile",
+        "Two-Handed"
+    ],
     wounded_save_penalty: -2,
     xp_award_per_level_of_monster: 15,
     xp_buffer_by_level: {

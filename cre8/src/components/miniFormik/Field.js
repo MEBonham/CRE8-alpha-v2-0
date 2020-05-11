@@ -24,7 +24,10 @@ const Field = ({ name, as, type, children, radioValue, ...otherProps }) => {
                     <select
                         name={name}
                         onChange={state.handleInputChange}
-                        value={state.inputs[name] || false}
+                        value={otherPropsRef.current.multiple ? 
+                            state.inputs[name] || [] :
+                            state.inputs[name] || false
+                        }
                         {...otherPropsRef.current}
                     >
                         {children}

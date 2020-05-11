@@ -287,7 +287,7 @@ export const itemDefault = {
     bulk: 1,
     description: "",
     attacks: [],
-    hands_occupied: 1,
+    hands_occupied: "1",
     investments: {},
     magic_item: false,
     passives: [],
@@ -295,5 +295,6 @@ export const itemDefault = {
     selective_passives: {},
     various_bonuses: [],
     various_penalties: [],
+    weapon_heft: "Light",
     worn_or_wielded: false
 }
