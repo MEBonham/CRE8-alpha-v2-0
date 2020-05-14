@@ -173,9 +173,17 @@ const ItemsLibraryMenu = () => {
                         ))}
                     </tbody>
                 </table>
+                <section className="bundles">
+                    <h2>Item Bundles</h2>
+                    <section>
+                        <h3>Classic Adventuring Gear</h3>
+                        <p>A traveler's outfit to wear; four pouches, a knife, and a waterskin attached to the outfit's belt or baldric for easy access; a large backpack containing a mess kit, a tinderbox, four torches, three days' worth of trail rations, and a second traveler's outfit to change into; and a bedroll and 50-ft manila rope strapped to the outside of the backpack.</p>
+                        <p><strong>Combined Price: 12. Total effective Bulk: 34.</strong> The backpack has additional room for 3 more bulk's worth of items, which will increase the effective carried Bulk by 2.</p>
+                    </section>
+                </section>
                 {state.user && (state.user.rank === "admin" || state.user.rank === "archon") ? 
                     <section>
-                        <h3>Wealth Scale</h3>
+                        <h2>Wealth Scale</h2>
                         {Object.keys(results).map((wealthNum) => (
                             <p key={wealthNum}>Wealth {wealthNum}: {results[wealthNum]}</p>
                         ))}

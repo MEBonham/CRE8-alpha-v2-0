@@ -354,6 +354,23 @@ const Reducer = (state, action) => {
                             })
                         }
                     };
+                case "swapInventorySpots":
+                    return {
+                        ...state,
+                        curChangesMade: true,
+                        cur: {
+                            ...state.cur,
+                            stats: {
+                                ...state.cur.stats,
+                                inventory: [
+                                    ...state.cur.stats.inventory.slice(0, action.payload[0]),
+                                    state.cur.stats.inventory[action.payload[1]],
+                                    state.cur.stats.inventory[action.payload[0]],
+                                    ...state.cur.stats.inventory.slice(action.payload[1] + 1)
+                                ]
+                            }
+                        }
+                    };
                 case "talents":
                     return {
                         ...state,

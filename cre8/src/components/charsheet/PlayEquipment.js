@@ -84,7 +84,7 @@ const PlayEquipment = () => {
                                 <span className="bulk">Bulk: {itemObj.bulk}</span>
                                 <span className="price">Price: {itemObj.price}</span>
                             </h4>
-                            <PlayManageItem item={itemObj} />
+                            <PlayManageItem item={itemObj} index={i} />
                         </AccordionSection>
                     ))}
                 </Accordion>

@@ -366,6 +366,17 @@ div.char-sheet > div.float-right .my-button {
     align-items: center;
 }
 
+.parchment section.play-equipment .accordion .toggles.open {
+    padding-top: 8px;
+}
+
+.parchment section.play-equipment .accordion div.float-right {
+    margin-bottom: 8px;
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+}
+
 .parchment section.play-equipment .float-right div.my-button,
 .parchment section.play-equipment .float-right input {
     margin-left: 10px;

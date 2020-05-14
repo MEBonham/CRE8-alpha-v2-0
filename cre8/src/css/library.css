@@ -137,7 +137,8 @@
     font-size: 1.6rem;
 }
 
-.App .primary-content .library-display p {
+.App .primary-content .library-display p,
+.library .bundles p {
     margin-bottom: 12px;
     font-size: 1.4rem;
 }

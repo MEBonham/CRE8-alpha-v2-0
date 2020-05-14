@@ -3,7 +3,7 @@ import React, { useContext } from 'react';
 import { Store } from '../GlobalWrapper';
 import MyButton from '../ui/MyButton';
 
-const PlayManageItem = ({ item }) => {
+const PlayManageItem = ({ item, index }) => {
     const [state, dispatch] = useContext(Store);
 
     const dispatchRollData = (data) => {
@@ -30,6 +30,13 @@ const PlayManageItem = ({ item }) => {
         dispatchLose();
     }
 
+    const moveUp = (ev) => {
+        dispatch({ type: "CHAR_EDIT", field: "swapInventorySpots", payload: [index - 1, index] });
+    }
+    const moveDown = (ev) => {
+        dispatch({ type: "CHAR_EDIT", field: "swapInventorySpots", payload: [index, index + 1] });
+    }
+
     return (
         <>
             <div className="float-right">
@@ -38,6 +45,10 @@ const PlayManageItem = ({ item }) => {
                 null}
                 <MyButton fct={sellItem} evData={`meb_sellButton_normal`}>Sell Item</MyButton>
                 <MyButton fct={loseItem}>Use Up or Lose Item</MyButton>
+            </div>
+            <div className="float-right">
+                {index !== 0 ? <MyButton fct={moveUp}>Move Up</MyButton> : null}
+                {state.cur && index + 1 < state.cur.stats.inventory.length ? <MyButton fct={moveDown}>Move Down</MyButton> : null}
             </div>
             <p>{item.description}</p>
         </>
