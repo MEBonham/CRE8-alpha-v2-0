@@ -151,7 +151,7 @@ const BuildLibraryItems = (props) => {
     }
     const processItemForm = (ev, formData) => {
         // console.log(formData);
-        const newSlug = encodeURIComponent(formData.name.split(" ").join("").toLowerCase());
+        const newSlug = encodeURIComponent(formData.name.split(" ").join("").toLowerCase().replace(/'/g, ""));
         const itemObj = {};
         Object.keys(formData).forEach((key) => {
             if (!key.startsWith("tag") && !key.startsWith("attack")) {
@@ -220,6 +220,20 @@ const BuildLibraryItems = (props) => {
                             <Field name="bulk" type="number" className="medium" />
                         </div>
                     </div>
+                    <div className="columns">
+                        <div className="rows">
+                            <label htmlFor="hardness">Hardness</label>
+                            <Field name="hardness" type="number" className="medium" />
+                        </div>
+                        <div className="rows">
+                            <label htmlFor="resistance">Resistance</label>
+                            <Field name="resistance" type="number" className="medium" />
+                        </div>
+                        <div className="rows">
+                            <label htmlFor="structural_save">Structural Save</label>
+                            <Field name="structural_save" type="number" className="medium" />
+                        </div>
+                    </div>
                     <div className="rows">
                         <label htmlFor="description">Description</label>
                         <Field name="description" as="textarea" rows="4" cols="50" />
@@ -239,19 +253,23 @@ const BuildLibraryItems = (props) => {
                         ))}
                     </ul>
                 </div>
-                <div className="columns">
-                    <Field type="checkbox" name="worn_or_wielded" />
-                    <label htmlFor="worn_or_wielded">Worn or Wielded?</label>
-                    <Field type="radio" name="hands_occupied" radioValue={0} />
-                    <label>0 hands</label>
-                    <Field type="radio" name="hands_occupied" radioValue={1} />
-                    <label>1 hand</label>
-                    <Field type="radio" name="hands_occupied" radioValue={2} />
-                    <label>2 hands</label>
-                    <Field type="radio" name="hands_occupied" radioValue={[1, 2]} />
-                    <label>1-2 hands</label>
+            </div>
+            <div className="columns">
+                <div className="rows main-body">
+                    <div className="columns">
+                        <Field type="checkbox" name="worn_or_wielded" />
+                        <label htmlFor="worn_or_wielded">Worn or Wielded?</label>
+                        <Field type="radio" name="hands_occupied" radioValue={0} />
+                        <label>0 hands</label>
+                        <Field type="radio" name="hands_occupied" radioValue={1} />
+                        <label>1 hand</label>
+                        <Field type="radio" name="hands_occupied" radioValue={2} />
+                        <label>2 hands</label>
+                        <Field type="radio" name="hands_occupied" radioValue={[1, 2]} />
+                        <label>1-2 hands</label>
+                    </div>
                 </div>
-                <div className="rows">
+                <div className="rows right-column">
                     <label htmlFor="weapon_heft">Weapon Heft</label>
                     <Field name="weapon_heft" as="select">
                         {gc.weapon_hefts.map((heft, j) => (
@@ -259,80 +277,80 @@ const BuildLibraryItems = (props) => {
                         ))}
                     </Field>
                 </div>
-                <section className="attack-form brown-box rows">
-                    <h3>Attacks</h3>
-                    {attacks.map((attackObj, i) => (
-                        <div key={i} className="columns">
-                            <div className="main-body">
-                                <div className="rows">
-                                    <label htmlFor={`attacks.${i}.name`}>Name of Attack</label>
-                                    <Field name={`attacks.${i}.name`} type="text" required />
-                                </div>
-                                <div className="rows">
-                                    <label htmlFor={`attacks.${i}.categories`}>Categories</label>
-                                    <Field name={`attacks.${i}.categories`} as="select" multiple>
-                                        {gc.weapon_categories.map((category, j) => (
-                                            <option key={j} value={category}>Weapon: {category}</option>
-                                        ))}
-                                        <option value="Natural Weapon">Weapon: Natural</option>
-                                        <option value="MiscWeapon">Weapon: Other</option>
-                                        <option value="Spell">Nonweapon: Spell Attack</option>
-                                        <option value="Vim">Nonweapon: Vim Attack</option>
-                                    </Field>
-                                    {/* <ul className="radio-bank">
-                                        <li>
-                                            <Field name={`attacks.${i}.type`} type="radio" radioValue="weapon" />
-                                            <label>Weapon attack</label>
-                                        </li>
-                                        <li>
-                                            <Field name={`attacks.${i}.type`} type="radio" radioValue="natural_weapon" />
-                                            <label>Natural Weapon attack</label>
-                                        </li>
-                                        <li>
-                                            <Field name={`attacks.${i}.type`} type="radio" radioValue="spell" />
-                                            <label>Spell attack</label>
-                                        </li>
-                                        <li>
-                                            <Field name={`attacks.${i}.type`} type="radio" radioValue="vim" />
-                                            <label>Vim attack</label>
-                                        </li>
-                                    </ul> */}
-                                    <div className="rows">
-                                        <label htmlFor={`attacks.${i}.range`}>Attack Range(s)</label>
-                                        <Field name={`attacks.${i}.range`} type="text" required />
-                                    </div>
-                                    <div className="columns">
-                                        <Field name={`attacks.${i}.impact_num_dice`} type="number" className="short" />
-                                        <label>d</label>
-                                        <Field name={`attacks.${i}.impact_dice_sides`} type="number" className="short s" />
-                                        <label className="pre">base Impact; Peril mod +</label>
-                                        <Field name={`attacks.${i}.peril_mod`} type="number" className="short" />
-                                    </div>
-                                </div>
-                            </div>
-                            <div className="right-column rows">
-                                <label>Base Damage Types</label>
-                                <ul>
-                                    {gc.damage_types.map((damageType, j) => (
-                                        <li key={j} className="checkbox-pair">
-                                            <Field
-                                                type="checkbox"
-                                                name={`attacks.${i}.damage_type.${damageType}`}
-                                            />
-                                            <label>{damageType}</label>
-                                        </li>
-                                    ))}
-                                </ul>
+            </div>
+            <section className="attack-form brown-box rows">
+                <h3>Attacks</h3>
+                {attacks.map((attackObj, i) => (
+                    <div key={i} className="columns">
+                        <div className="main-body">
+                            <div className="rows">
+                                <label htmlFor={`attacks.${i}.name`}>Name of Attack</label>
+                                <Field name={`attacks.${i}.name`} type="text" required />
                             </div>
                             <div className="rows">
-                                <label htmlFor={`attacks.${i}.detail`}>Details</label>
-                                <Field name={`attacks.${i}.detail`} as="textarea" rows="4" cols="50" />
+                                <label htmlFor={`attacks.${i}.categories`}>Categories</label>
+                                <Field name={`attacks.${i}.categories`} as="select" multiple>
+                                    {gc.weapon_categories.map((category, j) => (
+                                        <option key={j} value={category}>Weapon: {category}</option>
+                                    ))}
+                                    <option value="Natural Weapon">Weapon: Natural</option>
+                                    <option value="MiscWeapon">Weapon: Other</option>
+                                    <option value="Spell">Nonweapon: Spell Attack</option>
+                                    <option value="Vim">Nonweapon: Vim Attack</option>
+                                </Field>
+                                {/* <ul className="radio-bank">
+                                    <li>
+                                        <Field name={`attacks.${i}.type`} type="radio" radioValue="weapon" />
+                                        <label>Weapon attack</label>
+                                    </li>
+                                    <li>
+                                        <Field name={`attacks.${i}.type`} type="radio" radioValue="natural_weapon" />
+                                        <label>Natural Weapon attack</label>
+                                    </li>
+                                    <li>
+                                        <Field name={`attacks.${i}.type`} type="radio" radioValue="spell" />
+                                        <label>Spell attack</label>
+                                    </li>
+                                    <li>
+                                        <Field name={`attacks.${i}.type`} type="radio" radioValue="vim" />
+                                        <label>Vim attack</label>
+                                    </li>
+                                </ul> */}
+                                <div className="rows">
+                                    <label htmlFor={`attacks.${i}.range`}>Attack Range(s)</label>
+                                    <Field name={`attacks.${i}.range`} type="text" required />
+                                </div>
+                                <div className="columns">
+                                    <Field name={`attacks.${i}.impact_num_dice`} type="number" className="short" />
+                                    <label>d</label>
+                                    <Field name={`attacks.${i}.impact_dice_sides`} type="number" className="short s" />
+                                    <label className="pre">base Impact; Peril mod +</label>
+                                    <Field name={`attacks.${i}.peril_mod`} type="number" className="short" />
+                                </div>
                             </div>
                         </div>
-                    ))}
-                    <MyButton fct={newAttack}>Add Attached Attack</MyButton>
-                </section>
-            </div>
+                        <div className="right-column rows">
+                            <label>Base Damage Types</label>
+                            <ul>
+                                {gc.damage_types.map((damageType, j) => (
+                                    <li key={j} className="checkbox-pair">
+                                        <Field
+                                            type="checkbox"
+                                            name={`attacks.${i}.damage_type.${damageType}`}
+                                        />
+                                        <label>{damageType}</label>
+                                    </li>
+                                ))}
+                            </ul>
+                        </div>
+                        <div className="rows">
+                            <label htmlFor={`attacks.${i}.detail`}>Details</label>
+                            <Field name={`attacks.${i}.detail`} as="textarea" rows="4" cols="50" />
+                        </div>
+                    </div>
+                ))}
+                <MyButton fct={newAttack}>Add Attached Attack</MyButton>
+            </section>
             <MyFormButton type="submit">Save</MyFormButton>
         </Form>
     );

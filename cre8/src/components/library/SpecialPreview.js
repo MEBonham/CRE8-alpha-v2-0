@@ -558,12 +558,17 @@ const SpecialPreview = () => {
                 <h1>{data.name}</h1>
                 <h2 className="subtitle">{data.tags.join(", ")} Item</h2>
                 <h3>Price {data.price}; Bulk {data.bulk}</h3>
+                <h3>Hardness {data.hardness}; Resistance {data.resistance}; Structural 
+                    Save {ifPlus(parseInt(data.structural_save))}{data.structural_save}</h3>
                 <p>{data.description}</p>
                 {data.attacks.length ? 
                     <section>
                         <h2>Attacking</h2>
+                        {data.attacks.length ?
+                            <h3>{data.attacks[0].categories.join(", ")} Weapon</h3> :
+                        null}
                         {data.attacks.map((attackObj, i) => (
-                            <p key={i}>Gain a {attackObj.name} attack (range {attackObj.range}, 
+                            <p key={i}>{attackObj.name} attack (range {attackObj.range}, 
                                 base Impact {attackObj.impact_num_dice}d{attackObj.impact_dice_sides}, {Object.keys(attackObj.damage_type.base)
                                     .filter((damageType) => attackObj.damage_type.base[damageType]).join("/")} damage, 
                                 Peril modifier {`${ifPlus(attackObj.peril_mod)}${attackObj.peril_mod}`}).

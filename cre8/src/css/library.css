@@ -89,6 +89,27 @@
     margin-bottom: 16px;
 }
 
+.library table {
+    margin-bottom: 16px;
+    border-spacing: 4px;
+    border-collapse: separate;
+    font-size: 1.4rem;
+}
+
+.library table th {
+    padding: 0 4px;
+    text-align: center;
+    font-weight: bold;
+}
+
+.library table td.numeric {
+    text-align: center;
+}
+
+.library table td.pad-right {
+    padding-right: 10px;
+}
+
 .library > div .my-button {
     margin-right: 10px;
 }

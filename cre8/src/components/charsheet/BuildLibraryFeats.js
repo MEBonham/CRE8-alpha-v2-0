@@ -343,7 +343,7 @@ const BuildLibraryFeats = (props) => {
         return arr;
     }
     const processFeatForm = (formData) => {
-        const newSlug = encodeURIComponent(formData.name.split(" ").join("").toLowerCase());
+        const newSlug = encodeURIComponent(formData.name.split(" ").join("").toLowerCase().replace(/'/g, ""));
         const featObj = {
             passives: []
         };

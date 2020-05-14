@@ -73,7 +73,7 @@ const PlayAcquiringCenter = (props) => {
                 name: "Buy Item",
                 merchant: false,
                 prevWealth: state.cur.stats.wealth,
-                adjustMoneyQty: (0 - currentItem.price),
+                adjustMoneyQty: (0 - parseInt(currentItem.price)),
                 type: "wealth roll"
             });
             dispatchGain();
@@ -90,7 +90,7 @@ const PlayAcquiringCenter = (props) => {
             <select onChange={selectItem} defaultValue={false}>
                 <option value={false}>Select Item</option>
                 {Object.keys(selectItems).sort().map((itemSlug) => (
-                    <option key={itemSlug} value={itemSlug} className="non-false">{selectItems[itemSlug].name}</option>
+                    <option key={itemSlug} value={itemSlug} className="non-false">({selectItems[itemSlug].price}) {selectItems[itemSlug].name}</option>
                 ))}
             </select>
             <MyButton fct={buyItem}>Buy</MyButton>

@@ -17,7 +17,7 @@ export const defaultActions = {
         "Disarm:",
         "Grab: provoke opportunity attacks from a target within the threatened area of your unarmed strike. That target must then make a Defense Save against your unarmed strike Accuracy. On a failure, the target becomes Grabbed until some effect or action ends the grapple.",
         "Shove: provoke opportunity attacks from a target within the threatened area of your unarmed strike. That target must then make an Athletics or Brawn check (whichever is better) to keep its footing. The TN is the Accuracy of your unarmed strike. If the check fails, you may inflict the Prone condition on the target or shove it up to 5 ft away from you. If you are bigger than the target, this increases by 5 ft for each size category of difference.",
-        "Sunder: declare an object your foe holds, wears, or wields as your target. Make a normal weapon attack, except instead of the normal Hazard Menu, if your attack Impact exceeds the target's AV, the object must succeed at a Structural Save against your attack's Accuracy or be destroyed."
+        "Sunder: declare an object your foe holds, wears, or wields as your target. Make a normal weapon attack, except instead of the normal Hazard Menu, if your attack Impact exceeds the target's hardness, the object must succeed at a Structural Save against your attack's Accuracy or be destroyed."
     ],
     move: [
         "Standard Movement: move up to your Speed + 15 ft, provoking opportunity attacks if you move through threatened areas. Make a Speed Check (TN = number of feet moved). If it succeeds, add a Maneuver to your movement.",

@@ -6,6 +6,7 @@ import useLsPersistedState from '../../hooks/useLsPersistedState';
 import PlayAcquiringCenter from './PlayAcquiringCenter';
 import Accordion from '../ui/Accordion';
 import AccordionSection from '../ui/AccordionSection';
+import PlayManageItem from './PlayManageItem';
 
 const PlayEquipment = () => {
     const [state, dispatch] = useContext(Store);
@@ -83,9 +84,7 @@ const PlayEquipment = () => {
                                 <span className="bulk">Bulk: {itemObj.bulk}</span>
                                 <span className="price">Price: {itemObj.price}</span>
                             </h4>
-                            <>
-                                <p>{itemObj.description}</p>
-                            </>
+                            <PlayManageItem item={itemObj} />
                         </AccordionSection>
                     ))}
                 </Accordion>

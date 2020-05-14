@@ -348,7 +348,7 @@ const BuildLibraryKits = (props) => {
     }
     const processKitForm = (formData) => {
         // console.log(formData, attacks);
-        const newSlug = encodeURIComponent(formData.name.split(" ").join("").toLowerCase());
+        const newSlug = encodeURIComponent(formData.name.split(" ").join("").toLowerCase().replace(/'/g, ""));
         const kitObj = {
             passives: []
         };

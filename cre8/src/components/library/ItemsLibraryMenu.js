@@ -5,6 +5,7 @@ import { Store } from '../GlobalWrapper';
 import fb from '../../fbConfig';
 // import { wealthRoll } from '../../helpers/Roll';
 import gc from '../../helpers/GameConstants';
+import { ifPlus } from '../../helpers/Calculations';
 
 const ItemsLibraryMenu = () => {
     const [state, dispatch] = useContext(Store);
@@ -28,7 +29,12 @@ const ItemsLibraryMenu = () => {
                     allItemsCopy.push({
                         slug: doc.id,
                         name: doc.data().name,
-                        tags: doc.data().tags
+                        tags: doc.data().tags,
+                        price: doc.data().price,
+                        bulk: doc.data().bulk,
+                        hardness: doc.data().hardness,
+                        resistance: doc.data().resistance,
+                        structural_save: doc.data().structural_save
                     });
                 });
                 if (_isMounted.current) {
@@ -141,13 +147,32 @@ const ItemsLibraryMenu = () => {
         <section className="links columns space-between">
             <div className="rows">
                 <h2>Items</h2>
-                <ul>
-                    {selectItems.map((itemObj) => (
-                        <li key={itemObj.slug}>
-                            <Link to={`items/${itemObj.slug}`}>{itemObj.name}</Link>
-                        </li>
-                    ))}
-                </ul>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Item</th>
+                            <th>Price</th>
+                            <th>Bulk</th>
+                            <th>Hardness</th>
+                            <th>Resistance</th>
+                            <th>Structural Save</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {selectItems.map((itemObj) => (
+                            <tr key={itemObj.slug}>
+                                <td className="pad-right">
+                                    <Link to={`items/${itemObj.slug}`}>{itemObj.name}</Link>
+                                </td>
+                                <td className="numeric">{itemObj.price}</td>
+                                <td className="numeric">{itemObj.bulk}</td>
+                                <td className="numeric">{itemObj.hardness}</td>
+                                <td className="numeric">{itemObj.resistance}</td>
+                                <td className="numeric">{ifPlus(parseInt(itemObj.structural_save))}{itemObj.structural_save}</td>
+                            </tr>
+                        ))}
+                    </tbody>
+                </table>
                 {state.user && (state.user.rank === "admin" || state.user.rank === "archon") ? 
                     <section>
                         <h3>Wealth Scale</h3>

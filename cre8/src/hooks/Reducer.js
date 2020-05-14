@@ -6,6 +6,7 @@ const Reducer = (state, action) => {
     switch (action.type) {
         case 'CHAR_EDIT':
             let newVal;
+            let foundIndex = -1;
             switch (action.field) {
                 case "active_conditions":
                     newVal = [ ...action.payload ];
@@ -24,7 +25,6 @@ const Reducer = (state, action) => {
                         }
                     };
                 case "addItem":
-                    let foundIndex = -1;
                     for (let i = 0; i < state.cur.stats.inventory.length; i++) {
                         if (state.cur.stats.inventory[i].id === action.payload.id) {
                             foundIndex = i;
@@ -213,6 +213,50 @@ const Reducer = (state, action) => {
                             type: "kits",
                             data: action.payload[action.level][action.index]
                         }
+                    }
+                case "loseItem":
+                    for (let i = 0; i < state.cur.stats.inventory.length; i++) {
+                        if (state.cur.stats.inventory[i].id === action.payload) {
+                            foundIndex = i;
+                        }
+                    }
+                    if (state.cur.stats.inventory[foundIndex].quantity === 1) {
+                        return {
+                            ...state,
+                            curChangesMade: true,
+                            saveButtonHit: true,
+                            cur: {
+                                ...state.cur,
+                                stats: {
+                                    ...state.cur.stats,
+                                    inventory: [
+                                        ...state.cur.stats.inventory.slice(0, foundIndex),
+                                        ...state.cur.stats.inventory.slice(foundIndex + 1)
+                                    ]
+                                }
+                            }
+                        };
+                    } else {
+                        newVal = state.cur.stats.inventory[foundIndex].quantity - 1;
+                        return {
+                            ...state,
+                            curChangesMade: true,
+                            saveButtonHit: true,
+                            cur: {
+                                ...state.cur,
+                                stats: {
+                                    ...state.cur.stats,
+                                    inventory: [
+                                        ...state.cur.stats.inventory.slice(0, foundIndex),
+                                        {
+                                            ...state.cur.stats.inventory[foundIndex],
+                                            quantity: newVal
+                                        },
+                                        ...state.cur.stats.inventory.slice(foundIndex + 1)
+                                    ]
+                                }
+                            }
+                        };
                     }
                 case "monster_flag":
                     return {

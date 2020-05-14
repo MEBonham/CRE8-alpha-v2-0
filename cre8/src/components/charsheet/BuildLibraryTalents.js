@@ -268,7 +268,7 @@ const BuildLibraryTalents = (props) => {
     }
     const processTalentForm = (formData) => {
         // console.log(formData);
-        const newSlug = encodeURIComponent(formData.name.split(" ").join("").toLowerCase());
+        const newSlug = encodeURIComponent(formData.name.split(" ").join("").toLowerCase().replace(/'/g, ""));
         const talentObj = {
             passives: [],
             various_bonuses: []
