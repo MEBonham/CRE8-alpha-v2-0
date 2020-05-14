@@ -117,6 +117,7 @@
 }
 
 .App .primary-content .library-display p {
+    margin-bottom: 12px;
     font-size: 1.4rem;
 }
 
@@ -124,6 +125,14 @@
     margin-bottom: 2px;
     font-size: 1.4rem;
     line-height: 1.2;
+}
+
+div.primary-content.library section ul {
+    margin-bottom: 20px;
+}
+
+div.primary-content.library section ul li {
+    margin-bottom: 2px;
 }
 
 div.primary-content.library div.filters .checkbox-pair {

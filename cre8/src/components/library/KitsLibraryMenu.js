@@ -48,7 +48,6 @@ const KitsLibraryMenu = () => {
             if (!state.kitFilters.monster && kitObj.tags.includes("Monster")) skip = true;
             if (state.kitFilters.levelCap && (kitObj.intended_level > state.kitFilters.levelCap)) skip = true;
             if (state.kitFilters.levelCap && state.kitFilters.levelExact && (kitObj.intended_level !== state.kitFilters.levelCap)) skip = true;
-            // if (kitObj.name === "Swarm") console.log(kitObj.intended_level, state.kitFilters.levelCap, skip);
             if (state.kitFilters.coreOnly && !kitObj.tags.includes("Core")) skip = true;
             if (!skip) {
                 selectKitsCopy.push({

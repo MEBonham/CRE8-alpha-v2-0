@@ -89,15 +89,17 @@ const SpecialPreview = () => {
                             Gain {data.attacks.map((attackObj, i) => (
                                 <span key={i}>
                                     a {attackObj.name} {attackObj.type === "natural_weapon" ? "natural weapon" : `${attackObj.type} attack`} (range {attackObj.range}, 
-                                    base Impact {attackObj.impact_num_dice}d{attackObj.impact_dice_sides}, {Object.keys(attackObj.damage_type.base).filter((type) => attackObj.damage_type.base[type]).join("/")} damage, 
-                            Peril modifier {`${ifPlus(attackObj.peril_mod)}${attackObj.peril_mod}`}{attackObj.detail ? `, details: ${attackObj.detail.slice(0, -1)}` : null}{(i < data.attacks.length - 1) ? <span> <span className="or">or</span> gain </span> : "."}
+                                    base Impact {attackObj.impact_num_dice}d{attackObj.impact_dice_sides}, {Object.keys(attackObj.damage_type.base)
+                                        .filter((type) => attackObj.damage_type.base[type]).join("/")} damage, 
+                                    Peril modifier {`${ifPlus(attackObj.peril_mod)}${attackObj.peril_mod}`}{attackObj.detail ? `), details: ${attackObj.detail.slice(0, -1)}` : ")"}{(i < data.attacks.length - 1) ? <span> <span className="or">or</span> gain </span> : "."}
                                 </span>
                             ))}
                         </li> :    
                         data.attacks.map((attackObj, i) => (
                             <li key={i}>Gain a {attackObj.name} {attackObj.type === "natural_weapon" ? "natural weapon" : `${attackObj.type} attack`} (range {attackObj.range}, 
-                                base Impact {attackObj.impact_num_dice}d{attackObj.impact_dice_sides}, {Object.keys(attackObj.damage_type.base).filter((type) => attackObj.damage_type.base[type]).join("/")} damage, 
-                                Peril modifier {`${ifPlus(attackObj.peril_mod)}${attackObj.peril_mod}`}. {attackObj.detail ? `Details: ${attackObj.detail}` : null}
+                                base Impact {attackObj.impact_num_dice}d{attackObj.impact_dice_sides}, {Object.keys(attackObj.damage_type.base)
+                                    .filter((type) => attackObj.damage_type.base[type]).join("/")} damage, 
+                                Peril modifier {`${ifPlus(attackObj.peril_mod)}${attackObj.peril_mod}`}). {attackObj.detail ? `Details: ${attackObj.detail}` : null}
                             </li>
                         ))
                     }
@@ -315,8 +317,9 @@ const SpecialPreview = () => {
                         <h2>Effect:</h2>
                         {data.attacks.map((attackObj, i) => (
                             <p key={i}>Gain a {attackObj.name} {attackObj.type === "natural_weapon" ? "natural weapon" : `${attackObj.type} attack`} (range {attackObj.range}, 
-                                base Impact {attackObj.impact_num_dice}d{attackObj.impact_dice_sides}, {Object.keys(attackObj.damage_type.base).join("/")} damage, 
-                                Peril modifier {`${ifPlus(attackObj.peril_mod)}${attackObj.peril_mod}`}. {attackObj.detail ? `Details: ${attackObj.detail}` : null}
+                                base Impact {attackObj.impact_num_dice}d{attackObj.impact_dice_sides}, {Object.keys(attackObj.damage_type.base)
+                                    .filter((damageType) => attackObj.damage_type.base[damageType]).join("/")} damage, 
+                                Peril modifier {`${ifPlus(attackObj.peril_mod)}${attackObj.peril_mod}`}). {attackObj.detail ? `Details: ${attackObj.detail}` : null}
                             </p>
                         ))}
                         {data.standard_actions.map((standard, i) => (
@@ -460,8 +463,9 @@ const SpecialPreview = () => {
                     {data.attacks.map((attackObj, i) => (
                         <li key={i}>Gain a {attackObj.name} 
                             {attackObj.type === "natural_weapon" ? "natural weapon" : `${attackObj.type} attack`} (range {attackObj.range}, 
-                            base Impact {attackObj.impact_num_dice}d{attackObj.impact_dice_sides}, {Object.keys(attackObj.damage_type.base).join("/")} damage, 
-                            Peril modifier {`${ifPlus(attackObj.peril_mod)}${attackObj.peril_mod}`}.
+                            base Impact {attackObj.impact_num_dice}d{attackObj.impact_dice_sides}, {Object.keys(attackObj.damage_type.base)
+                                .filter((damageType) => attackObj.damage_type.base[damageType]).join("/")} damage, 
+                            Peril modifier {`${ifPlus(attackObj.peril_mod)}${attackObj.peril_mod}`}).
                         </li>
                     ))}
                     {data.standard_actions.map((standardAction, i) => (
@@ -552,6 +556,21 @@ const SpecialPreview = () => {
         return(
             <>
                 <h1>{data.name}</h1>
+                <h2 className="subtitle">{data.tags.join(", ")} Item</h2>
+                <h3>Price {data.price}; Bulk {data.bulk}</h3>
+                <p>{data.description}</p>
+                {data.attacks.length ? 
+                    <section>
+                        <h2>Attacking</h2>
+                        {data.attacks.map((attackObj, i) => (
+                            <p key={i}>Gain a {attackObj.name} attack (range {attackObj.range}, 
+                                base Impact {attackObj.impact_num_dice}d{attackObj.impact_dice_sides}, {Object.keys(attackObj.damage_type.base)
+                                    .filter((damageType) => attackObj.damage_type.base[damageType]).join("/")} damage, 
+                                Peril modifier {`${ifPlus(attackObj.peril_mod)}${attackObj.peril_mod}`}).
+                            </p>
+                        ))}
+                    </section> :
+                null}
             </>
         );
     }

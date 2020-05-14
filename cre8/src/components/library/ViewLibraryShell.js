@@ -83,8 +83,18 @@ const ViewLibraryShell = () => {
                 }
                 break;
             default:
+                if (state.itemCycleLinks) {
+                    for (let i = 0; i < state.itemCycleLinks.length; i++) {
+                        if (slug === state.itemCycleLinks[i].slug) {
+                            setNextLink(i === state.itemCycleLinks.length - 1 ?
+                                state.itemCycleLinks[0] : state.itemCycleLinks[i + 1]);
+                            setPrevLink(i === 0 ? state.itemCycleLinks[state.itemCycleLinks.length - 1] : state.itemCycleLinks[i - 1]);
+                        }
+                    }
+                }
+                break;
         }
-    }, [category, slug, state.featCycleLinks, state.kitCycleLinks, state.talentCycleLinks])
+    }, [category, slug, state.featCycleLinks, state.itemCycleLinks, state.kitCycleLinks, state.talentCycleLinks])
 
     if (code404) return <Code404 from="ViewLibraryShell" />
     return (

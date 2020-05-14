@@ -8,7 +8,7 @@ import FeatEditingMenu from '../library/FeatEditingMenu';
 import BuildLibraryTalents from '../charsheet/BuildLibraryTalents';
 import TalentEditingMenu from '../library/TalentEditingMenu';
 import BuildLibraryItems from '../charsheet/BuildLibraryItems';
-import ItemsEditingMenu from '../library/ItemsEditingMenu';
+import ItemEditingMenu from '../library/ItemEditingMenu';
 
 const EditShell = () => {
     const match = useRouteMatch();
@@ -30,7 +30,7 @@ const EditShell = () => {
                     path={`${match.url}/talents/:slug`}
                     render={() => <BuildLibraryTalents editing />}
                 />
-                <Route exact path={`${match.url}/items`} component={ItemsEditingMenu} />
+                <Route exact path={`${match.url}/items`} component={ItemEditingMenu} />
                 <Route
                     path={`${match.url}/items/:slug`}
                     render={() => <BuildLibraryItems editing />}

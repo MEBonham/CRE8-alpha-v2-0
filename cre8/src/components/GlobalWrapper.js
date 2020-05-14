@@ -52,6 +52,7 @@ const initialData = {
         coreOnly: true
     },
     initialMount: true,
+    itemFilters: {},
     kitFilters: {
         coreOnly: true
     },

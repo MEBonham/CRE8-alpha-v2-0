@@ -150,7 +150,7 @@ const BuildLibraryItems = (props) => {
         }
     }
     const processItemForm = (ev, formData) => {
-        console.log(formData);
+        // console.log(formData);
         const newSlug = encodeURIComponent(formData.name.split(" ").join("").toLowerCase());
         const itemObj = {};
         Object.keys(formData).forEach((key) => {

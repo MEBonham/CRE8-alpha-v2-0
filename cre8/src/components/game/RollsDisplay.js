@@ -67,7 +67,6 @@ const RollsDisplay = () => {
                 const roll = state.rollsToDisplay[i];
                 if (roll.resultData.multRoll && roll.resultData.multRoll.length > 1) {
                     const elArr = document.querySelectorAll(`#meb_showNatRollsD20_${i} p.bg`);
-                    console.log(elArr);
                     let oneBold = false;
                     roll.resultData.multRoll.forEach((natDieRoll, j) => {
                         const el = elArr[j];
