@@ -1,4 +1,4 @@
-import { updateFeats, updateGoodSave, updateKits, updateSkillRanks, updateSynergies, updateTalents, updateXp, updateWealth } from '../helpers/Calculations';
+import { updateFeats, updateGoodSave, updateItems, updateKits, updateSkillRanks, updateSynergies, updateTalents, updateXp, updateWealth } from '../helpers/Calculations';
 
 import gc from '../helpers/GameConstants';
 
@@ -37,7 +37,7 @@ const Reducer = (state, action) => {
                             saveButtonHit: true,
                             cur: {
                                 ...state.cur,
-                                stats: {
+                                stats: updateItems({
                                     ...state.cur.stats,
                                     inventory: [
                                         ...state.cur.stats.inventory.slice(0, foundIndex),
@@ -47,7 +47,7 @@ const Reducer = (state, action) => {
                                         },
                                         ...state.cur.stats.inventory.slice(foundIndex + 1)
                                     ]
-                                }
+                                })
                             }
                         };
                     } else {
@@ -57,7 +57,7 @@ const Reducer = (state, action) => {
                             saveButtonHit: true,
                             cur: {
                                 ...state.cur,
-                                stats: {
+                                stats: updateItems({
                                     ...state.cur.stats,
                                     inventory: [
                                         ...state.cur.stats.inventory,
@@ -66,7 +66,7 @@ const Reducer = (state, action) => {
                                             quantity: 1
                                         }
                                     ]
-                                }
+                                })
                             }
                         };
                     }
@@ -227,13 +227,13 @@ const Reducer = (state, action) => {
                             saveButtonHit: true,
                             cur: {
                                 ...state.cur,
-                                stats: {
+                                stats: updateItems({
                                     ...state.cur.stats,
                                     inventory: [
                                         ...state.cur.stats.inventory.slice(0, foundIndex),
                                         ...state.cur.stats.inventory.slice(foundIndex + 1)
                                     ]
-                                }
+                                })
                             }
                         };
                     } else {
@@ -244,7 +244,7 @@ const Reducer = (state, action) => {
                             saveButtonHit: true,
                             cur: {
                                 ...state.cur,
-                                stats: {
+                                stats: updateItems({
                                     ...state.cur.stats,
                                     inventory: [
                                         ...state.cur.stats.inventory.slice(0, foundIndex),
@@ -254,7 +254,7 @@ const Reducer = (state, action) => {
                                         },
                                         ...state.cur.stats.inventory.slice(foundIndex + 1)
                                     ]
-                                }
+                                })
                             }
                         };
                     }
@@ -265,6 +265,88 @@ const Reducer = (state, action) => {
                         cur: {
                             ...state.cur,
                             monster_flag: action.payload
+                        }
+                    };
+                case "moveItemInInventory":
+                    // Remove Item from previous location
+                    const prevLocation = action.payload.location;
+                    if (prevLocation === "Readily Available" || prevLocation === "Worn/Wielded" || prevLocation === "Not Carried") {
+                        for (let i = 0; i < state.cur.stats.inventory.length; i++) {
+                            if (state.cur.stats.inventory[i].id === action.payload.id) {
+                                foundIndex = i;
+                                break;
+                            }
+                        }
+                        newVal = [
+                            ...state.cur.stats.inventory.slice(0, foundIndex),
+                            ...state.cur.stats.inventory.slice(foundIndex + 1)
+                        ];
+                    } else {
+                        for (let i = 0; i < state.cur.stats.inventory.length; i++) {
+                            if (state.cur.stats.inventory[i].id === action.payload.location) {
+                                for (let j = 0; j < state.cur.stats.inventory[i].held_items.length; j++) {
+                                    if (state.cur.stats.inventory[i].held_items[j].id === action.payload.id) {
+                                        foundIndex = [i, j];
+                                        break;
+                                    }
+                                }
+                            }
+                            if (foundIndex !== -1) break;
+                        }
+                        newVal = [
+                            ...state.cur.stats.inventory.slice(0, foundIndex[0]),
+                            {
+                                ...state.cur.stats.inventory[foundIndex[0]],
+                                held_items: [
+                                    ...state.cur.stats.inventory[foundIndex[0]].held_items.slice(0, foundIndex[1]),
+                                    ...state.cur.stats.inventory[foundIndex[0]].held_items.slice(foundIndex[1] + 1)
+                                ]
+                            },
+                            ...state.cur.stats.inventory.slice(foundIndex[0] + 1)
+                        ];
+                    }
+                    // Add item to new location
+                    if (action.newLocation === "Readily Available" || action.newLocation === "Worn/Wielded" || action.newLocation === "Not Carried") {
+                        newVal = [
+                            ...newVal,
+                            {
+                                ...action.payload,
+                                location: action.newLocation
+                            }
+                        ];
+                    } else {
+                        for (let i = 0; i < newVal.length; i++) {
+                            console.log(newVal[i], action.newLocation);
+                            if (newVal[i].id === action.newLocation) {
+                                foundIndex = i;
+                                break;
+                            }
+                        }
+                        console.log(foundIndex);
+                        newVal = [
+                            ...newVal.slice(0, foundIndex),
+                            {
+                                ...newVal[foundIndex],
+                                held_items: [
+                                    ...newVal[foundIndex].held_items,
+                                    {
+                                        ...action.payload,
+                                        location: action.newLocation
+                                    }
+                                ]
+                            },
+                            ...newVal.slice(foundIndex + 1)
+                        ];
+                    }
+                    return {
+                        ...state,
+                        curChangesMade: true,
+                        cur: {
+                            ...state.cur,
+                            stats: updateItems({
+                                ...state.cur.stats,
+                                inventory: newVal
+                            })
                         }
                     };
                 case "mp":

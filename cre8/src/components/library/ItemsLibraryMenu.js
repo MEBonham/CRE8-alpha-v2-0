@@ -6,6 +6,7 @@ import fb from '../../fbConfig';
 // import { wealthRoll } from '../../helpers/Roll';
 import gc from '../../helpers/GameConstants';
 import { ifPlus } from '../../helpers/Calculations';
+import MyLink from '../ui/MyLink';
 
 const ItemsLibraryMenu = () => {
     const [state, dispatch] = useContext(Store);
@@ -49,7 +50,6 @@ const ItemsLibraryMenu = () => {
     
     const [selectItems, setSelectItems] = useState([]);
     useEffect(() => {
-        console.log(state.itemFilters);
         const selectItemsCopy = [];
         allItems.forEach((itemObj) => {
             let skip = false;
@@ -216,6 +216,7 @@ const ItemsLibraryMenu = () => {
                         <option key={tagName} value={tagName}>{tagName}</option>
                     ))}
                 </select>
+                <MyLink to="/library/weapons">Weapons Table</MyLink>
             </div>
         </section>
     );

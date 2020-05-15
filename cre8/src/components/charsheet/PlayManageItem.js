@@ -30,6 +30,9 @@ const PlayManageItem = ({ item, index }) => {
         dispatchLose();
     }
 
+    const moveItem = (ev) => {
+        dispatch({ type: "CHAR_EDIT", field: "moveItemInInventory", newLocation: ev.target.value, payload: item });
+    }
     const moveUp = (ev) => {
         dispatch({ type: "CHAR_EDIT", field: "swapInventorySpots", payload: [index - 1, index] });
     }
@@ -49,6 +52,19 @@ const PlayManageItem = ({ item, index }) => {
             <div className="float-right">
                 {index !== 0 ? <MyButton fct={moveUp}>Move Up</MyButton> : null}
                 {state.cur && index + 1 < state.cur.stats.inventory.length ? <MyButton fct={moveDown}>Move Down</MyButton> : null}
+            </div>
+            <div className="float-right">
+                <label>Item Location:</label>
+                <select onChange={moveItem} defaultValue={item.location}>
+                    <option value="Readily Available">Readily Available</option>
+                    <option value="Worn/Wielded">Worn/Wielded</option>
+                    <option value="Not Carried">Not Carried</option>
+                    {state.cur ?
+                        state.cur.stats.inventory.filter((itemObj) => itemObj.tags.includes("Container")).map((itemObj, i) => (
+                            <option key={i} value={itemObj.id}>{itemObj.name}</option>
+                        )) :
+                    null}
+                </select>
             </div>
             <p>{item.description}</p>
         </>

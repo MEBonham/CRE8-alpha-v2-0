@@ -105,7 +105,7 @@ const WeaponsTable = () => {
                         </tr>
                     ))}
                 </tbody>
-                <div className="tbody-spacing" />
+                <tbody className="tbody-spacing" />
                 <tbody>
                     <tr>
                         <th colSpan="9" className="subtable">Martial Weapons</th>
@@ -126,7 +126,7 @@ const WeaponsTable = () => {
                         </tr>
                     ))}
                 </tbody>
-                <div className="tbody-spacing" />
+                <tbody className="tbody-spacing" />
                 <tbody>
                     <tr>
                         <th colSpan="9" className="subtable">Exotic Weapons</th>

@@ -268,6 +268,10 @@ const BuildLibraryItems = (props) => {
                         <Field type="radio" name="hands_occupied" radioValue={[1, 2]} />
                         <label>1-2 hands</label>
                     </div>
+                    <div>
+                        <label htmlFor="halve_bulk_capacity">Halve-Bulk Capacity (0 to disable):</label>
+                        <Field type="number" name="halve_bulk_capacity" />
+                    </div>
                 </div>
                 <div className="rows right-column">
                     <label htmlFor="weapon_heft">Weapon Heft</label>

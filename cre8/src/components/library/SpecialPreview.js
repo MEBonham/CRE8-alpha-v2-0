@@ -553,10 +553,11 @@ const SpecialPreview = () => {
     }
 
     const previewItem = (data) => {
+        const grade = `${data.weapon_grade[0].toUpperCase()}${data.weapon_grade.slice(1)}`
         return(
             <>
                 <h1>{data.name}</h1>
-                <h2 className="subtitle">{data.tags.join(", ")} Item</h2>
+                <h2 className="subtitle">[{data.tags.join("] [")}] Item</h2>
                 <h3>Price {data.price}; Bulk {data.bulk}</h3>
                 <h3>Hardness {data.hardness}; Resistance {data.resistance}; Structural 
                     Save {ifPlus(parseInt(data.structural_save))}{data.structural_save}</h3>
@@ -565,7 +566,7 @@ const SpecialPreview = () => {
                     <section>
                         <h2>Attacking</h2>
                         {data.attacks.length ?
-                            <h3>{data.attacks[0].categories.join(", ")} Weapon</h3> :
+                            <h3>{grade} {data.weapon_heft} {data.attacks[0].categories.join("/").replace("MiscWeapon", "Miscellaneous")} Weapon</h3> :
                         null}
                         {data.attacks.map((attackObj, i) => (
                             <p key={i}>{attackObj.name} attack (range {attackObj.range}, 
@@ -574,6 +575,7 @@ const SpecialPreview = () => {
                                 Peril modifier {`${ifPlus(attackObj.peril_mod)}${attackObj.peril_mod}`}).
                             </p>
                         ))}
+                        {data.attacks.length ? <p>{data.attacks[0].detail}</p> : null}
                     </section> :
                 null}
             </>

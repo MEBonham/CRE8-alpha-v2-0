@@ -565,6 +565,10 @@ const updateHeroicBonus = (statsObj) => {
     return result;
 }
 
+export const updateItems = (statsObj) => {
+    return statsObj;
+}
+
 export const updateKits = (statsObj) => {
     let result = {
         ...statsObj,
