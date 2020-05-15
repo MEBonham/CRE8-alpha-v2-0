@@ -298,6 +298,7 @@ export const itemDefault = {
     structural_save: "0",
     various_bonuses: [],
     various_penalties: [],
+    weapon_grade: "martial",
     weapon_heft: "Light",
     worn_or_wielded: false
 }

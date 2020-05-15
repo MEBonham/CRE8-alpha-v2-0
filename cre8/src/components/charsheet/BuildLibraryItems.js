@@ -276,6 +276,12 @@ const BuildLibraryItems = (props) => {
                             <option key={j} value={heft}>{heft}</option>
                         ))}
                     </Field>
+                    <label htmlFor="weapon_grade">Weapon Grade</label>
+                    <Field name="weapon_grade" as="select">
+                        <option value="simple">Simple</option>
+                        <option value="martial">Martial</option>
+                        <option value="exotic">Exotic</option>
+                    </Field>
                 </div>
             </div>
             <section className="attack-form brown-box rows">

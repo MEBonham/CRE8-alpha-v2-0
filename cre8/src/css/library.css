@@ -96,10 +96,26 @@
     font-size: 1.4rem;
 }
 
+.library table.armorWeaponTable td {
+    padding: 2px 0;
+    vertical-align: middle;
+    line-height: 1.2;
+}
+
+.library table div.tbody-spacing {
+    height: 8px;
+}
+
 .library table th {
     padding: 0 4px;
     text-align: center;
     font-weight: bold;
+}
+
+.library table th.subtable {
+    padding: 0 0 0 40px;
+    text-align: left;
+    font-style: italic;
 }
 
 .library table td.numeric {

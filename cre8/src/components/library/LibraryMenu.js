@@ -7,6 +7,7 @@ import KitsLibraryMenu from './KitsLibraryMenu';
 import FeatsLibraryMenu from './FeatsLibraryMenu';
 import TalentsLibraryMenu from './TalentsLibraryMenu';
 import ItemsLibraryMenu from './ItemsLibraryMenu';
+import WeaponsTable from './WeaponsTable';
 
 const LibraryMenu = (props) => {
     const [, dispatch] = useContext(Store);
@@ -41,6 +42,7 @@ const LibraryMenu = (props) => {
                 <Route exact path={`/library/kits`} component={KitsLibraryMenu} />
                 <Route exact path={`/library/feats`} component={FeatsLibraryMenu} />
                 <Route exact path={`/library/talents`} component={TalentsLibraryMenu} />
+                <Route exact path={`/library/weapons`} component={WeaponsTable} />
                 <Route exact path={`/library/items`} component={ItemsLibraryMenu} />
             </Switch>
         </div>
