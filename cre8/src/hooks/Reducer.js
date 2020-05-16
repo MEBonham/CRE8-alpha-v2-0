@@ -1,4 +1,4 @@
-import { updateFeats, updateGoodSave, updateItems, updateKits, updateSkillRanks, updateSynergies, updateTalents, updateXp, updateWealth } from '../helpers/Calculations';
+import { updateFeats, updateGoodSave, updateItems, updateKits, updateSkillRanks, updateSynergies, updateTalents, updateXp, updateWealth, unflattenInventory } from '../helpers/Calculations';
 
 import gc from '../helpers/GameConstants';
 
@@ -7,6 +7,7 @@ const Reducer = (state, action) => {
         case 'CHAR_EDIT':
             let newVal;
             let foundIndex = -1;
+            let flattened;
             switch (action.field) {
                 case "active_conditions":
                     newVal = [ ...action.payload ];
@@ -215,49 +216,33 @@ const Reducer = (state, action) => {
                         }
                     }
                 case "loseItem":
-                    for (let i = 0; i < state.cur.stats.inventory.length; i++) {
-                        if (state.cur.stats.inventory[i].id === action.payload) {
-                            foundIndex = i;
-                        }
-                    }
-                    if (state.cur.stats.inventory[foundIndex].quantity === 1) {
-                        return {
-                            ...state,
-                            curChangesMade: true,
-                            saveButtonHit: true,
-                            cur: {
-                                ...state.cur,
-                                stats: updateItems({
-                                    ...state.cur.stats,
-                                    inventory: [
-                                        ...state.cur.stats.inventory.slice(0, foundIndex),
-                                        ...state.cur.stats.inventory.slice(foundIndex + 1)
-                                    ]
-                                })
-                            }
-                        };
+                    if (action.flattened[action.index].quantity === 1) {
+                        newVal = unflattenInventory([
+                            ...action.flattened.slice(0, action.index),
+                            ...action.flattened.slice(action.index + 1)
+                        ]);
                     } else {
-                        newVal = state.cur.stats.inventory[foundIndex].quantity - 1;
-                        return {
-                            ...state,
-                            curChangesMade: true,
-                            saveButtonHit: true,
-                            cur: {
-                                ...state.cur,
-                                stats: updateItems({
-                                    ...state.cur.stats,
-                                    inventory: [
-                                        ...state.cur.stats.inventory.slice(0, foundIndex),
-                                        {
-                                            ...state.cur.stats.inventory[foundIndex],
-                                            quantity: newVal
-                                        },
-                                        ...state.cur.stats.inventory.slice(foundIndex + 1)
-                                    ]
-                                })
-                            }
-                        };
+                        newVal = unflattenInventory([
+                            ...action.flattened.slice(0, action.index),
+                            {
+                                ...action.flattened[action.index],
+                                quantity: action.flattened[action.index].quantity - 1
+                            },
+                            ...action.flattened.slice(action.index + 1)
+                        ]);
                     }
+                    return {
+                        ...state,
+                        curChangesMade: true,
+                        saveButtonHit: true,
+                        cur: {
+                            ...state.cur,
+                            stats: updateItems({
+                                ...state.cur.stats,
+                                inventory: newVal
+                            })
+                        }
+                    };
                 case "monster_flag":
                     return {
                         ...state,
@@ -316,13 +301,11 @@ const Reducer = (state, action) => {
                         ];
                     } else {
                         for (let i = 0; i < newVal.length; i++) {
-                            console.log(newVal[i], action.newLocation);
                             if (newVal[i].id === action.newLocation) {
                                 foundIndex = i;
                                 break;
                             }
                         }
-                        console.log(foundIndex);
                         newVal = [
                             ...newVal.slice(0, foundIndex),
                             {
@@ -437,6 +420,13 @@ const Reducer = (state, action) => {
                         }
                     };
                 case "swapInventorySpots":
+                    flattened = [
+                        ...action.flattened.slice(0, action.payload[0]),
+                        action.flattened[action.payload[1]],
+                        action.flattened[action.payload[0]],
+                        ...action.flattened.slice(action.payload[1] + 1)
+                    ];
+                    newVal = unflattenInventory(flattened);
                     return {
                         ...state,
                         curChangesMade: true,
@@ -444,12 +434,7 @@ const Reducer = (state, action) => {
                             ...state.cur,
                             stats: {
                                 ...state.cur.stats,
-                                inventory: [
-                                    ...state.cur.stats.inventory.slice(0, action.payload[0]),
-                                    state.cur.stats.inventory[action.payload[1]],
-                                    state.cur.stats.inventory[action.payload[0]],
-                                    ...state.cur.stats.inventory.slice(action.payload[1] + 1)
-                                ]
+                                inventory: newVal
                             }
                         }
                     };

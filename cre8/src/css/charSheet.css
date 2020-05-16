@@ -396,6 +396,11 @@ section.play-equipment section.inventory-display h4 span.name-qty {
     width: 60%;
 }
 
+section.play-equipment section.inventory-display h4 span.name-qty img {
+    width: 14px;
+    margin-right: 2px;
+}
+
 section.play-equipment section.inventory-display h4 span.bulk {
     display: inline-block;
     width: 20%;

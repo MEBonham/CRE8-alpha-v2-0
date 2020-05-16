@@ -243,6 +243,25 @@ export const numSort = (numArr) => {
     return numArr.sort((a, b) => { return a - b });
 }
 
+export const unflattenInventory = (flattened) => {
+    const unFlat = [];
+    flattened.forEach((itemObj) => {
+        if (itemObj.contained) {
+            let lastIndex = unFlat.length - 1;
+            unFlat[lastIndex] = {
+                ...unFlat[lastIndex],
+                held_items: [
+                    ...unFlat[lastIndex].held_items,
+                    itemObj
+                ]
+            };
+        } else {
+            unFlat.push(itemObj);
+        }
+    });
+    return unFlat;
+}
+
 const updateAttacks = (statsObj) => {
     const attacks = statsObj.attacks.map((attackObj) => {
         let accuracy;

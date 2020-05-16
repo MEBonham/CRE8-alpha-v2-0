@@ -1,4 +1,4 @@
-import React, { useEffect, useContext } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 
 import { Store } from '../GlobalWrapper';
 import MyButton from '../ui/MyButton';
@@ -7,10 +7,37 @@ import PlayAcquiringCenter from './PlayAcquiringCenter';
 import Accordion from '../ui/Accordion';
 import AccordionSection from '../ui/AccordionSection';
 import PlayManageItem from './PlayManageItem';
+import indent from '../../media/indent-arrow.png';
 
 const PlayEquipment = () => {
     const [state, dispatch] = useContext(Store);
     const LS_KEY = "moneyGainLose";
+
+    const [flattened, setFlattened] = useState([]);
+    useEffect(() => {
+        const inventoryCopy = [];
+        state.cur.stats.inventory.forEach((itemObj, i) => {
+            const heldCopy = [ ...itemObj.held_items ];
+            inventoryCopy.push({
+                ...itemObj,
+                held_items: [],
+                contained: false,
+                current_index: i,
+                out_of: state.cur.stats.inventory.length
+            });
+            // console.log(itemObj.held_items);
+            heldCopy.forEach((heldItemObj, j) => {
+                inventoryCopy.push({
+                    ...heldItemObj,
+                    held_items: [],
+                    contained: true,
+                    current_index: j,
+                    out_of: heldCopy.length
+                });
+            });
+        });
+        setFlattened(inventoryCopy);
+    }, [state.cur])
 
     const [moneyQtyField, setMoneyQtyField] = useLsPersistedState(LS_KEY, 0);
     const adjustMoneyQty = (ev) => {
@@ -77,14 +104,20 @@ const PlayEquipment = () => {
             </div>
             <section className="inventory-display">
                 <Accordion uniqueKey="meb_inventoryDisplay" cur={state.cur.id}>
-                    {state.cur.stats.inventory.map((itemObj, i) => (
+                    {flattened.map((itemObj, i) => (
                         <AccordionSection key={i}>
                             <h4>
-                                <span className="name-qty">{itemObj.name}{itemObj.quantity > 1 ? ` (x${itemObj.quantity})` : null}</span>
+                                <span className="name-qty">
+                                    {itemObj.contained ?
+                                        <img src={indent} alt="" /> :
+                                    null}
+                                    {itemObj.name}
+                                    {itemObj.quantity > 1 ? ` (x${itemObj.quantity})` : null}
+                                </span>
                                 <span className="bulk">Bulk: {itemObj.bulk}</span>
                                 <span className="price">Price: {itemObj.price}</span>
                             </h4>
-                            <PlayManageItem item={itemObj} index={i} />
+                            <PlayManageItem item={itemObj} flattened={flattened} index={i} />
                         </AccordionSection>
                     ))}
                 </Accordion>

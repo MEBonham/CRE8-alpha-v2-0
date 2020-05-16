@@ -3,14 +3,15 @@ import React, { useContext } from 'react';
 import { Store } from '../GlobalWrapper';
 import MyButton from '../ui/MyButton';
 
-const PlayManageItem = ({ item, index }) => {
+const PlayManageItem = ({ item, index, flattened }) => {
     const [state, dispatch] = useContext(Store);
+    // console.log(item.name, item.current_index, item.out_of);
 
     const dispatchRollData = (data) => {
         dispatch({ type: "ROLL_PENDING", payload: data });
     }
     const dispatchLose = () => {
-        dispatch({ type: "CHAR_EDIT", field: "loseItem", payload: item.id });
+        dispatch({ type: "CHAR_EDIT", field: "loseItem", flattened, payload: index });
     }
     const sellItem = (ev) => {
         if (state.cur) {
@@ -34,10 +35,10 @@ const PlayManageItem = ({ item, index }) => {
         dispatch({ type: "CHAR_EDIT", field: "moveItemInInventory", newLocation: ev.target.value, payload: item });
     }
     const moveUp = (ev) => {
-        dispatch({ type: "CHAR_EDIT", field: "swapInventorySpots", payload: [index - 1, index] });
+        dispatch({ type: "CHAR_EDIT", field: "swapInventorySpots", flattened, payload: [index - 1, index] });
     }
     const moveDown = (ev) => {
-        dispatch({ type: "CHAR_EDIT", field: "swapInventorySpots", payload: [index, index + 1] });
+        dispatch({ type: "CHAR_EDIT", field: "swapInventorySpots", flattened, payload: [index, index + 1] });
     }
 
     return (
@@ -50,8 +51,8 @@ const PlayManageItem = ({ item, index }) => {
                 <MyButton fct={loseItem}>Use Up or Lose Item</MyButton>
             </div>
             <div className="float-right">
-                {index !== 0 ? <MyButton fct={moveUp}>Move Up</MyButton> : null}
-                {state.cur && index + 1 < state.cur.stats.inventory.length ? <MyButton fct={moveDown}>Move Down</MyButton> : null}
+                {item.current_index !== 0 ? <MyButton fct={moveUp}>Move Up</MyButton> : null}
+                {item.current_index + 1 < item.out_of ? <MyButton fct={moveDown}>Move Down</MyButton> : null}
             </div>
             <div className="float-right">
                 <label>Item Location:</label>
