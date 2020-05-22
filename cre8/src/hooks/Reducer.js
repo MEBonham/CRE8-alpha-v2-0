@@ -527,6 +527,23 @@ const Reducer = (state, action) => {
                             })
                         }
                     };
+                case "updateCustomItem":
+                    newVal = unflattenInventory([
+                        ...action.flattened.slice(0, action.index),
+                        action.payload,
+                        ...action.flattened.slice(action.index + 1)
+                    ]);
+                    return {
+                        ...state,
+                        curChangesMade: true,
+                        cur: {
+                            ...state.cur,
+                            stats: updateItems({
+                                ...state.cur.stats,
+                                inventory: newVal
+                            })
+                        }
+                    };
                 case "vp":
                     newVal = parseInt(action.inputs[`${action.stub}_${action.field}`]);
                     return {

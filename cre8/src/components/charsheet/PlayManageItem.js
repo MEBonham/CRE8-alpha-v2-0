@@ -1,6 +1,9 @@
 import React, { useContext } from 'react';
 
 import { Store } from '../GlobalWrapper';
+import Form from '../miniFormik/Form';
+import Field from '../miniFormik/Field';
+import MyFormButton from '../ui/MyFormButton';
 import MyButton from '../ui/MyButton';
 
 const PlayManageItem = ({ item, index, flattened }) => {
@@ -34,6 +37,13 @@ const PlayManageItem = ({ item, index, flattened }) => {
         dispatch({ type: "CHAR_EDIT", field: "moveItemInInventory", newLocation: ev.target.value, payload: item });
     }
 
+    const updateCustomItem = (ev, formData) => {
+        dispatch({ type: "CHAR_EDIT", field: "updateCustomItem", flattened, index, payload: {
+            ...item,
+            ...formData
+        } });
+    }
+
     return (
         <>
             <div className="float-right">
@@ -57,6 +67,41 @@ const PlayManageItem = ({ item, index, flattened }) => {
                 </select>
             </div>
             <p>{item.description}</p>
+            {item.tags.includes("Custom") ? 
+                <Form
+                    onSubmit={updateCustomItem}
+                    defaultValues={{
+                        name: item.name,
+                        description: item.description,
+                        bulk: item.bulk,
+                        price: item.price
+                    }}
+                    reset={false}
+                    className="update-custom-item"
+                >
+                    <div className="rows">
+                        <div className="rows">
+                            <label htmlFor="name">Name</label>
+                            <Field name="name" type="text" required />
+                        </div>
+                        <div className="columns">
+                            <div className="rows">
+                                <label htmlFor="price">Price</label>
+                                <Field name="price" type="number" className="medium" />
+                            </div>
+                            <div className="rows">
+                                <label htmlFor="bulk">Bulk</label>
+                                <Field name="bulk" type="number" className="medium" />
+                            </div>
+                        </div>
+                        <div className="rows">
+                            <label htmlFor="description">Description</label>
+                            <Field name="description" as="textarea" rows="4" cols="50" />
+                        </div>
+                    </div>
+                    <MyFormButton type="submit">Save</MyFormButton>
+                </Form> :
+            null}
         </>
     );
 }

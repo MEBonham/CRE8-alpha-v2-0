@@ -430,6 +430,7 @@ section.play-equipment section.inventory-display h4 span.up-down button {
 
 section.play-equipment section.inventory-display h4 span.up-down img {
     width: 14px;
+    margin-left: 1px;
 }
 
 section.play-equipment section.inventory-display h4 {
@@ -443,6 +444,21 @@ section.play-equipment section.inventory-display h4 span.bulk.total {
     position: relative;
     left: -37px;
     line-height: 1.2;
+}
+
+section.play-equipment section.inventory-display .accordion label {
+    margin: 0 4px 2px 0;
+    font-size: 1.2rem;
+    font-weight: bold;
+}
+
+section.play-equipment section.inventory-display .accordion input {
+    margin-bottom: 6px;
+    width: 50%;
+}
+
+section.play-equipment section.inventory-display .accordion textarea {
+    margin-bottom: 6px;
 }
 
 section.play-equipment section.acquiring-center select,

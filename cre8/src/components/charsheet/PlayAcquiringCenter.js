@@ -1,7 +1,9 @@
 import React, { useState, useEffect, useRef, useContext } from 'react';
+import { v4 as uuidv4 } from 'uuid';
 
 import { Store } from '../GlobalWrapper';
 import fb from '../../fbConfig';
+import { itemDefault } from '../../helpers/Templates';
 import MyButton from '../ui/MyButton';
 
 const PlayAcquiringCenter = (props) => {
@@ -51,10 +53,19 @@ const PlayAcquiringCenter = (props) => {
 
     const [currentItem, setCurrentItem] = useState(false);
     const selectItem = (ev) => {
-        setCurrentItem({
-            id: ev.target.value,
-            ...selectItems[ev.target.value]
-        });
+        if (ev.target.value === "Custom") {
+            setCurrentItem({
+                ...itemDefault,
+                name: "Custom Item",
+                tags: [ "Custom" ],
+                id: uuidv4()
+            });
+        } else {
+            setCurrentItem({
+                id: ev.target.value,
+                ...selectItems[ev.target.value]
+            });
+        }
     }
 
     const dispatchRollData = (data) => {
@@ -89,6 +100,7 @@ const PlayAcquiringCenter = (props) => {
         <section className="acquiring-center columns">
             <select onChange={selectItem} defaultValue={false}>
                 <option value={false}>Select Item</option>
+                <option value="Custom">Custom Item</option>
                 {Object.keys(selectItems).sort().map((itemSlug) => (
                     <option key={itemSlug} value={itemSlug} className="non-false">({selectItems[itemSlug].price}) {selectItems[itemSlug].name}</option>
                 ))}
