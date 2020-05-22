@@ -6,8 +6,8 @@ import useLsPersistedState from '../../hooks/useLsPersistedState';
 import PlayAcquiringCenter from './PlayAcquiringCenter';
 import Accordion from '../ui/Accordion';
 import AccordionSection from '../ui/AccordionSection';
+import PlayItemSummary from './PlayItemSummary';
 import PlayManageItem from './PlayManageItem';
-import indent from '../../media/indent-arrow.png';
 
 const PlayEquipment = () => {
     const [state, dispatch] = useContext(Store);
@@ -106,17 +106,7 @@ const PlayEquipment = () => {
                 <Accordion uniqueKey="meb_inventoryDisplay" cur={state.cur.id}>
                     {flattened.map((itemObj, i) => (
                         <AccordionSection key={i}>
-                            <h4>
-                                <span className="name-qty">
-                                    {itemObj.contained ?
-                                        <img src={indent} alt="" /> :
-                                    null}
-                                    {itemObj.name}
-                                    {itemObj.quantity > 1 ? ` (x${itemObj.quantity})` : null}
-                                </span>
-                                <span className="bulk">Bulk: {itemObj.bulk}</span>
-                                <span className="price">Price: {itemObj.price}</span>
-                            </h4>
+                            <PlayItemSummary item={itemObj} flattened={flattened} index={i} />
                             <PlayManageItem item={itemObj} flattened={flattened} index={i} />
                         </AccordionSection>
                     ))}

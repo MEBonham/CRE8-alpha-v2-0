@@ -33,12 +33,6 @@ const PlayManageItem = ({ item, index, flattened }) => {
     const moveItem = (ev) => {
         dispatch({ type: "CHAR_EDIT", field: "moveItemInInventory", newLocation: ev.target.value, payload: item });
     }
-    const moveUp = (ev) => {
-        dispatch({ type: "CHAR_EDIT", field: "swapInventorySpots", flattened, index, direction: "up" });
-    }
-    const moveDown = (ev) => {
-        dispatch({ type: "CHAR_EDIT", field: "swapInventorySpots", flattened, index, direction: "down" });
-    }
 
     return (
         <>
@@ -48,10 +42,6 @@ const PlayManageItem = ({ item, index, flattened }) => {
                 null}
                 <MyButton fct={sellItem} evData={`meb_sellButton_normal`}>Sell Item</MyButton>
                 <MyButton fct={loseItem}>Use Up or Lose Item</MyButton>
-            </div>
-            <div className="float-right">
-                {item.current_index !== 0 ? <MyButton fct={moveUp}>Move Up</MyButton> : null}
-                {item.current_index + 1 < item.out_of ? <MyButton fct={moveDown}>Move Down</MyButton> : null}
             </div>
             <div className="float-right">
                 <label>Item Location:</label>

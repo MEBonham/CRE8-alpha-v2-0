@@ -333,7 +333,7 @@ const updateEncumbrance = (statsObj) => {
 
     const capacity = 50 + 10 * result.skill_mods_net.Brawn;
     const encumbrance = Math.min(0, Math.floor((capacity - totalBulk) / 10));
-    console.log(encumbrance);
+    // console.log(encumbrance);
     result = {
         ...result,
         skill_mods: {

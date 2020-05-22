@@ -393,7 +393,7 @@ section.play-equipment section.inventory-display h4 {
 
 section.play-equipment section.inventory-display h4 span.name-qty {
     display: inline-block;
-    width: 60%;
+    width: 54%;
 }
 
 section.play-equipment section.inventory-display h4 span.name-qty img {
@@ -404,6 +404,32 @@ section.play-equipment section.inventory-display h4 span.name-qty img {
 section.play-equipment section.inventory-display h4 span.bulk {
     display: inline-block;
     width: 20%;
+}
+
+section.play-equipment section.inventory-display h4 span.price {
+    display: inline-block;
+    width: 13%;
+}
+
+section.play-equipment section.inventory-display h4 span.up-down {
+    width: 13%;
+    display: inline-block;
+}
+
+section.play-equipment section.inventory-display h4 span.up-down span {
+    display: flex;
+    justify-content: center;
+}
+
+section.play-equipment section.inventory-display h4 span.up-down button {
+    padding: 0;
+    background: transparent;
+    border: none;
+    outline: none;
+}
+
+section.play-equipment section.inventory-display h4 span.up-down img {
+    width: 14px;
 }
 
 section.play-equipment section.inventory-display h4 {
