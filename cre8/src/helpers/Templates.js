@@ -36,6 +36,7 @@ export const charDefault = {
         awesome_check: 5,
         awesome_mods: {},
         awesome_mods_total: 0,
+        bulk_carried: 0,
         caster_level: 0,
         caster_level_kits: {},
         caster_level_kits_total: 0,

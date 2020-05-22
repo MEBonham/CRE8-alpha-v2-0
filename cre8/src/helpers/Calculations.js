@@ -309,6 +309,82 @@ const updateDefense = (statsObj) => {
     };
 }
 
+const updateEncumbrance = (statsObj) => {
+    let result = { ...statsObj };
+    result = clearBonuses(result, ["encumbrance"]);
+
+    let totalBulk = Math.floor(result.wealth / 10);
+    result.inventory.forEach((itemObj) => {
+        if (itemObj.location !== "Not Carried") {
+            totalBulk += itemObj.quantity * parseInt(itemObj.bulk);
+            let subtotal = 0;
+            itemObj.held_items.forEach((heldObj) => {
+                subtotal += heldObj.quantity * parseInt(heldObj.bulk);
+            });
+            if (itemObj.halve_bulk_capacity) {
+                const bulkToHalve = Math.min(subtotal, itemObj.halve_bulk_capacity);
+                totalBulk += (subtotal - Math.ceil(bulkToHalve / 2));
+            } else {
+                totalBulk += subtotal;
+            }
+        }
+    });
+    result.bulk_carried = totalBulk;
+
+    const capacity = 50 + 10 * result.skill_mods_net.Brawn;
+    const encumbrance = Math.min(0, Math.floor((capacity - totalBulk) / 10));
+    console.log(encumbrance);
+    result = {
+        ...result,
+        skill_mods: {
+            ...result.skill_mods,
+            Athletics: {
+                ...result.skill_mods.Athletics,
+                Encumbrance: {
+                    ...result.skill_mods.Athletics.Encumbrance,
+                    bulk_carried: {
+                        num: encumbrance,
+                        srcType: "encumbrance"
+                    }
+                }
+            },
+            Dexterity: {
+                ...result.skill_mods.Dexterity,
+                Encumbrance: {
+                    ...result.skill_mods.Dexterity.Encumbrance,
+                    bulk_carried: {
+                        num: encumbrance,
+                        srcType: "encumbrance"
+                    }
+                }
+            },
+            Stealth: {
+                ...result.skill_mods.Stealth,
+                Encumbrance: {
+                    ...result.skill_mods.Stealth.Encumbrance,
+                    bulk_carried: {
+                        num: encumbrance,
+                        srcType: "encumbrance"
+                    }
+                }
+            }
+        },
+        speed_mods: {
+            ...result.speed_mods,
+            Encumbrance: {
+                ...result.speed_mods.Encumbrance,
+                bulk_carried: {
+                    num: 5 * encumbrance,
+                    srcType: "encumbrance"
+                }
+            }
+        }
+    };
+
+    result = updateVariousMods(result);
+    return result;
+}
+
 export const updateFeats = (statsObj) => {
     let result = {
         ...statsObj,
@@ -585,7 +661,12 @@ const updateHeroicBonus = (statsObj) => {
 }
 
 export const updateItems = (statsObj) => {
-    return statsObj;
+    let result = { ...statsObj };
+    result = clearBonuses(result, ["item"]);
+
+    result = updateEncumbrance(result);
+
+    return result;
 }
 
 export const updateKits = (statsObj) => {
@@ -1164,6 +1245,7 @@ const updateSize = (statsObj) => {
 }
 
 const updateSkillMods = (statsObj) => {
+    const prevBrawn = statsObj.skill_mods_net.Brawn;
     const skill_mods_net = {};
     const initialVals = {};
     gc.skills_list.forEach(skill => {
@@ -1176,11 +1258,15 @@ const updateSkillMods = (statsObj) => {
     gc.skills_list.forEach(skill => {
         skill_mods_net[skill] = statsObj.skill_ranks[skill] + mineModifiers(skill_mods[skill], { level: statsObj.level });
     });
-    return {
+    let result = {
         ...statsObj,
         skill_mods,
         skill_mods_net
     };
+    if (skill_mods_net.Brawn !== prevBrawn) {
+        result = updateEncumbrance(result);
+    }
+    return result;
 }
 
 export const updateSkillRanks = (statsObj) => {
@@ -1585,6 +1671,7 @@ export const updateVariousMods = (statsObj) => {
     result = updateMpMax(result);
     result = updateRpMax(result);
     result = updateSkillMods(result);
+    result = updateSpeed(result);
     result = updateSpellcraft(result);
     result = updateVpMax(result);
 
@@ -1607,10 +1694,10 @@ const updateVpMax = (statsObj) => {
 
 export const updateWealth = (statsObj) => {
     const wealth = gc.base_initial_wealth + mineModifiers(statsObj.wealth_mods, {});
-    return {
+    return updateEncumbrance({
         ...statsObj,
         wealth
-    };
+    });
 }
 
 export const updateXp = (statsObj) => {

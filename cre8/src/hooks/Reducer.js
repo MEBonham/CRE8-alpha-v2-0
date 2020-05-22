@@ -8,6 +8,7 @@ const Reducer = (state, action) => {
             let newVal;
             let foundIndex = -1;
             let flattened;
+            let temp;
             switch (action.field) {
                 case "active_conditions":
                     newVal = [ ...action.payload ];
@@ -420,13 +421,37 @@ const Reducer = (state, action) => {
                         }
                     };
                 case "swapInventorySpots":
-                    flattened = [
-                        ...action.flattened.slice(0, action.payload[0]),
-                        action.flattened[action.payload[1]],
-                        action.flattened[action.payload[0]],
-                        ...action.flattened.slice(action.payload[1] + 1)
-                    ];
-                    newVal = unflattenInventory(flattened);
+                    if (action.flattened[action.index].location === "Readily Available" ||
+                            action.flattened[action.index].location === "Worn/Wielded" ||
+                            action.flattened[action.index].location === "Not Carried") {
+                        let unflatIndex = 0;
+                        for (let i = 0; i < action.index; i++) {
+                            if (action.flattened[i].location === "Readily Available" ||
+                                    action.flattened[i].location === "Worn/Wielded" ||
+                                    action.flattened[i].location === "Not Carried") {
+                                unflatIndex++;
+                            }
+                        }
+                        const index1 = (action.direction === "up") ? unflatIndex - 1 : unflatIndex;
+                        const index2 = index1 + 1;
+                        temp = unflattenInventory(action.flattened);
+                        newVal = [
+                            ...temp.slice(0, index1),
+                            temp[index2],
+                            temp[index1],
+                            ...temp.slice(index2 + 1)
+                        ];
+                    } else {
+                        const index1 = (action.direction === "up") ? action.index - 1 : action.index;
+                        const index2 = index1 + 1;
+                        flattened = [
+                            ...action.flattened.slice(0, index1),
+                            action.flattened[index2],
+                            action.flattened[index1],
+                            ...action.flattened.slice(index2 + 1)
+                        ];
+                        newVal = unflattenInventory(flattened);
+                    }
                     return {
                         ...state,
                         curChangesMade: true,

@@ -121,6 +121,10 @@ const PlayEquipment = () => {
                         </AccordionSection>
                     ))}
                 </Accordion>
+                <h4>
+                    <span className="name-qty" />
+                    <span className="bulk total">Total Bulk: {state.cur.stats.bulk_carried} (capacity {state.cur.stats.skill_mods_net.Brawn * 10 + 50})</span>
+                </h4>
             </section>
             <PlayAcquiringCenter />
         </section>

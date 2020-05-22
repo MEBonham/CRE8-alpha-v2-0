@@ -5,13 +5,12 @@ import MyButton from '../ui/MyButton';
 
 const PlayManageItem = ({ item, index, flattened }) => {
     const [state, dispatch] = useContext(Store);
-    // console.log(item.name, item.current_index, item.out_of);
 
     const dispatchRollData = (data) => {
         dispatch({ type: "ROLL_PENDING", payload: data });
     }
     const dispatchLose = () => {
-        dispatch({ type: "CHAR_EDIT", field: "loseItem", flattened, payload: index });
+        dispatch({ type: "CHAR_EDIT", field: "loseItem", flattened, index });
     }
     const sellItem = (ev) => {
         if (state.cur) {
@@ -35,10 +34,10 @@ const PlayManageItem = ({ item, index, flattened }) => {
         dispatch({ type: "CHAR_EDIT", field: "moveItemInInventory", newLocation: ev.target.value, payload: item });
     }
     const moveUp = (ev) => {
-        dispatch({ type: "CHAR_EDIT", field: "swapInventorySpots", flattened, payload: [index - 1, index] });
+        dispatch({ type: "CHAR_EDIT", field: "swapInventorySpots", flattened, index, direction: "up" });
     }
     const moveDown = (ev) => {
-        dispatch({ type: "CHAR_EDIT", field: "swapInventorySpots", flattened, payload: [index, index + 1] });
+        dispatch({ type: "CHAR_EDIT", field: "swapInventorySpots", flattened, index, direction: "down" });
     }
 
     return (

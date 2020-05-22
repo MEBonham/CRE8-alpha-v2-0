@@ -406,6 +406,19 @@ section.play-equipment section.inventory-display h4 span.bulk {
     width: 20%;
 }
 
+section.play-equipment section.inventory-display h4 {
+    width: 100%;
+    padding: 4px 6%;
+    font-size: 1.4rem;
+    font-weight: bold;
+}
+
+section.play-equipment section.inventory-display h4 span.bulk.total {
+    position: relative;
+    left: -37px;
+    line-height: 1.2;
+}
+
 section.play-equipment section.acquiring-center select,
 section.play-equipment section.acquiring-center div.my-button {
     margin-right: 8px;
