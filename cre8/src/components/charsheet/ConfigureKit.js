@@ -140,6 +140,20 @@ const ConfigureKit = (props) => {
         });
     }
 
+    const [bonusTalentsArr, setBonusTalentsArr] = useState([]);
+    useEffect(() => {
+        if (currentKit.id && state.cur) {
+            const arrCopy = [ ...currentKit.bonus_talents ];
+            if (state.cur.stats.kits[props.level][props.index].vpPlus2_OR_buffTalent &&
+                    state.cur.stats.kits[props.level][props.index].selected_options.vpPlus2_OR_buffTalent === "buffTalent") {
+                arrCopy.push({
+                    byTag: ["Buff"]
+                });
+            }
+            setBonusTalentsArr(arrCopy);
+        }
+    }, [currentKit, props.index, props.level, state.cur])
+
     return (
         <div className="select-kit" id={`meb_editChar_selectKit_${props.level}_${props.index}`}>
             <select onChange={changeKits} className="color-coded">
@@ -233,6 +247,27 @@ const ConfigureKit = (props) => {
                         </div>
                     </div> :
                 null}
+                {currentKit && currentKit.vpPlus2_OR_buffTalent ?
+                    <div className="radio-bank rows">
+                        <label>Choose one:</label>
+                        <div>
+                            <input
+                                type="radio"
+                                name={`vpPlus2_OR_buffTalent-kit-${props.level}-${props.index}`}
+                                value="vpPlus2"
+                                onChange={radioSelection}
+                            /> Vitality Points +2
+                        </div>
+                        <div>
+                            <input
+                                type="radio"
+                                name={`vpPlus2_OR_buffTalent-kit-${props.level}-${props.index}`}
+                                value="buffTalent"
+                                onChange={radioSelection}
+                            /> Gain a bonus [Buff] talent.
+                        </div>
+                    </div> :
+                null}
                 {currentKit && currentKit.fightingRpBoost_OR_rpPlus2 ?
                     <div className="radio-bank rows">
                         <label>Choose one:</label>
@@ -273,19 +308,21 @@ const ConfigureKit = (props) => {
                 null}
             </div>
             <div className="selects columns">
-                {currentKit && currentKit.bonus_talents && currentKit.bonus_talents.map((bonusTalent, i) => {
-                    const key = Object.keys(bonusTalent)[0];
-                    const tagFilter = bonusTalent[key];
-                    return (
-                        <ConfigureTalent
-                            key={i}
-                            level={props.level}
-                            index={`kit${props.index}_${i}`}
-                            tagFilter={tagFilter}
-                            search={props.search}
-                        />
-                    );
-                })}
+                {currentKit ?
+                    bonusTalentsArr.map((bonusTalent, i) => {
+                        const key = Object.keys(bonusTalent)[0];
+                        const tagFilter = bonusTalent[key];
+                        return (
+                            <ConfigureTalent
+                                key={i}
+                                level={props.level}
+                                index={`kit${props.index}_${i}`}
+                                tagFilter={tagFilter}
+                                search={props.search}
+                            />
+                        );
+                    }) :
+                null}
                 {currentKit && currentKit.bonus_feat ?
                     <ConfigureFeat level={props.level} index={`kit${props.index}`} search={props.search} /> :
                 null}

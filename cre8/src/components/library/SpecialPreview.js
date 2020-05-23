@@ -83,6 +83,9 @@ const SpecialPreview = () => {
                     {data.vpPlus2_OR_mpPlus2 ?
                         <li>VP +2 <span className="or">or</span> MP +2</li> :
                     null}
+                    {data.vpPlus2_OR_buffTalent ?
+                        <li>VP +2 <span className="or">or</span> gain a bonus [Buff] talent.</li> :
+                    null}
                     {data.vp_boost > 0 ? <li>VP +{data.vp_boost}</li> : null}
                     {data.bonus_feat ? <li>Gain a bonus feat.</li> : null}
                     {data.bonus_talents.map((talent, i) => (

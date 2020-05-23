@@ -888,6 +888,13 @@ export const updateKits = (statsObj) => {
             ) {
                 vp_boost += 2;
             }
+            if (
+                kitObj.vpPlus2_OR_buffTalent &&
+                kitObj.selected_options.vpPlus2_OR_buffTalent &&
+                kitObj.selected_options.vpPlus2_OR_buffTalent === "vpPlus2"
+            ) {
+                vp_boost += 2;
+            }
             result.vp_kits = {
                 ...result.vp_kits,
                 [level]: {

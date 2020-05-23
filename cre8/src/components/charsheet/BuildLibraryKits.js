@@ -605,6 +605,15 @@ const BuildLibraryKits = (props) => {
                         />
                         <label>VP +2 <span className="or">or</span> MP +2</label>
                     </div>
+                    <div className="checkbox-pair">
+                        <Controller
+                            as="input"
+                            type="checkbox"
+                            name="vpPlus2_OR_buffTalent"
+                            control={control}
+                        />
+                        <label>VP +2 <span className="or">or</span> gain a [Buff] talent</label>
+                    </div>
                     <div className="columns">
                         <label>Grow a size category at level: (zero to disable)</label>
                         <Controller
