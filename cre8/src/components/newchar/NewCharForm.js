@@ -1,5 +1,4 @@
-// import React, { useState, useEffect, useRef, useContext, useCallback } from 'react';
-import React, { useState, useEffect, useContext, useCallback } from 'react';
+import React, { useState, useEffect, useRef, useContext, useCallback } from 'react';
 import { Link, Redirect } from 'react-router-dom';
 import { Store } from '../GlobalWrapper';
 import fb from '../../fbConfig';
@@ -13,6 +12,15 @@ import { updateVariousMods } from '../../helpers/Calculations';
 const NewCharForm = () => {
     const [state, dispatch] = useContext(Store);
     const db = fb.db;
+
+    // Protect against memory leak
+    const _isMounted = useRef(false);
+    useEffect(() => {
+        _isMounted.current = true;
+        return(() => {
+            _isMounted.current = false;
+        });
+    }, [])
 
     const [redirectFlag, setRedirectFlag] = useState(false);
     useEffect(() => {
@@ -61,7 +69,9 @@ const NewCharForm = () => {
             delete charObj.slug;
             await db.collection("characters").doc(id).set(charObj);
             dispatch({ type: "SET", key: "shouldUpdateCharacterCache", payload: true });
-            setRedirectFlag(true);
+            if (_isMounted.current) {
+                setRedirectFlag(true);
+            }
         } catch(err) {
             console.log("Error:", err);
         }

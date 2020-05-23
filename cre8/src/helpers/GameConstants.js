@@ -83,6 +83,7 @@ const gc = {
     epic_level_xp_increment: 500,
     feat_tags: [
         "Boost",
+        "Buff",
         "Core",
         "Counter",
         "Grace",

@@ -80,6 +80,31 @@ const Reducer = (state, action) => {
                             coasting: action.payload
                         }
                     };
+                case "customizeFeat":
+                    newVal = (action.property === "consuming_mage_flight") ? (action.payload ? "on" : "off") : action.payload;
+                    return {
+                        ...state,
+                        curChangesMade: true,
+                        cur: {
+                            ...state.cur,
+                            stats: updateFeats({
+                                ...state.cur.stats,
+                                feats: {
+                                    ...state.cur.stats.feats,
+                                    [action.level]: {
+                                        ...state.cur.stats.feats[action.level],
+                                        [action.index]: {
+                                            ...state.cur.stats.feats[action.level][action.index],
+                                            selected_options: {
+                                                ...state.cur.stats.feats[action.level][action.index].selected_options,
+                                                [action.property]: newVal
+                                            }
+                                        }
+                                    }
+                                }
+                            })
+                        }
+                    };
                 case "customizeKit":
                     let property;
                     if (action.property.startsWith("trainedSkill")) {

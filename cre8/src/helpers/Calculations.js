@@ -570,6 +570,10 @@ export const updateFeats = (statsObj) => {
     result = updateTalents(result);
 
     result = updateSynergies(result);               // Includes updateVariousMods()
+    if (featsAlreadyChecked.includes("mageflight")) {
+        result = updateMageFlight(result);
+        result = updateMpMax(result);
+    }
     return result;
 }
 
@@ -1095,6 +1099,7 @@ export const updateKits = (statsObj) => {
     result.caster_level = result.heroic_bonus + result.caster_level_kits_total;
     result = updateSpellcraft(result);
     result = updateMageArmor(result);
+    result = updateMageFlight(result);
     result = updateMpMax(result);
 
     result.coast_number_kits_total = mineKits(result.coast_number_kits, stack1stLevelKits);
@@ -1176,6 +1181,48 @@ const updateMageArmor = (statsObj) => {
                 }
             }
         };
+    }
+    return result;
+}
+
+const updateMageFlight = (statsObj) => {
+    const slug = "mageflight";
+    let result = { ...statsObj };
+    let foundFeatObj;
+    let foundLevel;
+    Object.keys(statsObj.feats).forEach((level) => {
+        Object.keys(statsObj.feats[level]).forEach((index) => {
+            if (!foundFeatObj && statsObj.feats[level][index].id === slug) {
+                foundFeatObj = statsObj.feats[level][index];
+                foundLevel = level;
+            }
+        });
+    });
+    if (foundFeatObj) {
+        if (foundFeatObj.selected_options.consuming_mage_flight &&
+            foundFeatObj.selected_options.consuming_mage_flight === "on") {
+            result.mp_mods = {
+                ...result.mp_mods,
+                Untyped: {
+                    ...result.mp_mods.Untyped,
+                    [slug]: {
+                        level: foundLevel,
+                        num: -2,
+                        srcType: "feat"
+                    }
+                }
+            }
+        }
+        result.passives = [
+            ...result.passives,
+            {
+                displaySource: "Mage Flight",
+                drawback: false,
+                src: slug,
+                srcType: "feat",
+                text: "You can remain flying in between actions and turns."
+            }
+        ];
     }
     return result;
 }

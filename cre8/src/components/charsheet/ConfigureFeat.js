@@ -85,6 +85,17 @@ const ConfigureFeat = (props) => {
         dispatch({ type: "CHAR_EDIT", field: "feats", payload: featsObj, level: props.level, index: props.index });
     }
 
+    const consumingModeToggle = (ev) => {
+        dispatch({
+            type: "CHAR_EDIT",
+            field: "customizeFeat",
+            level: props.level,
+            index: props.index,
+            property: ev.target.name.split("-")[0],
+            payload: ev.target.checked
+        });
+    }
+
     return (
         <div className="select-feat" id={`meb_editChar_selectFeat_${props.level}_${props.index}`}>
             <select onChange={changeFeats} className="color-coded">
@@ -93,6 +104,17 @@ const ConfigureFeat = (props) => {
                     <option key={featSlug} value={featSlug} className="non-false">{selectFeats[featSlug].name}</option>
                 ))}
             </select>
+            {currentFeat && currentFeat.id === "mageflight" ?
+                <div className="checkbox-pair columns">
+                    <input
+                        type="checkbox"
+                        name={`consuming_mage_flight-featCheckbox-${props.level}-${props.index}`}
+                        onChange={consumingModeToggle}
+                        defaultChecked={!!currentFeat.selected_options.consuming_mage_armor}
+                    />
+                    <label>Consuming Mode</label>
+                </div>
+            : null}
         </div>
     );
 }

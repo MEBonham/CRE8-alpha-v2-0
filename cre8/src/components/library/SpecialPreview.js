@@ -43,7 +43,15 @@ const SpecialPreview = () => {
             <>
                 <header>
                     <h1>{data.name}</h1>
-                    <h2 className="subtitle">[{data.tags.map((tag) => (tag)).join("] [")}] Kit</h2>
+                    <h2 className="subtitle">
+                        {data.tags.length ? 
+                            <>
+                                [
+                                {data.tags.map((tag) => (tag)).join("] [")}
+                                ]
+                            </> :
+                            null 
+                        } Kit</h2>
                     <p className="prereqs"><strong>Prerequisites:</strong> {data.prereqs}</p>
                 </header>
                 <h2>Benefits:</h2>
