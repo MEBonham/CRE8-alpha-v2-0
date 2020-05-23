@@ -5,19 +5,19 @@ import MyButton from '../ui/MyButton';
 
 const BatchEdit = () => {
 
-    const collection = "characters";
+    const collection = "kits";
     const editAll = async (ev) => {
         try {
             const collectionCopy = {};
             const query = await fb.db.collection(collection).get();
             query.forEach((item) => {
-                collectionCopy[item.id] = (item.data().bulk_carried) ?
+                collectionCopy[item.id] = (item.data().melee_weapon_impact_plus1) ?
                     {
                         ...item.data()
                     } :
                     {
                         ...item.data(),
-                        bulk_carried: 0
+                        melee_weapon_impact_plus1: false
                     };
             });
             Object.keys(collectionCopy).forEach((id) => {

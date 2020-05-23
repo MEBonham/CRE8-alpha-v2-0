@@ -371,13 +371,13 @@ const BuildLibraryFeats = (props) => {
                     });
                 });
             } else if (key === "passives") {
-                featObj.passives = {
+                featObj.passives = [
                     ...featObj.passives,
                     ...formData[key].map((passive) => ({
                         text: passive,
                         drawback: false
                     }))
-                }
+                ];
             } else if (key === "attackDetail") {
                 featObj.attacks = formData[key].map((detail, i) => ({
                     name: formData.attackName[i],

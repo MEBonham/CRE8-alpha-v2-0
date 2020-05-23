@@ -410,8 +410,8 @@ const BuildLibraryKits = (props) => {
             } else if (key === "intended_level") {
                 kitObj[key] = parseInt(formData[key]);
             } else if (!key.startsWith("kitTag") && !key.startsWith("variousBonus") && key !== "bonusTrainingOptions" &&
-                !key.startsWith("variousPenal") && !key.startsWith("attack")) {
-                    kitObj[key] = formData[key];
+                    !key.startsWith("variousPenal") && !key.startsWith("attack")) {
+                kitObj[key] = formData[key];
             }
         })
         kitObj.bonus_talents = bonusTalentsArr;
@@ -632,6 +632,15 @@ const BuildLibraryKits = (props) => {
                             control={control}
                         />
                         <label>Select One From Attacks</label>
+                    </div>
+                    <div className="checkbox-pair">
+                        <Controller
+                            as="input"
+                            type="checkbox"
+                            name="melee_weapon_impact_plus1"
+                            control={control}
+                        />
+                        <label>Impact +1 to melee weapon attacks</label>
                     </div>
                     <section className="various-bonuses rows">
                         <ul>

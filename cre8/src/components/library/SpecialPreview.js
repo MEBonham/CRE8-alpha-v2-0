@@ -38,7 +38,7 @@ const SpecialPreview = () => {
     }, [state.previewComponent])
 
     const previewKit = (data) => {
-        // console.log(data.passives);
+        // console.log(data);
         return(
             <>
                 <header>
@@ -94,7 +94,7 @@ const SpecialPreview = () => {
                                     Peril modifier {`${ifPlus(attackObj.peril_mod)}${attackObj.peril_mod}`}{attackObj.detail ? `), details: ${attackObj.detail.slice(0, -1)}` : ")"}{(i < data.attacks.length - 1) ? <span> <span className="or">or</span> gain </span> : "."}
                                 </span>
                             ))}
-                        </li> :    
+                        </li> :
                         data.attacks.map((attackObj, i) => (
                             <li key={i}>Gain a {attackObj.name} {attackObj.type === "natural_weapon" ? "natural weapon" : `${attackObj.type} attack`} (range {attackObj.range}, 
                                 base Impact {attackObj.impact_num_dice}d{attackObj.impact_dice_sides}, {Object.keys(attackObj.damage_type.base)
@@ -126,6 +126,16 @@ const SpecialPreview = () => {
                             return null;
                         }
                     })}
+                    {data.melee_weapon_impact_plus1 ?
+                        <li>
+                            Gain a +1 feat bonus to the impact of your melee weapon attacks.
+                        </li> :
+                    null}
+                    {parseInt(data.grow_bigger_level) ?
+                        <li>
+                            <em>From level {data.grow_bigger_level}:</em> Gain a +1 bonus to Size.
+                        </li> :
+                    null}
                     {data.passives.filter((passive) => !passive.drawback).map((passive, i) => (
                         <li key={i}>{passive.text}</li>
                     ))}
@@ -226,7 +236,10 @@ const SpecialPreview = () => {
             } else {
                 return [];
             }
-        }));
+        })).concat(data.passives.filter((passiveFeatureObj) => !passiveFeatureObj.drawback).map((passiveFeatureObj) => ({
+            text: passiveFeatureObj.text,
+            type: "passive"
+        })));
 
         const seedEffectsObj = {};
         data.seed_effects.forEach((effect) => {
@@ -461,11 +474,10 @@ const SpecialPreview = () => {
                         }
                     })}
                     {data.attacks.map((attackObj, i) => (
-                        <li key={i}>Gain a {attackObj.name} 
-                            {attackObj.type === "natural_weapon" ? "natural weapon" : `${attackObj.type} attack`} (range {attackObj.range}, 
+                        <li key={i}>Gain a {attackObj.name} {attackObj.type === "natural_weapon" ? "natural weapon" : `${attackObj.type} attack`} (range {attackObj.range}, 
                             base Impact {attackObj.impact_num_dice}d{attackObj.impact_dice_sides}, {Object.keys(attackObj.damage_type.base)
-                                .filter((damageType) => attackObj.damage_type.base[damageType]).join("/")} damage, 
-                            Peril modifier {`${ifPlus(attackObj.peril_mod)}${attackObj.peril_mod}`}).
+                                .filter((type) => attackObj.damage_type.base[type]).join("/")} damage, 
+                            Peril modifier {`${ifPlus(attackObj.peril_mod)}${attackObj.peril_mod}`}). {attackObj.detail ? `Details: ${attackObj.detail}` : null}
                         </li>
                     ))}
                     {data.standard_actions.map((standardAction, i) => (

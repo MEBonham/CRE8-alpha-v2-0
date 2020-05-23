@@ -201,7 +201,8 @@ export const mineModifiers = (modsObj, qualifiers) => {
         if (type === "Circumstance" || type === "Untyped" || type === "buy_history") {
             sources.forEach(source => {
                 const obj = modsObj[type][source];
-                if (!obj.conditional || qualifiers[obj.condition.split("=")[0]] === obj.condition.split("=")[1]) {
+                if (!obj.conditional || qualifiers[obj.condition.split("=")[0]] === obj.condition.split("=")[1] ||
+                        (obj.condition.split(">=")[0] === "level" && qualifiers.level >= obj.condition.split(">=")[1])) {
                     total += parseInt(obj.num);
                 }
             });
@@ -209,7 +210,8 @@ export const mineModifiers = (modsObj, qualifiers) => {
             let bestSoFar = 0;
             sources.forEach(source => {
                 const obj = modsObj[type][source];
-                if (!obj.conditional || qualifiers[obj.condition.split("=")[0]] === obj.condition.split("=")[1]) {
+                if (!obj.conditional || qualifiers[obj.condition.split("=")[0]] === obj.condition.split("=")[1] ||
+                        (obj.condition.split(">=")[0] === "level" && qualifiers.level >= obj.condition.split(">=")[1])) {
                     const mod = parseInt(obj.num);
                     if (mod < 0) {
                         total += mod;
@@ -274,9 +276,20 @@ const updateAttacks = (statsObj) => {
             accuracy = 10 + statsObj.caster_level;
             peril_rating = statsObj.caster_level + attackObj.peril_mod;
         } else {
-            accuracy = 10 + statsObj.fighting_level + mineModifiers(statsObj.weapon_accuracy_mods, { ...attackObj, level: statsObj.level });
+            accuracy = 10 + statsObj.fighting_level + mineModifiers(statsObj.weapon_accuracy_mods, {
+                ...attackObj,
+                level: statsObj.level,
+                range: attackObj.range.startsWith("Melee") ? "melee" : "ranged"
+            });
+            if (attackObj.name === "Unarmed Strike" && !statsObj.traits_from_talents.includes("Unarmed Focus")) {
+                accuracy -= 5;
+            }
             peril_rating = statsObj.fighting_level + attackObj.peril_mod;
-            impact_total_mod = mineModifiers(statsObj.weapon_impact_mods, { ...attackObj, level: statsObj.level });
+            impact_total_mod = mineModifiers(statsObj.weapon_impact_mods, {
+                ...attackObj,
+                level: statsObj.level,
+                range: attackObj.range.startsWith("Melee") ? "melee" : "ranged"
+            });
         }
         return {
             ...attackObj,
@@ -298,6 +311,14 @@ const updateAv = (statsObj) => {
         ...statsObj,
         armor_value,
         resistance_value
+    };
+}
+
+const updateAwesome = (statsObj) => {
+    const awesome_check = gc.base_awesome_bonus + statsObj.level_max8 + mineModifiers(statsObj.awesome_mods, { level: statsObj.level });
+    return {
+        ...statsObj,
+        awesome_check
     };
 }
 
@@ -331,7 +352,13 @@ const updateEncumbrance = (statsObj) => {
     });
     result.bulk_carried = totalBulk;
 
-    const capacity = 50 + 10 * result.skill_mods_net.Brawn;
+    let capacity = Math.max(0, 50 + 10 * result.skill_mods_net.Brawn);
+    if (result.size_final > -4) {
+        capacity = Math.max(capacity, 1);
+    }
+    if (result.size_final > -3) {
+        capacity = Math.max(capacity, 5);
+    }
     const encumbrance = Math.min(0, Math.floor((capacity - totalBulk) / 10));
     // console.log(encumbrance);
     result = {
@@ -412,8 +439,8 @@ export const updateFeats = (statsObj) => {
             result.traits_from_feats = result.traits_from_feats.concat(featObj.benefit_traits).concat(featObj.drawback_traits);
             featObj.passives.forEach((passiveFeature) => {
                 result.passives.push({
+                    ...passiveFeature,
                     displaySource: featObj.name,
-                    text: passiveFeature,
                     src: featObj.id,
                     srcType: "feat"
                 });
@@ -1015,6 +1042,37 @@ export const updateKits = (statsObj) => {
                 }
             });
 
+            if (parseInt(kitObj.grow_bigger_level)) {
+                result.size_mods = {
+                    ...result.size_mods,
+                    Base: {
+                        ...result.size_mods.Base,
+                        [kitObj.id]: {
+                            level: parseInt(kitObj.grow_bigger_level),
+                            num: 1,
+                            srcType: "kit",
+                            conditional: true,
+                            condition: `level>=${parseInt(kitObj.grow_bigger_level)}`
+                        }
+                    }
+                };
+            }
+            if (kitObj.melee_weapon_impact_plus1) {
+                result.weapon_impact_mods = {
+                    ...result.weapon_impact_mods,
+                    Feat: {
+                        ...result.weapon_impact_mods.Feat,
+                        [kitObj.id]: {
+                            level,
+                            num: 1,
+                            srcType: "kit",
+                            conditional: true,
+                            condition: "range=melee"
+                        }
+                    }
+                }
+            }
+
             kitsAlreadyChecked.push(kitObj.id);
         });
     });
@@ -1024,6 +1082,8 @@ export const updateKits = (statsObj) => {
     result = updateSynergies(result);               // Includes updateVariousMods() which includes updateSize() and updateAttacks()
 
     result = updateSkillRanks(result);
+
+    result = updateWealth(result);
 
     const stack1stLevelKits = result.traits_from_kits.includes("Stack 1st-Level Kits");
 
@@ -1391,6 +1451,7 @@ export const updateTalents = (statsObj) => {
         ...statsObj,
         traits_from_talents: []
     };
+    result = clearAttacks(result, ["talent"]);
     result = clearBonuses(result, ["talent"]);
     result = clearPassives(result, ["talent"]);
     result = clearRestFeatures(result, ["talent"]);
@@ -1458,6 +1519,19 @@ export const updateTalents = (statsObj) => {
                     srcType: "talent"
                 });
             });
+            result.attacks = [
+                ...result.attacks,
+                ...talentObj.attacks.map((attackObj) => ({
+                    ...attackDefault,
+                    ...attackObj,
+                    damage_type: {
+                        ...attackDefault.damage_type,
+                        ...attackObj.damage_type
+                    },
+                    src: talentObj.id,
+                    srcType: "talent"
+                }))
+            ];
 
             if (talentObj.mighty_constitution) {
                 if (result.good_save === "fortitude") {
@@ -1656,6 +1730,7 @@ export const updateTalents = (statsObj) => {
     });
 
     result = updateSynergies(result);               // Includes updateVariousMods()
+    result = updateWealth(result);
     if (talentsAlreadyChecked.includes("magearmor")) {
         result = updateMageArmor(result);
         result = updateMpMax(result);
@@ -1666,7 +1741,7 @@ export const updateTalents = (statsObj) => {
 export const updateVariousMods = (statsObj) => {
     let result = { ...statsObj };
     result = updateSize(result);            // Includes some other updates
-    // result = updateAwesome(result);
+    result = updateAwesome(result);
     result = updateGoodSave(result);
     result = updateMpMax(result);
     result = updateRpMax(result);
@@ -1693,9 +1768,20 @@ const updateVpMax = (statsObj) => {
 }
 
 export const updateWealth = (statsObj) => {
-    const wealth = gc.base_initial_wealth + mineModifiers(statsObj.wealth_mods, {});
+    let wealth = gc.base_initial_wealth + mineModifiers(statsObj.wealth_mods, {});
+    let result = { ...statsObj };
+    if (wealth < 0) {
+        result.wealth_mods.buy_history = [
+            ...result.wealth_mods.buy_history,
+            {
+                num: 0 - wealth,
+                srcType: "Zero_Min"
+            }
+        ];
+        wealth = 0;
+    }
     return updateEncumbrance({
-        ...statsObj,
+        ...result,
         wealth
     });
 }

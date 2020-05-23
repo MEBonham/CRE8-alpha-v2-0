@@ -12,6 +12,7 @@ const PlayAccordions = () => {
 
     const [traitsArr, setTraitsArr] = useState([]);
     const [passivesObj, setPassivesObj] = useState({});
+    const [unarmedGray, setUnarmedGray] = useState("default-gray");
     useEffect(() => {
         const convertPassives = (arr) => {
             const newObj = {};
@@ -29,10 +30,14 @@ const PlayAccordions = () => {
                     sourcesArr.push(passiveAbilityObj.displaySource);
                 }
             });
+            // console.log(newObj);
             setPassivesObj(newObj);
         }
 
         if (state.cur) {
+            if (state.cur.stats.traits_from_talents.includes("Unarmed Focus")) {
+                setUnarmedGray("");
+            }
             setTraitsArr([
                 ...new Set(
                     state.cur.stats.traits_from_kits.concat(state.cur.stats.traits_from_feats)
@@ -64,7 +69,7 @@ const PlayAccordions = () => {
                     ))}
                     {state.cur.stats.attacks.filter((attackObj) => attackObj.name === "Unarmed Strike").map((attackObj, i) => (
                         <AccordionSection key={i}>
-                            <h4 className="default-gray">{attackObj.name}</h4>
+                            <h4 className={unarmedGray}>{attackObj.name}</h4>
                             <>
                                 <p><strong>Range:</strong> {attackObj.range}</p>
                                 <p>

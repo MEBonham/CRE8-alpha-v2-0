@@ -16,7 +16,7 @@ export const charDefault = {
         active_conditions: [],
         armor_value: 2,
         attacks: [{
-            accuracy: 10,
+            accuracy: 5,
             name: "Unarmed Strike",
             type: "natural_weapon",
             range: "Melee reach 1 (short)",
@@ -211,6 +211,7 @@ export const kitDefault = {
     fightingRpBoost_OR_rpPlus2: false,
     grow_bigger_level: 0,
     intended_level: 1,
+    melee_weapon_impact_plus1: false,
     passives: [],
     selected_options: {},
     select_one_from_attacks: false,

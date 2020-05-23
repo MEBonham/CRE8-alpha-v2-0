@@ -23,11 +23,13 @@ const gc = {
         "Skill Ranks for Parcels",
         "Stability",
         "Stack 1st-Level Kits",
-        "Swarm Resilience"
+        "Swarm Resilience",
+        "Unarmed Focus"
     ],
     bonus_targets: [
         { name: "Armor Value", code: "av_mods" },
         { name: "Athletics", code: "Athletics" },
+        { name: "Awesome", code: "awesome_mods" },
         { name: "Brawn", code: "Brawn" },
         { name: "Charisma", code: "Charisma" },
         { name: "Defense", code: "defense_mods" },

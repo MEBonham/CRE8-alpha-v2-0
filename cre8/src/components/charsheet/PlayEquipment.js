@@ -14,7 +14,13 @@ const PlayEquipment = () => {
     const LS_KEY = "moneyGainLose";
 
     const [flattened, setFlattened] = useState([]);
+    const [bulkCapacity, setBulkCapacity] = useState(50);
     useEffect(() => {
+        let minCapacity = 0;
+        if (state.cur.stats.size_final > -4) minCapacity = 1;
+        if (state.cur.stats.size_final > -3) minCapacity = 5;
+        setBulkCapacity(Math.max(minCapacity, state.cur.stats.skill_mods_net.Brawn * 10 + 50));
+
         const inventoryCopy = [];
         state.cur.stats.inventory.forEach((itemObj, i) => {
             const heldCopy = [ ...itemObj.held_items ];
@@ -113,7 +119,7 @@ const PlayEquipment = () => {
                 </Accordion>
                 <h4>
                     <span className="name-qty" />
-                    <span className="bulk total">Total Bulk: {state.cur.stats.bulk_carried} (capacity {state.cur.stats.skill_mods_net.Brawn * 10 + 50})</span>
+                    <span className="bulk total">Total Bulk: {state.cur.stats.bulk_carried} (capacity {bulkCapacity})</span>
                 </h4>
             </section>
             <PlayAcquiringCenter />
