@@ -83,8 +83,11 @@ const TalentsLibraryMenu = () => {
     }, [selectTalents, dispatch])
 
     const handleChange = (ev) => {
-        const value = (ev.target.type === "checkbox") ? ev.target.checked : ev.target.value;
+        let value = (ev.target.type === "checkbox") ? ev.target.checked : ev.target.value;
         const property = ev.target.id.split("_")[2];
+        if (property === "levelCap") {
+            value = parseInt(value);
+        }
         dispatch({ type: "SET", key: "talentFilters", payload: {
             ...state.talentFilters,
             [property]: value
