@@ -273,8 +273,15 @@ const updateAttacks = (statsObj) => {
             accuracy = 10 + statsObj.fortitude_total;
             peril_rating = statsObj.fortitude_total + attackObj.peril_mod;
         } else if (attackObj.type === "spell") {
-            accuracy = 10 + statsObj.caster_level;
+            accuracy = 10 + statsObj.caster_level + mineModifiers(statsObj.spell_accuracy_mods, {
+                ...attackObj,
+                level: statsObj.level
+            });
             peril_rating = statsObj.caster_level + attackObj.peril_mod;
+            impact_total_mod = mineModifiers(statsObj.spell_impact_mods, {
+                ...attackObj,
+                level: statsObj.level
+            });
         } else {
             accuracy = 10 + statsObj.fighting_level + mineModifiers(statsObj.weapon_accuracy_mods, {
                 ...attackObj,
@@ -315,9 +322,11 @@ const updateAv = (statsObj) => {
 }
 
 const updateAwesome = (statsObj) => {
-    const awesome_check = gc.base_awesome_bonus + statsObj.level_max8 + mineModifiers(statsObj.awesome_mods, { level: statsObj.level });
+    const awesome_mods_total = mineModifiers(statsObj.awesome_mods, { level: statsObj.level });
+    const awesome_check = gc.base_awesome_bonus + statsObj.level_max8 + awesome_mods_total;
     return {
         ...statsObj,
+        awesome_mods_total,
         awesome_check
     };
 }
@@ -710,6 +719,7 @@ export const updateKits = (statsObj) => {
     result = clearBonuses(result, ["kit"]);
     result = clearPassives(result, ["kit"]);
     result = clearRestFeatures(result, ["kit"]);
+    result = clearFreeActions(result, ["kit"]);
     result = clearTrainings(result, ["kit"]);
     const kitsAlreadyChecked = [];
     Object.keys(statsObj.kits).forEach((level) => {
@@ -739,6 +749,14 @@ export const updateKits = (statsObj) => {
             kitObj.extended_rest_actions.forEach((restAction) => {
                 result.extended_rest_actions.push({
                     text: restAction,
+                    src: kitObj.id,
+                    srcType: "kit"
+                });
+            });
+            kitObj.free_actions.forEach((freeAction) => {
+                result.free_actions.push({
+                    displaySource: kitObj.name,
+                    text: freeAction,
                     src: kitObj.id,
                     srcType: "kit"
                 });
@@ -1511,6 +1529,7 @@ export const updateTalents = (statsObj) => {
     result = clearRestFeatures(result, ["talent"]);
     result = clearStandardActions(result, ["talent"]);
     result = clearSwiftActions(result, ["talent"]);
+    result = clearOpportunityActions(result, ["talent"]);
     result = clearFreeActions(result, ["talent"]);
     result = clearSynergies(result, ["talent"]);
     result = clearTrainings(result, ["talent"]);
@@ -1543,6 +1562,14 @@ export const updateTalents = (statsObj) => {
             });
             talentObj.swift_actions.forEach((action) => {
                 result.swift_actions.push({
+                    displaySource: talentObj.name,
+                    text: action,
+                    src: talentObj.id,
+                    srcType: "talent"
+                });
+            });
+            talentObj.opportunity_actions.forEach((action) => {
+                result.opportunity_actions.push({
                     displaySource: talentObj.name,
                     text: action,
                     src: talentObj.id,

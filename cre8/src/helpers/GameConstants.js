@@ -14,6 +14,7 @@ const gc = {
         "Dropped"
     ],
     benefit_traits: [
+        "Aberration Type",
         "Climber",
         "Darkvision",
         "Ignore Armor Speed Penalty",
@@ -47,6 +48,7 @@ const gc = {
         { name: "Speed", code: "speed_mods" },
         { name: "Spell Accuracy", code: "spell_accuracy_mods" },
         { name: "Spellcraft", code: "spellcraft_mods" },
+        { name: "Spell Impact", code: "spell_impact_mods" },
         { name: "Stealth", code: "Stealth" },
         { name: "Wealth (one-time)", code: "wealth_mods" },
         { name: "Weapon Accuracy", code: "weapon_accuracy_mods" },
@@ -156,6 +158,7 @@ const gc = {
         "Grace",
         "Ki",
         "Luck",
+        "Metamagic",
         "Monster",
         "Proficiency",
         "Seed",

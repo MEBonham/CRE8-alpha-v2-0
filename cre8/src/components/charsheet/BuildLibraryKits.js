@@ -28,6 +28,7 @@ const BuildLibraryKits = (props) => {
     const [bonusTalents, setBonusTalents] = useState([]);
     const [variousBonuses, setVariousBonuses] = useState([]);
     const [extendedRests, setExtendedRests] = useState([]);
+    const [freeActions, setFreeActions] = useState([]);
     const [shortRests, setShortRests] = useState([]);
     const [xpParcels, setXpParcels] = useState([]);
     const [passives, setPassives] = useState([]);
@@ -72,7 +73,13 @@ const BuildLibraryKits = (props) => {
     }
     const newShortRest = (ev) => {
         setShortRests([
-            ...extendedRests,
+            ...shortRests,
+            ""
+        ]);
+    }
+    const newFreeAction = (ev) => {
+        setFreeActions([
+            ...freeActions,
             ""
         ]);
     }
@@ -222,6 +229,8 @@ const BuildLibraryKits = (props) => {
                 setExtendedRests(data[key]);
             } else if (key === "short_rest_actions") {
                 setShortRests(data[key]);
+            } else if (key === "free_actions") {
+                setFreeActions(data[key]);
             } else if (key === "xp_parcels") {
                 setXpParcels(data[key]);
             } else if (key === "passives") {
@@ -308,6 +317,7 @@ const BuildLibraryKits = (props) => {
                 setDrawbackPassives([]);
                 setExtendedRests([]);
                 setShortRests([]);
+                setFreeActions([]);
                 setAttacks([]);
                 setXpParcels([]);
                 setBonusTrainings([]);
@@ -878,6 +888,21 @@ const BuildLibraryKits = (props) => {
                     />
                 ))}
                 <MyButton fct={newExtendedRest}>Add Extended Rest Ability</MyButton>
+            </section>
+            <section className="free-actions brown-box rows main-body">
+                <label>Free Actions</label>
+                {freeActions.map((ability, i) => (
+                    <Controller
+                        key={i}
+                        as="textarea"
+                        control={control}
+                        name={`free_actions[${i}]`}
+                        defaultValue={ability}
+                        rows="3"
+                        cols="44"
+                    />
+                ))}
+                <MyButton fct={newFreeAction}>Add Free Action</MyButton>
             </section>
             <section className="attack-form brown-box rows">
                 <label>Attacks</label>

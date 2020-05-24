@@ -1,4 +1,5 @@
 export const traitDescriptions = {
+    "Aberration Type": "This has no innate effect, but is considered a Benefit because it qualifies for so many special abilities.",
     "Arcane Aversion": "Incur a penalty to your Spellcraft Check and the Accuracy of your spell attacks. This penalty is equal to any encumbrance penalties you suffer to your Athletics, Dexterity, and Stealth skills (due to armor, shield, or a heavy load). The penalty additionally worsens by 1 if you wear a shield and again by 1 if you wear armor.",
     "Beast Type": "Cannot speak normal languages. Illiterate. Limited in the Charisma, Dexterity, Gadgetry, Glibness, and Knowledge skills.",
     "Climber": "You can coast Athletics checks to climb, even under pressure.",

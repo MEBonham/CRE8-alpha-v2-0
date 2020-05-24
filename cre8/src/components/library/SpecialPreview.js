@@ -150,6 +150,9 @@ const SpecialPreview = () => {
                     {data.passives.filter((passive) => !passive.drawback).map((passive, i) => (
                         <li key={i}>{passive.text}</li>
                     ))}
+                    {data.free_actions.map((freeAction, i) => (
+                        <li key={i}><em>Free Action:</em> {freeAction}</li>
+                    ))}
                     {data.benefit_traits.map((trait, i) => (
                         <li key={i}><strong>{trait}:</strong> {traitDescriptions[trait]}</li>
                     ))}
@@ -496,6 +499,9 @@ const SpecialPreview = () => {
                     ))}
                     {data.swift_actions.map((swiftAction, i) => (
                         <li key={i}><em>Swift Action:</em> {swiftAction}</li>
+                    ))}
+                    {data.opportunity_actions.map((oppAction, i) => (
+                        <li key={i}><em>Opportunity Action:</em> {oppAction}</li>
                     ))}
                     {data.free_actions.map((freeAction, i) => (
                         <li key={i}><em>Free Action:</em> {freeAction}</li>

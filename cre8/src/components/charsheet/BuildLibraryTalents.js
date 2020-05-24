@@ -84,6 +84,13 @@ const BuildLibraryTalents = (props) => {
             ""
         ]);
     }
+    const [opportunityActions, setOpportunityActions] = useState([]);
+    const newOpportunity = (ev) => {
+        setOpportunityActions([
+            ...opportunityActions,
+            ""
+        ]);
+    }
     const [freeActions, setFreeActions] = useState([]);
     const newFree = (ev) => {
         setFreeActions([
@@ -219,6 +226,8 @@ const BuildLibraryTalents = (props) => {
                 setStandardActions(data[key]);
             } else if (key === "swift_actions") {
                 setSwiftActions(data[key]);
+            } else if (key === "opportunity_actions") {
+                setOpportunityActions(data[key]);
             } else if (key === "free_actions") {
                 setFreeActions(data[key]);
             } else if (key === "short_rest_actions") {
@@ -293,6 +302,7 @@ const BuildLibraryTalents = (props) => {
                 setSelectivePassives([]);
                 setStandardActions([]);
                 setSwiftActions([]);
+                setOpportunityActions([]);
                 setFreeActions([]);
                 setShortRestActions([]);
                 setExtendedRestActions([]);
@@ -660,6 +670,21 @@ const BuildLibraryTalents = (props) => {
                             />
                         ))}
                         <MyButton fct={newSwift}>Add Swift Action</MyButton>
+                    </section>
+                    <section className="opportunity-actions rows brown-box">
+                        <label>Opportunity Actions</label>
+                        {opportunityActions.map((action, i) => (
+                            <Controller
+                                key={i}
+                                as="textarea"
+                                control={control}
+                                name={`opportunity_actions[${i}]`}
+                                defaultValue={action}
+                                rows="3"
+                                cols="44"
+                            />
+                        ))}
+                        <MyButton fct={newOpportunity}>Add Opportunity Action</MyButton>
                     </section>
                     <section className="free-actions rows brown-box">
                         <label>Free Actions</label>
