@@ -160,7 +160,17 @@ export const charDefault = {
                 }
             }
         },
-        weapon_impact_mods: {},
+        weapon_impact_mods: {
+            Circumstance: {
+                TwoHandedBonus: {
+                    level: 1,
+                    num: 1,
+                    srcType: "automatic",
+                    conditional: true,
+                    condition: "twoHanded=true"
+                }
+            }
+        },
         willpower_base_total: 0,
         willpower_mods: {
             base: {}

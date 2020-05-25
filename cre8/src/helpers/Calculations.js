@@ -346,7 +346,7 @@ const updateEncumbrance = (statsObj) => {
     let totalBulk = Math.floor(result.wealth / 10);
     result.inventory.forEach((itemObj) => {
         if (itemObj.location !== "Not Carried" && 
-                (itemObj.location !== "Worn/Wielded" || !itemObj.tags.includes("Armor") || !parseInt(itemObj.hands_occupied) === 0)) {
+                (itemObj.location !== "Worn/Wielded" || !itemObj.tags.includes("Armor") || parseInt(itemObj.hands_occupied) !== 0)) {
             totalBulk += itemObj.quantity * parseInt(itemObj.bulk);
             let subtotal = 0;
             itemObj.held_items.forEach((heldObj) => {
@@ -709,10 +709,11 @@ export const updateItems = (statsObj) => {
     const processItem = (itemObj) => {
         let attacksArr = [];
         if (itemObj.location === "Worn/Wielded" || !itemObj.worn_or_wielded) {
-            attacksArr = itemObj.attacks.map((attackObj) => {
+            attacksArr = itemObj.attacks.flatMap((attackObj) => {
                 let type;
                 let improvised = "false";
                 let shieldbash = "false";
+                let twoHanded = "false";
                 if (attackObj.categories.includes("Spell")) {
                     type = "spell_attack";
                 } else if (attackObj.categories.includes("Vim")) {
@@ -726,18 +727,54 @@ export const updateItems = (statsObj) => {
                     improvised = "true";
                     shieldbash = "true";
                 }
-                return {
-                    ...attackDefault,
-                    type,
-                    ...attackObj,
-                    damage_type: {
-                        ...attackDefault.damage_type,
-                        ...attackObj.damage_type
-                    },
-                    improvised,
-                    shieldbash,
-                    src: itemObj.id,
-                    srcType: "item"
+                if (itemObj.weapon_heft === "Two-Handed" && !attackObj.categories.includes("Crossbow")) twoHanded = "true";
+                if (itemObj.weapon_heft === "Versatile" && !attackObj.range.startsWith("Thrown")) {
+                    twoHanded = "true";
+                    return [
+                        {
+                            ...attackDefault,
+                            type,
+                            ...attackObj,
+                            damage_type: {
+                                ...attackDefault.damage_type,
+                                ...attackObj.damage_type
+                            },
+                            improvised,
+                            shieldbash,
+                            src: itemObj.id,
+                            srcType: "item"
+                        },
+                        {
+                            ...attackDefault,
+                            type,
+                            twoHanded,
+                            ...attackObj,
+                            damage_type: {
+                                ...attackDefault.damage_type,
+                                ...attackObj.damage_type
+                            },
+                            name: `${attackObj.name} (2-H)`,
+                            improvised,
+                            shieldbash,
+                            src: itemObj.id,
+                            srcType: "item"
+                        }
+                    ];
+                } else {
+                    return [{
+                        ...attackDefault,
+                        type,
+                        twoHanded,
+                        ...attackObj,
+                        damage_type: {
+                            ...attackDefault.damage_type,
+                            ...attackObj.damage_type
+                        },
+                        improvised,
+                        shieldbash,
+                        src: itemObj.id,
+                        srcType: "item"
+                    }];
                 }
             });
             result.attacks = [ ...result.attacks, ...attacksArr ];

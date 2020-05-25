@@ -102,7 +102,6 @@ const gc = {
     item_tags: [
         "Armor",
         "Container",
-        "Custom",
         "Gear",
         "Weapon"
     ],

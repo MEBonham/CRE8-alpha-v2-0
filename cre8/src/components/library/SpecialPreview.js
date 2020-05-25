@@ -449,6 +449,12 @@ const SpecialPreview = () => {
                             </section>
                     ) :
                 null}
+                {data.normal ?
+                    <section>
+                        <h2>Normal:</h2>
+                        <p>{data.normal}</p>
+                    </section> :
+                null}
             </>
         );
     }
@@ -582,7 +588,7 @@ const SpecialPreview = () => {
     }
 
     const previewItem = (data) => {
-        const grade = `${data.weapon_grade[0].toUpperCase()}${data.weapon_grade.slice(1)}`
+        const grade = data.weapon_grade ? `${data.weapon_grade[0].toUpperCase()}${data.weapon_grade.slice(1)}` : "";
         return(
             <>
                 <h1>{data.name}</h1>

@@ -16,22 +16,21 @@ const BatchEdit = () => {
                     ...item.data(),
                     stats: {
                         ...item.data().stats,
-                        weapon_accuracy_mods: {
-                            ...item.data().stats.weapon_accuracy_mods,
+                        weapon_impact_mods: {
+                            ...item.data().stats.weapon_impact_mods,
                             Circumstance: {
-                                ...item.data().stats.weapon_accuracy_mods.Circumstance,
-                                Nonproficiency: {
+                                ...item.data().stats.weapon_impact_mods.Circumstance,
+                                TwoHandedBonus: {
                                     level: 1,
-                                    num: -5,
+                                    num: 1,
                                     srcType: "automatic",
                                     conditional: true,
-                                    condition: "improvised=true"
+                                    condition: "twoHanded=true"
                                 }
                             }
                         }
                     }
                 };
-                delete collectionCopy[item.id].stats.weapon_accuracy_mods.Circumstance.Nonproficiency.conditonal;
             });
             Object.keys(collectionCopy).forEach((id) => {
                 fb.db.collection(collection).doc(id).set({
