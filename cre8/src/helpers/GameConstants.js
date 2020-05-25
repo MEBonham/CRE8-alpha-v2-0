@@ -58,6 +58,8 @@ const gc = {
     bonus_types: [
         "Base",
         "Circumstance",
+        "Deflection",
+        "Encumbrance",
         "Feat",
         "Item",
         "Racial",

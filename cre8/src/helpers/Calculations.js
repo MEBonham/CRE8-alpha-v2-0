@@ -201,7 +201,7 @@ export const mineModifiers = (modsObj, qualifiers) => {
         if (type === "Circumstance" || type === "Untyped" || type === "buy_history") {
             sources.forEach(source => {
                 const obj = modsObj[type][source];
-                if (!obj.conditional || qualifiers[obj.condition.split("=")[0]] === obj.condition.split("=")[1] ||
+                if ((!obj.conditional) || qualifiers[obj.condition.split("=")[0]] === obj.condition.split("=")[1] ||
                         (obj.condition.split(">=")[0] === "level" && qualifiers.level >= obj.condition.split(">=")[1])) {
                     total += parseInt(obj.num);
                 }
@@ -210,7 +210,7 @@ export const mineModifiers = (modsObj, qualifiers) => {
             let bestSoFar = 0;
             sources.forEach(source => {
                 const obj = modsObj[type][source];
-                if (!obj.conditional || qualifiers[obj.condition.split("=")[0]] === obj.condition.split("=")[1] ||
+                if ((!obj.conditional) || qualifiers[obj.condition.split("=")[0]] === obj.condition.split("=")[1] ||
                         (obj.condition.split(">=")[0] === "level" && qualifiers.level >= obj.condition.split(">=")[1])) {
                     const mod = parseInt(obj.num);
                     if (mod < 0) {
@@ -345,7 +345,8 @@ const updateEncumbrance = (statsObj) => {
 
     let totalBulk = Math.floor(result.wealth / 10);
     result.inventory.forEach((itemObj) => {
-        if (itemObj.location !== "Not Carried") {
+        if (itemObj.location !== "Not Carried" && 
+                (itemObj.location !== "Worn/Wielded" || !itemObj.tags.includes("Armor") || !parseInt(itemObj.hands_occupied) === 0)) {
             totalBulk += itemObj.quantity * parseInt(itemObj.bulk);
             let subtotal = 0;
             itemObj.held_items.forEach((heldObj) => {
@@ -702,9 +703,143 @@ const updateHeroicBonus = (statsObj) => {
 
 export const updateItems = (statsObj) => {
     let result = { ...statsObj };
+    result = clearAttacks(result, ["item"]);
     result = clearBonuses(result, ["item"]);
 
+    const processItem = (itemObj) => {
+        let attacksArr = [];
+        if (itemObj.location === "Worn/Wielded" || !itemObj.worn_or_wielded) {
+            attacksArr = itemObj.attacks.map((attackObj) => {
+                let type;
+                let improvised = "false";
+                let shieldbash = "false";
+                if (attackObj.categories.includes("Spell")) {
+                    type = "spell_attack";
+                } else if (attackObj.categories.includes("Vim")) {
+                    type = "vim_attack";
+                } else if (attackObj.categories.includes("Natural Weapon")) {
+                    type = "natural_weapon";
+                } else {
+                    type = "weapon";
+                }
+                if (itemObj.tags.includes("Armor") && parseInt(itemObj.hands_occupied) === 1) {
+                    improvised = "true";
+                    shieldbash = "true";
+                }
+                return {
+                    ...attackDefault,
+                    type,
+                    ...attackObj,
+                    damage_type: {
+                        ...attackDefault.damage_type,
+                        ...attackObj.damage_type
+                    },
+                    improvised,
+                    shieldbash,
+                    src: itemObj.id,
+                    srcType: "item"
+                }
+            });
+            result.attacks = [ ...result.attacks, ...attacksArr ];
+
+            let fullShieldFlag = false;
+            itemObj.various_bonuses.forEach((bonusObj) => {
+                if (bonusObj.type === "Synergy") {
+                    if (!result.synergy_bonuses[bonusObj.skill]) result.synergy_bonuses[bonusObj.skill] = [];
+                    result.synergy_bonuses = {
+                        ...result.synergy_bonuses,
+                        [bonusObj.skill]: [
+                            ...result.synergy_bonuses[bonusObj.skill],
+                            {
+                                to: bonusObj.to,
+                                display: getDisplayName(bonusObj.to),
+                                primary: false,
+                                source: itemObj.id,
+                                srcType: "item"
+                            }
+                        ]
+                    }
+                } else if (gc.skills_list.includes(bonusObj.to)) {
+                    result.skill_mods[bonusObj.to] = {
+                        ...result.skill_mods[bonusObj.to],
+                        [bonusObj.type]: {
+                            ...result.skill_mods[bonusObj.to][bonusObj.type],
+                            [itemObj.id]: {
+                                num: bonusObj.num,
+                                srcType: "item"
+                            }
+                        }
+                    }
+                } else {
+                    result[bonusObj.to] = {
+                        ...result[bonusObj.to],
+                        [bonusObj.type]: {
+                            ...result[bonusObj.to][bonusObj.type],
+                            [itemObj.id]: {
+                                num: bonusObj.num,
+                                srcType: "item"
+                            }
+                        }
+                    }
+                    if (itemObj.tags.includes("Armor") && parseInt(itemObj.hands_occupied) === 1 &&
+                            bonusObj.type === "Untyped" && bonusObj.to === "weapon_accuracy_mods") {
+                        result.weapon_accuracy_mods.Untyped[itemObj.id] = {
+                            ...result.weapon_accuracy_mods.Untyped[itemObj.id],
+                            conditional: true,
+                            condition: "range=melee"
+                        };
+                        fullShieldFlag = true;
+                    }
+                }
+            });
+
+            itemObj.various_penalties.forEach((penaltyObj) => {
+                if (gc.skills_list.includes(penaltyObj.to)) {
+                    if (!result.skill_mods[penaltyObj.to][penaltyObj.type]) {
+                        result.skill_mods[penaltyObj.to][penaltyObj.type] = {};
+                    }
+                    result.skill_mods[penaltyObj.to] = {
+                        ...result.skill_mods[penaltyObj.to],
+                        [penaltyObj.type]: {
+                            ...result.skill_mods[penaltyObj.to][penaltyObj.type],
+                            [itemObj.id]: {
+                                num: penaltyObj.num,
+                                srcType: "item"
+                            }
+                        }
+                    };
+                } else {
+                    result[penaltyObj.to] = {
+                        ...result[penaltyObj.to],
+                        [penaltyObj.type]: {
+                            ...result[penaltyObj.to][penaltyObj.type],
+                            [itemObj.id]: {
+                                num: penaltyObj.num,
+                                srcType: "item"
+                            }
+                        }
+                    }
+                }
+            });
+            if (fullShieldFlag) {
+                result.weapon_accuracy_mods.Untyped[`${itemObj.id}-2`] = {
+                    num: -1,
+                    srcType: "item",
+                    conditional: true,
+                    condition: "shieldbash=true"
+                };
+            }
+        }
+    }
+
+    statsObj.inventory.forEach((itemObj) => {
+        processItem(itemObj);
+        itemObj.held_items.forEach((heldItemObj) => {
+            processItem(heldItemObj);
+        });
+    });
     result = updateEncumbrance(result);
+    result = updateAttacks(result);
 
     return result;
 }

@@ -72,10 +72,6 @@ const BuildLibraryItems = (props) => {
         defaultsRef.current = { ...defaultValues, ...defaultsObj };
         // setDefaultValues({ ...defaultsObj, ...defaultValues });
     }
-    useEffect(() => {
-        // console.log(attacks, attacks.length);
-        setDefaultValues(defaultsRef.current);
-    }, [attacks])
     
     const bundleAttackFields = (index, data) => {
         const damage_type = {
@@ -113,6 +109,70 @@ const BuildLibraryItems = (props) => {
         });
         return result;
     }
+
+    const [variousBonuses, setVariousBonuses] = useState([]);
+    const newVBonus = (ev) => {
+        const newestIndex = variousBonuses.length;
+        const baseBonusObj = {
+            type: "Item",
+            num: 1,
+            to: "av_mods",
+            skill: "Brawn"
+        };
+        setVariousBonuses([
+            ...variousBonuses,
+            baseBonusObj
+        ]);
+        const defaultsObj = {};
+        Object.keys(baseBonusObj).forEach((bonusKey) => {
+            defaultsObj[`variousBonuses.${newestIndex}.${bonusKey}`] = baseBonusObj[bonusKey];
+        });
+        fillFormWithPrevInfo({ ...defaultValues, ...defaultsObj });
+        defaultsRef.current = { ...defaultValues, ...defaultsObj };
+    }
+    const [variousPenalties, setVariousPenalties] = useState([]);
+    const newVPenalty = (ev) => {
+        const newestIndex = variousPenalties.length;
+        const basePenaltyObj = {
+            type: "Item",
+            num: -1,
+            to: "fortitude_mods"
+        };
+        setVariousPenalties([
+            ...variousPenalties,
+            basePenaltyObj
+        ]);
+        const defaultsObj = {};
+        Object.keys(basePenaltyObj).forEach((penaltyKey) => {
+            defaultsObj[`variousPenalties.${newestIndex}.${penaltyKey}`] = basePenaltyObj[penaltyKey];
+        });
+        fillFormWithPrevInfo({ ...defaultValues, ...defaultsObj });
+        defaultsRef.current = { ...defaultValues, ...defaultsObj };
+    }
+    useEffect(() => {
+        // console.log(attacks, attacks.length);
+        setDefaultValues(defaultsRef.current);
+    }, [attacks, variousBonuses, variousPenalties])
+    const unbundleBonuses = (bonusesObj) => {
+        const result = {};
+        bonusesObj.forEach((bonusObj, i) => {
+            result[`variousBonuses.${i}.num`] = bonusObj.num;
+            result[`variousBonuses.${i}.type`] = bonusObj.type;
+            result[`variousBonuses.${i}.to`] = bonusObj.to;
+            result[`variousBonuses.${i}.skill`] = bonusObj.skill;
+        });
+        return result;
+    }
+    const unbundlePenalties = (penaltiesObj) => {
+        const result = {};
+        penaltiesObj.forEach((penaltyObj, i) => {
+            result[`variousPenalties.${i}.num`] = penaltyObj.num;
+            result[`variousPenalties.${i}.type`] = penaltyObj.type;
+            result[`variousPenalties.${i}.to`] = penaltyObj.to;
+            result[`variousPenalties.${i}.skill`] = penaltyObj.skill;
+        });
+        return result;
+    }
     
     const fillFormWithPrevInfo = useCallback((data) => {
         // console.log(data);
@@ -122,16 +182,46 @@ const BuildLibraryItems = (props) => {
                 data[key].forEach((trueTag) => {
                     newDefaults[`tag_checkbox_${trueTag}`] = true;
                 });
+            // } else if (key === "various_bonuses") {
+            //     setVariousBonuses(data[key].map((bonus) => {
+            //         const bonusObj = {};
+            //         bonusObj.type = bonus.type || "Item";
+            //         bonusObj.to = bonus.to || "av_mods";
+            //         bonusObj.num = bonus.num || 1;
+            //         bonusObj.skill = bonus.skill || "Brawn";
+            //         return bonusObj;
+            //     }));
+            // } else if (key === "various_penalties") {
+            //     setVariousPenalties(data[key].map((penalty) => {
+            //         const penaltyObj = {};
+            //         penaltyObj.type = penalty.type || "Item";
+            //         penaltyObj.to = penalty.to || "fortitude_mods";
+            //         penaltyObj.num = penalty.num || -1;
+            //         return penaltyObj;
+            //     }));
             } else {
                 newDefaults[key] = data[key];
             }
         });
+        defaultsRef.current = newDefaults;
         if (data.attacks.length) {
-            defaultsRef.current = { ...newDefaults, ...unbundleAttacks(data.attacks) };
+            defaultsRef.current = { ...defaultsRef.current, ...unbundleAttacks(data.attacks) };
             setAttacks(data.attacks);
-        } else {
-            setDefaultValues(newDefaults);
         }
+        if (data.various_bonuses.length) {
+            defaultsRef.current = { ...defaultsRef.current, ...unbundleBonuses(data.various_bonuses) };
+            setVariousBonuses(data.various_bonuses);
+        }
+        if (data.various_penalties.length) {
+            defaultsRef.current = { ...defaultsRef.current, ...unbundlePenalties(data.various_penalties) };
+            setVariousPenalties(data.various_penalties);
+        }
+        // if (data.attacks.length) {
+        //     defaultsRef.current = { ...newDefaults, ...unbundleAttacks(data.attacks) };
+        //     setAttacks(data.attacks);
+        // } else {
+        //     setDefaultValues(newDefaults);
+        // }
     }, []);
 
     const saveItem = async (newSlug, itemObj) => {
@@ -144,17 +234,65 @@ const BuildLibraryItems = (props) => {
                 fillFormWithPrevInfo(itemObj);
             } else {
                 setAttacks([]);
+                setVariousBonuses([]);
+                setVariousPenalties([]);
             }
         } catch(err) {
             console.log("Error:", err);
         }
     }
+    
+    const bundleVariousMods = (data) => {
+        const arr = [];
+        const arr2 = [];
+        let i = 0;
+        while (data[`variousBonuses.${i}.to`]) {
+            if (data[`variousBonuses.${i}.type`] === "Select" || data[`variousBonuses.${i}.to`] === "Select") continue;
+            if (data[`variousBonuses.${i}.num`] >= 0) {
+                arr.push({
+                    num: parseInt(data[`variousBonuses.${i}.num`]),
+                    type: data[`variousBonuses.${i}.type`],
+                    to: data[`variousBonuses.${i}.to`],
+                    skill: data[`variousBonuses.${i}.skill`]
+                });
+            } else {
+                arr2.push({
+                    num: parseInt(data[`variousBonuses.${i}.num`]),
+                    type: data[`variousBonuses.${i}.type`],
+                    to: data[`variousBonuses.${i}.to`]
+                });
+            }
+            i++;
+        }
+        i = 0;
+        while (data[`variousPenalties.${i}.to`]) {
+            if (data[`variousPenalties.${i}.type`] === "Select" || data[`variousPenalties.${i}.to`] === "Select") continue;
+            if (data[`variousPenalties.${i}.num`] >= 0) {
+                arr.push({
+                    num: parseInt(data[`variousPenalties.${i}.num`]),
+                    type: data[`variousPenalties.${i}.type`],
+                    to: data[`variousPenalties.${i}.to`]
+                });
+            } else {
+                arr2.push({
+                    num: parseInt(data[`variousPenalties.${i}.num`]),
+                    type: data[`variousPenalties.${i}.type`],
+                    to: data[`variousPenalties.${i}.to`]
+                });
+            }
+            i++;
+        }
+        return [arr, arr2];
+    }
     const processItemForm = (ev, formData) => {
         // console.log(formData);
         const newSlug = encodeURIComponent(formData.name.split(" ").join("").toLowerCase().replace(/'/g, ""));
-        const itemObj = {};
+        const itemObj = {
+            various_bonuses: []
+        };
         Object.keys(formData).forEach((key) => {
-            if (!key.startsWith("tag") && !key.startsWith("attack")) {
+            if (!key.startsWith("tag") && !key.startsWith("attack") && !key.startsWith("variousBonus") &&
+                    !key.startsWith("variousPenal")) {
                 itemObj[key] = formData[key];
             }
         })
@@ -169,6 +307,10 @@ const BuildLibraryItems = (props) => {
             i++;
         }
         itemObj.attacks = attacksCopy;
+        const [bonuses, penalties] = bundleVariousMods(formData);
+        itemObj.various_bonuses = bonuses;
+        itemObj.various_penalties = penalties;
+        console.log(itemObj);
         saveItem(newSlug, itemObj);
     }
 
@@ -286,8 +428,46 @@ const BuildLibraryItems = (props) => {
                         <option value="martial">Martial</option>
                         <option value="exotic">Exotic</option>
                     </Field>
+                    <label htmlFor="armor_girth">Armor Girth</label>
+                    <Field name="armor_girth" as="select">
+                        <option value="light">Light</option>
+                        <option value="heavy">Heavy</option>
+                    </Field>
                 </div>
             </div>
+            <section className="various-bonuses rows brown-box">
+                <label>Various Bonuses</label>
+                <ul>
+                    {variousBonuses.map((bonus, i) => (
+                        <li key={`${i}`}>
+                            <div className="columns">
+                                <Field name={`variousBonuses.${i}.num`} type="number" className="short s" />
+                                <Field name={`variousBonuses.${i}.type`} as="select">
+                                    <option value={"Select"}>Select</option>
+                                    {gc.bonus_types.map((type) => (
+                                        <option key={type} value={type}>{type}</option>
+                                    ))}
+                                </Field>
+                                <label>bonus to</label>
+                                <Field name={`variousBonuses.${i}.to`} as="select">
+                                    <option value={"Select"}>Select</option>
+                                    {gc.bonus_targets.map((stat) => (
+                                        <option key={stat.code} value={stat.code}>{stat.name}</option>
+                                    ))}
+                                </Field>
+                                <label>(if Synergy, based on</label>
+                                <Field name={`variousBonuses.${i}.skill`} as="select" value="Brawn">
+                                    {gc.skills_list.map((skill) => (
+                                        <option key={skill} value={skill}>{skill}</option>
+                                    ))}
+                                </Field>
+                                <label>)</label>
+                            </div>
+                        </li>
+                    ))}
+                </ul>
+                <MyButton fct={newVBonus}>Add Bonus</MyButton>
+            </section>
             <section className="attack-form brown-box rows">
                 <h3>Attacks</h3>
                 {attacks.map((attackObj, i) => (
@@ -360,6 +540,36 @@ const BuildLibraryItems = (props) => {
                     </div>
                 ))}
                 <MyButton fct={newAttack}>Add Attached Attack</MyButton>
+            </section>
+            <section className="various-penalties rows brown-box">
+                <label>Various Penalties</label>
+                <ul>
+                    {variousPenalties.map((bonus, i) => (
+                        <li key={`${i}`}>
+                            <div className="columns">
+                                <Field name={`variousPenalties.${i}.num`} type="number" className="short s" />
+                                <Field name={`variousPenalties.${i}.type`} as="select">
+                                    <option value={"Select"}>Select</option>
+                                    {gc.bonus_types.flatMap((type) => {
+                                        if (type === "Synergy") {
+                                            return [];
+                                        } else {
+                                            return [<option key={type} value={type}>{type}</option>];
+                                        }
+                                    })}
+                                </Field>
+                                <label>penalty to</label>
+                                <Field name={`variousPenalties.${i}.to`} as="select">
+                                    <option value={"Select"}>Select</option>
+                                    {gc.bonus_targets.map((stat) => (
+                                        <option key={stat.code} value={stat.code}>{stat.name}</option>
+                                    ))}
+                                </Field>
+                            </div>
+                        </li>
+                    ))}
+                </ul>
+                <MyButton fct={newVPenalty}>Add Penalty</MyButton>
             </section>
             <MyFormButton type="submit">Save</MyFormButton>
         </Form>

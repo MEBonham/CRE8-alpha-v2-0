@@ -144,6 +144,7 @@ const ConfigureKit = (props) => {
     useEffect(() => {
         if (currentKit.id && state.cur) {
             const arrCopy = [ ...currentKit.bonus_talents ];
+            // console.log(currentKit.id);
             if (state.cur.stats.kits[props.level][props.index].vpPlus2_OR_buffTalent &&
                     state.cur.stats.kits[props.level][props.index].selected_options.vpPlus2_OR_buffTalent === "buffTalent") {
                 arrCopy.push({

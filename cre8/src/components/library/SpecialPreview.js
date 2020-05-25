@@ -607,6 +607,48 @@ const SpecialPreview = () => {
                         {data.attacks.length ? <p>{data.attacks[0].detail}</p> : null}
                     </section> :
                 null}
+                {data.various_bonuses.length ?
+                    <section>
+                        <h2>Benefits</h2>
+                        {data.various_bonuses.map((modObj, i) => {
+                            if (modObj.type === "Synergy") {
+                                return (<p key={i}>
+                                    Gain a{modObj.skill === "Athletics" ? "n" : null} {modObj.skill}-based
+                                    synergy bonus to your {getDisplayName(modObj.to)}{data.worn_or_wielded ? " while worn/wielded" : ""}.
+                                </p>);
+                            } else if (modObj.num > 0) {
+                                return (<p key={i}>
+                                    Gain a +{modObj.num} {modObj.type} bonus to your {getDisplayName(modObj.to)}{data.worn_or_wielded ? " while worn/wielded" : ""}.
+                                </p>);
+                            } else {
+                                return null;
+                            }
+                        })}
+                    </section> :
+                null}
+                {data.various_penalties.length ?
+                    <section>
+                        <h2>Drawbacks:</h2>
+                        {data.various_penalties.map((penalty, i) => (
+                            <p key={i}>
+                                Incur a {penalty.num} {penalty.type === "Untyped" ? null : penalty.type} penalty 
+                                to your {getDisplayName(penalty.to)}{data.worn_or_wielded ? " while worn/wielded" : ""}.
+                            </p>
+                        ))}
+                        {data.various_bonuses.map((modObj, i) => {
+                            if (modObj.type !== "Synergy" && modObj.num < 0) {
+                                return (
+                                    <p key={i}>
+                                        Incur a {modObj.num} {modObj.type === "Untyped" ? null : modObj.type} penalty 
+                                        to your {getDisplayName(modObj.to)}{data.worn_or_wielded ? " while worn/wielded" : ""}.
+                                    </p>
+                                );
+                            } else {
+                                return null;
+                            }
+                        })}
+                    </section> :
+                null}
             </>
         );
     }

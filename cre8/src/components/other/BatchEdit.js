@@ -5,20 +5,33 @@ import MyButton from '../ui/MyButton';
 
 const BatchEdit = () => {
 
-    const collection = "talents";
+    const collection = "characters";
     const editAll = async (ev) => {
         try {
             const collectionCopy = {};
             const query = await fb.db.collection(collection).get();
             query.forEach((item) => {
-                collectionCopy[item.id] = (item.data().opportunity_actions) ?
-                    {
-                        ...item.data()
-                    } :
-                    {
-                        ...item.data(),
-                        opportunity_actions: []
-                    };
+                // collectionCopy[item.id] = (Object.keys(item.data().stats.weapon_accuracy_mods)) ?
+                collectionCopy[item.id] = {
+                    ...item.data(),
+                    stats: {
+                        ...item.data().stats,
+                        weapon_accuracy_mods: {
+                            ...item.data().stats.weapon_accuracy_mods,
+                            Circumstance: {
+                                ...item.data().stats.weapon_accuracy_mods.Circumstance,
+                                Nonproficiency: {
+                                    level: 1,
+                                    num: -5,
+                                    srcType: "automatic",
+                                    conditional: true,
+                                    condition: "improvised=true"
+                                }
+                            }
+                        }
+                    }
+                };
+                delete collectionCopy[item.id].stats.weapon_accuracy_mods.Circumstance.Nonproficiency.conditonal;
             });
             Object.keys(collectionCopy).forEach((id) => {
                 fb.db.collection(collection).doc(id).set({

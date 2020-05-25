@@ -149,7 +149,17 @@ export const charDefault = {
             buy_history: []
         },
         wealth_undo_used: true,
-        weapon_accuracy_mods: {},
+        weapon_accuracy_mods: {
+            Circumstance: {
+                Nonproficiency: {
+                    level: 1,
+                    num: -5,
+                    srcType: "automatic",
+                    conditional: true,
+                    condition: "improvised=true"
+                }
+            }
+        },
         weapon_impact_mods: {},
         willpower_base_total: 0,
         willpower_mods: {
@@ -291,6 +301,7 @@ export const itemDefault = {
     price: 10,
     bulk: 1,
     description: "",
+    armor_girth: "Light",
     attacks: [],
     hands_occupied: "1",
     halve_bulk_capacity: 0,
