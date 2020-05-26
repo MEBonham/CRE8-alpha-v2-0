@@ -5,7 +5,7 @@ import MyButton from '../ui/MyButton';
 
 const BatchEdit = () => {
 
-    const collection = "characters";
+    const collection = "kits";
     const editAll = async (ev) => {
         try {
             const collectionCopy = {};
@@ -14,22 +14,7 @@ const BatchEdit = () => {
                 // collectionCopy[item.id] = (Object.keys(item.data().stats.weapon_accuracy_mods)) ?
                 collectionCopy[item.id] = {
                     ...item.data(),
-                    stats: {
-                        ...item.data().stats,
-                        weapon_impact_mods: {
-                            ...item.data().stats.weapon_impact_mods,
-                            Circumstance: {
-                                ...item.data().stats.weapon_impact_mods.Circumstance,
-                                TwoHandedBonus: {
-                                    level: 1,
-                                    num: 1,
-                                    srcType: "automatic",
-                                    conditional: true,
-                                    condition: "twoHanded=true"
-                                }
-                            }
-                        }
-                    }
+                    heroic_bonus_to_impact_with_category: false
                 };
             });
             Object.keys(collectionCopy).forEach((id) => {
@@ -51,8 +36,8 @@ const BatchEdit = () => {
                 const abilities_clone = { ...collectionCopy[item.id].stats[collection] };
                 Object.keys(abilities_clone).forEach((level) => {
                     Object.keys(abilities_clone[level]).forEach((index) => {
-                        if (!abilities_clone[level][index].opportunity_actions) {
-                            abilities_clone[level][index].opportunity_actions = [];
+                        if (!abilities_clone[level][index].heroic_bonus_to_impact_with_category) {
+                            abilities_clone[level][index].heroic_bonus_to_impact_with_category = false;
                         }
                     });
                 });

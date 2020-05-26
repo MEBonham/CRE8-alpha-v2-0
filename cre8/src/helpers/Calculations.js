@@ -202,7 +202,8 @@ export const mineModifiers = (modsObj, qualifiers) => {
             sources.forEach(source => {
                 const obj = modsObj[type][source];
                 if ((!obj.conditional) || qualifiers[obj.condition.split("=")[0]] === obj.condition.split("=")[1] ||
-                        (obj.condition.split(">=")[0] === "level" && qualifiers.level >= obj.condition.split(">=")[1])) {
+                        (obj.condition.split(">=")[0] === "level" && qualifiers.level >= obj.condition.split(">=")[1]) ||
+                        (qualifiers.categories && obj.condition.split("=")[0] === "category" && qualifiers.categories.includes(obj.condition.split("=")[1]))) {
                     total += parseInt(obj.num);
                 }
             });
@@ -211,7 +212,8 @@ export const mineModifiers = (modsObj, qualifiers) => {
             sources.forEach(source => {
                 const obj = modsObj[type][source];
                 if ((!obj.conditional) || qualifiers[obj.condition.split("=")[0]] === obj.condition.split("=")[1] ||
-                        (obj.condition.split(">=")[0] === "level" && qualifiers.level >= obj.condition.split(">=")[1])) {
+                        (obj.condition.split(">=")[0] === "level" && qualifiers.level >= obj.condition.split(">=")[1]) ||
+                        (qualifiers.categories && obj.condition.split("=")[0] === "category" && qualifiers.categories.includes(obj.condition.split("=")[1]))) {
                     const mod = parseInt(obj.num);
                     if (mod < 0) {
                         total += mod;
@@ -292,17 +294,39 @@ const updateAttacks = (statsObj) => {
                 accuracy -= 5;
             }
             peril_rating = statsObj.fighting_level + attackObj.peril_mod;
+            // console.log(statsObj.weapon_range_mods);
             impact_total_mod = mineModifiers(statsObj.weapon_impact_mods, {
                 ...attackObj,
                 level: statsObj.level,
                 range: attackObj.range.startsWith("Melee") ? "melee" : "ranged"
             });
         }
+        // console.log(attackObj, statsObj.weapon_range_mods);
+        const rangeBoost = mineModifiers(statsObj.weapon_range_mods, {
+            ...attackObj,
+            level: statsObj.level,
+            range: attackObj.range.startsWith("Melee") ? "melee" : "ranged",
+            meleeWeapon: (attackObj.range.startsWith("Melee") && attackObj.type === "weapon") ? "true" : "false"
+        });
+        let effRange = attackObj.range;
+        if (rangeBoost > 0 && effRange.startsWith("Melee")) {
+            const arr = effRange.split(" ");
+            effRange = `${arr[0]} ${arr[1]} ${parseInt(arr[2]) + rangeBoost} ${arr[3]}`;
+        } else if (rangeBoost > 0) {
+            const arr = effRange.split(" / ");
+            const [prefix, shortRange] = (arr[0].startsWith("Projectile") || arr[0].startsWith("Thrown")) ?
+                [arr[0].split(" ")[0] + " ", arr[0].split(" ")[1]] :
+                ["", arr[0]];
+            const [longRange, units] = arr[2].split(" ");
+            effRange = `${prefix}${parseInt(shortRange) + rangeBoost} / ${parseInt(arr[1]) + 2 * rangeBoost} / ${parseInt(longRange) + 3 * rangeBoost} ${units}`;
+        }
+        // console.log(effRange);
         return {
             ...attackObj,
             accuracy,
             peril_rating,
-            impact_total_mod
+            impact_total_mod,
+            effRange
         };
     })
     return {
@@ -830,6 +854,7 @@ export const updateItems = (statsObj) => {
                 }
             });
 
+            let dwarfSpeedBump = false;
             itemObj.various_penalties.forEach((penaltyObj) => {
                 if (gc.skills_list.includes(penaltyObj.to)) {
                     if (!result.skill_mods[penaltyObj.to][penaltyObj.type]) {
@@ -856,6 +881,10 @@ export const updateItems = (statsObj) => {
                             }
                         }
                     }
+                    if (itemObj.tags.includes("Armor") && parseInt(itemObj.hands_occupied) === 0 && itemObj.armor_girth === "Heavy" &&
+                            penaltyObj.type === "Encumbrance" && penaltyObj.to === "speed_mods") {
+                        dwarfSpeedBump = true;
+                    }
                 }
             });
             if (fullShieldFlag) {
@@ -864,6 +893,12 @@ export const updateItems = (statsObj) => {
                     srcType: "item",
                     conditional: true,
                     condition: "shieldbash=true"
+                };
+            }
+            if (statsObj.traits_from_kits.includes("Ignore Armor Speed Penalty") && dwarfSpeedBump) {
+                result.speed_mods.Untyped[`${itemObj.id}-2`] = {
+                    num: 5,
+                    srcType: "item"
                 };
             }
         }
@@ -1211,6 +1246,18 @@ export const updateKits = (statsObj) => {
                     }
                 }
             });
+            if (kitObj.heroic_bonus_to_impact_with_category) {
+                result.weapon_impact_mods.Feat = {
+                    ...result.weapon_impact_mods.Feat,
+                    [kitObj.id]: {
+                        level,
+                        num: statsObj.heroic_bonus,
+                        srcType: "kit",
+                        conditional: true,
+                        condition: `category=${kitObj.heroic_bonus_to_impact_with_category}`
+                    }
+                };
+            }
 
             kitObj.various_penalties.forEach((penaltyObj) => {
                 if (gc.skills_list.includes(penaltyObj.to)) {
@@ -1529,6 +1576,19 @@ const updateSize = (statsObj) => {
                     level: 0
                 }
             }
+        },
+        weapon_range_mods: {
+            ...result.weapon_range_mods,
+            Size: {
+                ...result.weapon_range_mods.Size,
+                "Tall Weapon Reach": {
+                    srcType: "size",
+                    num: (size_final > 0 && statsObj.traits_from_talents.includes("Tall Weapon Reach")) ? size_final : 0,
+                    level: 0,
+                    conditional: true,
+                    condition: "meleeWeapon=true"
+                }
+            }
         }
     });
     result = updateSpeed({
@@ -1800,7 +1860,7 @@ export const updateTalents = (statsObj) => {
                         base: {
                             ...result.fortitude_mods.base,
                             [talentObj.id]: {
-                                level: level,
+                                level,
                                 num: 2,
                                 srcType: "talent"
                             }
@@ -1812,7 +1872,7 @@ export const updateTalents = (statsObj) => {
                         base: {
                             ...result.fortitude_mods.base,
                             [talentObj.id]: {
-                                level: level,
+                                level,
                                 num: 1,
                                 srcType: "talent"
                             }
@@ -1833,7 +1893,7 @@ export const updateTalents = (statsObj) => {
                         base: {
                             ...result.reflex_mods.base,
                             [talentObj.id]: {
-                                level: level,
+                                level,
                                 num: 2,
                                 srcType: "talent"
                             }
@@ -1845,7 +1905,7 @@ export const updateTalents = (statsObj) => {
                         base: {
                             ...result.reflex_mods.base,
                             [talentObj.id]: {
-                                level: level,
+                                level,
                                 num: 1,
                                 srcType: "talent"
                             }
@@ -1866,7 +1926,7 @@ export const updateTalents = (statsObj) => {
                         base: {
                             ...result.willpower_mods.base,
                             [talentObj.id]: {
-                                level: level,
+                                level,
                                 num: 2,
                                 srcType: "talent"
                             }
@@ -1878,13 +1938,27 @@ export const updateTalents = (statsObj) => {
                         base: {
                             ...result.willpower_mods.base,
                             [talentObj.id]: {
-                                level: level,
+                                level,
                                 num: 1,
                                 srcType: "talent"
                             }
                         }
                     };
                 }
+            }
+
+            if (talentObj.id === "speartraining") {
+                result.weapon_range_mods.Feat = {
+                    ...result.weapon_range_mods.Feat,
+                    [talentObj.id]: {
+                        level,
+                        num: 5,
+                        srcType: "talent",
+                        conditional: true,
+                        condition: "name=Javelin"
+                    }
+                }
+                console.log(result.weapon_range_mods);
             }
 
             talentObj.various_bonuses.forEach((bonusObj) => {

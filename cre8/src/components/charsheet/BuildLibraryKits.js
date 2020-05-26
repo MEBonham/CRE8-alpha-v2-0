@@ -661,6 +661,20 @@ const BuildLibraryKits = (props) => {
                         />
                         <label>Impact +1 to melee weapon attacks</label>
                     </div>
+                    <div className="rows">
+                        <label>Add heroic bonus to impact with weapon category:</label>
+                        <Controller
+                            as="select"
+                            name="heroic_bonus_to_impact_with_category"
+                            control={control}
+                        >
+                            <option value={false}>None</option>
+                            <option value="Unarmed">Unarmed</option>
+                            {gc.weapon_categories.map((categoryName) => (
+                                <option key={categoryName} value={categoryName}>{categoryName}</option>
+                            ))}
+                        </Controller>
+                    </div>
                     <section className="various-bonuses rows">
                         <ul>
                             {variousBonuses.map((bonus, i) => (

@@ -25,6 +25,7 @@ const gc = {
         "Stability",
         "Stack 1st-Level Kits",
         "Swarm Resilience",
+        "Tall Weapon Reach",
         "Unarmed Focus"
     ],
     bonus_targets: [
@@ -53,6 +54,7 @@ const gc = {
         { name: "Wealth (one-time)", code: "wealth_mods" },
         { name: "Weapon Accuracy", code: "weapon_accuracy_mods" },
         { name: "Weapon Impact", code: "weapon_impact_mods" },
+        { name: "Weapon Range", code: "weapon_range_mods" },
         { name: "Willpower", code: "willpower_mods" },
     ],
     bonus_types: [
@@ -81,6 +83,7 @@ const gc = {
     drawback_traits: [
         "Arcane Aversion",
         "Beast Type",
+        "Giant Type",
         "Instinctual",
         "Swarm Vulnerabilities"
     ],

@@ -512,6 +512,15 @@ const BuildLibraryTalents = (props) => {
                         <Controller
                             as="input"
                             type="checkbox"
+                            name="tall_weapon_reach"
+                            control={control}
+                        />
+                        <label>Extended Weapon Reach for larger sizes</label>
+                    </div>
+                    <div className="checkbox-pair">
+                        <Controller
+                            as="input"
+                            type="checkbox"
                             name="claw_rend"
                             control={control}
                         />

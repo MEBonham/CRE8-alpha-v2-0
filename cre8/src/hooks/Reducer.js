@@ -558,6 +558,7 @@ const Reducer = (state, action) => {
                         action.payload,
                         ...action.flattened.slice(action.index + 1)
                     ]);
+                    console.log(newVal);
                     return {
                         ...state,
                         curChangesMade: true,

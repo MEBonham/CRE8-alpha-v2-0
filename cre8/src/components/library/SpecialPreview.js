@@ -139,7 +139,12 @@ const SpecialPreview = () => {
                     })}
                     {data.melee_weapon_impact_plus1 ?
                         <li>
-                            Gain a +1 feat bonus to the impact of your melee weapon attacks.
+                            Gain a +1 Feat bonus to the impact of your melee weapon attacks.
+                        </li> :
+                    null}
+                    {data.heroic_bonus_to_impact_with_category ?
+                        <li>
+                            Add your Heroic Bonus to your weapon impact with {data.heroic_bonus_to_impact_with_category} weapons as a Feat bonus.
                         </li> :
                     null}
                     {parseInt(data.grow_bigger_level) ?

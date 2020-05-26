@@ -3,12 +3,13 @@ export const defaultActions = {
         "Make a melee or ranged weapon attack. A ranged weapon attack provokes opportunity attacks.",
         "Make a special attack.",
         "Draw an item out of a backpack or similar container.",
-        "Withdraw: move up to your Speed + 15 ft, without provoking opportunity attacks for your first 5 ft of movement.",
+        "Withdraw: if your Speed is at least +0, move up to 10 ft without provoking opportunity attacks.",
+        "Sprint: move up to your Speed + 15 ft in a straight line with a clear path, provoking opportunity attacks if you move through threatened areas.",
         "Stand from Prone Defensively: remove the prone condition from yourself without provoking opportunity attacks.",
         "Communicate: speak in a manner that requires coherence and coordination, limited to about ten seconds. TNs for social interaction are still higher than they are outside of combat, but they are possible.",
         "Total Defense: Until the start of your next turn, you may use your Awesome Check in place of your Defense Save.",
         "Aid an Ally.",
-        "If you have momentum, encourage an ally who can hear you. Make a TN 15 Charisma or Glibness check (whichever is better). On a success, the target ally gains momentum.",
+        "If you have momentum, Encourage an ally who can hear you. Make a TN 15 Charisma or Glibness check (whichever is better). On a success, the target ally gains momentum.",
         "Administer first aid."
     ],
     special_attacks: [

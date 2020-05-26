@@ -171,6 +171,7 @@ export const charDefault = {
                 }
             }
         },
+        weapon_range_mods: {},
         willpower_base_total: 0,
         willpower_mods: {
             base: {}
@@ -231,6 +232,7 @@ export const kitDefault = {
     fightingRpBoost_OR_rpPlus2: false,
     free_actions: [],
     grow_bigger_level: 0,
+    heroic_bonus_to_impact_with_category: false,
     intended_level: 1,
     melee_weapon_impact_plus1: false,
     passives: [],
@@ -301,6 +303,7 @@ export const talentDefault = {
     standard_actions: [],
     steely_focus: false,
     swift_actions: [],
+    tall_weapon_reach: false,
     various_bonuses: [],
     various_penalties: []
 }
