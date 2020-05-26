@@ -902,6 +902,17 @@ export const updateItems = (statsObj) => {
                 };
             }
         }
+
+        if (statsObj.traits_from_feats.includes("Expert Parry") && itemObj.tags.includes("Weapon") && itemObj.attacks.length &&
+                itemObj.attacks[0].categories.includes("Heavy Blade") && itemObj.location === "Worn/Wielded") {
+            result.defense_mods.Feat = {
+                ...result.defense_mods.Feat,
+                expertparry: {
+                    num: 1,
+                    srcType: "feat"
+                }
+            }
+        }
     }
 
     statsObj.inventory.forEach((itemObj) => {
@@ -1960,6 +1971,16 @@ export const updateTalents = (statsObj) => {
                 }
                 console.log(result.weapon_range_mods);
             }
+            if (talentObj.id === "longstrider" && statsObj.skill_ranks.Athletics >= 9) {
+                result.speed_mods.Feat = {
+                    ...result.speed_mods.Feat,
+                    [talentObj.id]: {
+                        level,
+                        num: 10,
+                        srcType: "talent"
+                    }
+                };
+            } 
 
             talentObj.various_bonuses.forEach((bonusObj) => {
                 if (bonusObj.type === "Synergy") {

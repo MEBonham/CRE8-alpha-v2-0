@@ -17,6 +17,7 @@ const gc = {
         "Aberration Type",
         "Climber",
         "Darkvision",
+        "Expert Parry",
         "Ignore Armor Speed Penalty",
         "Instinctual Immunities",
         "Low-Light Vision",

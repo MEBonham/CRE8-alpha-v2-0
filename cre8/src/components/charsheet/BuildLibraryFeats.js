@@ -918,6 +918,23 @@ const BuildLibraryFeats = (props) => {
                         name="intended_level"
                         control={control}
                     />
+                    <section className="rows">
+                        <label>Positive Traits</label>
+                        <select
+                            name="benefit_traits"
+                            ref={register}
+                            multiple
+                        >
+                            {gc.benefit_traits.map((trait) => (
+                                <option
+                                    key={trait}
+                                    value={trait}
+                                >
+                                    {trait}
+                                </option>
+                            ))}
+                        </select>
+                    </section>
                 </div>
             </section>
             <MyFormButton type="submit">Save</MyFormButton>

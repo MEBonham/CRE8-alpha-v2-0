@@ -165,7 +165,7 @@ const SpecialPreview = () => {
                         <li key={i}><em>Extended Rest:</em> {restAction}</li>
                     ))}
                 </ul>
-                {data.drawback_traits.length || data.various_penalties.length ?
+                {data.drawback_traits.length || data.various_penalties.length || data.passives.filter((passive) => passive.drawback).length ?
                     <>
                         <h2>Drawbacks:</h2>
                         <ul>
@@ -238,7 +238,7 @@ const SpecialPreview = () => {
         }
 
         const benefitsArr = data.benefit_traits.map((trait) => ({
-            text: trait,
+            text: `${trait}: ${traitDescriptions[trait]}`,
             type: "trait"
         })).concat(data.various_bonuses.flatMap((modObj, i) => {
             if (modObj.type === "Synergy") {
