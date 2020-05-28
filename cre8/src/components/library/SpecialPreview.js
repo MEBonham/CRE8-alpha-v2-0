@@ -53,6 +53,9 @@ const SpecialPreview = () => {
                             null 
                         } Kit</h2>
                     <p className="prereqs"><strong>Prerequisites:</strong> {data.prereqs}</p>
+                    {data.expectation ?
+                        <p className="prereqs"><strong>Expectation:</strong> {data.expectation}</p> :
+                    null}
                 </header>
                 <h2>Benefits:</h2>
                 <ul>
@@ -533,6 +536,9 @@ const SpecialPreview = () => {
                                 ))}
                             </ul>
                         </li> :
+                    null}
+                    {data.three_bonus_talents ?
+                        <li>Gain three bonus non-[Epic] talents.</li> :
                     null}
                     {data.short_rest_actions.map((restAction, i) => (
                         <li key={i}><em>Short Rest:</em> {restAction}</li>

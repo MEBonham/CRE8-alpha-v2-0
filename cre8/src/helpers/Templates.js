@@ -304,6 +304,7 @@ export const talentDefault = {
     steely_focus: false,
     swift_actions: [],
     tall_weapon_reach: false,
+    three_bonus_talents: false,
     various_bonuses: [],
     various_penalties: []
 }

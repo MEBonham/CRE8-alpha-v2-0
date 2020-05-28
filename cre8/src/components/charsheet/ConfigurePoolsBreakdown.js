@@ -11,7 +11,11 @@ const ConfigurePoolsBreakdown = () => {
             <div className="breakdown columns">
                 <div className="fill-in">
                     <p className="big-num">{state.cur.stats.vp_max}</p>
-                    <p className="caption">Vitality<br />Points</p>
+                    {
+                        state.cur.stats.traits_from_kits.includes("Hit Points") ?
+                        <p className="caption">Hit<br />Points</p> :
+                        <p className="caption">Vitality<br />Points</p>
+                    }
                 </div>
                 <div className="equals-symbol">
                     =

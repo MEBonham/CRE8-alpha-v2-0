@@ -44,6 +44,7 @@ const ConfigureTalent = (props) => {
             if (props.search.level_access && (talentData.intended_level - props.level > 1)) skip = true;
             if (props.flaw && !talentData.tags.includes("Flaw")) skip = true;
             if (props.tagFilter && !arrayMatch(props.tagFilter, talentData.tags)) skip = true;
+            if (props.nonEpic && talentData.tags.includes("Epic")) skip = true;
             
             if (!skip) {
                 selectTalentsCopy[talentSlug] = talentData;
@@ -118,6 +119,28 @@ const ConfigureTalent = (props) => {
                     <option key={talentSlug} value={talentSlug} className="non-false">{selectTalents[talentSlug].name}</option>
                 ))}
             </select>
+            {currentTalent && currentTalent.three_bonus_talents ?
+                <>
+                    <ConfigureTalent
+                        level={props.level}
+                        index={`talent${props.index}_0`}
+                        nonEpic
+                        search={props.search}
+                    />
+                    <ConfigureTalent
+                        level={props.level}
+                        index={`talent${props.index}_1`}
+                        nonEpic
+                        search={props.search}
+                    />
+                    <ConfigureTalent
+                        level={props.level}
+                        index={`talent${props.index}_2`}
+                        nonEpic
+                        search={props.search}
+                    />
+                </> :
+            null}
             {currentTalent && currentTalent.id === "magearmor" ?
                 <div className="checkbox-pair columns">
                     <input
@@ -127,8 +150,19 @@ const ConfigureTalent = (props) => {
                         defaultChecked={!!currentTalent.selected_options.consuming_mage_armor}
                     />
                     <label>Consuming Mode</label>
-                </div>
-            : null}
+                </div> :
+            null}
+            {currentTalent && currentTalent.id === "foresight" ?
+                <div className="checkbox-pair columns">
+                    <input
+                        type="checkbox"
+                        name={`consuming_foresight-talentCheckbox-${props.level}-${props.index}`}
+                        onChange={consumingModeToggle}
+                        defaultChecked={!!currentTalent.selected_options.consuming_foresight}
+                    />
+                    <label>Consuming Mode</label>
+                </div> :
+            null}
             {currentTalent && currentTalent.selective_passives && Object.keys(currentTalent.selective_passives).length ?
                 <select
                     onChange={selectOptionalPassives}

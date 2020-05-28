@@ -47,7 +47,7 @@ const PlayPools = () => {
                         </div>
                     </form>
                     <div className="below-big-num" />
-                    <p className="small">VP</p>
+                    <p className="small">{state.cur.stats.traits_from_kits.includes("Hit Points") ? "HP" : "VP"}</p>
                 </div>
             </div>
             <div className="rp">

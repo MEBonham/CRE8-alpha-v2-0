@@ -147,7 +147,9 @@ const Reducer = (state, action) => {
                         }
                     };
                 case "customizeTalent":
-                    newVal = (action.property === "consuming_mage_armor") ? (action.payload ? "on" : "off") : action.payload;
+                    newVal = (action.property === "consuming_mage_armor" || action.property === "consuming_foresight") ?
+                        (action.payload ? "on" : "off") :
+                        action.payload;
                     return {
                         ...state,
                         curChangesMade: true,

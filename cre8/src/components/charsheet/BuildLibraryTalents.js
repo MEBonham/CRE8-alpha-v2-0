@@ -526,6 +526,15 @@ const BuildLibraryTalents = (props) => {
                         />
                         <label>Claw Rend</label>
                     </div>
+                    <div className="checkbox-pair">
+                        <Controller
+                            as="input"
+                            type="checkbox"
+                            name="three_bonus_talents"
+                            control={control}
+                        />
+                        <label>Three Bonus non-Epic Talents</label>
+                    </div>
                 </div>
                 <div className="right-column">
                     <h3>Tags</h3>

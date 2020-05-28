@@ -132,6 +132,9 @@ const CharSheetShell = () => {
     const toSaveBtn = (ev) => {
         dispatch({ type: "SET", key: "saveButtonHit", payload: true });
     }
+    const duplication = (ev) => {
+        console.log(state.activeCampaigns, state.cur);
+    }
 
     if (code404) return <Code404 />
     if (redirectFlag) return <Redirect to="/characters" />
@@ -151,6 +154,9 @@ const CharSheetShell = () => {
                 <div className="columns">
                     {state.editPrivilege ? <MyButton fct={toSaveBtn}>Save Character</MyButton> : null}
                     {adminPrivilege ? <MyButton>Delete Character (TODO)</MyButton> : null}
+                </div>
+                <div className="columns">
+                    <MyButton fct={duplication}>Duplicate Character to Campaign (TODO)</MyButton>
                 </div>
             </div>
         </div>

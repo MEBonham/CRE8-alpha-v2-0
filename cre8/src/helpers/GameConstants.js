@@ -18,6 +18,7 @@ const gc = {
         "Climber",
         "Darkvision",
         "Expert Parry",
+        "Hit Points",
         "Ignore Armor Speed Penalty",
         "Instinctual Immunities",
         "Low-Light Vision",
@@ -86,6 +87,7 @@ const gc = {
         "Beast Type",
         "Giant Type",
         "Instinctual",
+        "Outsider Type",
         "Swarm Vulnerabilities"
     ],
     epic_level_xp_increment: 500,

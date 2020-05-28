@@ -5,14 +5,17 @@ import MyButton from '../ui/MyButton';
 
 const BatchEdit = () => {
 
-    const collection = "kits";
+    const collection = "talents";
     const editAll = async (ev) => {
         try {
             const collectionCopy = {};
             const query = await fb.db.collection(collection).get();
             query.forEach((item) => {
                 // collectionCopy[item.id] = (Object.keys(item.data().stats.weapon_accuracy_mods)) ?
-                collectionCopy[item.id] = {
+                // collectionCopy[item.id] = {
+                collectionCopy[item.id] = (item.data().three_bonus_talents) ? {
+                    ...item.data()
+                } : {
                     ...item.data(),
                     heroic_bonus_to_impact_with_category: false
                 };
@@ -36,8 +39,8 @@ const BatchEdit = () => {
                 const abilities_clone = { ...collectionCopy[item.id].stats[collection] };
                 Object.keys(abilities_clone).forEach((level) => {
                     Object.keys(abilities_clone[level]).forEach((index) => {
-                        if (!abilities_clone[level][index].heroic_bonus_to_impact_with_category) {
-                            abilities_clone[level][index].heroic_bonus_to_impact_with_category = false;
+                        if (!abilities_clone[level][index].three_bonus_talents) {
+                            abilities_clone[level][index].three_bonus_talents = false;
                         }
                     });
                 });

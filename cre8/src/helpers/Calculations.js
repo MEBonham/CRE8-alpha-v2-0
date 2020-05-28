@@ -152,12 +152,18 @@ export const getDisplayName = (codeProperty) => {
             return codeProperty;
         case "av_mods":
             return "Armor Value";
+        case "defense_mods":
+            return "Defense save";
         case "fortitude_mods":
             return "Fortitude save";
         case "mp_mods":
             return "MP Pool";
+        case "reflex_mods":
+            return "Reflex save";
         case "rp_mods":
             return "RP Pool";
+        case "willpower_mods":
+            return "Willpower save";
         default:
             let result = codeProperty.split("_").slice(0, -1);
             result = result.map((word) => {
@@ -165,7 +171,6 @@ export const getDisplayName = (codeProperty) => {
                 return `${firstLetter}${word.slice(1)}`;
             });
             return result.join(" ");
-
     }
 }
 
@@ -1980,7 +1985,20 @@ export const updateTalents = (statsObj) => {
                         srcType: "talent"
                     }
                 };
-            } 
+            }
+            if (talentObj.id === "foresight" && talentObj.selected_options && talentObj.selected_options.consuming_foresight === "on") {
+                result.mp_mods = {
+                    ...result.mp_mods,
+                    Untyped: {
+                        ...result.mp_mods.Untyped,
+                        [talentObj.id]: {
+                            level,
+                            num: -1,
+                            srcType: "talent"
+                        }
+                    }
+                }
+            }
 
             talentObj.various_bonuses.forEach((bonusObj) => {
                 if (bonusObj.type === "Synergy") {
