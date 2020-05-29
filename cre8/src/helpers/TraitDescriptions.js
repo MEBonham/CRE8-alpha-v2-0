@@ -15,7 +15,7 @@ export const traitDescriptions = {
     "Huge Size": "Your Stealth checks to hide from Gargantuan or larger creatures are boosted. Your Athletics or Brawn checks to keep your footing or resist Grabbing against Gargantuan or larger creatures are dragged. Your Perception checks to spot Large or smaller creatures are dragged. Your Athletics or Brawn checks to keep your footing or resist Grabbing against Large or smaller creatures are boosted. Your Stealth checks to hide from Large or smaller creatures are dragged.",
     "Ignore Armor Speed Penalty": "Ignore Speed penalty for wearing heavy armor (or chainmail), as long as you're proficient.",
     "Instinctual": "Cannot speak normal languages. Illiterate. Limited in the Gadgetry, Glibness, and Knowledge skills.",
-    "Instinctual Immunities": "You are immune to Fear and to [Charm] effects.",
+    "Instinctual Immunities": "You are immune to [Fear] and [Charm] effects.",
     "Large Size": "Your Stealth checks to hide from Huge or larger creatures are boosted. Your Athletics or Brawn checks to keep your footing or resist Grabbing against Huge or larger creatures are dragged. Your Perception checks to spot Medium or smaller creatures are dragged. Your Athletics or Brawn checks to keep your footing or resist Grabbing against Medium or smaller creatures are boosted. Your Stealth checks to hide from Medium or smaller creatures are dragged.",
     "Low-Light Vision": "Treat nonmagical shadowy illumination as well-lit.",
     "Martial Weaponry": "You are proficient with all martial weapons and with light armor. (You may immediately retrain Light Armor Proficiency.)",
