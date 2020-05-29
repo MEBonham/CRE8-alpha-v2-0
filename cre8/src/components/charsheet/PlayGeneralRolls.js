@@ -28,7 +28,7 @@ const PlayGeneralRolls = () => {
     const savingRoll = (ev) => {
         if (state.cur) {
             const specialMod = {};
-            if (state.cur.stats.active_conditions.includes("Wounded")) {
+            if (state.cur.stats.active_conditions.includes("Wounded") && !state.cur.stats.traits_from_kits.includes("Wound-Tolerant")) {
                 specialMod.wounded = {
                     wounded: {
                         num: gc.wounded_save_penalty

@@ -30,7 +30,8 @@ const gc = {
         "Swarm Resilience",
         "Tall Weapon Reach",
         "Unarmed Focus",
-        "Undead Type"
+        "Undead Type",
+        "Wound-Tolerant"
     ],
     bonus_targets: [
         { name: "Armor Value", code: "av_mods" },

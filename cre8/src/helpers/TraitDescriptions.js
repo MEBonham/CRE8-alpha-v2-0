@@ -33,5 +33,6 @@ export const traitDescriptions = {
     "Tiny Size": "Your Stealth checks to hide from Small or larger creatures are boosted. Your Athletics or Brawn checks to keep your footing or resist Grabbing against Small or larger creatures are dragged. Your Perception checks to spot Diminutive or smaller creatures are dragged. Your Athletics or Brawn checks to keep your footing or resist Grabbing against Diminutive or smaller creatures are boosted. Your Stealth checks to hide from Diminutive or smaller creatures are dragged.",
     "Unarmed Focus": "You are proficient with your Unarmed Strike. You may freely choose whether your Unarmed Strike attacks deal subdual damage or not.",
     "Undead Type": "This overrides other Type traits. You are immune to diseases and poison (unless the specific disease or poison states otherwise).",
-    "Whiff of Blight": "You can be detected and targeted as a Blighted creature."
+    "Whiff of Blight": "You can be detected and targeted as a Blighted creature.",
+    "Wound-Tolerant": "You do not suffer the normal -2 penalty to saving throws for being Wounded."
 }
