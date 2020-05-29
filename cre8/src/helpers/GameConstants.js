@@ -15,6 +15,7 @@ const gc = {
     ],
     benefit_traits: [
         "Aberration Type",
+        "Bully",
         "Climber",
         "Darkvision",
         "Expert Parry",
