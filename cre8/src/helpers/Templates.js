@@ -217,6 +217,7 @@ export const kitDefault = {
     expectation: "",
     attacks: [],
     benefit_traits: [],
+    blight_choice: false,
     bonus_feat: false,
     bonus_talents: [],
     bonus_trained_skills: [],

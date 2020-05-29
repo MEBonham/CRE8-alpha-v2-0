@@ -2,6 +2,8 @@ export const traitDescriptions = {
     "Aberration Type": "This has no innate effect, but is considered a Benefit because it qualifies for so many special abilities.",
     "Arcane Aversion": "Incur a penalty to your Spellcraft Check and the Accuracy of your spell attacks. This penalty is equal to any encumbrance penalties you suffer to your Athletics, Dexterity, and Stealth skills (due to armor, shield, or a heavy load). The penalty additionally worsens by 1 if you wear a shield and again by 1 if you wear armor.",
     "Beast Type": "Cannot speak normal languages. Illiterate. Limited in the Charisma, Dexterity, Gadgetry, Glibness, and Knowledge skills.",
+    "Blight-Embraced": "You are immune to the Blight Affliciton. However, you can be detected and targeted as a Blighted creature. Also, you are pretty close to irredeemably evil.",
+    "Blight-Snared": "You may choose to become Blight-Embraced when you take an extended rest. If you are not Blight-Embraced, you are subject to an exposure of the Blight Affliction each day. Even if you manage to stave off all stages of the Blight Affliction, you can be detected and targeted as a Blighted creature.",
     "Bully": "Your skill checks to intimidate are boosted.",
     "Climber": "You can coast Athletics checks to climb, even under pressure.",
     "Colossal Size": "Your Perception checks to spot Gargantuan or smaller creatures are dragged. Your Athletics or Brawn checks to keep your footing or resist Grabbing against Gargantuan or smaller creatures are boosted. Your Stealth checks to hide from Gargantuan or smaller creatures are dragged.",
@@ -29,5 +31,7 @@ export const traitDescriptions = {
     "Swarm Vulnerabilities": "An attack that affects an area or multiple targets may affect you more than once by targeting your Spawns as if they were separate creatures. While you have no active Spawns, foes may inflict Hazards on you as if you were Wounded. If any effect would cause you to be Dropped, you instead dissipate.",
     "Tall Weapon Reach": "Gain a +1 Size bonus to your melee weapons' reach for each size category bigger than Medium that you are.",
     "Tiny Size": "Your Stealth checks to hide from Small or larger creatures are boosted. Your Athletics or Brawn checks to keep your footing or resist Grabbing against Small or larger creatures are dragged. Your Perception checks to spot Diminutive or smaller creatures are dragged. Your Athletics or Brawn checks to keep your footing or resist Grabbing against Diminutive or smaller creatures are boosted. Your Stealth checks to hide from Diminutive or smaller creatures are dragged.",
-    "Unarmed Focus": "You are proficient with your Unarmed Strike. You may freely choose whether your Unarmed Strike attacks deal subdual damage or not."
+    "Unarmed Focus": "You are proficient with your Unarmed Strike. You may freely choose whether your Unarmed Strike attacks deal subdual damage or not.",
+    "Undead Type": "This overrides other Type traits. You are immune to diseases and poison (unless the specific disease or poison states otherwise).",
+    "Whiff of Blight": "You can be detected and targeted as a Blighted creature."
 }

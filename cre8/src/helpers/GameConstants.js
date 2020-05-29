@@ -29,7 +29,8 @@ const gc = {
         "Stack 1st-Level Kits",
         "Swarm Resilience",
         "Tall Weapon Reach",
-        "Unarmed Focus"
+        "Unarmed Focus",
+        "Undead Type"
     ],
     bonus_targets: [
         { name: "Armor Value", code: "av_mods" },
@@ -74,11 +75,16 @@ const gc = {
         "Untyped"
     ],
     damage_types: [
+        "acid",
         "bludgeoning",
         "cold",
         "fire",
         "lightning",
+        "necrotic",
         "piercing",
+        "poison",
+        "psychic",
+        "radiant",
         "slashing",
         "thunder",
         "typeless"
@@ -86,10 +92,13 @@ const gc = {
     drawback_traits: [
         "Arcane Aversion",
         "Beast Type",
+        "Blight-Embraced",
+        "Blight-Snared",
         "Giant Type",
         "Instinctual",
         "Outsider Type",
-        "Swarm Vulnerabilities"
+        "Swarm Vulnerabilities",
+        "Whiff of Blight"
     ],
     epic_level_xp_increment: 500,
     feat_tags: [

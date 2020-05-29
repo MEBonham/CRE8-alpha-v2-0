@@ -307,6 +307,27 @@ const ConfigureKit = (props) => {
                         ))}
                     </div> :
                 null}
+                {currentKit && currentKit.blight_choice ?
+                    <div className="radio-bank rows">
+                        <label>Choose one:</label>
+                        <div>
+                            <input
+                                type="radio"
+                                name={`blight_choice-kit-${props.level}-${props.index}`}
+                                value="blightSnared"
+                                onChange={radioSelection}
+                            /> Blight-Snared
+                        </div>
+                        <div>
+                            <input
+                                type="radio"
+                                name={`blight_choice-kit-${props.level}-${props.index}`}
+                                value="blightEmbraced"
+                                onChange={radioSelection}
+                            /> Blight-Embraced
+                        </div>
+                    </div> :
+                null}
             </div>
             <div className="selects columns">
                 {currentKit ?

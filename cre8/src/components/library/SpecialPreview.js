@@ -196,6 +196,11 @@ const SpecialPreview = () => {
                             {data.drawback_traits.map((trait, i) => (
                                 <li key={i}><strong>{trait}:</strong> {traitDescriptions[trait]}</li>
                             ))}
+                            {data.blight_choice ?
+                                <li>
+                                    <strong>Blight-Snared:</strong> {traitDescriptions["Blight-Snared"]}
+                                </li> :
+                            null}
                         </ul>
                     </> :
                 null}

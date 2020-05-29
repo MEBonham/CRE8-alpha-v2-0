@@ -1121,6 +1121,26 @@ export const updateKits = (statsObj) => {
                 };
             }
 
+            if (
+                kitObj.blight_choice &&
+                kitObj.selected_options.blight_choice &&
+                kitObj.selected_options.blight_choice === "blightSnared"
+            ) {
+                result.traits_from_kits = [
+                    ...result.traits_from_kits,
+                    "Blight-Snared"
+                ];
+            } else if (
+                kitObj.blight_choice &&
+                kitObj.selected_options.blight_choice &&
+                kitObj.selected_options.blight_choice === "blightEmbraced"
+            ) {
+                result.traits_from_kits = [
+                    ...result.traits_from_kits,
+                    "Blight-Embraced"
+                ];
+            }
+
             let vp_boost = parseInt(kitObj.vp_boost);
             if (
                 kitObj.vpPlus2_OR_mpPlus2 &&
