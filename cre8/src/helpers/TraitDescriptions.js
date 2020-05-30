@@ -9,6 +9,7 @@ export const traitDescriptions = {
     "Colossal Size": "Your Perception checks to spot Gargantuan or smaller creatures are dragged. Your Athletics or Brawn checks to keep your footing or resist Grabbing against Gargantuan or smaller creatures are boosted. Your Stealth checks to hide from Gargantuan or smaller creatures are dragged.",
     "Darkvision": "Treat nonmagical darkness as if it were shadowy illumination.",
     "Diminutive Size": "Your Stealth checks to hide from Tiny or larger creatures are boosted. Your Athletics or Brawn checks to keep your footing or resist Grabbing against Tiny or larger creatures are dragged. Your Perception checks to spot Fine creatures are dragged. Your Athletics or Brawn checks to keep your footing or resist Grabbing against Fine creatures are boosted. Your Stealth checks to hide from Fine creatures are dragged.",
+    "Dragon Type": "Limited in the Dexterity and Gadgetry skills.",
     "Expert Parry": "While you wield a Heavy Blade weapon, gain a +1 Feat bonus to your Defense save.",
     "Fine Size": "Your Stealth checks to hide from Diminutive or larger creatures are boosted. Your Athletics or Brawn checks to keep your footing or resist Grabbing against Diminutive or larger creatures are dragged.",
     "Gargantuan Size": "Your Stealth checks to hide from Colossal creatures are boosted. Your Athletics or Brawn checks to keep your footing or resist Grabbing against Colossal creatures are dragged. Your Perception checks to spot Huge or smaller creatures are dragged. Your Athletics or Brawn checks to keep your footing or resist Grabbing against Huge or smaller creatures are boosted. Your Stealth checks to hide from Huge or smaller creatures are dragged.",
@@ -34,5 +35,6 @@ export const traitDescriptions = {
     "Unarmed Focus": "You are proficient with your Unarmed Strike. You may freely choose whether your Unarmed Strike attacks deal subdual damage or not.",
     "Undead Type": "This overrides other Type traits. You are immune to diseases and poison (unless the specific disease or poison states otherwise).",
     "Whiff of Blight": "You can be detected and targeted as a Blighted creature.",
+    "Wing-Aided Movement": "Your Athletics checks to balance on a narrow surface or jump are boosted. You can control the speed at which you fall somewhat, enough to avoid taking falling damage if you desire. When you fall, you may glide 4 ft horizontally for each 1 ft you fall vertically.",
     "Wound-Tolerant": "You do not suffer the normal -2 penalty to saving throws for being Wounded."
 }

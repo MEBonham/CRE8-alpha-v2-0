@@ -298,7 +298,15 @@ const SpecialPreview = () => {
             <>
                 <header>
                     <h1>{data.name}</h1>
-                    <h2 className="subtitle">[{data.tags.map((tag) => (tag)).join("] [")}] Talent</h2>
+                    <h2 className="subtitle">
+                        {data.tags.length ? 
+                            <>
+                                [
+                                {data.tags.map((tag) => (tag)).join("] [")}
+                                ]
+                            </> :
+                            null 
+                        } Feat</h2>
                     <p className="prereqs"><strong>Prerequisites:</strong> {data.prereqs}</p>
                     {data.expectation ? <p className="prereqs"><strong>Expectation:</strong> {data.expectation}</p> : null}
                     {data.tags.includes("Spell") ? 

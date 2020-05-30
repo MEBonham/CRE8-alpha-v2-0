@@ -31,6 +31,7 @@ const gc = {
         "Tall Weapon Reach",
         "Unarmed Focus",
         "Undead Type",
+        "Wing-Aided Movement",
         "Wound-Tolerant"
     ],
     bonus_targets: [
@@ -95,6 +96,7 @@ const gc = {
         "Beast Type",
         "Blight-Embraced",
         "Blight-Snared",
+        "Dragon Type",
         "Giant Type",
         "Instinctual",
         "Outsider Type",
