@@ -203,7 +203,7 @@ export const mineModifiers = (modsObj, qualifiers) => {
     const bonusTypes = Object.keys(modsObj);
     bonusTypes.forEach(type => {
         const sources = Object.keys(modsObj[type]);
-        if (type === "Circumstance" || type === "Untyped" || type === "buy_history") {
+        if (type === "BaseSize" || type === "Circumstance" || type === "Untyped" || type === "buy_history") {
             sources.forEach(source => {
                 const obj = modsObj[type][source];
                 if ((!obj.conditional) || qualifiers[obj.condition.split("=")[0]] === obj.condition.split("=")[1] ||
@@ -277,8 +277,15 @@ const updateAttacks = (statsObj) => {
         let peril_rating;
         let impact_total_mod = 0;
         if (attackObj.type === "vim") {
-            accuracy = 10 + statsObj.fortitude_total;
+            accuracy = 10 + statsObj.fortitude_total + mineModifiers(statsObj.vim_accuracy_mods, {
+                ...attackObj,
+                level: statsObj.level
+            });
             peril_rating = statsObj.fortitude_total + attackObj.peril_mod;
+            impact_total_mod = mineModifiers(statsObj.vim_impact_mods, {
+                ...attackObj,
+                level: statsObj.level
+            });
         } else if (attackObj.type === "spell") {
             accuracy = 10 + statsObj.caster_level + mineModifiers(statsObj.spell_accuracy_mods, {
                 ...attackObj,
@@ -582,7 +589,8 @@ export const updateFeats = (statsObj) => {
                         ...attackObj.damage_type
                     },
                     src: featObj.id,
-                    srcType: "feat"
+                    srcType: "feat",
+                    dragonBreathQual: (featObj.name === "Poison Breath" || featObj.name.startsWith("Energy Breath")) ? "true" : "false"
                 }))
             ];
 
@@ -1329,8 +1337,8 @@ export const updateKits = (statsObj) => {
             if (parseInt(kitObj.grow_bigger_level)) {
                 result.size_mods = {
                     ...result.size_mods,
-                    Base: {
-                        ...result.size_mods.Base,
+                    BaseSize: {
+                        ...result.size_mods.BaseSize,
                         [kitObj.id]: {
                             level: parseInt(kitObj.grow_bigger_level),
                             num: 1,
@@ -1617,6 +1625,13 @@ const updateSize = (statsObj) => {
             ...result.weapon_range_mods,
             Size: {
                 ...result.weapon_range_mods.Size,
+                "Final Size": {
+                    srcType: "size",
+                    num: Math.max(0, size_final - 2),
+                    level: 0,
+                    conditional: true,
+                    condition: "range=melee"
+                },
                 "Tall Weapon Reach": {
                     srcType: "size",
                     num: (size_final > 0 && statsObj.traits_from_talents.includes("Tall Weapon Reach")) ? size_final : 0,
@@ -2003,6 +2018,30 @@ export const updateTalents = (statsObj) => {
                         level,
                         num: 10,
                         srcType: "talent"
+                    }
+                };
+            }
+            if (talentObj.id === "draconicbuild") {
+                result.weapon_range_mods.Untyped = {
+                    ...result.weapon_range_mods.Untyped,
+                    [talentObj.id]: {
+                        level,
+                        num: 1,
+                        srcType: "talent",
+                        conditional: true,
+                        condition: "name=Bite"
+                    }
+                };
+            }
+            if (talentObj.id === "draconicassociation") {
+                result.vim_impact_mods.Untyped = {
+                    ...result.vim_impact_mods.Untyped,
+                    [talentObj.id]: {
+                        level,
+                        num: statsObj.heroic_bonus,
+                        srcType: "talent",
+                        conditional: true,
+                        condition: "dragonBreathQual=true"
                     }
                 };
             }
