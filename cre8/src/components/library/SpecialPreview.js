@@ -23,6 +23,9 @@ const SpecialPreview = () => {
                 case "talents":
                     dispatch({ type: "SET", key: "previewComponent", payload: previewTalent(state.preview.data) });
                     break;
+                case "rituals":
+                    dispatch({ type: "SET", key: "previewComponent", payload: previewRitual(state.preview.data) });
+                    break;
                 default:
                     dispatch({ type: "SET", key: "previewComponent", payload: previewItem(state.preview.data) });
             }
@@ -678,6 +681,55 @@ const SpecialPreview = () => {
                             }
                         })}
                     </section> :
+                null}
+            </>
+        );
+    }
+
+    const previewRitual = (data) => {
+        // console.log(data);
+        return(
+            <>
+                <header>
+                    <h1>{data.name}</h1>
+                    <h2 className="subtitle">
+                        {data.tags.length ? 
+                            <>
+                                [
+                                {data.tags.map((tag) => (tag)).join("] [")}
+                                ]
+                            </> :
+                            null 
+                        } Ritual</h2>
+                    <p><strong>Ritual Level:</strong> {data.ritual_level}</p>
+                    <p><strong>Copyable:</strong> {data.copyable ? "Yes" : "No"}</p>
+                    <p><strong>Base MP Cost:</strong> {data.base_mp_cost}</p>
+                    <p><strong>Component Cost:</strong> {data.component_cost}</p>
+                    <p><strong>Casting Time:</strong> {data.casting_time}</p>
+                </header>
+                <h2>Effect:</h2>
+                <p>{data.effect}</p>
+                {data.augments.length ?
+                    <>
+                        <h2>Augments:</h2>
+                        <ul>
+                            {data.augments.map((augment, i) => (
+                                <li key={i}>
+                                    {augment}
+                                </li>
+                            ))}
+                        </ul>
+                    </> :
+                null}
+                {data.variations.length ?
+                    <>
+                        <h2>Variations:</h2>
+                        <ul>
+                            {data.variations.map((variation, i) => (
+                                <li key={i}>{variation}</li>
+                            ))}
+                        </ul>
+                    </> :
                 null}
             </>
         );

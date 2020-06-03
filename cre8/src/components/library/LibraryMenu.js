@@ -7,6 +7,7 @@ import KitsLibraryMenu from './KitsLibraryMenu';
 import FeatsLibraryMenu from './FeatsLibraryMenu';
 import TalentsLibraryMenu from './TalentsLibraryMenu';
 import ItemsLibraryMenu from './ItemsLibraryMenu';
+import RitualsLibraryMenu from './RitualsLibraryMenu';
 import WeaponsTable from './WeaponsTable';
 
 const LibraryMenu = (props) => {
@@ -37,6 +38,7 @@ const LibraryMenu = (props) => {
                 <MyLink to={`/library/feats`} className={category === "feats" ? "on" : "off"}>Feats</MyLink>
                 <MyLink to={`/library/talents`} className={category === "talents" ? "on" : "off"}>Talents</MyLink>
                 <MyLink to={`/library/items`} className={category === "items" ? "on" : "off"}>Items</MyLink>
+                <MyLink to={`/library/rituals`} className={category === "rituals" ? "on" : "off"}>Rituals</MyLink>
             </div>
             <Switch>
                 <Route exact path={`/library/kits`} component={KitsLibraryMenu} />
@@ -44,6 +46,7 @@ const LibraryMenu = (props) => {
                 <Route exact path={`/library/talents`} component={TalentsLibraryMenu} />
                 <Route exact path={`/library/weapons`} component={WeaponsTable} />
                 <Route exact path={`/library/items`} component={ItemsLibraryMenu} />
+                <Route exact path={`/library/rituals`} component={RitualsLibraryMenu} />
             </Switch>
         </div>
     );

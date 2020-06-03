@@ -58,6 +58,7 @@ const initialData = {
     },
     mainNavMenuOpen: false,
     preview: {},
+    ritualFilters: {},
     rollQueue: [],
     rollsToDisplay: [],
     shouldUpdateCharacterCache: true,

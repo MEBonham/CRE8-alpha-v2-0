@@ -82,6 +82,17 @@ const ViewLibraryShell = () => {
                     }
                 }
                 break;
+            case "rituals":
+                if (state.ritualCycleLinks) {
+                    for (let i = 0; i < state.ritualCycleLinks.length; i++) {
+                        if (slug === state.ritualCycleLinks[i].slug) {
+                            setNextLink(i === state.ritualCycleLinks.length - 1 ?
+                                state.ritualCycleLinks[0] : state.ritualCycleLinks[i + 1]);
+                            setPrevLink(i === 0 ? state.ritualCycleLinks[state.ritualCycleLinks.length - 1] : state.ritualCycleLinks[i - 1]);
+                        }
+                    }
+                }
+                break;
             default:
                 if (state.itemCycleLinks) {
                     for (let i = 0; i < state.itemCycleLinks.length; i++) {
@@ -94,7 +105,7 @@ const ViewLibraryShell = () => {
                 }
                 break;
         }
-    }, [category, slug, state.featCycleLinks, state.itemCycleLinks, state.kitCycleLinks, state.talentCycleLinks])
+    }, [category, slug, state.featCycleLinks, state.itemCycleLinks, state.kitCycleLinks, state.ritualCycleLinks, state.talentCycleLinks])
 
     if (code404) return <Code404 from="ViewLibraryShell" />
     return (

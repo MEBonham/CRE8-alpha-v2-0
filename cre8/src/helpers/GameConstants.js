@@ -18,6 +18,8 @@ const gc = {
         "Bully",
         "Climber",
         "Darkvision",
+        "Epic Continuation: Fortitude",
+        "Epic Continuation: VP",
         "Expert Parry",
         "Hit Points",
         "Ignore Armor Speed Penalty",
@@ -145,6 +147,15 @@ const gc = {
         "Stunned"
     ],
     resistance_boost: 4,
+    ritual_tags: [
+        "Arcane",
+        "Divination",
+        "Divine",
+        "Healing",
+        "Item Creation",
+        "Primal",
+        "Vile"
+    ],
     size_categories: {
         "-5": "Fine Size",
         "-4": "Fine Size",

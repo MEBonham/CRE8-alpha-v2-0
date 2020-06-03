@@ -21,7 +21,7 @@ const ConfigurePoolsBreakdown = () => {
                     =
                 </div>
                 <div className="fill-in">
-                    <p className="big-num">{2 * state.cur.stats.level_max8}</p>
+                    <p className="big-num">{2 * ((state.cur.stats.traits_from_talents.includes("Epic Continuation: VP")) ? (state.cur.stats.level) : (state.cur.stats.level_max8))}</p>
                     <p className="caption">2x Level</p>
                 </div>
                 <div className="plus-symbol">

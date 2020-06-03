@@ -368,7 +368,8 @@ const updateAwesome = (statsObj) => {
 }
 
 const updateDefense = (statsObj) => {
-    const defense_total = statsObj.heroic_bonus + mineModifiers(statsObj.defense_mods, { level: statsObj.level });
+    const levelBaseDef = (statsObj.traits_from_talents.includes("Epic Continuation: Defense")) ? Math.floor(statsObj.level / 2) : statsObj.heroic_bonus;
+    const defense_total = levelBaseDef + mineModifiers(statsObj.defense_mods, { level: statsObj.level });
     return {
         ...statsObj,
         defense_total
@@ -683,20 +684,23 @@ export const updateGoodSave = (statsObj) => {
             ...willMod
         }
     };
-    const fortitude_base_total = heroic_bonus + mineModifiers({ base: fortMod }, { level: statsObj.level });
-    const reflex_base_total = heroic_bonus + mineModifiers({ base: refMod }, { level: statsObj.level });
-    const willpower_base_total = heroic_bonus + mineModifiers({ base: willMod }, { level: statsObj.level });
+    const levelBaseFort = statsObj.traits_from_talents.includes("Epic Continuation: Fortitude") ? Math.floor(statsObj.level / 2) : heroic_bonus;
+    const fortitude_base_total = levelBaseFort + mineModifiers({ base: fortMod }, { level: statsObj.level });
+    const levelBaseRef = statsObj.traits_from_talents.includes("Epic Continuation: Reflex") ? Math.floor(statsObj.level / 2) : heroic_bonus;
+    const reflex_base_total = levelBaseRef + mineModifiers({ base: refMod }, { level: statsObj.level });
+    const levelBaseWill = statsObj.traits_from_talents.includes("Epic Continuation: Willpower") ? Math.floor(statsObj.level / 2) : heroic_bonus;
+    const willpower_base_total = levelBaseWill + mineModifiers({ base: willMod }, { level: statsObj.level });
     let result = {
         ...statsObj,
         fortitude_base_total,
         fortitude_mods,
-        fortitude_total: heroic_bonus + mineModifiers(fortitude_mods, { level: statsObj.level }),
+        fortitude_total: levelBaseFort + mineModifiers(fortitude_mods, { level: statsObj.level }),
         reflex_base_total,
         reflex_mods,
-        reflex_total: heroic_bonus + mineModifiers(reflex_mods, { level: statsObj.level }),
+        reflex_total: levelBaseRef + mineModifiers(reflex_mods, { level: statsObj.level }),
         willpower_base_total,
         willpower_mods,
-        willpower_total: heroic_bonus + mineModifiers(willpower_mods, { level: statsObj.level }),
+        willpower_total: levelBaseWill + mineModifiers(willpower_mods, { level: statsObj.level }),
     };
     if (fortitude_base_total !== origFortBase) {
         result = updateVpMax(result);
@@ -2182,7 +2186,8 @@ const updateVpMax = (statsObj) => {
     const origVpMax = statsObj.vp_max;
     
     const vp_kits_total = mineKits(statsObj.vp_kits);
-    const vp_max = gc.base_vitality_points + (2 * statsObj.level_max8) + vp_kits_total + statsObj.fortitude_base_total;
+    const from_level = (statsObj.traits_from_talents.includes("Epic Continuation: VP")) ? (2 * statsObj.level) : (2 * statsObj.level_max8);
+    const vp_max = gc.base_vitality_points + from_level + vp_kits_total + statsObj.fortitude_base_total;
     const vp = Math.max(0, statsObj.vp + (vp_max - origVpMax));
     return {
         ...statsObj,

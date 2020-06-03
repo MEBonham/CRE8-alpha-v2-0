@@ -7,6 +7,7 @@ import BuildLibraryKits from './BuildLibraryKits';
 import BuildLibraryFeats from './BuildLibraryFeats';
 import BuildLibraryTalents from './BuildLibraryTalents';
 import BuildLibraryItems from './BuildLibraryItems';
+import BuildLibraryRituals from './BuildLibraryRituals';
 
 const BuildLibrary = () => {
     const [state] = useContext(Store);
@@ -35,6 +36,9 @@ const BuildLibrary = () => {
             case "Items":
                 setInner(<BuildLibraryItems />);
                 break;
+            case "Rituals":
+                setInner(<BuildLibraryRituals />);
+                break;
             default:
                 setInner(null);
         }
@@ -53,7 +57,7 @@ const BuildLibrary = () => {
                 <header>
                     <h1>{state.cur.name}</h1>
                     {!state.user || state.user.rank === "peasant" ?
-                        <h2>You do not have sufficient account rank to build most parts of the Library.</h2>
+                        <h2>You do not have sufficient account rank to add to the Library.</h2>
                     : null}
                 </header>
                 <div className="columns">
@@ -61,6 +65,7 @@ const BuildLibrary = () => {
                     <MyButton fct={setBuildLibraryMode} evData="meb_setLibraryModeBtn_Feats">Feats</MyButton>
                     <MyButton fct={setBuildLibraryMode} evData="meb_setLibraryModeBtn_Talents">Talents</MyButton>
                     <MyButton fct={setBuildLibraryMode} evData="meb_setLibraryModeBtn_Items">Items</MyButton>
+                    <MyButton fct={setBuildLibraryMode} evData="meb_setLibraryModeBtn_Rituals">Rituals</MyButton>
                 </div>
             </header>
             {inner}

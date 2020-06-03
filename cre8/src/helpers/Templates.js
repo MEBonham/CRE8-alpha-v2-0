@@ -339,3 +339,16 @@ export const itemDefault = {
     weapon_heft: "Light",
     worn_or_wielded: false
 }
+
+export const ritualDefault = {
+    name: "",
+    tags: [],
+    ritual_level: "1",
+    copyable: true,
+    base_mp_cost: "1",
+    component_cost: "10",
+    casting_time: "1 hour",
+    effect: "",
+    augments: [],
+    variations: []
+}

@@ -2,13 +2,15 @@ import React from 'react';
 import { Route, Switch, useRouteMatch } from 'react-router-dom';
 
 import BuildLibraryKits from '../charsheet/BuildLibraryKits';
-import KitEditingMenu from '../library/KitEditingMenu';
+import KitEditingMenu from './KitEditingMenu';
 import BuildLibraryFeats from '../charsheet/BuildLibraryFeats';
-import FeatEditingMenu from '../library/FeatEditingMenu';
+import FeatEditingMenu from './FeatEditingMenu';
 import BuildLibraryTalents from '../charsheet/BuildLibraryTalents';
-import TalentEditingMenu from '../library/TalentEditingMenu';
+import TalentEditingMenu from './TalentEditingMenu';
 import BuildLibraryItems from '../charsheet/BuildLibraryItems';
-import ItemEditingMenu from '../library/ItemEditingMenu';
+import ItemEditingMenu from './ItemEditingMenu';
+import BuildLibraryRituals from '../charsheet/BuildLibraryRituals';
+import RitualEditingMenu from './RitualEditingMenu';
 
 const EditShell = () => {
     const match = useRouteMatch();
@@ -34,6 +36,11 @@ const EditShell = () => {
                 <Route
                     path={`${match.url}/items/:slug`}
                     render={() => <BuildLibraryItems editing />}
+                />
+                <Route exact path={`${match.url}/rituals`} component={RitualEditingMenu} />
+                <Route
+                    path={`${match.url}/rituals/:slug`}
+                    render={() => <BuildLibraryRituals editing />}
                 />
             </Switch>
         </div>
