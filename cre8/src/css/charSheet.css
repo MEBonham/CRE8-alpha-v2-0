@@ -467,6 +467,14 @@ section.play-equipment section.inventory-display .accordion textarea {
     margin-bottom: 6px;
 }
 
+section.play-equipment section.inventory-display .accordion .manage-item-rituals .preview-link {
+    cursor: pointer;
+}
+
+section.play-equipment section.inventory-display .accordion .manage-item-rituals select {
+    margin-right: 8px;
+}
+
 section.play-equipment section.acquiring-center select,
 section.play-equipment section.acquiring-center div.my-button {
     margin-right: 8px;

@@ -60,6 +60,17 @@ const PlayAcquiringCenter = (props) => {
                 tags: [ "Custom" ],
                 id: uuidv4()
             });
+        } else if (ev.target.value === "Spell Scroll") {
+            setCurrentItem({
+                ...itemDefault,
+                name: "Spell Scroll",
+                tags: [ "Consumable", "Custom", "Magical" ],
+                price: "0",
+                bulk: "1",
+                description: "This is a scroll containing instructions to conduct a Ritual, typically rolled up inside a scroll case. Performing the ritual takes the normal amount of Casting Time, but the power of the Ritual's Components has already been bound within the scroll. When the Ritual is completed, the scroll crumbles to dust. The Price of a Spell Scroll is typically the Ritual's Component Cost + the Ritual's Level, and the Bulk of a Spell Scroll is typically the Ritual's Level.",
+                id: uuidv4(),
+                has_rituals: true
+            });
         } else {
             setCurrentItem({
                 id: ev.target.value,
@@ -101,6 +112,7 @@ const PlayAcquiringCenter = (props) => {
             <select onChange={selectItem} defaultValue={false}>
                 <option value={false}>Select Item</option>
                 <option value="Custom">Custom Item</option>
+                <option value="Spell Scroll">Spell Scroll</option>
                 {Object.keys(selectItems).sort().map((itemSlug) => (
                     <option key={itemSlug} value={itemSlug} className="non-false">({selectItems[itemSlug].price}) {selectItems[itemSlug].name}</option>
                 ))}

@@ -125,8 +125,10 @@ const gc = {
     good_save_boost: 2,
     item_tags: [
         "Armor",
+        "Consumable",
         "Container",
         "Gear",
+        "Magical",
         "Weapon"
     ],
     kit_tags: [

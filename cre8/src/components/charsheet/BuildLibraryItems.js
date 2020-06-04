@@ -414,6 +414,10 @@ const BuildLibraryItems = (props) => {
                         <label htmlFor="halve_bulk_capacity">Halve-Bulk Capacity (0 to disable):</label>
                         <Field type="number" name="halve_bulk_capacity" />
                     </div>
+                    <div>
+                        <Field type="checkbox" name="has_rituals" />
+                        <label htmlFor="has_rituals">Includes Rituals</label>
+                    </div>
                 </div>
                 <div className="rows right-column">
                     <label htmlFor="weapon_heft">Weapon Heft</label>
