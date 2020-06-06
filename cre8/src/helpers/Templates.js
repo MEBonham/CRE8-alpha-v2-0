@@ -330,6 +330,7 @@ export const itemDefault = {
     investments: {},
     location: "Readily Available",
     magic_item: false,
+    metallic_armor: false,
     passives: [],
     resistance: "8",
     selected_options: {},

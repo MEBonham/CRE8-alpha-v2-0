@@ -4,7 +4,7 @@ export const traitDescriptions = {
     "Beast Type": "Cannot speak normal languages. Illiterate. Limited in the Charisma, Dexterity, Gadgetry, Glibness, and Knowledge skills.",
     "Blight-Embraced": "You are immune to the Blight Affliciton. However, you can be detected and targeted as a Blighted creature. Also, you are pretty close to irredeemably evil.",
     "Blight-Snared": "You may choose to become Blight-Embraced when you take an extended rest. If you are not Blight-Embraced, you are subject to an exposure of the Blight Affliction each day. Even if you manage to stave off all stages of the Blight Affliction, you can be detected and targeted as a Blighted creature.",
-    "Bully": "Your skill checks to intimidate are boosted.",
+    "Bully": "Your skill checks to intimidate are boosted, as long as the target of your intimidation is not a larger size category than you.",
     "Climber": "You can coast Athletics checks to climb, even under pressure.",
     "Colossal Size": "Your Perception checks to spot Gargantuan or smaller creatures are dragged. Your Athletics or Brawn checks to keep your footing or resist Grabbing against Gargantuan or smaller creatures are boosted. Your Stealth checks to hide from Gargantuan or smaller creatures are dragged.",
     "Darkvision": "Treat nonmagical darkness as if it were shadowy illumination.",
@@ -37,6 +37,7 @@ export const traitDescriptions = {
     "Unarmed Focus": "You are proficient with your Unarmed Strike. You may freely choose whether your Unarmed Strike attacks deal subdual damage or not.",
     "Undead Type": "This overrides other Type traits. You are immune to diseases and poison (unless the specific disease or poison states otherwise).",
     "Whiff of Blight": "You can be detected and targeted as a Blighted creature.",
+    "Wilds' Aversion": "If you wear metal armor or wield a metal shield, incur a -2 penalty to your Spellcraft and your spell attack accuracy.",
     "Wing-Aided Movement": "Your Athletics checks to balance on a narrow surface or jump are boosted. You can control the speed at which you fall somewhat, enough to avoid taking falling damage if you desire. When you fall, you may glide 4 ft horizontally for each 1 ft you fall vertically.",
     "Wound-Tolerant": "You do not suffer the normal -2 penalty to saving throws for being Wounded."
 }

@@ -356,7 +356,7 @@ const BuildLibraryFeats = (props) => {
                     featObj.augment_options.push({
                         detail,
                         Mp: formData.augmentMpCost[i],
-                        cumulative: formData[`augmentCumulative_${i}`]
+                        cumulative: formData[`augmentCumulative_${i}`] || false
                     });
                 });
             } else if (key === "seedEffectDetail") {
@@ -367,7 +367,7 @@ const BuildLibraryFeats = (props) => {
                         detail,
                         Mp: formData.seedEffectMpCost[i],
                         // cumulative: formData.seedEffectCumulative[i]
-                        cumulative: formData[`seedEffectCumulative_${i}`]
+                        cumulative: formData[`seedEffectCumulative_${i}`] || false
                     });
                 });
             } else if (key === "passives") {
@@ -405,6 +405,7 @@ const BuildLibraryFeats = (props) => {
             return formData[idString] ? true : false;
         });
         featObj.various_bonuses = bundleVariousBonuses(formData);
+        console.log(featObj);
         saveFeat(newSlug, featObj);
     }
 

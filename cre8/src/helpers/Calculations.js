@@ -918,6 +918,22 @@ export const updateItems = (statsObj) => {
                     srcType: "item"
                 };
             }
+            if (itemObj.metallic_armor && statsObj.traits_from_kits.includes("Wilds' Aversion")) {
+                result.spell_accuracy_mods.Untyped = {
+                    ...result.spell_accuracy_mods.Untyped,
+                    metallic_armor: {
+                        num: -2,
+                        srcType: "item"
+                    }
+                };
+                result.spellcraft_mods.Untyped = {
+                    ...result.spellcraft_mods.Untyped,
+                    metallic_armor: {
+                        num: -2,
+                        srcType: "item"
+                    }
+                };
+            }
         }
 
         if (statsObj.traits_from_feats.includes("Expert Parry") && itemObj.tags.includes("Weapon") && itemObj.attacks.length &&
@@ -2013,7 +2029,6 @@ export const updateTalents = (statsObj) => {
                         condition: "name=Javelin"
                     }
                 }
-                console.log(result.weapon_range_mods);
             }
             if (talentObj.id === "longstrider" && statsObj.skill_ranks.Athletics >= 9) {
                 result.speed_mods.Feat = {

@@ -13,11 +13,11 @@ const BatchEdit = () => {
             query.forEach((item) => {
                 // collectionCopy[item.id] = (Object.keys(item.data().stats.weapon_accuracy_mods)) ?
                 // collectionCopy[item.id] = {
-                collectionCopy[item.id] = (item.data().has_rituals) ? {
+                collectionCopy[item.id] = (item.data().metallic_armor) ? {
                     ...item.data()
                 } : {
                     ...item.data(),
-                    has_rituals: false
+                    metallic_armor: false
                 };
             });
             Object.keys(collectionCopy).forEach((id) => {

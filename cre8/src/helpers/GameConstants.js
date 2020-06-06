@@ -106,7 +106,8 @@ const gc = {
         "Instinctual",
         "Outsider Type",
         "Swarm Vulnerabilities",
-        "Whiff of Blight"
+        "Whiff of Blight",
+        "Wilds' Aversion"
     ],
     epic_level_xp_increment: 500,
     feat_tags: [
