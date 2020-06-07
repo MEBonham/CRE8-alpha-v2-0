@@ -1,7 +1,7 @@
 import React from 'react';
 import MyLink from '../../ui/MyLink';
 
-const PoisonRules = () => {
+const Conditions = () => {
     return (
         <>
             <div className="float-right">
@@ -70,4 +70,4 @@ const PoisonRules = () => {
     );
 }
 
-export default PoisonRules;
+export default Conditions;

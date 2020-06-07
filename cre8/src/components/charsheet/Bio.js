@@ -56,7 +56,7 @@ const Bio = () => {
                 code: "quirks"
             },
             {
-                title: "Non-Carried Possessions",
+                title: "Non-Carried Property",
                 code: "possessions"
             }
         ];

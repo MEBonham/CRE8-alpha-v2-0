@@ -8,6 +8,7 @@ const Home = () => {
             <h1>Welcome!</h1>
             <MyLink to="/characters">Characters</MyLink>
             <MyLink to="/library">Character Options Library</MyLink>
+            <MyLink to="/rules">Rules of the Game</MyLink>
         </div>
     );
 }
