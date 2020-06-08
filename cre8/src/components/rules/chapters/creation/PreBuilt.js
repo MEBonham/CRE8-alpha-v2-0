@@ -60,7 +60,6 @@ const PreBuilt = () => {
                 <p>Gain 1 Rank in Athletics, Brawn, Charisma, Gadgetry, and Stealth. You can finally check off the XP Parcel under Soldier for "Stealth 4 ranks," gaining some bonus XP.</p>
                 <p>Choose Guardian's Rebuke for your Feat at this level, and Staredown for your Talent.</p>
                 <p>If you are starting at this level, ask your GM what other items she will allow you to "Just Acquire." At a minimum, replacing your Leather Armor, Chainmail, or Composite Armor with Plate Armor (proficient) is recommended.</p>
-                
             </section>
         </>
     );
