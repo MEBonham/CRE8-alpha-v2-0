@@ -67,6 +67,7 @@ export const charDefault = {
         heroic_bonus: 0,
         inventory: [],
         kits: {},
+        languages: "Common",
         level: 1,
         level_max8: 1,
         move_actions: [],

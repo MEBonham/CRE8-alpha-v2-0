@@ -225,6 +225,14 @@ const PlayAccordions = () => {
                             </>
                         </AccordionSection>
                     ))}
+                    {state.cur && state.cur.stats.languages && state.cur.stats.languages !== "none" ?
+                        <AccordionSection>
+                            <h4>Languages</h4>
+                            <>
+                                <p>{state.cur.stats.languages}</p>
+                            </>
+                        </AccordionSection> :
+                    <></>}
                 </Accordion>
             </section>
             <section>

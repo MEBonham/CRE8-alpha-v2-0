@@ -65,6 +65,15 @@ const ConfigureHeader = () => {
                     <span className="stat float-right bold">Next Level At: {state.cur.stats.next_level_at}</span>
                 </div>
             </div>
+            <div className="meb-contain-edit paragraph">
+                <span onClick={state.toggleCharEditing} id="meb_togCharEdit_languages" className="editable-text bold">
+                    Languages: {state.cur.stats.languages}
+                </span>
+                <form className="meb-popout-edit" onSubmit={handleSubmit} id="meb_charEditForm_languages">
+                    <input type="text" onChange={handleInputChange} id="meb_charEditVal_languages" />
+                    <button type="submit">Enter</button>
+                </form>
+            </div>
         </header>
     );
 }

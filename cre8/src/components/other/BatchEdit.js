@@ -5,7 +5,7 @@ import MyButton from '../ui/MyButton';
 
 const BatchEdit = () => {
 
-    const collection = "items";
+    const collection = "characters";
     const editAll = async (ev) => {
         try {
             const collectionCopy = {};
@@ -13,11 +13,14 @@ const BatchEdit = () => {
             query.forEach((item) => {
                 // collectionCopy[item.id] = (Object.keys(item.data().stats.weapon_accuracy_mods)) ?
                 // collectionCopy[item.id] = {
-                collectionCopy[item.id] = (item.data().metallic_armor) ? {
+                collectionCopy[item.id] = (item.data().stats.languages) ? {
                     ...item.data()
                 } : {
                     ...item.data(),
-                    metallic_armor: false
+                    stats: {
+                        ...item.data().stats,
+                        languages: "Common"
+                    }
                 };
             });
             Object.keys(collectionCopy).forEach((id) => {

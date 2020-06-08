@@ -243,6 +243,19 @@ const Reducer = (state, action) => {
                             data: action.payload[action.level][action.index]
                         }
                     }
+                case "languages":
+                    newVal = action.inputs[`${action.stub}_${action.field}`];
+                    return {
+                        ...state,
+                        curChangesMade: true,
+                        cur: {
+                            ...state.cur,
+                            stats: {
+                                ...state.cur.stats,
+                                languages: newVal
+                            }
+                        }
+                    };
                 case "loseItem":
                     if (action.flattened[action.index].quantity === 1) {
                         newVal = unflattenInventory([

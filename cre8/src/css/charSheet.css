@@ -130,6 +130,11 @@ div.char-sheet > div.float-right .my-button {
     flex-wrap: wrap;
 }
 
+.parchment .paragraph {
+    margin-top: 8px;
+    font-size: 1.4rem;
+}
+
 .parchment header header .stat.float-right,
 .parchment .xp-button.float-right {
     margin-left: 20px;

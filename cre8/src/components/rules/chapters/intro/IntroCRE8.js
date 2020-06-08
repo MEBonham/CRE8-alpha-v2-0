@@ -12,7 +12,7 @@ const RPGBasics = () => {
             <h1>Introduction to CRE8</h1>
             <p>You're probably wondering "with so many TTRPGs available, why should I learn to play CRE8?" It's a fair question. CRE8 tries to cover the same ground as a lot of other popular RPGs: fantasy setting, with a mix of swords-and-sorcery and high-fantasy elements; not particularly "narrative." It just tries to do these things better. At least it's free. Beyond that, I'll try to highlight a few of the ways I think it succeeds.</p>
             <section>
-                <h2>Roots</h2>
+                <h2>Ancestry</h2>
                 <p>CRE8 draws inspiration from <em>many</em> other RPGs and is truly a unique beast, but it's most fundamentally rooted in Edition 3.5 of <em>Dungeons & Dragons</em>, the system I was most familiar with when I started making CRE8. It tries to preserve some of the things that were elegant about this game, such as monsters being created by a similar process to PCs. That said, Edition 3.5 had plenty of weaknesses that needed fixing, too ...</p>
             </section>
             <section>

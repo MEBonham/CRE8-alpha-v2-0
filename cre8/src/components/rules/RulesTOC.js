@@ -12,8 +12,15 @@ const RulesTOC = () => {
                 <ul>
                     <li><Link to={`${match.url}/ttrpgbasics`}>TTRPG Basics</Link></li>
                     <li><Link to={`${match.url}/dice`}>Dice Mechanics</Link></li>
-                    <li><Link to={`${match.url}/introcre8`}>Introduction to CRE8</Link></li>
+                    <li><Link to={`${match.url}/introcre8`}>Why Choose CRE8?</Link></li>
                     <li><Link to={`${match.url}/charsheettour`}>Character Sheet Tour</Link></li>
+                </ul>
+            </section>
+            <section>
+                <h2>Character Creation</h2>
+                <ul>
+                    <li><Link to={`${match.url}/charcreation`}>Creating a Character</Link></li>
+                    <li><Link to={`${match.url}/xp`}>XP and Advancement</Link></li>
                 </ul>
             </section>
             <section>
