@@ -60,10 +60,10 @@ const PlayAcquiringCenter = (props) => {
                 tags: [ "Custom" ],
                 id: uuidv4()
             });
-        } else if (ev.target.value === "Spell Scroll") {
+        } else if (ev.target.value === "Ritual Scroll") {
             setCurrentItem({
                 ...itemDefault,
-                name: "Spell Scroll",
+                name: "Ritual Scroll",
                 tags: [ "Consumable", "Custom", "Magical" ],
                 price: "0",
                 bulk: "1",
@@ -112,7 +112,7 @@ const PlayAcquiringCenter = (props) => {
             <select onChange={selectItem} defaultValue={false}>
                 <option value={false}>Select Item</option>
                 <option value="Custom">Custom Item</option>
-                <option value="Spell Scroll">Spell Scroll</option>
+                <option value="Ritual Scroll">Ritual Scroll</option>
                 {Object.keys(selectItems).sort().map((itemSlug) => (
                     <option key={itemSlug} value={itemSlug} className="non-false">({selectItems[itemSlug].price}) {selectItems[itemSlug].name}</option>
                 ))}

@@ -20,6 +20,7 @@ const RulesTOC = () => {
                 <h2>Character Creation</h2>
                 <ul>
                     <li><Link to={`${match.url}/charcreation`}>Creating a Character</Link></li>
+                    <li><Link to={`${match.url}/prebuilt`}>Pre-Built Characters</Link></li>
                     <li><Link to={`${match.url}/xp`}>XP and Advancement</Link></li>
                 </ul>
             </section>

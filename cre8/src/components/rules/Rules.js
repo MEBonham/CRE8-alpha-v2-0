@@ -8,6 +8,7 @@ import DiceMechanics from './chapters/intro/DiceMechanics';
 import IntroCRE8 from './chapters/intro/IntroCRE8';
 import CharSheetTour from './chapters/intro/CharSheetTour';
 import CharCreation from './chapters/creation/CharCreation';
+import PreBuilt from './chapters/creation/PreBuilt';
 import Xp from './chapters/creation/Xp';
 import Conditions from './chapters/Conditions';
 import PoisonRules from './chapters/PoisonRules';
@@ -34,6 +35,8 @@ const Rules = () => {
             setChapterBody(<CharSheetTour />);
         } else if (chapter === "charcreation") {
             setChapterBody(<CharCreation />);
+        } else if (chapter === "prebuilt") {
+            setChapterBody(<PreBuilt />);
         } else if (chapter === "xp") {
             setChapterBody(<Xp />);
         } else if (chapter === "conditions") {
