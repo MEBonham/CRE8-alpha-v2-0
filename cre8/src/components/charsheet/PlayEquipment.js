@@ -12,6 +12,7 @@ import PlayManageItem from './PlayManageItem';
 const PlayEquipment = () => {
     const [state, dispatch] = useContext(Store);
     const LS_KEY = "moneyGainLose";
+    const LS_KEY_HAGGLE = "haggleToggle";
 
     const [flattened, setFlattened] = useState([]);
     const [bulkCapacity, setBulkCapacity] = useState(50);
@@ -50,6 +51,17 @@ const PlayEquipment = () => {
         setMoneyQtyField(ev.target.value);
     }
 
+    const [haggleOn, setHaggleOn] = useLsPersistedState(LS_KEY_HAGGLE, false);
+    const toggleHaggle = (ev) => {
+        setHaggleOn(ev.target.checked);
+    }
+    useEffect(() => {
+        const el = document.getElementById("meb_playEquip_haggle");
+        if (el) {
+            el.checked = haggleOn;
+        }
+    }, [haggleOn])
+
     const dispatchRollData = (data) => {
         dispatch({ type: "ROLL_PENDING", payload: data });
     }
@@ -63,6 +75,7 @@ const PlayEquipment = () => {
                 dieMode: false,
                 // merchant: state.cur.stats.traits_from_talents.includes("Merchant"),
                 merchant: false,
+                haggle: haggleOn,
                 prevWealth: state.cur.stats.wealth,
                 adjustMoneyQty: moneyQtyCopy,
                 type: "wealth roll"
@@ -77,6 +90,7 @@ const PlayEquipment = () => {
                 ...state.constructRollData(),
                 name: "Gain/Lose Money",
                 merchant: false,
+                haggle: haggleOn,
                 prevWealth: state.cur.stats.wealth,
                 adjustMoneyQty: (0 - moneyQtyCopy),
                 type: "wealth roll"
@@ -98,6 +112,17 @@ const PlayEquipment = () => {
                 </div>
             </header>
             <div className="float-right columns">
+                {state.cur && state.cur.stats.traits_from_talents.includes("Haggler") ?
+                    <div className="checkbox-pair">
+                        <input
+                            type="checkbox"
+                            name="playEquip_haggle"
+                            id="meb_playEquip_haggle"
+                            onChange={toggleHaggle}
+                        />
+                        <label>Haggle?</label>
+                    </div> :
+                null}
                 <MyButton fct={gainMoney}>Gain Money</MyButton>
                 <input
                     type="number"

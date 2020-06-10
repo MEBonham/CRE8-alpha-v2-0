@@ -21,6 +21,7 @@ const gc = {
         "Epic Continuation: Fortitude",
         "Epic Continuation: VP",
         "Expert Parry",
+        "Haggler",
         "Hit Points",
         "Ignore Armor Speed Penalty",
         "Instinctual Immunities",
@@ -221,16 +222,16 @@ const gc = {
         "Two-Handed"
     ],
     wounded_save_penalty: -2,
-    xp_award_per_level_of_monster: 15,
+    xp_award_per_level_of_monster: 40,
     xp_buffer_by_level: {
-        1: 1,
-        2: 5,
-        3: 10,
-        4: 15,
-        5: 20,
-        6: 25,
-        7: 30,
-        8: 35
+        1: 5,
+        2: 10,
+        3: 15,
+        4: 20,
+        5: 25,
+        6: 30,
+        7: 35,
+        8: 40
     },
     xp_increment_per_level: 100,
     xp_per_parcel: 30

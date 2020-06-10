@@ -184,7 +184,7 @@ export const charDefault = {
         xp: 0,
         xp_award: 15,
         xp_base: 0,
-        xp_buffer: 1,
+        xp_buffer: 5,
         xp_parcels_total: 0
     }
 };

@@ -32,6 +32,7 @@ const PlayManageItem = ({ item, index, flattened }) => {
                 ...state.constructRollData(),
                 name: "Sell Item",
                 merchant,
+                haggle: state.cur.stats.traits_from_talents.includes("Haggler"),
                 prevWealth: state.cur.stats.wealth,
                 adjustMoneyQty: parseInt(item.price),
                 type: "wealth roll"

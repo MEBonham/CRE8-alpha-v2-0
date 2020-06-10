@@ -15,7 +15,9 @@ const RollerEngine = () => {
                     ...state.pendingRoll,
                     resultData: wealthRoll(
                         state.pendingRoll.prevWealth,
-                        state.pendingRoll.adjustMoneyQty
+                        state.pendingRoll.adjustMoneyQty,
+                        state.pendingRoll.merchant,
+                        state.pendingRoll.haggle
                     )
                 } });
             } else {

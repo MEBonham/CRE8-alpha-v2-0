@@ -41,7 +41,7 @@ export const roll = (dieMode, modBasic, modsMisc, coastVal) => {
     };
 }
 
-export const wealthRoll = (prevWealth, vector, merchant) => {
+export const wealthRoll = (prevWealth, vector, merchant, haggle) => {
     const d6history = [];
     let finalDifference;
     let finalWealth;
@@ -50,16 +50,23 @@ export const wealthRoll = (prevWealth, vector, merchant) => {
     for (let i = 0; i < diceNumber; i++) {
         d6history.push(d6());
     }
-    const successes = d6history.filter((result) => (result > 4)).length;
+    let successes = d6history.filter((result) => (result > 4)).length;
     if (vector < 0) {
+        if (haggle && successes < d6history.length) {
+            successes += 1;
+        } 
         finalWealth = Math.min(prevWealth, subtotal + successes);
     } else {
+        if (haggle && successes > 0) {
+            successes -= 1;
+        }
         finalWealth = Math.max(prevWealth, subtotal - successes);
     }
     finalDifference = finalWealth - prevWealth;
     return {
         d6history,
         finalDifference,
-        finalWealth
+        finalWealth,
+        haggle
     };
 }

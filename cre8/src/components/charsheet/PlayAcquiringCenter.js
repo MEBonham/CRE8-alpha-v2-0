@@ -94,6 +94,7 @@ const PlayAcquiringCenter = (props) => {
                 ...state.constructRollData(),
                 name: "Buy Item",
                 merchant: false,
+                haggle: state.cur.stats.traits_from_talents.includes("Haggler"),
                 prevWealth: state.cur.stats.wealth,
                 adjustMoneyQty: (0 - parseInt(currentItem.price)),
                 type: "wealth roll"

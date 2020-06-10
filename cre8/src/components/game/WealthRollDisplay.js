@@ -20,6 +20,7 @@ const WealthRollDisplay = (props) => {
             <div className="roll-result rows">
                 <p className="big-num">{`${d6history.filter((d6) => (d6 > 4)).length} "successes"`}</p>
                 <p className="big-num">{`New Wealth: ${props.rollData.resultData.finalWealth}`}</p>
+                {props.rollData.resultData.haggle ? <p className="tiny">(haggled)</p> : null}
             </div>
         </div>
     );
