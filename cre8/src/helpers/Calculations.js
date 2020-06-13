@@ -755,6 +755,7 @@ export const updateItems = (statsObj) => {
                 let improvised = "false";
                 let shieldbash = "false";
                 let twoHanded = "false";
+                let lightmelee = "false";
                 if (attackObj.categories.includes("Spell")) {
                     type = "spell_attack";
                 } else if (attackObj.categories.includes("Vim")) {
@@ -769,6 +770,7 @@ export const updateItems = (statsObj) => {
                     shieldbash = "true";
                 }
                 if (itemObj.weapon_heft === "Two-Handed" && !attackObj.categories.includes("Crossbow")) twoHanded = "true";
+                if (itemObj.weapon_heft === "Light" && attackObj.range.startsWith("Melee")) lightmelee = "true";
                 if (itemObj.weapon_heft === "Versatile" && !attackObj.range.startsWith("Thrown")) {
                     twoHanded = "true";
                     return [
@@ -806,6 +808,7 @@ export const updateItems = (statsObj) => {
                         ...attackDefault,
                         type,
                         twoHanded,
+                        lightmelee,
                         ...attackObj,
                         damage_type: {
                             ...attackDefault.damage_type,
@@ -1798,12 +1801,16 @@ export const updateSynergies = (statsObj) => {
         const bonusesArr = result.synergy_bonuses[skill];
         bonusesArr.forEach((synergy) => {
             const num = (synergy.primary) ? calcPrimary(ranks) : calcSecondary(ranks);
+            const conditional = (synergy.conditional) ? synergy.conditional : false;
+            const condition = (synergy.conditional) ? synergy.condition : false;
             if (gc.skills_list.includes(synergy.to)) {
                 result.skill_mods[skill] = {
                     ...result.skill_mods[skill],
                     [synergy.source]: {
                         num,
-                        srcType: [synergy.srcType]
+                        srcType: [synergy.srcType],
+                        conditional,
+                        condition
                     }
                 };
             } else {
@@ -1813,7 +1820,9 @@ export const updateSynergies = (statsObj) => {
                         ...result[synergy.to].Synergy,
                         [synergy.source]: {
                             num,
-                            srcType: synergy.srcType
+                            srcType: synergy.srcType,
+                            conditional,
+                            condition
                         }
                     }
                 }
@@ -2079,6 +2088,24 @@ export const updateTalents = (statsObj) => {
                         }
                     }
                 }
+            }
+            if (talentObj.id === "weaponfinesse") {
+                if (!result.synergy_bonuses.Dexterity) result.synergy_bonuses.Dexterity = [];
+                result.synergy_bonuses = {
+                    ...result.synergy_bonuses,
+                    Dexterity: [
+                        ...result.synergy_bonuses.Dexterity,
+                        {
+                            to: "weapon_accuracy_mods",
+                            display: getDisplayName("weapon_accuracy_mods"),
+                            primary: false,
+                            source: talentObj.id,
+                            srcType: "talent",
+                            conditional: true,
+                            condition: "lightmelee=true"
+                        }
+                    ]
+                };
             }
 
             talentObj.various_bonuses.forEach((bonusObj) => {
