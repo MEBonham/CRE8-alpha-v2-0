@@ -177,6 +177,11 @@ const ItemsLibraryMenu = () => {
                         <p>A traveler's outfit to wear; four pouches, a knife, and a waterskin attached to the outfit's belt or baldric for easy access; a large backpack containing a mess kit, a tinderbox, a trowel, four torches, three days' worth of trail rations, and a second traveler's outfit to change into; and a bedroll and 50-ft manila rope strapped to the outside of the backpack.</p>
                         <p><strong>Combined Price: 11. Total effective Bulk: 35.</strong> The backpack has additional room for 2 more bulk's worth of items, which will increase the effective carried Bulk by 1.</p>
                     </section>
+                    <section>
+                        <h3>Dungeonbreaker</h3>
+                        <p>A medium backpack, containing lockpicks, a hacksaw, a crowbar, a pouch of ball bearings, a stick of chalk, a hand drill, a knife, a magnet, five pitons, and a rubber ball. Also includes a ten-foot pole, too large to put in the backpack.</p>
+                        <p><strong>Combined Price: 12. Total effective Bulk: 26.</strong> The backpack is full (in terms of its ability to reduce bulk carried).</p>
+                    </section>
                 </section>
                 {state.user && (state.user.rank === "admin" || state.user.rank === "archon") ? 
                     <section>

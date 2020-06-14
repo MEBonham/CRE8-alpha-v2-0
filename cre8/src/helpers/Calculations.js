@@ -369,11 +369,24 @@ const updateAwesome = (statsObj) => {
 
 const updateDefense = (statsObj) => {
     const levelBaseDef = (statsObj.traits_from_talents.includes("Epic Continuation: Defense")) ? Math.floor(statsObj.level / 2) : statsObj.heroic_bonus;
-    const defense_total = levelBaseDef + mineModifiers(statsObj.defense_mods, { level: statsObj.level });
-    return {
-        ...statsObj,
-        defense_total
-    };
+    let result = { ...statsObj };
+    let weaponCount = 0;
+    statsObj.inventory.forEach((itemObj) => {
+        if (itemObj.location === "Worn/Wielded" && itemObj.attacks.length) {
+            let weaponCountIncrement = 0;
+            itemObj.attacks.forEach((attackObj) => {
+                if (attackObj.range.startsWith("Melee")) {
+                    weaponCountIncrement = 1;
+                }
+            });
+            weaponCount += (weaponCountIncrement * itemObj.quantity);
+        }
+    });
+    result.defense_total = levelBaseDef + mineModifiers(result.defense_mods, {
+        level: result.level,
+        weaponCountTwo: (weaponCount > 1) ? "true" : "false"
+    });
+    return result;
 }
 
 const updateEncumbrance = (statsObj) => {
@@ -548,6 +561,33 @@ export const updateFeats = (statsObj) => {
                     srcType: "feat"
                 });
             });
+
+            if (featObj.id === "two-weaponstyle") {
+                if (!result.defense_mods.Deflection) result.defense_mods.Deflection = {};
+                result.defense_mods.Deflection = {
+                    ...result.defense_mods.Deflection,
+                    [featObj.id]: {
+                        level,
+                        srcType: "feat",
+                        num: 2,
+                        conditional: true,
+                        condition: "weaponCountTwo=true"
+                    }
+                };
+            }
+            if (featObj.id === "two-weapontempest") {
+                if (!result.defense_mods.Deflection) result.defense_mods.Deflection = {};
+                result.defense_mods.Deflection = {
+                    ...result.defense_mods.Deflection,
+                    [featObj.id]: {
+                        level,
+                        srcType: "feat",
+                        num: 3,
+                        conditional: true,
+                        condition: "weaponCountTwo=true"
+                    }
+                };
+            }
 
             featObj.various_bonuses.forEach((bonusObj) => {
                 if (bonusObj.type === "Synergy") {
@@ -959,6 +999,7 @@ export const updateItems = (statsObj) => {
     });
     result = updateEncumbrance(result);
     result = updateAttacks(result);
+    result = updateDefense(result);
 
     return result;
 }

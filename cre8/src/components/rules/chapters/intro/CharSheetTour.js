@@ -32,7 +32,7 @@ const CharSheetTour = () => {
                     <h4>Vitality Points (VP)</h4>
                     <p>A character's short-term stamina, luck, and ability to defend themself and keep fighting is represented by a Pool of "Vitality Points." When this number gets low, you are in danger of being hurt badly by attaacks.</p>
                     <h4>Reserve Points (RP)</h4>
-                    <p>A character's long-term endurance is represented by a Pool of "Reserve Points." They can use these up to "recharge" their Vitality Points, Magic Points, and some other abilities when they take a short rest (5 minutes). When this number gets low, you are in danger of becoming exhausted and needing badly to take a night's rest.</p>
+                    <p>A character's long-term endurance is represented by a Pool of "Reserve Points." They can use these up to "recharge" their Vitality Points, Magic Points, and some other abilities when they take a short rest (10 minutes). When this number gets low, you are in danger of becoming exhausted and needing badly to take a night's rest.</p>
                     <h4>Magic Points (MP)</h4>
                     <p>A character's mystic reserves are represented by a Pool of "Magic Points." Spellcasters use these up to cast spells or rituals. Even nonmagical characters can "use" their Magic Points to attune to magical items.</p>
                 </section>
