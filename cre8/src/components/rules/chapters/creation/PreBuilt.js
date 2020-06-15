@@ -128,6 +128,43 @@ const PreBuilt = () => {
                 <p>Follow the selection choices made on the <Link to="/characters/prebuiltmage">PreBuilt Mage</Link> character sheet up to Level 8. You now qualify for the "Anyseed talent, Ritualist talent" XP Parcel under Magician, and you should look for an opportunity to use any [Divination] ritual once, if you haven't already, so that you can qualify for the first Parcel under Loremaster. You qualify for the first and second Parcel under Archmage.</p>
                 <p>If you are starting at a higher level, your GM might be more generous with starting equipment. If you picked the Two-Weapon Style feat, make sure you have a second melee weapon, even if it's just a Knife (but a Short Sword is probably preferable).</p>
             </section>
+            <section>
+                <h2>Cleric of Light</h2>
+                <h3>Level 1</h3>
+                <p>Follow the selection choices made on the <Link to="/characters/prebuiltcleric">PreBuilt Cleric</Link> character sheet up to Level 1. You already qualify for the XP Parcel under Priest.</p>
+                <p>For your first Kit, make a choice to represent your character's race: Dwarf, Elf, Halfling, Human Paragon, or Orc. If you picked Human Paragon, choose Spell Ward as your bonus Feat. You may also have to choose bonus Skill Ranks as you gain XP Parcels, but you should be able to choose any Skills you like (that are not already maxxed out) and have your build be legal.</p>
+                <p>Buy a Mace, Chainmail (proficient), and a Holy Amulet. If you were lucky with your Wealth rolls or the GM allows you to pick up more equipment for free, consider a Ritual Book and some [Divine] rituals inscribed, or items from the Classic Adventuring Gear bundle.</p>
+                <p>Don't forget to tell your character sheet that you are Wearing your clothing and Chainmail, and Wielding your Mace. Put most of your other Equipment in a Backpack or Pouches.</p>
+                <h3>Level 2</h3>
+                <p>If you are starting at this level, give your character 100 Base XP.</p>
+                <p>Follow the selection choices made on the <Link to="/characters/prebuiltcleric">PreBuilt Cleric</Link> character sheet up to Level 2.</p>
+                <p>If you are starting at a higher level, your GM might be more generous with starting equipment, particularly Rituals in your Ritual Book.</p>
+                <h3>Level 3</h3>
+                <p>If you are starting at this level, give your character 300 Base XP.</p>
+                <p>Follow the selection choices made on the <Link to="/characters/prebuiltcleric">PreBuilt Cleric</Link> character sheet up to Level 3. You do not yet qualify for the "Energy Strike feat" XP Parcel under Spellblade.</p>
+                <p>If you are starting at a higher level, your GM might be more generous with starting equipment. At this level, you should be able to add a Full Shield (proficient) to your inventory.</p>
+                <h3>Level 4</h3>
+                <p>If you are starting at this level, give your character 600 Base XP.</p>
+                <p>Follow the selection choices made on the <Link to="/characters/prebuiltcleric">PreBuilt Cleric</Link> character sheet up to Level 4. You do not yet qualify for the "Energy Strike feat" XP Parcel under Spellblade.</p>
+                <p>Your Feat at this level is up to you, to make your character feel more individual. Choose one of the following: Bestow Curse, Dispel, or Weapon Ward.</p>
+                <p>If you are starting at a higher level, your GM might be more generous with starting equipment. At this level, shoot for Composite Armor (proficient) rather than Chainmail.</p>
+                <h3>Level 5</h3>
+                <p>If you are starting at this level, give your character 1000 Base XP.</p>
+                <p>Follow the selection choices made on the <Link to="/characters/prebuiltcleric">PreBuilt Cleric</Link> character sheet up to Level 5. You do not yet qualify for the "Energy Strike feat" XP Parcel under Spellblade. You qualify for the "Low-Light Vision trait" Parcel under Radiant Locus if you are an Elf or an Orc.</p>
+                <p>If you are starting at a higher level, your GM might be more generous with starting equipment, particularly Rituals in your Ritual Book. At this level, you may even shoot for Plate Armor (proficient) instead of Composite Armor.</p>
+                <h3>Level 6</h3>
+                <p>If you are starting at this level, give your character 1500 Base XP.</p>
+                <p>Follow the selection choices made on the <Link to="/characters/prebuiltcleric">PreBuilt Cleric</Link> character sheet up to Level 6. You finally qualify for the "Energy Strike feat" XP Parcel under Spellblade. You qualify for the "Low-Light Vision trait" Parcel under Radiant Locus if you are an Elf or an Orc.</p>
+                <p>If you are starting at a higher level, your GM might be more generous with starting equipment, particularly Rituals in your Ritual Book.</p>
+                <h3>Level 7</h3>
+                <p>If you are starting at this level, give your character 2100 Base XP.</p>
+                <p>Follow the selection choices made on the <Link to="/characters/prebuiltcleric">PreBuilt Cleric</Link> character sheet up to Level 7. You qualify for the "Energy Strike feat" XP Parcel under Spellblade and the first, second, and fourth Parcels under Paladin. You qualify for the "Low-Light Vision trait" Parcel under Radiant Locus if you are an Elf or an Orc.</p>
+                <p>If you are starting at a higher level, your GM might be more generous with starting equipment, particularly Rituals in your Ritual Book.</p>
+                <h3>Level 8</h3>
+                <p>If you are starting at this level, give your character 2800 Base XP.</p>
+                <p>Follow the selection choices made on the <Link to="/characters/prebuiltcleric">PreBuilt Cleric</Link> character sheet up to Level 8. You qualify for the "Energy Strike feat" XP Parcel under Spellblade and the first, second, and fourth Parcels under Paladin. You qualify for the "Low-Light Vision trait" Parcel under Radiant Locus if you are an Elf or an Orc.</p>
+                <p>If you are starting at a higher level, your GM might be more generous with starting equipment, particularly Rituals in your Ritual Book. You should also finally upgrade your Mace to a Warhammer, unless you have a magical Mace that you are attached to.</p>
+            </section>
         </>
     );
 }

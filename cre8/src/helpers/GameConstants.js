@@ -15,6 +15,7 @@ const gc = {
     ],
     benefit_traits: [
         "Aberration Type",
+        "Blight-Defiant",
         "Bully",
         "Climber",
         "Darkvision",
@@ -188,6 +189,7 @@ const gc = {
     skills_list_num: 10,
     skill_ranks_per_level: 5,
     talent_tags: [
+        "Aura",
         "Background",
         "Buff",
         "Core",

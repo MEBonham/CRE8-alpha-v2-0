@@ -2,6 +2,7 @@ export const traitDescriptions = {
     "Aberration Type": "This has no innate effect, but is considered a Benefit because it qualifies for so many special abilities.",
     "Arcane Aversion": "Incur a penalty to your Spellcraft Check and the Accuracy of your spell attacks. This penalty is equal to any encumbrance penalties you suffer to your Athletics, Dexterity, and Stealth skills (due to armor, shield, or a heavy load). The penalty additionally worsens by 1 if you wear a shield and again by 1 if you wear armor.",
     "Beast Type": "Cannot speak normal languages. Illiterate. Limited in the Charisma, Dexterity, Gadgetry, Glibness, and Knowledge skills.",
+    "Blight-Defiant": "If you are Blight-Snared, ignore the worst two stages of its effects. Your saving throws against new stages of Blight are never capped due to the Blight's other effects.",
     "Blight-Embraced": "You are immune to the Blight Affliciton. However, you can be detected and targeted as a Blighted creature. Also, you are pretty close to irredeemably evil.",
     "Blight-Snared": "You may choose to become Blight-Embraced when you take an extended rest. If you are not Blight-Embraced, you are subject to an exposure of the Blight Affliction each day. Even if you manage to stave off all stages of the Blight Affliction, you can be detected and targeted as a Blighted creature.",
     "Bully": "Your skill checks to intimidate are boosted, as long as the target of your intimidation is not a larger size category than you.",
