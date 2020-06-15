@@ -91,6 +91,43 @@ const PreBuilt = () => {
                 <p>Follow the selection choices made on the <Link to="/characters/prebuiltthief">PreBuilt Thief</Link> character sheet up to Level 8. Check carefully (or go through the notes under previous levels) for which XP Parcels you qualify for.</p>
                 <p>If you are starting at a higher level, your GM might be more generous with starting equipment. If you picked the Two-Weapon Style feat, make sure you have a second melee weapon, even if it's just a Knife (but a Short Sword is probably preferable).</p>
             </section>
+            <section>
+                <h2>Mage</h2>
+                <h3>Level 1</h3>
+                <p>Follow the selection choices made on the <Link to="/characters/prebuiltmage">PreBuilt Mage</Link> character sheet up to Level 1.</p>
+                <p>For your first Kit, make a choice to represent your character's race: Dwarf, Elf, Halfling, Human Paragon, or Orc. If you picked Human Paragon, choose Weapon Ward as your bonus Feat. You may also have to choose bonus Skill Ranks as you gain XP Parcels, but you should be able to choose any Skills you like (that are not already maxxed out) and have your build be legal. If you picked Halfling, change your Initial Trained Skill from Dexterity to Athletics.</p>
+                <p>For your first (non-bonus) Talent, choose an additional flavor of magic that you know: Acid Seed, Cold Seed, or Lightning Seed.</p>
+                <p>Your most important equipment to buy is a Ritual Book. It comes with the Hindering Zone spell inscribed in it, as well as the other spells you know. You also should have at least one Simple weapon, especially at low levels. A Knife or Staff is traditional, but other options are also valid, especially a Crossbow and a Quiver of Bolts. Otherwise, shop from the Classic Adventuring Gear bundle or ask your GM what Rituals to put in your Ritual Book are available for purchase.</p>
+                <p>Don't forget to tell your character sheet that you are Wearing your clothing, and Wielding your primary weapon. Put most of your other Equipment in a Backpack or Pouches.</p>
+                <h3>Level 2</h3>
+                <p>If you are starting at this level, give your character 100 Base XP.</p>
+                <p>Follow the selection choices made on the <Link to="/characters/prebuiltmage">PreBuilt Mage</Link> character sheet up to Level 2.</p>
+                <p>If you are starting at a higher level, your GM might be more generous with starting equipment, particularly Rituals in your Ritual Book.</p>
+                <h3>Level 3</h3>
+                <p>If you are starting at this level, give your character 300 Base XP.</p>
+                <p>Follow the selection choices made on the <Link to="/characters/prebuiltmage">PreBuilt Mage</Link> character sheet up to Level 3. You do not yet qualify for the "Anyseed talent, Ritualist talent" XP Parcel.</p>
+                <p>If you are starting at a higher level, your GM might be more generous with starting equipment, particularly Rituals in your Ritual Book.</p>
+                <h3>Level 4</h3>
+                <p>If you are starting at this level, give your character 600 Base XP.</p>
+                <p>Follow the selection choices made on the <Link to="/characters/prebuiltmage">PreBuilt Mage</Link> character sheet up to Level 4. You do not yet qualify for the "Anyseed talent, Ritualist talent" XP Parcel.</p>
+                <p>If you are starting at a higher level, your GM might be more generous with starting equipment, particularly Rituals in your Ritual Book.</p>
+                <h3>Level 5</h3>
+                <p>If you are starting at this level, give your character 1000 Base XP.</p>
+                <p>Follow the selection choices made on the <Link to="/characters/prebuiltmage">PreBuilt Mage</Link> character sheet up to Level 5. You now qualify for the "Anyseed talent, Ritualist talent" XP Parcel under Magician, and you should look for an opportunity to use any [Divination] ritual once so that you can qualify for the first Parcel under Loremaster.</p>
+                <p>If you are starting at a higher level, your GM might be more generous with starting equipment, particularly Rituals in your Ritual Book.</p>
+                <h3>Level 6</h3>
+                <p>If you are starting at this level, give your character 1500 Base XP.</p>
+                <p>Follow the selection choices made on the <Link to="/characters/prebuiltmage">PreBuilt Mage</Link> character sheet up to Level 6. You now qualify for the "Anyseed talent, Ritualist talent" XP Parcel under Magician, and you should look for an opportunity to use any [Divination] ritual once, if you haven't already, so that you can qualify for the first Parcel under Loremaster.</p>
+                <p>If you are starting at a higher level, your GM might be more generous with starting equipment, particularly Rituals in your Ritual Book.</p>
+                <h3>Level 7</h3>
+                <p>If you are starting at this level, give your character 2100 Base XP.</p>
+                <p>Follow the selection choices made on the <Link to="/characters/prebuiltmage">PreBuilt Mage</Link> character sheet up to Level 7. You now qualify for the "Anyseed talent, Ritualist talent" XP Parcel under Magician, and you should look for an opportunity to use any [Divination] ritual once, if you haven't already, so that you can qualify for the first Parcel under Loremaster. You qualify for the second Parcel under Archmage.</p>
+                <p>If you are starting at a higher level, your GM might be more generous with starting equipment, particularly Rituals in your Ritual Book.</p>
+                <h3>Level 8</h3>
+                <p>If you are starting at this level, give your character 2800 Base XP.</p>
+                <p>Follow the selection choices made on the <Link to="/characters/prebuiltmage">PreBuilt Mage</Link> character sheet up to Level 8. You now qualify for the "Anyseed talent, Ritualist talent" XP Parcel under Magician, and you should look for an opportunity to use any [Divination] ritual once, if you haven't already, so that you can qualify for the first Parcel under Loremaster. You qualify for the first and second Parcel under Archmage.</p>
+                <p>If you are starting at a higher level, your GM might be more generous with starting equipment. If you picked the Two-Weapon Style feat, make sure you have a second melee weapon, even if it's just a Knife (but a Short Sword is probably preferable).</p>
+            </section>
         </>
     );
 }

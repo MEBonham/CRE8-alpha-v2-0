@@ -1555,7 +1555,7 @@ const updateMageFlight = (statsObj) => {
     });
     if (foundFeatObj) {
         if (foundFeatObj.selected_options.consuming_mage_flight &&
-            foundFeatObj.selected_options.consuming_mage_flight === "on") {
+                foundFeatObj.selected_options.consuming_mage_flight === "on") {
             result.mp_mods = {
                 ...result.mp_mods,
                 Untyped: {
@@ -1567,17 +1567,17 @@ const updateMageFlight = (statsObj) => {
                     }
                 }
             }
+            result.passives = [
+                ...result.passives,
+                {
+                    displaySource: "Mage Flight",
+                    drawback: false,
+                    src: slug,
+                    srcType: "feat",
+                    text: "You can remain flying in between actions and turns."
+                }
+            ];
         }
-        result.passives = [
-            ...result.passives,
-            {
-                displaySource: "Mage Flight",
-                drawback: false,
-                src: slug,
-                srcType: "feat",
-                text: "You can remain flying in between actions and turns."
-            }
-        ];
     }
     return result;
 }

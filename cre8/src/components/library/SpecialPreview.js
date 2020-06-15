@@ -269,12 +269,16 @@ const SpecialPreview = () => {
         })).concat(data.passives.filter((passiveFeatureObj) => !passiveFeatureObj.drawback).map((passiveFeatureObj) => ({
             text: passiveFeatureObj.text,
             type: "passive"
+        }))).concat(data.bonus_talents.map((talent) => ({
+            text: `Gain a bonus [${talent.byTag.join("] or [")}] talent.`,
+            type: "bonus_talent"
         })));
 
         const seedEffectsObj = {};
         data.seed_effects.forEach((effect) => {
+            // if (effect.seed === "Cold") console.log(effect, Object.keys(seedEffectsObj).includes(effect.seed));
             if (Object.keys(seedEffectsObj).includes(effect.seed)) {
-                if (effect.Mp === "0" || 
+                if (effect.Mp === "0" || effect.Mp === 0 || 
                     effect.detail === `Using this spell with the ${effect.seed} seed works normally, but at a higher MP cost.`) {
                         seedEffectsObj[effect.seed].unshift({
                             Mp: effect.Mp,
@@ -285,7 +289,8 @@ const SpecialPreview = () => {
                     seedEffectsObj[effect.seed].push({
                         Mp: effect.Mp,
                         detail: effect.detail,
-                        heading: (effect.Mp === "0" || effect.Mp === 0) ? effect.seed : `${effect.seed} (+${effect.Mp} MP${effect.cumulative ? " cumulative" : ""})`
+                        // heading: (effect.Mp === "0" || effect.Mp === 0) ? effect.seed : `${effect.seed} (+${effect.Mp} MP${effect.cumulative ? " cumulative" : ""})`,
+                        cumulative: effect.cumulative
                     });
                 }
             } else {
@@ -441,7 +446,7 @@ const SpecialPreview = () => {
                                                 <ul>
                                                     {seedEffectsObj[seedName].slice(1).map((effectObj, i) => (
                                                         <li key={i}>
-                                                            <strong>MP +{effectObj.Mp}:</strong> {effectObj.detail}
+                                                            <strong>MP +{effectObj.Mp}{effectObj.cumulative ? " (cumulative)" : ""}:</strong> {effectObj.detail}
                                                         </li>
                                                     ))}
                                                 </ul>

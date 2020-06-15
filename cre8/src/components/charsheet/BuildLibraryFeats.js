@@ -63,6 +63,15 @@ const BuildLibraryFeats = (props) => {
             ""
         ]);
     }
+    const [bonusTalents, setBonusTalents] = useState([]);
+    const newBonusTalent = (ev) => {
+        setBonusTalents([
+            ...bonusTalents,
+            {
+                byTag: []
+            }
+        ]);
+    }
     const [augmentOptions, setAugmentOptions] = useState([]);
     const newAugmentOption = (ev) => {
         setAugmentOptions([
@@ -265,6 +274,8 @@ const BuildLibraryFeats = (props) => {
                 setFreeActions(data[key]);
             } else if (key === "swift_actions") {
                 setSwiftActions(data[key]);
+            } else if (key === "bonus_talents") {
+                setBonusTalents(data[key]);
             } else if (key === "short_rest_actions") {
                 setShortRestActions(data[key]);
             } else if (key === "extended_rest_actions") {
@@ -284,6 +295,14 @@ const BuildLibraryFeats = (props) => {
         });
     }, []);
 
+    useEffect(() => {
+        bonusTalents.forEach((talent, i) => {
+            const el = document.querySelectorAll(".bonus-talents select")[i];
+            gc.talent_tags.forEach((option) => {
+                el.querySelector(`option[value="${option}"]`).selected = (talent.byTag.includes(option));
+            });
+        });
+    }, [bonusTalents])
     const [variousBonusTypes, setVariousBonusTypes] = useState([]);
     useEffect(() => {
         if (watch("variousBonusType") && !arraysEqual(watch("variousBonusType"), variousBonusTypes)) {
@@ -310,6 +329,7 @@ const BuildLibraryFeats = (props) => {
                 setPassives([]);
                 setAugmentOptions([]);
                 setSeedEffects([]);
+                setBonusTalents([]);
                 setStandardActions([]);
                 setAttacks([]);
                 setMoveActions([]);
@@ -347,9 +367,14 @@ const BuildLibraryFeats = (props) => {
         const featObj = {
             passives: []
         };
+        const bonusTalentsArr = [];
         Object.keys(formData).forEach((key) => {
             if (key === "feat_checkbox_repeatable") {
                 featObj.can_repeat = formData[key];
+            } else if (key === "bonus_talent") {
+                bonusTalentsArr.push({
+                    byTag: formData[key]
+                });
             } else if (key === "augmentDetail") {
                 featObj.augment_options = [];
                 formData[key].forEach((detail, i) => {
@@ -404,6 +429,7 @@ const BuildLibraryFeats = (props) => {
             const idString = `featTag_checkbox_${tagName}`;
             return formData[idString] ? true : false;
         });
+        featObj.bonus_talents = bonusTalentsArr;
         featObj.various_bonuses = bundleVariousBonuses(formData);
         console.log(featObj);
         saveFeat(newSlug, featObj);
@@ -567,6 +593,26 @@ const BuildLibraryFeats = (props) => {
                             ))}
                         </ul>
                         <MyButton fct={newVBonus}>Add Bonus</MyButton>
+                    </section>
+                    <section className="bonus-talents brown-box">
+                        <label>Bonus Talents</label>
+                        <div className="columns">
+                            {bonusTalents.map((talentData, i) => (
+                                <div key={i} className="columns">
+                                    <label>({i + 1})</label>
+                                    <select
+                                        name={`bonus_talent_tags_${i}`}
+                                        ref={register}
+                                        multiple
+                                    >
+                                        {gc.talent_tags.map((tagName) => (
+                                            <option key={tagName} value={tagName}>{tagName}</option>
+                                        ))}
+                                    </select>
+                                </div>
+                            ))}
+                        </div>
+                        <MyButton fct={newBonusTalent}>Add Bonus Talent</MyButton>
                     </section>
                     <section className="standard-actions brown-box rows">
                         <label>Standard Actions</label>

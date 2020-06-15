@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef, useContext } from 'react';
 
 import { Store } from '../GlobalWrapper';
 import fb from '../../fbConfig';
+import ConfigureTalent from './ConfigureTalent';
 
 const ConfigureFeat = (props) => {
     const [state, dispatch] = useContext(Store);
@@ -58,6 +59,7 @@ const ConfigureFeat = (props) => {
     }, [props.index, props.level, state.cur])
 
     useEffect(() => {
+        // console.log(currentFeat.name, currentFeat.bonus_talents);
         const mainSelectEl = document.querySelector(`#meb_editChar_selectFeat_${props.level}_${props.index} select`);
         mainSelectEl.querySelectorAll("option").forEach((optionEl) => {
             optionEl.selected = (optionEl.value === currentFeat.id) ? true : false;
@@ -115,6 +117,23 @@ const ConfigureFeat = (props) => {
                     <label>Consuming Mode</label>
                 </div>
             : null}
+            <div className="selects columns">
+                {currentFeat && currentFeat.bonus_talents ?
+                    currentFeat.bonus_talents.map((bonusTalent, i) => {
+                        const key = Object.keys(bonusTalent)[0];
+                        const tagFilter = bonusTalent[key];
+                        return (
+                            <ConfigureTalent
+                                key={i}
+                                level={props.level}
+                                index={`feat${props.index}_${i}`}
+                                tagFilter={tagFilter}
+                                search={props.search}
+                            />
+                        );
+                    }) :
+                null}
+            </div>
         </div>
     );
 }
