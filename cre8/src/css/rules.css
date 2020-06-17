@@ -1,0 +1,13 @@
+.rules ol.inner {
+    margin: 6px 0 0 28px;
+}
+
+.primary-content.rules h4 {
+    margin-bottom: 4px;
+    font-size: 1.4rem;
+    font-weight: bold;
+}
+
+.rules td.center {
+    text-align: center;
+}

@@ -18,11 +18,12 @@ const RPGBasics = () => {
             <section>
                 <h2>Minimizing Fiddly Dice Modifiers</h2>
                 <p>When you roll the dice, you should be able to add a total modifier that is written on your character sheet, and should not have to keep track of many other modifiers that must be added and subtracted. There are a couple fundamental important cases where you do apply a modifier that's not on your character sheet (e.g. making an "improvised" attack or when your character is Wounded), but these are far fewer than in many other games, and should become habitual. CRE8 uses other methods to influence dice results, as detailed under <Link to="/rules/dice">Dice Mechanics</Link>.</p>
+                <p>Also, CRE8 makes dice modifiers less fiddly by using a "curved" rolling system, i.e. rolling 3d20 and taking the middle result, which makes small dice modifiers more significant.</p>
             </section>
             <section>
                 <h2>Epic Eight</h2>
-                <p>"CRE8" stands for "Codex of Roleplaying: Epic Eight." The "Epic Eight" refers to how CRE8 stems from a variation of Edition 3.5 called "E8" (based on a more well-known variation called "E6"), in which characters' statistics mostly only increase until they get to Level 8, after which they are "epic" characters with a different progression system. The net effect of Epic Eight is similar to that of "bounded accuracy" in Edition 5 of <em>Dungeons & Dragons</em>; as characters grow, they mostly become more versatile rather than just having bigger numbers on their sheet (although bigger numbers are important too, especially up to Level 8).</p>
-                <p>Epic Eight means that numbers are very important in battle. Low-level characters can take on pretty scary monsters if they can gang up on them, while high-level characters can still be threatened by armies of weak characters.</p>
+                <p>"CRE8," in addition to being pronounced like the word "create," stands for "Codex of Roleplaying: Epic Eight." The "Epic Eight" refers to how CRE8 stems from a variation of Edition 3.5 called "E8" (based on a more well-known variation called "E6"), in which characters' statistics mostly only increase until they get to Level 8, after which they are "epic" characters with a different progression system. The net effect of Epic Eight is similar to that of "bounded accuracy" in Edition 5 of <em>Dungeons & Dragons</em>; as characters grow, they mostly become more versatile rather than just having bigger numbers on their sheet (although bigger numbers are important too, especially up to Level 8).</p>
+                <p>Epic Eight means that numbers of combatants are very important in battle. Low-level characters can take on pretty scary monsters if they can gang up on them, while high-level characters can still be threatened by armies of weak characters.</p>
             </section>
             <section>
                 <h2>Modular PC Archetypes</h2>
@@ -30,22 +31,28 @@ const RPGBasics = () => {
             </section>
             <section>
                 <h2>Reigning In the Power of Magic</h2>
-                <p>Some RPGs are infamous for having spellcasters be far more powerful than non-spellcasters. CRE8 puts many limitations on magic, including sharply limiting how much magic power spellcasters have in any individual conflict, especially at low levels, to give other characters a fair chance. In addition, all characters have a selection of special moves they can do in combat even if they don't cast "spells," so they should never be stuck just repeating "I hit the monster with my sword" in combat.</p>
+                <p>Some RPGs are infamous for having spellcasters be far more powerful than non-spellcasters. CRE8 puts many limitations on magic, including sharply limiting how much magic power spellcasters have in any individual conflict, especially at low levels, to give other characters a fair chance. In addition, all characters have a selection of special moves they can do in combat even if they don't cast "spells," so they should never be stuck just repeating "I hit the monster with my sword" in combat while the spellcasters show off their versatility.</p>
             </section>
             <section>
                 <h2>No "Fifteen-Minute Workday"</h2>
-                <p>In some RPGs, characters can run out of resources very quickly if they're played as powerfully as possible&emdash;resources that they only get back by resting for the night. Unless they're under particular time pressure in the story, it's efficient for them to use these resources as fast as possible, then wait until the next day to continue their adventures. In CRE8, the only resource you get back by sleeping for the night is "Reserve Points," and there are limits to how fast you can use your Reserve Points up, so adventures are encouraged to continue a little longer each day of the story.</p>
+                <p>In some RPGs, characters can run out of resources very quickly if they're played as powerfully as possible&mdash;resources that they only get back by resting for the night. Unless they're under particular time pressure in the story, it's efficient for them to use these resources as fast as possible, then wait until the next day to continue their adventures. In CRE8, the only resource you get back by sleeping for the night is "Reserve Points," and there are limits to how fast you can use your Reserve Points up, so adventures are encouraged to continue a little longer each day of the story.</p>
             </section>
             <section>
                 <h2>Avoiding the "Christmas Tree Effect"</h2>
-                <p>In some RPGs, minor magic items are so common, and so neccessary for a character's power, that at high levels characters end up looking "like a Christmas Tree" with sparkly or glowing ornaments all over their body.</p>
+                <p>In some RPGs, minor magic items are so common, and so neccessary for a character's power, that at high levels characters end up looking "like a Christmas tree" with sparkly or glowing ornaments all over their body.</p>
                 <p>CRE8 strives to make permanent magic items feel special, by limiting how much they can truly add to a character's overall power, limiting how many of them a character can use, and making them grow in power along with their wielder, so that minor items at low levels can become major items later on. Characters' lack of reliance on magic items means the GM can be in charge of how often to introduce them, as befits the story.</p>
             </section>
             <section>
-                <h2>Vitality Points instead of Hit Points; Armor Value and Defense instead of Armor Class</h2>
+                <h2>Vitality Points instead of Hit Points</h2>
                 <p>CRE8 departs from some common conventions of other RPGs when it comes to measuring a character's defenses in combat. A mid-level Barbarian character can't keep fighting at full potential with four arrows sticking out of her chest, because serious weapon hits like that do more than just subtract from a pool of "hit points." Instead, a character's "Vitality Points" represent mostly their stamina to be able to keep fighting energetically, while serious wounds are kept track of through the Wounded and Dying conditions.</p>
+            </section>
+            <section>
+                <h2>Armor Value and Defense instead of Armor Class</h2>
                 <p>Wearing a lot of armor doesn't make you harder to hit, but minimizes the consequences when you do get hit.</p>
-                <p>As a side note, I've always found it more exciting to roll the dice to determine my character's life or death, rather than rolling the dice to determine whether my foe is hit by my attack. Therefore, in CRE8, the defender always rolls a Saving Throw against an attack, rather than the attacker making an "attack roll." This is in contrast to a common RPG approach where the defender usually rolls against spells, but the attacker usually rolls for ordinary weapon attacks.</p>
+            </section>
+            <section>
+                <h2>Always Saving Throws Rather Than Attack Rolls</h2>
+                <p>I've always found it more exciting to roll the dice to determine my character's life or death, rather than rolling the dice to determine whether my foe is hit by my attack. Therefore, in CRE8, the defender always rolls a Saving Throw against an attack, rather than the attacker making an "attack roll." This is in contrast to a common RPG approach where the defender usually rolls against spells, but the attacker usually rolls for ordinary weapon attacks.</p>
             </section>
             <section>
                 <h2>Dynamic Attack Consequences</h2>
@@ -57,6 +64,11 @@ const RPGBasics = () => {
                 <p>In CRE8, characters have a Wealth statistic, instead of keeping track of exactly how many coins of several varieties they have collected. The Wealth score also grows logarithmically, meaning the numbers you need to keep track of aren't <em>too</em> huge even if your character is very, very rich.</p>
                 <p>As your character's Wealth grows, this mechanic allows you to do less and less bookkeeping about things like your character buying a drink from a tavern or finding a small pile of copper pieces. This also disincentivizes more wealthy characters from looting every crappy weapon or piece of equipment they can find in a dungeon, to cart back to town and sell for small change.</p>
                 <p>I've never enjoyed keeping track of small coins and pragmatically "needing" to loot everything I see. If you feel the same way, this Wealth system is for you.</p>
+            </section>
+            <section>
+                <h2>No Traditional Alignment Rules</h2>
+                <p>An oft-requested feature in roleplaying games, CRE8 does away with the traditional Alignment system, where creatures are classified as Good or Evil or neither and "lawful" or "chaotic" or neither. If the GM wishes to keep track of such things as an aid to roleplay, he can do so, but it is not neccessary and does not affect the game's mechanics.</p>
+                <p>Creatures supernaturally tainted by evil, such as fiends and undead, use the "Blight" system instead. But a creature can be thorougly evil and not Blighted, or well-intentioned but Blighted, so it's not a failsafe guide to which creatures are your enemies and which are your allies.</p>
             </section>
         </>
     );

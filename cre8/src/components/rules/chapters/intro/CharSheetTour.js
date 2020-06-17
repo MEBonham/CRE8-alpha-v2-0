@@ -52,7 +52,7 @@ const CharSheetTour = () => {
                     <h4>Resistance Value</h4>
                     <p>This is like Armor Value, but for attacks that a character is particularly resistant to, like a fiery dragon against a fire attack or a werewolf against an ordinary (non-silver) sword.</p>
                     <h4>Defense Save</h4>
-                    <p>"Saves" or "Saving Throws" are the main dice rolls you make to defend your character against attacks and other dangers. The numbers on this part of your character sheet get added to a d20 roll to determine how effective those defenses are. Defense is used to counter most physical blows&emdash;basically things that a shield would help you block. (And, indeed, shields are the main way to improve this statistic, other than going up in level.)</p>
+                    <p>"Saves" or "Saving Throws" are the main dice rolls you make to defend your character against attacks and other dangers. The numbers on this part of your character sheet get added to a d20 roll to determine how effective those defenses are. Defense is used to counter most physical blows&mdash;basically things that a shield would help you block. (And, indeed, shields are the main way to improve this statistic, other than going up in level.)</p>
                     <h4>Fortitude Save</h4>
                     <p>Fortitude represents your character's overall physical health. A good Fortitude score gets you more Vitality Points, helps you resist poisons and similar effects, and helps you heal after you do get injured.</p>
                     <h4>Reflex Save</h4>
@@ -87,7 +87,7 @@ const CharSheetTour = () => {
                     <p>First are the Attacks your character can make in combat. Most of these require a Standard Action, but are listed separately from other Standard Actions because of their nature.</p>
                     <p>Standard Actions, Move Actions, Swift Actions, Opportunity Actions, and Free Actions are things you can do when the game is keeping very careful track of time, such as in combat. See the Combat rules for details about what these different kinds of actions mean. The character sheet in this area includes a reminder of options that are available to all characters, in addition to special abilities that only some creatures have.</p>
                     <p>Passive Features & Traits are advantages and disadvantages your character has in certain situations that don't require using an action.</p>
-                    <p>Slower Features are things your character can do when they have more time&emdash;at least 5 minutes.</p>
+                    <p>Slower Features are things your character can do when they have more time&mdash;at least ten minutes.</p>
                 </section>
                 <section>
                     <h3>Equipment Section</h3>
@@ -126,7 +126,7 @@ const CharSheetTour = () => {
                 </section>
                 <section>
                     <h3>Special Abilities</h3>
-                    <p>Here is the meat of customizing your character&emdash;her Special Abilities that you select. There are three types of Special Abilities in CRE8.</p>
+                    <p>Here is the meat of customizing your character&mdash;her Special Abilities that you select. There are three types of Special Abilities in CRE8.</p>
                     <p><strong>Kits</strong> are "packages" of abilities that fit well with each other. They provide your character's unifying themes and archetypes, which makes them the most similar to Classes from other TTRPGs. Selection menus for Kits are labeled in red.</p>
                     <p><strong>Feats</strong> are your character's "signature moves," usually mostly useful in combat. Most feats require spending a specific kind of action to use. A spellcaster's known Spells are one type of Feat.</p>
                     <p><strong>Talents</strong> are lesser abilities; anything that isn't a Kit or a Feat. They have a lot of variety. Some of them round out your character, giving him abilities that represent a life beyond adventuring (which he may or may not have abandoned). Note that Talents are the main way a character continues to progress beyond Level 8, and therefore become a lot more potent at that point.</p>
@@ -137,7 +137,7 @@ const CharSheetTour = () => {
                 <p>Here are a number of less-mechanical aspects of your character that you can define by clicking on their titles and typing in a description.</p>
                 <p>For PCs, categories in this tab include Appearance & Physical Features; Summary of Personality; Motivations & Beliefs; Personal History; Relationships; and Tastes, Quirks, & Miscellaneous. Hopefully these are self-explanatory.</p>
                 <p>The last category, "Non-Carried Property," can be used to detail a character's possessions that, for whatever reason, don't make sense to put in their Inventory. This especially applies to if they own some kind of house, castle, or other "home base," which can be described here.</p>
-                <p>Monsters have their own categories on this tab: Appearance & Physical Features again; Personalily, Motivations, & Mentality; Habitat, Ecology, & Role; Combat Tactics; and Quirks & Miscellaneous.</p>
+                <p>Monsters have their own categories on this tab: Appearance & Physical Features again; Personality, Motivations, & Mentality; Habitat, Ecology, & Role; Combat Tactics; and Quirks & Miscellaneous.</p>
             </section>
         </>
     );

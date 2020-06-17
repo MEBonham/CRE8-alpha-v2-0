@@ -26,11 +26,13 @@ const CharCreation = () => {
                 <h2>3. Allocate Skill Ranks</h2>
                 <p>Choose two of your character's Skills to be "trained." Each trained Skill gains two free Ranks.</p>
                 <p>Add five Skill Ranks per character level (up to level 8). Untrained Skills can't have more ranks than your level; trained Skills can have two more Ranks.</p>
+                <p>Sometimes special abilities will state to "limit" a Skill. (This is rare for PCs; it usually happens when building monsters.) This means the limited Skill can't have more ranks than the character's Heroic Bonus.</p>
             </section>
             <section>
                 <h2>4. Level 1 Special Abilities</h2>
                 <p>If you intend to be non-human, choose a first Kit that represents your racial choice, such as the Orc kit for an orcish character. Human characters can choose the Human Paragon kit for this slot, or start with two Kits of their choice instead of just one.</p>
                 <p>Choose your other Level 1 special abilities in any order. You start with two Kits (including your racial choice), one Feat, and four Talents (or five, if one of them is a [Flaw] talent).</p>
+                <p>PCs may not take special abilities with the [Monster] tag without specific GM approval. The GM should be wary of PCs with these abilities being too powerful in some ways.</p>
             </section>
             <section>
                 <h2>5. Higher-Level Special Abilities</h2>

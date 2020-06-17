@@ -1,5 +1,5 @@
 import React from 'react';
-import MyLink from '../../ui/MyLink';
+import MyLink from '../../../ui/MyLink';
 
 const Conditions = () => {
     return (
@@ -8,6 +8,7 @@ const Conditions = () => {
                 <MyLink to="/rules">Back to Rules</MyLink>
             </div>
             <h1>Conditions</h1>
+            <p>This chapter is classified under Combat, when it will most frequently apply, but many Conditions can also apply outside of combat.</p>
             <section>
                 <h2>Battered</h2>
                 <p>A Battered creature cannot regain VP. If targeted by an effect that would otherwise restore VP, he may attempt a TN 20 Fortitude save to lose the Battered condition instead of regaining VP.</p>
@@ -23,13 +24,12 @@ const Conditions = () => {
             <section>
                 <h2>Dropped</h2>
                 <p>A Dropped creature is "out of the fight," Prone and Helpless. If a creature that is not Dying becomes Dropped, it also gains the Unconscious condition.</p>
-                <p>A conscious Dropped character (i.e. one who is also Dying) may take the following actions:
-                    <ul className="bullets">
-                        <li>Go Unconscious as a free action. This is a tempting option, and it also makes some foes less likely to hit you again to finish you off.</li>
-                        <li>Communicate with other creatures as a standard action. Any social skill checks made in this manner are dragged. Afterwards, the communicating creature falls Unconscious unless he succeeds on a TN 10 Fortitude or Willpower save.</li>
-                        <li>Crawl 5 ft as a standard action. This movement provokes opportunity attacks. Afterwards, the crawling creature falls Unconscious unless he succeeds on a TN 15 Fortitude or Willpower save.</li>
-                    </ul>
-                </p>
+                <p>A conscious Dropped character (i.e. one who is also Dying) may take the following actions:</p>
+                <ul className="bullets">
+                    <li>Go Unconscious as a free action. This is a tempting option, and it also makes some foes less likely to hit you again to finish you off.</li>
+                    <li>Communicate with other creatures as a standard action. Any social skill checks made in this manner are dragged. Afterwards, the communicating creature falls Unconscious unless he succeeds on a TN 10 Fortitude or Willpower save.</li>
+                    <li>Crawl 5 ft as a standard action. This movement provokes opportunity attacks. Afterwards, the crawling creature falls Unconscious unless he succeeds on a TN 15 Fortitude or Willpower save.</li>
+                </ul>
             </section>
             <section>
                 <h2>Dying</h2>

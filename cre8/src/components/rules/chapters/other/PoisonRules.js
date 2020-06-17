@@ -1,5 +1,5 @@
 import React from 'react';
-import MyLink from '../../ui/MyLink';
+import MyLink from '../../../ui/MyLink';
 
 const PoisonRules = () => {
     return (

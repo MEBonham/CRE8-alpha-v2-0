@@ -222,6 +222,7 @@ const ItemsLibraryMenu = () => {
                     ))}
                 </select>
                 <MyLink to="/library/weapons">Weapons Table</MyLink>
+                <MyLink to="/library/armorshields">Armor/Shields Table</MyLink>
             </div>
         </section>
     );

@@ -10,8 +10,14 @@ import CharSheetTour from './chapters/intro/CharSheetTour';
 import CharCreation from './chapters/creation/CharCreation';
 import PreBuilt from './chapters/creation/PreBuilt';
 import Xp from './chapters/creation/Xp';
-import Conditions from './chapters/Conditions';
-import PoisonRules from './chapters/PoisonRules';
+import Retraining from './chapters/creation/Retraining';
+import Initiative from './chapters/combat/Initiative';
+import Attacks from './chapters/combat/Attacks';
+import Conditions from './chapters/combat/Conditions';
+import Momentum from './chapters/combat/Momentum';
+import Resting from './chapters/exploration/Resting';
+import PoisonRules from './chapters/other/PoisonRules';
+import '../../css/rules.css';
 
 const Rules = () => {
     const [, dispatch] = useContext(Store);
@@ -35,12 +41,22 @@ const Rules = () => {
             setChapterBody(<CharSheetTour />);
         } else if (chapter === "charcreation") {
             setChapterBody(<CharCreation />);
+        } else if (chapter === "retraining") {
+            setChapterBody(<Retraining />);
         } else if (chapter === "prebuilt") {
             setChapterBody(<PreBuilt />);
         } else if (chapter === "xp") {
             setChapterBody(<Xp />);
+        } else if (chapter === "initiative") {
+            setChapterBody(<Initiative />);
+        } else if (chapter === "attacks") {
+            setChapterBody(<Attacks />);
         } else if (chapter === "conditions") {
             setChapterBody(<Conditions />);
+        } else if (chapter === "momentumexerting") {
+            setChapterBody(<Momentum />);
+        } else if (chapter === "resting") {
+            setChapterBody(<Resting />);
         } else if (chapter === "poison") {
             setChapterBody(<PoisonRules />);
         }
