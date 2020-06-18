@@ -670,6 +670,15 @@ const BuildLibraryKits = (props) => {
                         />
                         <label>Impact +1 to melee weapon attacks</label>
                     </div>
+                    <div className="checkbox-pair">
+                        <Controller
+                            as="input"
+                            type="checkbox"
+                            name="epic_to_awesome_boost"
+                            control={control}
+                        />
+                        <label>+1 Awesome per Epic Talent</label>
+                    </div>
                     <div className="rows">
                         <label>Add heroic bonus to impact with weapon category:</label>
                         <Controller

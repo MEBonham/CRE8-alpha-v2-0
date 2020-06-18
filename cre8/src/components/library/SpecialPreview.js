@@ -158,6 +158,11 @@ const SpecialPreview = () => {
                             <em>From level {data.grow_bigger_level}:</em> Gain a +1 bonus to Size.
                         </li> :
                     null}
+                    {data.epic_to_awesome_boost ?
+                        <li>
+                            Gain an Untyped bonus to your Awesome Check equal to your number of [Epic] talents.
+                        </li> :
+                    null}
                     {data.passives.filter((passive) => !passive.drawback).map((passive, i) => (
                         <li key={i}>{passive.text}</li>
                     ))}

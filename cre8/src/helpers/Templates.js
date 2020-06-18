@@ -230,6 +230,7 @@ export const kitDefault = {
     caster_OR_coast_boost: false,
     coast_number_boost: false,
     drawback_traits: [],
+    epic_to_awesome_boost: false,
     extended_rest_actions: [],
     fighting_level_boost: false,
     fighting_OR_caster_boost: false,

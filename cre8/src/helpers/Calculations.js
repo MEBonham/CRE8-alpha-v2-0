@@ -358,10 +358,40 @@ const updateAv = (statsObj) => {
 }
 
 const updateAwesome = (statsObj) => {
-    const awesome_mods_total = mineModifiers(statsObj.awesome_mods, { level: statsObj.level });
+    let result = { ...statsObj };
+    let foundKitObj;
+    let foundLevel;
+    Object.keys(statsObj.kits).forEach((level) => {
+        Object.keys(statsObj.kits[level]).forEach((index) => {
+            if (statsObj.kits[level][index].epic_to_awesome_boost) {
+                foundKitObj = statsObj.kits[level][index];
+                foundLevel = level;
+            }
+        });
+    });
+    if (foundKitObj) {
+        let total = 0;
+        Object.keys(statsObj.talents).forEach((level) => {
+            Object.keys(statsObj.talents[level]).forEach((index) => {
+                if (statsObj.talents[level][index].tags && statsObj.talents[level][index].tags.includes("Epic")) {
+                    total += 1;
+                }
+            });
+        });
+        result.awesome_mods.Untyped = {
+            ...result.awesome_mods.Untyped,
+            [foundKitObj.name]: {
+                level: foundLevel,
+                num: total,
+                srcType: "kit"
+            }
+        };
+    }
+
+    const awesome_mods_total = mineModifiers(result.awesome_mods, { level: statsObj.level });
     const awesome_check = gc.base_awesome_bonus + statsObj.level_max8 + awesome_mods_total;
     return {
-        ...statsObj,
+        ...result,
         awesome_mods_total,
         awesome_check
     };
