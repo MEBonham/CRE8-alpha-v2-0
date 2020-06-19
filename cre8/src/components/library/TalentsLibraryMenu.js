@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 
 import { Store } from '../GlobalWrapper';
 import fb from '../../fbConfig';
+import gc from '../../helpers/GameConstants';
 
 const TalentsLibraryMenu = () => {
     const [state, dispatch] = useContext(Store);
@@ -49,6 +50,7 @@ const TalentsLibraryMenu = () => {
             if (state.talentFilters.levelCap && (talentObj.intended_level > state.talentFilters.levelCap)) skip = true;
             if (state.talentFilters.levelCap && state.talentFilters.levelExact && (talentObj.intended_level !== state.talentFilters.levelCap)) skip = true;
             if (state.talentFilters.coreOnly && !talentObj.tags.includes("Core")) skip = true;
+            if (state.talentFilters.tagFilter && !talentObj.tags.includes(state.talentFilters.tagFilter)) skip = true;
             if (!skip) {
                 selectTalentsCopy.push({
                     ...talentObj
@@ -91,6 +93,13 @@ const TalentsLibraryMenu = () => {
         dispatch({ type: "SET", key: "talentFilters", payload: {
             ...state.talentFilters,
             [property]: value
+        } });
+    }
+    const tagSelect = (ev) => {
+        const value = (ev.target.value === "false") ? false : ev.target.value;
+        dispatch({ type: "SET", key: "talentFilters", payload: {
+            ...state.talentFilters,
+            tagFilter: value
         } });
     }
     
@@ -136,6 +145,17 @@ const TalentsLibraryMenu = () => {
                         onChange={handleChange}
                     />
                     <label>Available at <em>exactly</em> above level</label>
+                </div>
+                <div>
+                    <select
+                        id="meb_talentFilters_tagFilter"
+                        onChange={tagSelect}
+                    >
+                        <option value={false}>Select Tag</option>
+                        {gc.talent_tags.map((tagName) => (
+                            <option key={tagName} value={tagName}>{tagName}</option>
+                        ))}
+                    </select>
                 </div>
             </div>
         </section>

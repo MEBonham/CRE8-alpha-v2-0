@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 
 import { Store } from '../GlobalWrapper';
 import fb from '../../fbConfig';
+import gc from '../../helpers/GameConstants';
 
 const KitsLibraryMenu = () => {
     const [state, dispatch] = useContext(Store);
@@ -49,6 +50,7 @@ const KitsLibraryMenu = () => {
             if (state.kitFilters.levelCap && (kitObj.intended_level > state.kitFilters.levelCap)) skip = true;
             if (state.kitFilters.levelCap && state.kitFilters.levelExact && (kitObj.intended_level !== state.kitFilters.levelCap)) skip = true;
             if (state.kitFilters.coreOnly && !kitObj.tags.includes("Core")) skip = true;
+            if (state.kitFilters.tagFilter && !kitObj.tags.includes(state.kitFilters.tagFilter)) skip = true;
             if (!skip) {
                 selectKitsCopy.push({
                     ...kitObj
@@ -91,6 +93,12 @@ const KitsLibraryMenu = () => {
         dispatch({ type: "SET", key: "kitFilters", payload: {
             ...state.kitFilters,
             [property]: value
+        } });
+    }
+    const tagSelect = (ev) => {
+        dispatch({ type: "SET", key: "kitFilters", payload: {
+            ...state.kitFilters,
+            tagFilter: ev.target.value
         } });
     }
     
@@ -136,6 +144,17 @@ const KitsLibraryMenu = () => {
                         onChange={handleChange}
                     />
                     <label>Available at <em>exactly</em> above level</label>
+                </div>
+                <div>
+                    <select
+                        id="meb_kitFilters_tagFilter"
+                        onChange={tagSelect}
+                    >
+                        <option value={false}>Select Tag</option>
+                        {gc.kit_tags.map((tagName) => (
+                            <option key={tagName} value={tagName}>{tagName}</option>
+                        ))}
+                    </select>
                 </div>
             </div>
         </section>

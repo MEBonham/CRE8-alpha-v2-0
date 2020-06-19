@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 
 import { Store } from '../GlobalWrapper';
 import fb from '../../fbConfig';
+import gc from '../../helpers/GameConstants';
 
 const RitualsLibraryMenu = () => {
     const [state, dispatch] = useContext(Store);
@@ -44,10 +45,7 @@ const RitualsLibraryMenu = () => {
         const selectRitualsCopy = [];
         allRituals.forEach((ritualObj) => {
             let skip = false;
-            if (!state.ritualFilters.monster && ritualObj.tags.includes("Monster")) skip = true;
-            if (state.ritualFilters.levelCap && (ritualObj.intended_level > state.ritualFilters.levelCap)) skip = true;
-            if (state.ritualFilters.levelCap && state.ritualFilters.levelExact && (ritualObj.intended_level !== state.ritualFilters.levelCap)) skip = true;
-            if (state.ritualFilters.coreOnly && !ritualObj.tags.includes("Core")) skip = true;
+            if (state.ritualFilters.tagFilter && !ritualObj.tags.includes(state.ritualFilters.tagFilter)) skip = true;
             if (!skip) {
                 selectRitualsCopy.push({
                     ...ritualObj
@@ -81,6 +79,14 @@ const RitualsLibraryMenu = () => {
         }
     }, [selectRituals, dispatch])
     
+    const tagSelect = (ev) => {
+        const value = (ev.target.value === "false") ? false : ev.target.value;
+        dispatch({ type: "SET", key: "ritualFilters", payload: {
+            ...state.ritualFilters,
+            tagFilter: value
+        } });
+    }
+    
     return (
         <section className="links columns space-between">
             <div className="rows">
@@ -88,6 +94,19 @@ const RitualsLibraryMenu = () => {
                 {selectRituals.map((ritualObj) => (
                     <Link to={`rituals/${ritualObj.slug}`} key={ritualObj.slug}>{ritualObj.name}</Link>
                 ))}
+            </div>
+            <div>
+                <div>
+                    <select
+                        id="meb_ritualFilters_tagFilter"
+                        onChange={tagSelect}
+                    >
+                        <option value={false}>Select Tag</option>
+                        {gc.ritual_tags.map((tagName) => (
+                            <option key={tagName} value={tagName}>{tagName}</option>
+                        ))}
+                    </select>
+                </div>
             </div>
         </section>
     );

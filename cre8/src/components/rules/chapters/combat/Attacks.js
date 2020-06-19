@@ -78,7 +78,7 @@ const Attacks = () => {
                 <p>If the attack was a "crit," the attacker may also choose a <strong>Hazard</strong> to inflict on the target. Attacks normally have a Hazard Menu that they come with, or use the Standard Hazard Menu (below). Either way, the attacker must choose just one Hazard from the Menu, for which they meet the Requirements.</p>
             </section>
             <section>
-                <h3>5. Apply Primary Effect of Attack</h3>
+                <h3>5. Apply Secondary Effect of Attack</h3>
                 <p>If the attack's Impact was great enough, the attack has an additional effect. By default, this occurs if the Impact was greater than the target's Armor Value.</p>
                 <p>Sometimes the target "resists" the attack (often depending on what <strong>type of damage</strong> the attack is attempting to deal). In this case, Secondary Effects only occur if the Impact exceeds the target's Resistance Value.</p>
                 <p>Some standard weapons have the Penetration quality. Attacks with these weapons only need to tie the target's AV (or Resistance Value), not exceed it, in order to cause Secondary Effects.</p>
