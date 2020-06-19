@@ -306,12 +306,26 @@ const updateAttacks = (statsObj) => {
                 accuracy -= 5;
             }
             peril_rating = statsObj.fighting_level + attackObj.peril_mod;
-            // console.log(statsObj.weapon_range_mods);
+            // console.log(statsObj.weapon_impact_mods, attackObj);
             impact_total_mod = mineModifiers(statsObj.weapon_impact_mods, {
                 ...attackObj,
+                category: (attackObj.name === "Unarmed Strike") ? "Unarmed" : attackObj.category,
                 level: statsObj.level,
                 range: attackObj.range.startsWith("Melee") ? "melee" : "ranged"
             });
+        }
+        if (attackObj.name === "Unarmed Strike") {
+            let foundFeatObj;
+            Object.keys(statsObj.feats).forEach((level) => {
+                Object.keys(statsObj.feats[level]).forEach((index) => {
+                    if (!foundFeatObj && statsObj.feats[level][index].id === "resonantfist") {
+                        foundFeatObj = statsObj.feats[level][index];
+                    }
+                });
+            });
+            if (foundFeatObj && (statsObj.willpower_base_total + statsObj.willpower_mods_total) > peril_rating) {
+                peril_rating = statsObj.willpower_base_total + statsObj.willpower_mods_total;
+            }
         }
         // console.log(attackObj, statsObj.weapon_range_mods);
         const rangeBoost = mineModifiers(statsObj.weapon_range_mods, {
@@ -2301,7 +2315,7 @@ export const updateVariousMods = (statsObj) => {
 const updateVpMax = (statsObj) => {
     const origVpMax = statsObj.vp_max;
     
-    const vp_kits_total = mineKits(statsObj.vp_kits);
+    const vp_kits_total = mineKits(statsObj.vp_kits, statsObj.traits_from_kits.includes("Stack 1st-Level Kits"));
     const from_level = (statsObj.traits_from_talents.includes("Epic Continuation: VP")) ? (2 * statsObj.level) : (2 * statsObj.level_max8);
     const vp_max = gc.base_vitality_points + from_level + vp_kits_total + statsObj.fortitude_base_total;
     const vp = Math.max(0, statsObj.vp + (vp_max - origVpMax));
