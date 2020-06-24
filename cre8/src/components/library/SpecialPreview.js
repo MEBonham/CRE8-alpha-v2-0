@@ -556,7 +556,7 @@ const SpecialPreview = () => {
                         <li key={i}>{passive.text}</li>
                     ))}
                     {Object.keys(data.selective_passives).length ?
-                        <li> <div>Choose one:</div>
+                        <li> <div>Choose one{data.can_repeat ? " (each time you take this Talent)" : ""}:</div>
                             <ul>
                                 {Object.keys(data.selective_passives).sort().map((option) => (
                                     <li key={option}>
