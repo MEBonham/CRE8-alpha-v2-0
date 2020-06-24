@@ -412,7 +412,7 @@ const updateAwesome = (statsObj) => {
 }
 
 const updateDefense = (statsObj) => {
-    const levelBaseDef = (statsObj.traits_from_talents.includes("Epic Continuation: Defense")) ? Math.floor(statsObj.level / 2) : statsObj.heroic_bonus;
+    const levelBaseDef = statsObj.heroic_bonus;
     let result = { ...statsObj };
     let weaponCount = 0;
     statsObj.inventory.forEach((itemObj) => {
@@ -768,12 +768,12 @@ export const updateGoodSave = (statsObj) => {
             ...willMod
         }
     };
-    const levelBaseFort = statsObj.traits_from_talents.includes("Epic Continuation: Fortitude") ? Math.floor(statsObj.level / 2) : heroic_bonus;
-    const fortitude_base_total = levelBaseFort + mineModifiers({ base: fortMod }, { level: statsObj.level });
-    const levelBaseRef = statsObj.traits_from_talents.includes("Epic Continuation: Reflex") ? Math.floor(statsObj.level / 2) : heroic_bonus;
-    const reflex_base_total = levelBaseRef + mineModifiers({ base: refMod }, { level: statsObj.level });
-    const levelBaseWill = statsObj.traits_from_talents.includes("Epic Continuation: Willpower") ? Math.floor(statsObj.level / 2) : heroic_bonus;
-    const willpower_base_total = levelBaseWill + mineModifiers({ base: willMod }, { level: statsObj.level });
+    const levelBaseFort = heroic_bonus;
+    const fortitude_base_total = levelBaseFort + mineModifiers({ base: fortitude_mods.base }, { level: statsObj.level });
+    const levelBaseRef = heroic_bonus;
+    const reflex_base_total = levelBaseRef + mineModifiers({ base: reflex_mods.base }, { level: statsObj.level });
+    const levelBaseWill = heroic_bonus;
+    const willpower_base_total = levelBaseWill + mineModifiers({ base: willpower_mods.base }, { level: statsObj.level });
     let result = {
         ...statsObj,
         fortitude_base_total,
@@ -1059,6 +1059,7 @@ export const updateKits = (statsObj) => {
     result = clearPassives(result, ["kit"]);
     result = clearRestFeatures(result, ["kit"]);
     result = clearFreeActions(result, ["kit"]);
+    result = clearOpportunityActions(result, ["kit"]);
     result = clearTrainings(result, ["kit"]);
     const kitsAlreadyChecked = [];
     Object.keys(statsObj.kits).forEach((level) => {
@@ -1096,6 +1097,14 @@ export const updateKits = (statsObj) => {
                 result.free_actions.push({
                     displaySource: kitObj.name,
                     text: freeAction,
+                    src: kitObj.id,
+                    srcType: "kit"
+                });
+            });
+            kitObj.opportunity_actions.forEach((oppAction) => {
+                result.opportunity_actions.push({
+                    displaySource: kitObj.name,
+                    text: oppAction,
                     src: kitObj.id,
                     srcType: "kit"
                 });

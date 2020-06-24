@@ -241,6 +241,7 @@ export const kitDefault = {
     heroic_bonus_to_impact_with_category: false,
     intended_level: 1,
     melee_weapon_impact_plus1: false,
+    opportunity_actions: [],
     passives: [],
     selected_options: {},
     select_one_from_attacks: false,

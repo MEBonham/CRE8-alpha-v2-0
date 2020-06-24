@@ -19,7 +19,6 @@ const gc = {
         "Bully",
         "Climber",
         "Darkvision",
-        "Epic Continuation: Fortitude",
         "Epic Continuation: VP",
         "Expert Parry",
         "Haggler",
@@ -71,7 +70,7 @@ const gc = {
         { name: "Willpower", code: "willpower_mods" },
     ],
     bonus_types: [
-        "Base",
+        "base",
         "Circumstance",
         "Deflection",
         "Encumbrance",

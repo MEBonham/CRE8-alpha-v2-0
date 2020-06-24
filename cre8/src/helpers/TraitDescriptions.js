@@ -11,7 +11,6 @@ export const traitDescriptions = {
     "Darkvision": "Treat nonmagical darkness as if it were shadowy illumination.",
     "Diminutive Size": "Your Stealth checks to hide from Tiny or larger creatures are boosted. Your Athletics or Brawn checks to keep your footing or resist Grabbing against Tiny or larger creatures are dragged. Your Perception checks to spot Fine creatures are dragged. Your Athletics or Brawn checks to keep your footing or resist Grabbing against Fine creatures are boosted. Your Stealth checks to hide from Fine creatures are dragged.",
     "Dragon Type": "Limited in the Dexterity and Gadgetry skills.",
-    "Epic Continuation: Fortitude": "Gain +1 to your base Fortitude for each even-numbered level above 8 that you have attained.",
     "Epic Continuation: VP": "Gain 2 VP for each level above 8 that you have attained.",
     "Expert Parry": "While you wield a Heavy Blade weapon, gain a +1 Feat bonus to your Defense save.",
     "Fine Size": "Your Stealth checks to hide from Diminutive or larger creatures are boosted. Your Athletics or Brawn checks to keep your footing or resist Grabbing against Diminutive or larger creatures are dragged.",

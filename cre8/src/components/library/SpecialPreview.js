@@ -169,6 +169,9 @@ const SpecialPreview = () => {
                     {data.free_actions.map((freeAction, i) => (
                         <li key={i}><em>Free Action:</em> {freeAction}</li>
                     ))}
+                    {data.opportunity_actions.map((oppAction, i) => (
+                        <li key={i}><em>Opportunity Action:</em> {oppAction}</li>
+                    ))}
                     {data.benefit_traits.map((trait, i) => (
                         <li key={i}><strong>{trait}:</strong> {traitDescriptions[trait]}</li>
                     ))}
