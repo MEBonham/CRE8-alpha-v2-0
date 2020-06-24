@@ -250,6 +250,7 @@ export const kitDefault = {
     various_penalties: [],
     vp_boost: "0",
     vpPlus2_OR_buffTalent: false,
+    vpPlus2_OR_coastNumberPlus1: false,
     vpPlus2_OR_mpPlus2: false,
     xp_parcels: [],
     xp_parcels_acquired: []

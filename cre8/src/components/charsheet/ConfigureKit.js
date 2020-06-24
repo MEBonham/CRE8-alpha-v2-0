@@ -227,6 +227,27 @@ const ConfigureKit = (props) => {
                         </div>
                     </div> :
                 null}
+                {currentKit && currentKit.vpPlus2_OR_coastNumberPlus1 ?
+                    <div className="radio-bank rows">
+                        <label>Choose one:</label>
+                        <div>
+                            <input
+                                type="radio"
+                                name={`vpPlus2_OR_coastNumberPlus1-kit-${props.level}-${props.index}`}
+                                value="coastNumberPlus1"
+                                onChange={radioSelection}
+                            /> Coast Number +1
+                        </div>
+                        <div>
+                            <input
+                                type="radio"
+                                name={`vpPlus2_OR_coastNumberPlus1-kit-${props.level}-${props.index}`}
+                                value="vpPlus2"
+                                onChange={radioSelection}
+                            /> Vitality Points +2
+                        </div>
+                    </div> :
+                null}
                 {currentKit && currentKit.vpPlus2_OR_mpPlus2 ?
                     <div className="radio-bank rows">
                         <label>Choose one:</label>

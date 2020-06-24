@@ -601,6 +601,15 @@ const BuildLibraryKits = (props) => {
                         <Controller
                             as="input"
                             type="checkbox"
+                            name="vpPlus2_OR_coastNumberPlus1"
+                            control={control}
+                        />
+                        <label>Coast Number +1 <span className="or">or</span> VP +2</label>
+                    </div>
+                    <div className="checkbox-pair">
+                        <Controller
+                            as="input"
+                            type="checkbox"
                             name="fightingRpBoost_OR_rpPlus2"
                             control={control}
                         />

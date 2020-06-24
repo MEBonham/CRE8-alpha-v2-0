@@ -1206,7 +1206,8 @@ export const updateKits = (statsObj) => {
             if (
                 kitObj.coast_number_boost ||
                 (kitObj.fighting_OR_coast_boost && kitObj.selected_options.fighting_OR_coast_boost && kitObj.selected_options.fighting_OR_coast_boost === "coast") ||
-                (kitObj.caster_OR_coast_boost && kitObj.selected_options.caster_OR_coast_boost && kitObj.selected_options.caster_OR_coast_boost === "coast")
+                (kitObj.caster_OR_coast_boost && kitObj.selected_options.caster_OR_coast_boost && kitObj.selected_options.caster_OR_coast_boost === "coast") ||
+                (kitObj.vpPlus2_OR_coastNumberPlus1 && kitObj.selected_options.vpPlus2_OR_coastNumberPlus1 && kitObj.selected_options.vpPlus2_OR_coastNumberPlus1 === "coastNumberPlus1")
             ) {
                 result.coast_number_kits = {
                     ...result.coast_number_kits,
@@ -1267,6 +1268,13 @@ export const updateKits = (statsObj) => {
             }
 
             let vp_boost = parseInt(kitObj.vp_boost);
+            if (
+                kitObj.vpPlus2_OR_coastNumberPlus1 &&
+                kitObj.selected_options.vpPlus2_OR_coastNumberPlus1 &&
+                kitObj.selected_options.vpPlus2_OR_coastNumberPlus1 === "vpPlus2"
+            ) {
+                vp_boost += 2;
+            }
             if (
                 kitObj.vpPlus2_OR_mpPlus2 &&
                 kitObj.selected_options.vpPlus2_OR_mpPlus2 &&

@@ -79,7 +79,7 @@ const CharMenu = () => {
     return(
         <div className="primary-content content-padding char-library">
             <section className="rows">
-                <h1>Character Library</h1>
+                <h1>Character Vault</h1>
                 <MyLink to="/characters/new">New Character</MyLink>
             </section>
             {campaignIds.length ?

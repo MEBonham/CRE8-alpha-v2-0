@@ -86,6 +86,9 @@ const SpecialPreview = () => {
                             <li>RP +1</li>
                         </> :
                     null}
+                    {data.vpPlus2_OR_coastNumberPlus1 ?
+                        <li>Coast Number +1 <span className="or">or</span> VP +2</li> :
+                    null}
                     {data.vpPlus2_OR_mpPlus2 ?
                         <li>VP +2 <span className="or">or</span> MP +2</li> :
                     null}

@@ -13,11 +13,11 @@ const BatchEdit = () => {
             query.forEach((item) => {
                 // collectionCopy[item.id] = (Object.keys(item.data().stats.weapon_accuracy_mods)) ?
                 // collectionCopy[item.id] = {
-                collectionCopy[item.id] = (item.data().opportunity_actions) ? {
+                collectionCopy[item.id] = (item.data().vpPlus2_OR_coastNumberPlus1) ? {
                     ...item.data()
                 } : {
                     ...item.data(),
-                    opportunity_actions: []
+                    vpPlus2_OR_coastNumberPlus1: false
                 };
             });
             Object.keys(collectionCopy).forEach((id) => {
@@ -39,8 +39,8 @@ const BatchEdit = () => {
                 const abilities_clone = { ...collectionCopy[item.id].stats[collection] };
                 Object.keys(abilities_clone).forEach((level) => {
                     Object.keys(abilities_clone[level]).forEach((index) => {
-                        if (!abilities_clone[level][index].opportunity_actions) {
-                            abilities_clone[level][index].opportunity_actions = [];
+                        if (!abilities_clone[level][index].vpPlus2_OR_coastNumberPlus1) {
+                            abilities_clone[level][index].vpPlus2_OR_coastNumberPlus1 = false;
                         }
                     });
                 });
