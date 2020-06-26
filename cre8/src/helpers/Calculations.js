@@ -1906,15 +1906,17 @@ export const updateSynergies = (statsObj) => {
             const conditional = (synergy.conditional) ? synergy.conditional : false;
             const condition = (synergy.conditional) ? synergy.condition : false;
             if (gc.skills_list.includes(synergy.to)) {
-                result.skill_mods[skill] = {
-                    ...result.skill_mods[skill],
-                    [synergy.source]: {
-                        num,
-                        srcType: [synergy.srcType],
-                        conditional,
-                        condition
+                const modObj = { num, srcType: synergy.srcType, conditional, condition };
+                // console.log(synergy.to, synergy.source, modObj);
+                // console.log(result.skill_mods[synergy.to]);
+                result.skill_mods[synergy.to] = {
+                    ...result.skill_mods[synergy.to],
+                    Synergy: {
+                        ...result.skill_mods[synergy.to].Synergy,
+                        [synergy.source]: modObj
                     }
                 };
+                // console.log(result.skill_mods[synergy.to]);
             } else {
                 result[synergy.to] = {
                     ...result[synergy.to],
